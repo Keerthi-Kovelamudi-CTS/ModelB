@@ -1,7 +1,5 @@
 -- ============================================================================
 -- PROSTATE CONTROL COHORT - WINDOWED EVENTS (FILTERED)
--- Extracts events for controls (NO prostate cancer) with top 136 SNOMED codes
--- Uses latest event date as synthetic "index_date" to match cancer cohort
 -- ============================================================================
 
 WITH diagnostic_codes AS (
