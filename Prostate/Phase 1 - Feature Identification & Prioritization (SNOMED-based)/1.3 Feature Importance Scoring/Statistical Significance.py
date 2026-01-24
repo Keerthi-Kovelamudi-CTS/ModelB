@@ -9,7 +9,8 @@ Requirements:
 - Effect sizes (Cohen's d)
 - Prevalence difference
 - FDR correction (Benjamini-Hochberg)
-- Ranked list of top 250 discriminative features
+
+Output: Ranked list of top 250 discriminative features
 """
 
 import pandas as pd
