@@ -10,8 +10,8 @@ This script:
 1. Loads trained model and optimal threshold from Phase 3.1
 2. Comprehensive SHAP analysis (global + local + visualizations)
 3. Decision Tree surrogate model with visualization
-4. LIME for local patient explanations (optional)
-5. RuleFit for advanced rule extraction (optional)
+4. LIME for local patient explanations
+5. RuleFit for advanced rule extraction
 6. Generates patient-level explanations with risk factors
 7. Creates clinical prediction rules and summary document
 8. Exports results in multiple formats (CSV + JSON)
