@@ -1,5 +1,5 @@
 """
-This script validates that data is correctly structured for forward-looking prediction.
+This script validates that data is correctly structured for prediction.
 """
 
 import pandas as pd
