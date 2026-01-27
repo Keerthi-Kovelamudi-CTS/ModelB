@@ -1,15 +1,5 @@
 """
 PROSTATE CANCER PREDICTION MODEL TRAINING
-===========================================================================
-
-This is a modified version that removes EVENT_AGE features (age proxies) to focus
-on clinically relevant features like PSA values, lab values, and symptoms.
-
-MODIFICATIONS:
-- Removes all *_MEAN_EVENT_AGE, *_FIRST_EVENT_AGE, *_LAST_EVENT_AGE features
-- Optionally adds explicit AGE feature if available
-- Forces model to use actual test values and clinical markers
-- Should result in PSA features becoming more important
 """
 
 import pandas as pd
