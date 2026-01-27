@@ -1,5 +1,11 @@
 """
 This script validates that data is correctly structured for prediction.
+
+Verifies:
+1. INDEX_DATE exists and is correct
+2. No data leakage (events after INDEX_DATE)
+3. TIME_WINDOW is relative to INDEX_DATE
+4. Control patients have sufficient follow-up
 """
 
 import pandas as pd
