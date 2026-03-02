@@ -1,21 +1,3 @@
-/*╔══════════════════════════════════════════════════════════════════╗
-  ║  PRODUCTION — BLADDER CANCER                                    ║
-  ║  Phase 1: Top SNOMEDs (POSITIVE COHORT — Observations)         ║
-  ║  Version: 1.0                                                   ║
-  ║  Dates:   1950-01-01 → 2026-02-25                              ║
-  ║  Window:  [-13 months, -1 month] before diagnosis               ║
-  ║                                                                 ║
-  ║  Fixes vs prototype:                                            ║
-  ║    ✅ QUALIFY dedup on diagnostic_codes                          ║
-  ║    ✅ Proper NULL handling throughout                            ║
-  ║    ✅ No DISTINCT band-aid — dedup at source                    ║
-  ║    ✅ Cancer diagnosis codes excluded (leakage prevention)      ║
-  ║    ✅ Ethnicity codes excluded from features (not clinical)     ║
-  ║    ✅ Validated date boundaries                                  ║
-  ║    ✅ No LIMIT — return all SNOMEDs                              ║
-  ║    ✅ No ORDER BY in CTEs                                        ║
-  ╚══════════════════════════════════════════════════════════════════╝*/
-
 WITH params AS (
   SELECT
     DATE '1950-01-01'  AS mh_start,
