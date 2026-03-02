@@ -2338,7 +2338,7 @@ if len(lab_windowed_v6) > 0:
     early_lab_types = early_lab.groupby('PATIENT_GUID')['TERM'].apply(set)
     late_lab_types = late_lab.groupby('PATIENT_GUID')['TERM'].apply(set)
     lab_types_df = pd.DataFrame({'early': early_lab_types, 'late': late_lab_types})
-    lab_types_df = lab_types_df.fillna(set()).map(lambda x: x if isinstance(x, set) else set())
+    lab_types_df = lab_types_df.map(lambda x: x if isinstance(x, set) else set())  # pandas fillna(set()) invalid; map NaN -> set()
     lab_types_df['V6_NEW_LAB_TYPES'] = lab_types_df.apply(lambda r: len(r['late'] - r['early']), axis=1)
     fm['V6_NEW_LAB_TYPES_IN_LATE'] = lab_types_df['V6_NEW_LAB_TYPES'].reindex(fm.index)
     fm['V6_NEW_LAB_TYPES_FLAG'] = (fm['V6_NEW_LAB_TYPES_IN_LATE'].fillna(0) > 0).astype(int)
@@ -2457,8 +2457,10 @@ if len(meds) > 0:
     for feat_name, (cat1, cat2) in combos.items():
         pats_with_both = set(pid for pid, cats in pat_med_cats.items() if cat1 in cats and cat2 in cats)
         fm[feat_name] = fm.index.isin(pats_with_both).astype(int)
-    fm['V6_MED_CATEGORY_DIVERSITY'] = pat_med_cats.reindex(fm.index)
-    fm['V6_HIGH_MED_DIVERSITY'] = (fm['V6_MED_CATEGORY_DIVERSITY'].fillna(0) >= 6).astype(int)
+    # Count of distinct medication categories per patient (integer), not the set
+    med_diversity = pat_med_cats.apply(len).reindex(fm.index)
+    fm['V6_MED_CATEGORY_DIVERSITY'] = med_diversity.fillna(0).astype(np.int64)
+    fm['V6_HIGH_MED_DIVERSITY'] = (fm['V6_MED_CATEGORY_DIVERSITY'] >= 6).astype(int)
 
 print("\n" + "=" * 70)
 print("V6-9: LAB VALUE RELATIVE TO BASELINE")
