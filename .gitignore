@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# Allow directories (so Git can see into them)
+!**/
+
+# Track only Python files
+!**/*.py
+
+# Keep .gitignore in the repo
+!.gitignore
