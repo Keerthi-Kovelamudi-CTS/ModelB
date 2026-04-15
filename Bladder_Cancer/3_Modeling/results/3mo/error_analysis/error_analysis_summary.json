@@ -1,0 +1,27 @@
+{
+  "threshold": 0.235,
+  "model": "Ensemble (XGB+CB 40/60)",
+  "counts": {
+    "TP": 1365,
+    "FN": 237,
+    "FP": 4230,
+    "TN": 10219
+  },
+  "fn_profile": {
+    "mean_age": null,
+    "pct_male": null,
+    "pct_with_haematuria": 0.8438818565400843,
+    "mean_prob": 0.13327179243337253,
+    "pct_near_miss": 18.9873417721519,
+    "pct_very_low": 33.755274261603375
+  },
+  "archetypes": {
+    "Has haematuria but missed": 2,
+    "Near-miss (prob \u2265 80% of threshold)": 45
+  },
+  "key_findings": [
+    "FN patients have LESS haematuria: 0.8% vs 16.8% in TP",
+    "FN patients have FEWER observations: 2.1 vs 3.7 in TP",
+    "Near-miss patients (45) could be caught with lower threshold"
+  ]
+}

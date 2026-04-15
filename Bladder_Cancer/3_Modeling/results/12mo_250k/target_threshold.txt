@@ -1,0 +1,7 @@
+model=Ensemble (Top 2)
+threshold=0.3100
+sensitivity=0.7848
+specificity=0.6913
+ppv=0.0655
+npv=0.9915
+target_met=False

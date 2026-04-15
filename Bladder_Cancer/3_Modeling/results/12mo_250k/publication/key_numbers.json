@@ -1,0 +1,33 @@
+{
+  "Study Population": {
+    "Total patients": "235,626",
+    "Cancer cases": "6,319 (2.7%)",
+    "Non-cancer": "229,307",
+    "Features used": 753
+  },
+  "Best Model Performance (Test Set)": {
+    "Model": "Optuna-weighted ensemble (XGB+LGB+CB)",
+    "AUC-ROC": "0.830 (95% CI: 0.819\u20130.841)",
+    "Average Precision": "0.327"
+  },
+  "Clinical Operating Point (threshold=0.31)": {
+    "Sensitivity": "75.8%",
+    "Specificity": "72.7%",
+    "PPV": "7.1%",
+    "NPV": "99.1%",
+    "TP (cancers detected)": "1,197",
+    "FN (cancers missed)": "383",
+    "FP (false alarms)": "15,638",
+    "TN (correctly excluded)": "41,689",
+    "NNS (per cancer detected)": "14.1"
+  },
+  "Clinical Comparison": {
+    "Our PPV": "7.1%",
+    "NHS 2WW pathway PPV": "3-10%",
+    "Our sensitivity": "75.8%",
+    "NICE haematuria rule sensitivity": "~65%",
+    "Our AUC": "0.830",
+    "QCancer AUC": "0.84",
+    "DETECT I AUC": "0.80"
+  }
+}

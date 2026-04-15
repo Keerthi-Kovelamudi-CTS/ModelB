@@ -1,0 +1,211 @@
+2026-02-27 02:36:23 | INFO     | ================================================================================
+2026-02-27 02:36:23 | INFO     | PRODUCTION — BLADDER CANCER — Phase 1.3: Feature Ranking FINAL v2
+2026-02-27 02:36:23 | INFO     | Timestamp: 2026-02-27 02:36:23
+2026-02-27 02:36:23 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-02-27 02:36:23 | INFO     | ================================================================================
+2026-02-27 02:36:23 | INFO     | 
+📂 Loading input files...
+2026-02-27 02:36:23 | INFO     |   ✅ pos_obs: 4,829 rows validated
+2026-02-27 02:36:23 | INFO     |   ✅ neg_obs: 20,317 rows validated
+2026-02-27 02:36:23 | INFO     |   ✅ pos_meds: 827 rows validated
+2026-02-27 02:36:23 | INFO     |   ✅ neg_meds: 5,482 rows validated
+2026-02-27 02:36:23 | INFO     |   ✅ Observation matrix found: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/../Data/Bladder_patient_obs_matrix.csv
+2026-02-27 02:36:28 | INFO     |      284,307 patients, 43,406 features
+2026-02-27 02:36:28 | INFO     |   ✅ Medication matrix found: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/../Data/Bladder_patient_meds_matrix.csv
+2026-02-27 02:36:29 | INFO     |      212,617 patients, 13,483 features
+2026-02-27 02:36:29 | INFO     | 
+================================================================================
+2026-02-27 02:36:29 | INFO     | PART 1: OBSERVATIONS
+2026-02-27 02:36:29 | INFO     | ================================================================================
+2026-02-27 02:36:29 | INFO     | 
+============================================================
+2026-02-27 02:36:29 | INFO     | STATISTICAL RANKING: observations
+2026-02-27 02:36:29 | INFO     | ============================================================
+2026-02-27 02:36:29 | INFO     |   Positive: 6,480 patients, 4,829 terms
+2026-02-27 02:36:29 | INFO     |   Negative: 277,829 patients, 20,317 terms
+2026-02-27 02:36:30 | INFO     |   After filter (>=5): 4,829 terms
+2026-02-27 02:36:30 | INFO     |   OR > 2.0: 1905
+2026-02-27 02:36:30 | INFO     |   OR > 5.0: 506
+2026-02-27 02:36:30 | INFO     |   Significant (p<0.05): 2375
+2026-02-27 02:36:30 | INFO     |   Bonferroni sig (p<0.05): 1005
+2026-02-27 02:36:30 | INFO     | 
+============================================================
+2026-02-27 02:36:30 | INFO     | ML RANKING (Real Patient Data): observations
+2026-02-27 02:36:30 | INFO     | ============================================================
+2026-02-27 02:36:31 | INFO     |   Cohort: 5,197 pos + 25,985 neg (5:1)
+2026-02-27 02:36:31 | INFO     |   Pivoting to wide format...
+2026-02-27 02:36:31 | INFO     |   Matrix: 31,182 × 500
+2026-02-27 02:36:31 | INFO     |   Balance: 5,197 pos (16.7%), 25,985 neg (83.3%)
+2026-02-27 02:36:31 | INFO     |   Training L1 Logistic Regression...
+2026-02-27 02:41:11 | INFO     |     AUROC: 0.8591 ± 0.0049 | Non-zero: 494 | 280.4s
+2026-02-27 02:41:11 | INFO     |   Training Random Forest (200 trees)...
+2026-02-27 02:41:13 | INFO     |     AUROC: 0.8481 ± 0.0041 | 2.2s
+2026-02-27 02:41:13 | INFO     |   Training Gradient Boosting (150 trees)...
+2026-02-27 02:41:38 | INFO     |     AUROC: 0.8652 ± 0.0031 | 24.9s
+2026-02-27 02:41:38 | INFO     |   ✅ Complete: 308.3s total
+2026-02-27 02:41:38 | INFO     |   Building combined ranking for observations...
+2026-02-27 02:41:38 | INFO     |   Total: 4,829 | Both agree (top 150): 89
+2026-02-27 02:41:38 | INFO     | 
+📋 Top 20 Observations:
+2026-02-27 02:41:38 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-02-27 02:41:38 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-02-27 02:41:38 | INFO     |   1      observation  Fast track referral for suspected urologi     64.24   59.47   69.39   0.00e+00     61      1   0.869 Very High  ✅    
+2026-02-27 02:41:38 | INFO     |   2      observation  TURBT - Transurethral resection of bladde    874.13  571.67 1336.64   0.00e+00     13      3   0.591 High       ✅    
+2026-02-27 02:41:38 | INFO     |   3      observation  Haematuria                                    64.50   57.28   72.62   0.00e+00     60      2   0.544 High       ✅    
+2026-02-27 02:41:38 | INFO     |   4      observation  Blood in urine                                84.70   74.86   95.84   0.00e+00     54      4   0.529 High       ✅    
+2026-02-27 02:41:38 | INFO     |   5      observation  Frank haematuria                             127.33  108.64  149.23   0.00e+00     46      6   0.523 High       ✅    
+2026-02-27 02:41:38 | INFO     |   6      observation  Seen in urology clinic                        17.95   16.89   19.08   0.00e+00    128      5   0.457 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   7      observation  2 week rule referral - urology                51.07   46.29   56.35   0.00e+00     69      7   0.450 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   8      observation  Blood in urine - haematuria                   57.57   49.92   66.38   0.00e+00     65      8   0.391 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   9      observation  Suspected bladder cancer                     419.37  252.39  696.81   0.00e+00     41     14   0.359 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   10     observation  Flexible cystoscopy                           71.43   60.84   83.87   0.00e+00     58     11   0.353 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   11     observation  Urine blood test = +++                        22.80   20.85   24.93   0.00e+00    115      9   0.345 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   12     observation  Nephroureterectomy-unspecified              1935.79  117.41 31916.21  1.01e-197      4     21   0.345 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   13     observation  Lesion of urinary bladder                   2194.92  133.61 36058.98  1.13e-225      3     23   0.344 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   14     observation  Cystoscopy abnormal                         2540.80  155.22 41589.03  6.08e-263      1     31   0.341 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   15     observation  Cystoscopy and transurethral resection of   2281.35  139.01 37440.82  5.43e-235      2     32   0.335 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   16     observation  Painless haematuria                           97.72   75.02  127.28   0.00e+00     51     12   0.326 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   17     observation  Transitional cell neoplasm                  1332.10   79.69 22266.39  1.65e-132      7     27   0.325 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   18     observation  Nephroureterectomy                          1332.10   79.69 22266.39  1.65e-132      6     29   0.319 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   19     observation  Renal ultrasound abnormal                   1332.10   79.69 22266.39  1.65e-132      5     33   0.315 Medium     ✅    
+2026-02-27 02:41:38 | INFO     |   20     observation  Bladder polyp                               1245.97   74.32 20889.89  3.41e-123      9     43   0.307 Medium     ✅    
+2026-02-27 02:41:39 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_obs_all.csv (4,829 rows)
+2026-02-27 02:41:39 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_obs_top150.csv (150 rows)
+2026-02-27 02:41:39 | INFO     | 
+================================================================================
+2026-02-27 02:41:39 | INFO     | PART 2: MEDICATIONS
+2026-02-27 02:41:39 | INFO     | ================================================================================
+2026-02-27 02:41:39 | INFO     | 
+============================================================
+2026-02-27 02:41:39 | INFO     | STATISTICAL RANKING: medications
+2026-02-27 02:41:39 | INFO     | ============================================================
+2026-02-27 02:41:39 | INFO     |   Positive: 5,166 patients, 827 terms
+2026-02-27 02:41:39 | INFO     |   Negative: 207,367 patients, 5,482 terms
+2026-02-27 02:41:39 | INFO     |   After filter (>=5): 827 terms
+2026-02-27 02:41:39 | INFO     |   OR > 2.0: 203
+2026-02-27 02:41:39 | INFO     |   OR > 5.0: 61
+2026-02-27 02:41:39 | INFO     |   Significant (p<0.05): 252
+2026-02-27 02:41:39 | INFO     |   Bonferroni sig (p<0.05): 90
+2026-02-27 02:41:39 | INFO     | 
+============================================================
+2026-02-27 02:41:39 | INFO     | ML RANKING (Real Patient Data): medications
+2026-02-27 02:41:39 | INFO     | ============================================================
+2026-02-27 02:41:39 | INFO     |   Cohort: 4,539 pos + 22,695 neg (5:1)
+2026-02-27 02:41:39 | INFO     |   Pivoting to wide format...
+2026-02-27 02:41:39 | INFO     |   Matrix: 27,234 × 500
+2026-02-27 02:41:39 | INFO     |   Balance: 4,539 pos (16.7%), 22,695 neg (83.3%)
+2026-02-27 02:41:39 | INFO     |   Training L1 Logistic Regression...
+2026-02-27 03:02:29 | INFO     |     AUROC: 0.6790 ± 0.0056 | Non-zero: 500 | 1249.7s
+2026-02-27 03:02:29 | INFO     |   Training Random Forest (200 trees)...
+2026-02-27 03:02:31 | INFO     |     AUROC: 0.6917 ± 0.0069 | 2.3s
+2026-02-27 03:02:31 | INFO     |   Training Gradient Boosting (150 trees)...
+2026-02-27 03:02:53 | INFO     |     AUROC: 0.6951 ± 0.0061 | 21.9s
+2026-02-27 03:02:53 | INFO     |   ✅ Complete: 1274.2s total
+2026-02-27 03:02:53 | INFO     |   Building combined ranking for medications...
+2026-02-27 03:02:53 | INFO     |   Total: 827 | Both agree (top 150): 78
+2026-02-27 03:02:53 | INFO     | 
+📋 Top 20 Medications:
+2026-02-27 03:02:53 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-02-27 03:02:53 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-02-27 03:02:53 | INFO     |   1      medication   Nitrofurantoin 100mg modified-release cap      5.72    5.30    6.17   0.00e+00     56      1   0.804 Very High  ✅    
+2026-02-27 03:02:53 | INFO     |   2      medication   Trimethoprim 200mg tablets                     4.15    3.81    4.53  4.14e-262     71      2   0.558 High       ✅    
+2026-02-27 03:02:53 | INFO     |   3      medication   Spikevax XBB.1.5 COVID-19 mRNA Vaccine 0.     10.64    9.14   12.39   0.00e+00     30      3   0.543 High       ✅    
+2026-02-27 03:02:53 | INFO     |   4      medication   COVID-19 Vaccine VidPrevtyn Beta (CoV2 pr     24.03   18.80   30.72  7.23e-301     10      4   0.466 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   5      medication   Prostap 3 DCS 11.25mg powder and solvent    1247.87   74.65 20858.96  3.57e-124      1     11   0.402 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   6      medication   Decapeptyl SR 11.25mg powder and solvent     925.12   54.51 15701.83   2.75e-89      3     16   0.362 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   7      medication   Abrysvo vaccine powder and solvent for so    844.51   49.48 14414.35   1.44e-80      4     15   0.357 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   8      medication   Bicalutamide 50mg tablets                   1005.76   59.54 16990.09   5.23e-98      2     42   0.348 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   9      medication   Pivmecillinam 200mg tablets                    6.87    5.93    7.96  1.76e-194     45      5   0.340 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   10     medication   Hollister drainable night drainage bag 55    441.93   24.43 7993.66   4.87e-37      6     28   0.302 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   11     medication   Leuprorelin 11.25mg powder and solvent fo    441.93   24.43 7993.66   4.87e-37      5     37   0.298 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   12     medication   Tamsulosin 400microgram modified-release       3.50    3.03    4.05   2.13e-71     92      6   0.247 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   13     medication   Spikevax JN.1 COVID-19 mRNA Vaccine 0.1mg      3.47    2.97    4.04   1.04e-62     94      7   0.224 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   14     medication   Spirit One MT drainable night drainage ba     34.82   12.18   99.59   9.95e-21      8     24   0.208 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   15     medication   Zoladex LA 10.8mg implant SafeSystem pre-     40.18   13.54  119.22   1.62e-22      7     71   0.195 Low        ✅    
+2026-02-27 03:02:53 | INFO     |   16     medication   Cefalexin 500mg capsules                       3.57    3.03    4.22   6.51e-57     86      8   0.193 Low        ✅    
+2026-02-27 03:02:53 | INFO     |   17     medication   Zostavax vaccine powder and solvent for s     16.82   10.16   27.84   1.05e-46     17     22   0.192 Low        ✅    
+2026-02-27 03:02:53 | INFO     |   18     medication   Tranexamic acid 500mg tablets                 16.44    8.92   30.29   3.34e-30     19     23   0.185 Low        ✅    
+2026-02-27 03:02:53 | INFO     |   19     medication   Prosys sterile leg bag with lever tap P50     19.35   11.11   33.71   1.43e-44     13     45   0.183 Low        ✅    
+2026-02-27 03:02:53 | INFO     |   20     medication   Ugo fix catheter strap medium 3003 80cm (     34.82   12.18   99.59   9.95e-21      9    297   0.181 Low             
+2026-02-27 03:02:53 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_meds_all.csv (827 rows)
+2026-02-27 03:02:53 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_meds_top150.csv (150 rows)
+2026-02-27 03:02:53 | INFO     | 
+================================================================================
+2026-02-27 03:02:53 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-02-27 03:02:53 | INFO     | ================================================================================
+2026-02-27 03:02:53 | INFO     | 
+📋 Top 20 Combined Features:
+2026-02-27 03:02:53 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-02-27 03:02:53 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-02-27 03:02:53 | INFO     |   1      observation  Fast track referral for suspected urologi     64.24   59.47   69.39   0.00e+00     61      1   0.869 Very High  ✅    
+2026-02-27 03:02:53 | INFO     |   2      medication   Nitrofurantoin 100mg modified-release cap      5.72    5.30    6.17   0.00e+00     56      1   0.629 High       ✅    
+2026-02-27 03:02:53 | INFO     |   3      observation  TURBT - Transurethral resection of bladde    874.13  571.67 1336.64   0.00e+00     13      3   0.591 High       ✅    
+2026-02-27 03:02:53 | INFO     |   4      observation  Haematuria                                    64.50   57.28   72.62   0.00e+00     60      2   0.544 High       ✅    
+2026-02-27 03:02:53 | INFO     |   5      observation  Blood in urine                                84.70   74.86   95.84   0.00e+00     54      4   0.529 High       ✅    
+2026-02-27 03:02:53 | INFO     |   6      observation  Frank haematuria                             127.33  108.64  149.23   0.00e+00     46      6   0.523 High       ✅    
+2026-02-27 03:02:53 | INFO     |   7      medication   Trimethoprim 200mg tablets                     4.15    3.81    4.53  4.14e-262     71      2   0.482 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   8      observation  Seen in urology clinic                        17.95   16.89   19.08   0.00e+00    128      5   0.457 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   9      observation  2 week rule referral - urology                51.07   46.29   56.35   0.00e+00     69      7   0.450 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   10     medication   Spikevax XBB.1.5 COVID-19 mRNA Vaccine 0.     10.64    9.14   12.39   0.00e+00     30      3   0.443 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   11     observation  Blood in urine - haematuria                   57.57   49.92   66.38   0.00e+00     65      8   0.391 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   12     medication   COVID-19 Vaccine VidPrevtyn Beta (CoV2 pr     24.03   18.80   30.72  7.23e-301     10      4   0.366 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   13     observation  Suspected bladder cancer                     419.37  252.39  696.81   0.00e+00     41     14   0.359 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   14     observation  Flexible cystoscopy                           71.43   60.84   83.87   0.00e+00     58     11   0.353 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   15     observation  Urine blood test = +++                        22.80   20.85   24.93   0.00e+00    115      9   0.345 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   16     observation  Nephroureterectomy-unspecified              1935.79  117.41 31916.21  1.01e-197      4     21   0.345 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   17     observation  Lesion of urinary bladder                   2194.92  133.61 36058.98  1.13e-225      3     23   0.344 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   18     observation  Cystoscopy abnormal                         2540.80  155.22 41589.03  6.08e-263      1     31   0.341 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   19     medication   Prostap 3 DCS 11.25mg powder and solvent    1247.87   74.65 20858.96  3.57e-124      1     11   0.339 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   20     observation  Cystoscopy and transurethral resection of   2281.35  139.01 37440.82  5.43e-235      2     32   0.335 Medium     ✅    
+2026-02-27 03:02:53 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_combined_all.csv (5,656 rows)
+2026-02-27 03:02:53 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/bladder_combined_top150.csv (150 rows)
+2026-02-27 03:02:53 | INFO     | 
+================================================================================
+2026-02-27 03:02:53 | INFO     | FINAL SUMMARY
+2026-02-27 03:02:53 | INFO     | ================================================================================
+2026-02-27 03:02:53 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/output/Scores_2/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   bladder_obs_top150.csv       →  150 observations          │
+  │   bladder_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   bladder_combined_top150.csv  →  129 obs +   21 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   bladder_obs_all.csv          →   4829 observations       │
+  │   bladder_meds_all.csv         →    827 medications        │
+  │   bladder_combined_all.csv     →   5656 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: REAL patient matrix ✅
+  Medications:  REAL patient matrix ✅
+
+📊 Observations:  4,829 scored | OR>2: 1905 | Sig: 2375
+📊 Medications:   827 scored | OR>2: 203 | Sig: 252
+
+📊 Combined Top 150: 129 obs (86%) + 21 meds (14%)
+
+📊 Confidence: VeryHigh=1 | High=5 | Medium=87 | Low=57
+2026-02-27 03:02:53 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-02-27 03:02:53 | INFO     |   #1 Fast track referral for suspected urological cancer (OR=64.24 [59.47-69.39], p=0.00e+00, score=0.869)
+2026-02-27 03:02:53 | INFO     |   #3 TURBT - Transurethral resection of bladder tumour (OR=874.13 [571.67-1336.64], p=0.00e+00, score=0.591)
+2026-02-27 03:02:53 | INFO     |   #4 Haematuria (OR=64.50 [57.28-72.62], p=0.00e+00, score=0.544)
+2026-02-27 03:02:53 | INFO     |   #5 Blood in urine (OR=84.70 [74.86-95.84], p=0.00e+00, score=0.529)
+2026-02-27 03:02:53 | INFO     |   #6 Frank haematuria (OR=127.33 [108.64-149.23], p=0.00e+00, score=0.523)
+2026-02-27 03:02:53 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-02-27 03:02:53 | INFO     |   #2 Nitrofurantoin 100mg modified-release capsules (OR=5.72 [5.30-6.17], p=0.00e+00, score=0.629)
+2026-02-27 03:02:53 | INFO     |   #7 Trimethoprim 200mg tablets (OR=4.15 [3.81-4.53], p=4.14e-262, score=0.482)
+2026-02-27 03:02:53 | INFO     |   #10 Spikevax XBB.1.5 COVID-19 mRNA Vaccine 0.1mg/1ml dispersion for injection multidose vials (Moderna Biotech Distributor UK Ltd) (OR=10.64 [9.14-12.39], p=0.00e+00, score=0.443)
+2026-02-27 03:02:53 | INFO     |   #12 COVID-19 Vaccine VidPrevtyn Beta (CoV2 preS dTM monovalent B.1.351 [recombinant adjuvanted]) 5micrograms/0.5ml dose solution and emulsion for emulsion for injection multidose vials (Sanofi) (OR=24.03 [18.80-30.72], p=7.23e-301, score=0.366)
+2026-02-27 03:02:53 | INFO     |   #19 Prostap 3 DCS 11.25mg powder and solvent for prolonged-release suspension for injection pre-filled syringes (Takeda UK Ltd) (OR=1247.87 [74.65-20858.96], p=3.57e-124, score=0.339)
+2026-02-27 03:02:53 | INFO     | 
+⏱️  Total execution time: 1590.2s (26.5 min)
+2026-02-27 03:02:53 | INFO     | 
+================================================================================
+2026-02-27 03:02:53 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-02-27 03:02:53 | INFO     | ================================================================================

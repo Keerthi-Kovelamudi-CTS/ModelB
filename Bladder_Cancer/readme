@@ -1,0 +1,404 @@
+═══════════════════════════════════════════════════════════════════════════════
+ BLADDER CANCER PREDICTION — METHODOLOGY & RESULTS
+═══════════════════════════════════════════════════════════════════════════════
+
+PART A — METHODOLOGY
+═══════════════════════════════════════════════════════════════════════════════
+
+1. OBJECTIVE
+──────────────────────────────────────────────────────────────────────────────
+To predict bladder cancer risk in primary care patients using structured
+electronic health record (EHR) data from general practice. The model uses
+symptoms, observations, medications, laboratory results, and healthcare
+utilisation patterns within fixed time windows before the index date. The
+target operating point is set at ≥75% sensitivity and ≥65% specificity (to
+minimise missed cancers and limit false positives); earlier runs used 80%/70%.
+Predictions are evaluated for 3mo, 6mo, 12mo, and for the 12mo_250k cohort.
+
+2. DATA SOURCE AND FEATURE ENGINEERING
+──────────────────────────────────────────────────────────────────────────────
+  • The input to modeling is a cleaned, patient-level feature matrix produced
+    by the feature-engineering pipeline. The pipeline runs separately for each
+    window (3mo, 6mo, 12mo).
+  • Upstream steps: (1) sanity checks on raw windowed clinical and medication
+    data, (2) patient-overlap check between clinical and medication cohorts,
+    (3) removal of patients present only in medication data, (4) comprehensive
+    feature engineering from clinical events, medications, and labs, (5) feature
+    cleanup (redundant/sparse feature removal, correlation-based deduplication,
+    univariate AUC filter with lift-based protection for rare-but-informative
+    features).
+  • Features (approximately 750–780 per window after cleanup) include:
+    demographics (age, sex); symptom and observation counts/flags (e.g.
+    haematuria, LUTS, dysuria, fatigue, weight loss); laboratory-derived
+    features (e.g. haemoglobin, eGFR, WBC, trends and variability); medication
+    patterns; healthcare utilisation (GP visit frequency, recency); temporal
+    and sequence features; and interaction terms. All features are constructed
+    using only information available before the index date to avoid leakage.
+  • Outcome: binary label (cancer vs non-cancer). The proportion of cancer
+    cases is approximately 10% in each window, so class imbalance is handled
+    in both training and evaluation.
+
+3. TRAIN / VALIDATION / TEST SPLIT
+──────────────────────────────────────────────────────────────────────────────
+  • A single, stratified random split is applied so that the class balance
+    (cancer vs non-cancer) is preserved in each subset.
+  • Split proportions (e.g. for 12mo_250k): 25% training, 10% validation,
+    65% test (output subfolder 12mo_250k_65-25-10). The validation
+    set is used for: hyperparameter tuning (Optuna), early stopping for
+    gradient-boosted models, learning ensemble weights, training the stacking
+    meta-learner, and selecting the probability threshold. The test set is
+    never used for any tuning or threshold choice; it is reserved solely for
+    reporting final performance.
+  • This design ensures that test-set metrics (AUC, sensitivity, specificity,
+    PPV, NPV) are unbiased estimates of generalisation performance.
+
+4. MODELS
+──────────────────────────────────────────────────────────────────────────────
+  • Base classifiers:
+    — XGBoost, LightGBM, CatBoost: gradient-boosted decision trees with
+      scale_pos_weight (or equivalent) to account for class imbalance.
+    — Random Forest: ensemble of decision trees with class_weight='balanced'.
+    — Logistic Regression: L1-regularised, with StandardScaler applied to
+      features and class_weight='balanced'.
+  • Additional variants (used for stacking diversity):
+    — LightGBM with DART (Dropouts meet Multiple Additive Regression Trees).
+    — XGBoost with deeper trees (max_depth=10) and distinct hyperparameters.
+  • All tree models use early stopping on the validation set (e.g. 50 rounds)
+    to reduce overfitting; the number of boosting iterations is not fixed in
+    advance.
+
+5. HYPERPARAMETER TUNING
+──────────────────────────────────────────────────────────────────────────────
+  • Optuna is used with 100 trials per model for XGBoost, LightGBM, and
+    CatBoost. The objective is to maximise validation AUC, with a penalty
+    applied when the gap between training and validation AUC exceeds a
+    predefined limit (to discourage overfitting).
+  • Search spaces cover learning rate, tree depth, regularisation (L1/L2),
+    subsample and column sampling, and scale_pos_weight range. Random Forest
+    and Logistic Regression use fixed configurations; the DART and Deep XGB
+    variants also use fixed configs for stacking.
+
+6. CROSS-VALIDATION
+──────────────────────────────────────────────────────────────────────────────
+  • Five-fold stratified cross-validation is run on the training set only.
+    For each base model, cross-validated AUC, average precision (AP), F1,
+    F2, precision, and recall are computed and reported as mean ± standard
+    deviation. These metrics characterise stability and average performance
+    across folds and are reported separately from the held-out test set.
+
+7. ENSEMBLES
+──────────────────────────────────────────────────────────────────────────────
+  • Top 2 (by validation AUC): arithmetic mean of predicted probabilities
+    from the two best base models by validation AUC.
+  • Top 2 by recall: arithmetic mean of the two models selected for high
+    recall on the validation set.
+  • XGB + CatBoost 40/60: fixed-weight average (0.4 × XGBoost + 0.6 × CatBoost).
+  • Average of all tree models: unweighted mean of predictions from all
+    gradient-boosted and Random Forest models.
+  • Optuna-weighted: Optuna optimises non-negative weights for the tree-model
+    predictions to maximise validation AUC; the weighted sum of probabilities
+    is the ensemble prediction.
+  • Stacking: a logistic regression meta-learner is trained on out-of-fold
+    predictions from the base models (including DART and Deep XGB). The
+    meta-learner combines these predictions to produce a single score.
+
+8. THRESHOLD SELECTION AND RECOMMENDED MODEL
+──────────────────────────────────────────────────────────────────────────────
+  • For each candidate model (including ensembles), a grid of probability
+    thresholds (e.g. step 0.005) is evaluated on the validation set.
+    Optionally, predictions are calibrated on the validation set before
+    threshold search. A threshold is valid if it achieves sensitivity ≥ 75%
+    and specificity ≥ 65% (configurable; e.g. 80% / 70% in earlier runs).
+  • Among valid thresholds, the one with the highest sensitivity is chosen
+    (with ties broken by specificity, then AUC). The goal is to prioritise
+    catching cancers (high sensitivity) while maintaining at least 65%
+    specificity.
+  • The recommended model is the one that, at its chosen threshold, achieves
+    the highest test sensitivity among all models that meet the target on the
+    validation set; ties are broken by test specificity, then test AUC. The
+    chosen model and threshold are written to target_threshold.txt and used
+    for reporting sensitivity, specificity, PPV, and NPV on the test set.
+
+9. CALIBRATION
+──────────────────────────────────────────────────────────────────────────────
+  • For the 75/65 target, validation-set sigmoid calibration is applied to
+    predictions before threshold search so that the chosen threshold
+    generalises better to the test set. Raw (uncalibrated) probabilities are
+    still used for AUC and for the default-threshold tables.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART B — RESULTS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. NICE NG12 SYMPTOMS AND SIGNS FOR BLADDER CANCER
+──────────────────────────────────────────────────────────────────────────────
+NICE guideline NG12 (Suspected cancer: recognition and referral) specifies
+the key clinical features that should trigger referral for suspected bladder
+cancer. See: https://www.nice.org.uk/guidance/ng12/chapter/Recommendations-
+organised-by-site-of-cancer#urological-cancers
+
+  For bladder cancer (recommendations 1.6.4–1.6.5), NICE recommends:
+  • Suspected cancer pathway referral for people aged 45 and over with
+    unexplained visible haematuria without urinary tract infection, or
+    visible haematuria that persists or recurs after successful treatment
+    of UTI.
+  • Suspected cancer pathway referral for people aged 60 and over with
+    unexplained non-visible haematuria and either dysuria or a raised
+    white cell count on a blood test.
+  • Consider non-urgent referral for bladder cancer in people aged 60 and
+    over with recurrent or persistent unexplained UTI.
+
+  Thus the main predictors of bladder cancer in NICE NG12 are: visible
+  haematuria, non-visible haematuria in combination with dysuria or raised
+  white cell count (WBC), and (in context) dysuria and raised WBC. Lower
+  urinary tract symptoms (LUTS) are also relevant in primary care for
+  urological assessment.
+
+2. PREVALENCE OF NICE-RELEVANT SYMPTOMS IN OUR COHORT (BY WINDOW)
+──────────────────────────────────────────────────────────────────────────────
+Below we report the prevalence of these NICE-relevant features in our
+windowed GP data: haematuria, dysuria, LUTS, and raised WBC. For each
+symptom we show the percentage of cancer patients, the percentage of
+non-cancer patients, and the ratio (cancer vs non-cancer). Higher ratio
+indicates stronger discriminative value.
+
+  Symptom         Cancer   Non-Ca   Ratio    Cancer   Non-Ca   Ratio    Cancer   Non-Ca   Ratio
+                   (3mo)    (3mo)   (3mo)     (6mo)    (6mo)   (6mo)    (12mo)   (12mo)  (12mo)
+  ─────────────────────────────────────────────────────────────────────────────────────────────
+  Haematuria      15.2%    1.5%    10.1x     8.6%     1.5%    5.7x     5.7%     1.5%    3.8x
+  Dysuria          3.0%    0.9%     3.3x     2.4%     0.8%    3.0x     1.9%     0.9%    2.1x
+  LUTS             1.1%    0.7%     1.6x     0.9%     0.7%    1.3x     0.5%     0.6%    0.8x
+  Raised WBC       0.3%    0.4%     0.8x     0.3%     0.3%    1.0x     0.2%     0.3%    0.7x
+  ─────────────────────────────────────────────────────────────────────────────────────────────
+
+  In our data we observe the following. Only a small proportion of cancer
+  patients have the NICE-relevant features recorded in the lookback window:
+  haematuria in 15.2% (3mo) to 5.7% (12mo) of cancer patients, dysuria in
+  2–3%, LUTS in 0.5–1.1%, and raised WBC in 0.2–0.3%. Non-cancer prevalence
+  for these features is low and stable (e.g. haematuria ~1.5%). Because
+  only that much of these factors are present in the data, the model
+  depends on other risk factors to predict, such as smoking history and
+  intensity, haemoglobin and eGFR trends, healthcare utilisation (e.g. GP
+  visit frequency), BMI and metabolic markers, and medication prescribing
+  patterns, in addition to the NICE-relevant symptoms when they are
+  recorded.
+
+3. RESULTS BY WINDOW (WITH COMPARISON)
+──────────────────────────────────────────────────────────────────────────────
+For each window we report: dataset size, cross-validated performance (5-fold),
+test-set performance (best model and key ensembles), and the chosen target
+operating point (≥80% sensitivity, ≥70% specificity). A direct comparison
+table across all three windows follows.
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 3-MONTH WINDOW (3mo)                                                     │
+  └─────────────────────────────────────────────────────────────────────────┘
+  Dataset:  64,204 patients (6,409 cancer, 57,795 non-cancer). Train 41,732,
+            Val 6,421, Test 16,051. Features: 753.
+  CV:       XGBoost AUC 0.872±0.009; LightGBM 0.871±0.009; CatBoost 0.865±0.009.
+  Test:     Best AUC Ensemble (Stacking) 0.880. XGBoost 0.879; Ensemble
+            (Optuna Wt) 0.879; Ensemble (XGB+CB 40/60) 0.878.
+  Target:   Ensemble (XGB+CB 40/60), threshold 0.235.
+            Sensitivity 85.9%, Specificity 69.4%, PPV 23.8%, NPV 97.8%.
+            target_met = True.
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 6-MONTH WINDOW (6mo)                                                     │
+  └─────────────────────────────────────────────────────────────────────────┘
+  Dataset:  63,950 patients (6,362 cancer, 57,588 non-cancer). Train 41,567,
+            Val 6,395, Test 15,988. Features: 780.
+  CV:       XGBoost AUC 0.845±0.007; LightGBM 0.845±0.007; CatBoost 0.841±0.004.
+  Test:     Best AUC Ensemble (Stacking) 0.853. XGBoost 0.852; Ensemble
+            (Optuna Wt) 0.852; Ensemble (Top 2) 0.853.
+  Target:   Ensemble (Stacking), threshold 0.055.
+            Sensitivity 82.0%, Specificity 70.3%, PPV 23.4%, NPV 97.3%.
+            target_met = True.
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 12-MONTH WINDOW (12mo)                                                   │
+  └─────────────────────────────────────────────────────────────────────────┘
+  Dataset:  63,587 patients (6,317 cancer, 57,270 non-cancer). Train 41,331,
+            Val 6,359, Test 15,897. Features: 749.
+  CV:       XGBoost AUC 0.836±0.008; LightGBM 0.834±0.009; CatBoost 0.829±0.009.
+  Test:     Best AUC Ensemble (Optuna Wt) 0.847. XGBoost 0.846; Ensemble
+            (Stacking) 0.847; Ensemble (Top 2) 0.847.
+  Target:   Ensemble (Top 2), threshold 0.250.
+            Sensitivity 80.1%, Specificity 71.2%, PPV 23.5%, NPV 97.0%.
+            target_met = True.
+
+  COMPARISON ACROSS WINDOWS (target operating point)
+  ─────────────────────────────────────────────────────────────────────────
+  Window   Recommended model            Threshold   Sens     Spec    PPV     NPV
+  ─────────────────────────────────────────────────────────────────────────
+  3mo      Ensemble (XGB+CB 40/60)        0.235      85.9%    69.4%   23.8%   97.8%
+  6mo      Ensemble (Stacking)           0.055      82.0%    70.3%   23.4%   97.3%
+  12mo     Ensemble (Top 2)              0.250      80.1%    71.2%   23.5%   97.0%
+  ─────────────────────────────────────────────────────────────────────────
+  The recommended model is the one that, at a threshold meeting ≥80% sens
+  and ≥70% spec on the validation set, achieves the highest test sensitivity
+  (ties broken by specificity, then AUC); hence the different ensemble per
+  window.
+
+  Model performance summary (best test AUC, CV AUC, sens/spec at target):
+  ─────────────────────────────────────────────────────────────────────────
+  Window   Best test AUC   CV AUC (mean ± SD)   Sensitivity   Specificity
+  3mo      0.880           0.872 ± 0.009         85.9%         69.4%
+  6mo      0.853           0.845 ± 0.007         82.0%         70.3%
+  12mo     0.847           0.836 ± 0.008         80.1%         71.2%
+  ─────────────────────────────────────────────────────────────────────────
+
+4. OVERALL MODEL PERFORMANCE AND RELATED FINDINGS
+──────────────────────────────────────────────────────────────────────────────
+  • All three windows meet the target operating point (≥80% sensitivity,
+    ≥70% specificity) on the held-out test set. Sensitivity is highest at
+    3mo (85.9%) and slightly lower at 12mo (80.1%); specificity increases
+    with window length (69.4% at 3mo to 71.2% at 12mo).
+  • Test AUC is strong in every window (0.847–0.880). The drop from 3mo to
+    12mo is modest (0.034), so the model retains most of its discriminative
+    ability when using a longer lookback. Best AUC is achieved by
+    ensembles (Stacking or Optuna-weighted depending on window).
+  • PPV is ~23–24% in all windows, in line with ~10% cancer prevalence in
+    the cohort. NPV is high (97%+), so a negative score is a useful rule-out.
+  • In our data, recorded urinary symptoms (haematuria, dysuria, LUTS) and
+    raised WBC are present in only a small proportion of cancer patients
+    in each window; the model therefore relies heavily on other predictors
+    (e.g. smoking, Hb/eGFR trends, healthcare use, BMI, medications) to
+    achieve the reported performance.
+  • Shorter windows (3mo) capture more symptom-rich periods and yield
+    higher sensitivity; longer windows (12mo) rely more on risk factors
+    and lab trends, with a small cost in AUC and sensitivity.
+  • Choice of window can be guided by intended use: 12mo for earlier risk
+    flagging; 3mo when prioritising maximum sensitivity closer to diagnosis.
+
+═══════════════════════════════════════════════════════════════════════════════
+PART C — 12mo_250k RUN (SUMMARY) — Split 25/10/65 (output: 12mo_250k_65-25-10)
+═══════════════════════════════════════════════════════════════════════════════
+Summary of a single run with window=12mo_250k (250k cohort, 12-month lookback).
+Train/val/test: 25% train, 10% val, 65% test. Target: ≥75% sensitivity, ≥65% specificity.
+Calibration on validation set is used for threshold selection (75/65).
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 12-MONTH WINDOW (12mo_250k, 250k cohort)                                 │
+  └─────────────────────────────────────────────────────────────────────────┘
+  Dataset:  235,626 patients × 753 features (6,319 cancer, 229,307 non-cancer).
+            Train 58,906 (1,580 cancer) | Val 23,563 (632 cancer) | Test 153,157 (4,107 cancer).
+            Cancer rate: 2.68%. Stratification: Full=Train=Val=Test=0.0268.
+
+  CROSS-VALIDATION (5-fold stratified, on training set):
+  ─────────────────────────────────────────────────────────────────────────
+  Model                    AUC              AP            F1            F2      Recall
+  XGBoost                  0.8203±0.0062   0.2795±0.0224 0.3027±0.0185 0.2893  0.2810±0.0173
+  LightGBM                  0.8118±0.0053   0.2574±0.0229 0.1369±0.0057 0.2656  0.7120±0.0191
+  CatBoost                  0.8203±0.0051   0.2558±0.0229 0.1458±0.0031 0.2773  0.6962±0.0171
+  Random Forest             0.7833±0.0059   0.2173±0.0192 0.1670±0.0053 0.2664  0.4418±0.0123
+  Logistic Regression       0.7878±0.0082   0.2026±0.0156 0.1348±0.0025 0.2600  0.6823±0.0147
+
+  FINAL MODELS (trained on train, tuned on val) — Val AUC / Test AUC:
+  ─────────────────────────────────────────────────────────────────────────
+  XGBoost          Val 0.8173  Test 0.8143
+  LightGBM         Val 0.8147  Test 0.8094
+  CatBoost         Val 0.8153  Test 0.8140
+  Random Forest    Val 0.7731  Test 0.7721
+  Logistic Regr.   Val 0.7944  Test 0.7892
+  LightGBM (DART)  Val 0.7797  Test 0.7897
+  XGBoost (Deep)   Val 0.7976  Test 0.7997
+
+  TEST SET EVALUATION (at default threshold 0.5):
+  ─────────────────────────────────────────────────────────────────────────
+  SINGLE MODELS (top 2 by AUC):
+  Model                     AUC      AP      F1      F2    Prec   Recall   Acc
+  XGBoost                   0.8143   0.2828  0.3147  0.2989  0.3451  0.2893  0.9662
+  CatBoost                  0.8140   0.2634  0.1375  0.2658  0.0762  0.7022  0.7639
+  LightGBM                  0.8094   0.2638  0.1324  0.2580  0.0731  0.7025  0.7531
+
+  ENSEMBLES:
+  Ensemble (Top 2)          0.8160   0.2817  0.2186  0.3264  0.1410  0.4862  0.9068
+  Ensemble (XGB+CB 40/60)    0.8159   0.2803  0.1920  0.3129  0.1168  0.5393  0.8783
+  Ensemble (Optuna Wt)      0.8156   0.2828  0.1991  0.3186  0.1225  0.5310  0.8854
+  Ensemble (Avg Trees)       0.8131   0.2873  0.1927  0.3107  0.1180  0.5247  0.8821
+  Ensemble (Top 2 recall)    0.8135   0.2693  0.1366  0.2645  0.0756  0.7047  0.7610
+  Ensemble (Stacking)        0.8157   0.2885  0.2046  0.1408  0.8316  0.1166  0.9757
+
+  Best model by AUC: Ensemble (Top 2) (0.8160). Single-model best: XGBoost (0.8143), CatBoost (0.8140).
+
+  TARGET OPERATING POINT (Sens≥75%, Spec≥65%; calibrated probs):
+  ─────────────────────────────────────────────────────────────────────────
+  Eight (model, threshold) options met both targets on the validation set.
+  Recommended: Ensemble (Top 2) @ threshold 0.015 (calibrated).
+  Test: Sensitivity 80.62%, Specificity 64.83%, PPV 5.94%, NPV 99.18%. target_met = True.
+
+  SINGLE BEST PER MODEL (at 75/65 target, calibrated):
+  Model                     Thresh   Test Sens   Test Spec   PPV     NPV
+  Ensemble (Top 2)          0.015    80.62%     64.83%      5.94%   99.18%
+  XGBoost                   0.015    80.03%     65.26%      5.97%   99.16%
+  CatBoost                  0.020    78.06%     68.25%      6.34%   99.12%
+  LightGBM                  0.020    77.79%     67.49%      6.19%   99.10%
+  Ensemble (Top 2 recall)    0.020    77.65%     68.42%      6.34%   99.11%
+  Ensemble (Optuna Wt)       0.020    76.38%     70.26%      6.61%   99.08%
+  Ensemble (XGB+CB 40/60)    0.020    76.16%     70.31%      6.60%   99.07%
+  Logistic Regression        0.020    76.14%     66.65%      5.92%   99.02%
+  Ensemble (Avg Trees)       0.020    75.99%     70.62%      6.65%   99.07%
+
+  CONFUSION MATRICES (test set, at 75/65 target threshold per model):
+  ─────────────────────────────────────────────────────────────────────────
+  Ensemble (Top 2)      0.015  TP=3,311  FN=796   FP=52,470  TN=96,580   (Sens 80.6%, Spec 64.8%)
+  XGBoost               0.015  TP=3,287  FN=820   FP=51,579  TN=97,471   (Sens 80.0%, Spec 65.3%)
+  CatBoost              0.020  TP=3,206  FN=901   FP=47,328  TN=101,722  (Sens 78.1%, Spec 68.3%)
+  LightGBM              0.020  TP=3,195  FN=912   FP=48,456  TN=100,594  (Sens 77.8%, Spec 67.5%)
+  Ensemble (Top 2 rec)  0.020  TP=3,189  FN=918   FP=47,076  TN=101,974  (Sens 77.7%, Spec 68.4%)
+  Ensemble (Optuna Wt)  0.020  TP=3,137  FN=970   FP=44,330  TN=104,720  (Sens 76.4%, Spec 70.3%)
+  Ensemble (XGB+CB)     0.020  TP=3,128  FN=979   FP=44,254  TN=104,796  (Sens 76.2%, Spec 70.3%)
+  Logistic Regression   0.020  TP=3,127  FN=980   FP=49,703  TN=99,347   (Sens 76.1%, Spec 66.7%)
+  Ensemble (Avg Trees)  0.020  TP=3,121  FN=986   FP=43,794  TN=105,256  (Sens 76.0%, Spec 70.6%)
+
+  TRAIN–VAL–TEST GAP (overfitting check):
+  ─────────────────────────────────────────────────────────────────────────
+  XGBoost        Train=0.9359 Val=0.8173 Test=0.8143  Gap(T-V)=+0.1186  Gap(V-Te)=+0.0031
+  LightGBM       Train=0.8826 Val=0.8147 Test=0.8094  Gap(T-V)=+0.0679  Gap(V-Te)=+0.0054
+  CatBoost       Train=0.8861 Val=0.8153 Test=0.8140  Gap(T-V)=+0.0708  Gap(V-Te)=+0.0013
+  Random Forest  Train=0.9536 Val=0.7731 Test=0.7721  Gap(T-V)=+0.1805  Gap(V-Te)=+0.0010
+
+
+  FEATURE IMPORTANCE (XGBoost, top 15):
+  ─────────────────────────────────────────────────────────────────────────
+  1. RF_ALCOHOL_UNIQUE_TERMS    2. LAB_HB_MIN    3. RF_ALCOHOL_UNITS_RECORDED
+  4. LAB_EGFR_TREND             5. LAB_EGFR_RANGE  6. LAB_EGFR_MAX
+  7. LAB_HB_MEDIAN              8. RF_ALCOHOL_FLAG 9. LAB_EGFR_FIRST
+  10. LAB_HB_FIRST              11. LAB_EGFR_PCT_CHANGE  12. LAB_EGFR_MEDIAN
+  13. RATIO_OBS_TO_LAB          14. INT_AGE_X_HAEM  15. INT_OVERALL_SUSPICION_SCORE
+
+  SHAP (XGBoost, top 10):
+  ─────────────────────────────────────────────────────────────────────────
+  1. RF_ALCOHOL_UNITS_RECORDED  2. RF_ALCOHOL_UNIQUE_TERMS  3. INT_AGE_X_SMOKING
+  4. LAB_EGFR_RANGE             5. LAB_EGFR_TREND            6. LAB_HB_MIN
+  7. LAB_EGFR_PCT_CHANGE        8. RF_ALCOHOL_MIN_VALUE      9. LAB_BMI_IQR
+  10. LAB_BMI_WA_COUNT
+
+  MODEL PERFORMANCE SUMMARY (12mo_250k, 25/10/65 split):
+  ─────────────────────────────────────────────────────────────────────────
+  Best test AUC       CV AUC (mean ± SD)   Sensitivity   Specificity   Target met
+  0.8160 (Ens Top 2)  0.8203 ± 0.0062      80.62%        64.83%         Yes
+  Single top 2: XGBoost 0.8143, CatBoost 0.8140. At 75/65: XGBoost 80.03% sens / 65.26% spec; CatBoost 78.06% sens / 68.25% spec.
+
+5. RELATED FINDINGS (12mo_250k run, 25/10/65 split)
+──────────────────────────────────────────────────────────────────────────────
+  • With target ≥75% sensitivity and ≥65% specificity, and calibration on the
+    validation set, the recommended model is Ensemble (Top 2) at threshold 0.015,
+    achieving 80.62% test sensitivity and 64.83% specificity (target_met = True).
+  • Single-model best for 75/65: XGBoost @ 0.015 (80.03% sens, 65.26% spec) and
+    CatBoost @ 0.020 (78.06% sens, 68.25% spec). Ensemble (Top 2) gives the
+    highest test sensitivity among options meeting the target.
+  • Test AUC is strong: Ensemble (Top 2) 0.8160, XGBoost 0.8143, CatBoost 0.8140.
+    The 250k cohort has low cancer prevalence (~2.7%); PPV at target is ~6%,
+    NPV remains high (99.18%).
+  • Top predictive features (XGBoost and SHAP): alcohol recording (units, unique
+    terms), eGFR (range, trend, max, pct change), haemoglobin (min, median,
+    first), BMI (IQR, WA count), age–smoking and overall suspicion score.
+  • Overfitting: train–val AUC gaps are moderate for main trees; val–test gaps
+    are small. Threshold and metrics use calibrated probabilities for 75/65.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+

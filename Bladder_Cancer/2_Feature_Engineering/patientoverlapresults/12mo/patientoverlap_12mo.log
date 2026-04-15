@@ -1,0 +1,45 @@
+============================================================
+CANCER PATIENTS (LABEL=1)
+============================================================
+In clinical:        6317
+In meds:            2502
+In BOTH:            2485
+Only in clinical:   3832
+Only in meds:       17
+Meds ⊂ Clinical?    False
+
+============================================================
+NON-CANCER PATIENTS (LABEL=0)
+============================================================
+In clinical:        57270
+In meds:            17934
+In BOTH:            17830
+Only in clinical:   39440
+Only in meds:       104
+Meds ⊂ Clinical?    False
+
+============================================================
+ALL PATIENTS (BOTH LABELS)
+============================================================
+In clinical:        63587
+In meds:            20436
+In BOTH:            20315
+Only in clinical:   43272
+Only in meds:       121
+Meds ⊂ Clinical?    False
+
+============================================================
+WHAT TO LOOK FOR
+============================================================
+
+✅ GOOD if:
+  - "In BOTH" is high for meds patients
+  - "Only in clinical" is large (most patients don't have these meds)
+  - "Only in meds" is small (< 100)
+  - Meds ⊂ Clinical ideally True, but False is OK if "only in meds" is small
+
+⚠️ INVESTIGATE if:
+  - "Only in meds" is large (> 500)
+  - That would mean the sampling selected different patients
+
+Summary CSV: patientoverlap_summary_12mo.csv

@@ -1,0 +1,25 @@
+BLADDER CANCER RISK ASSESSMENT — CLINICAL DECISION RULES
+Model: XGBoost (AUC 0.879)
+Data: 64,204 patients, 12-36 months before diagnosis
+
+TIER 1 — URGENT (score ≥ 0.35): PPV ~53%
+TIER 2 — ENHANCED (score 0.185-0.35): PPV ~20%
+TIER 3 — ROUTINE (score < 0.185): NPV 97.2%
+
+SIMPLE CLINICAL SCORING SYSTEM:
+  +5 points: Haematuria recorded
+  +4 points: Hb ever < 80 (severe anaemia)
+  +3 points: Ever smoker
+  +3 points: Hb ever < 100
+  +3 points: Severe anaemia diagnosis
+  +3 points: Blood in urine test
+  +3 points: Bleeding syndrome score ≥ 2
+  +2 points: Recurrent UTIs
+  +2 points: Heavy smoker (bonus)
+  +2 points: Weight loss recorded
+  +2 points: Age 70-79
+  +2 points: Age 80+
+  +1 points: Fatigue recorded
+  +1 points: Age 60-69
+
+Simple score AUC: 0.6741

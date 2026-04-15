@@ -1,0 +1,211 @@
+============================================================
+SANITY CHECKS — Feature Engineering Inputs
+============================================================
+Input folder: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/data/12mo_250k
+Results folder: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/sanity_check_results/12mo_250k
+Clinical: FE_bladder_clinical_windowed_12m_250k.csv
+Meds:    FE_bladder_med_windowed_12m_250k.csv
+
+============================================================
+FILE SIZES
+============================================================
+Clinical: 14,368,514 rows, 18 columns
+Meds:     216,711 rows, 19 columns
+
+============================================================
+CHECK 1: COLUMNS
+============================================================
+Clinical columns: ['PATIENT_GUID', 'SEX', 'CANCER_ID', 'DATE_OF_DIAGNOSIS', 'INDEX_DATE', 'AGE_AT_DIAGNOSIS', 'AGE_AT_INDEX', 'EVENT_DATE', 'EVENT_AGE', 'MONTHS_BEFORE_INDEX', 'TIME_WINDOW', 'EVENT_TYPE', 'CATEGORY', 'SNOMED_ID', 'TERM', 'ASSOCIATED_TEXT', 'VALUE', 'LABEL']
+Meds columns:     ['PATIENT_GUID', 'SEX', 'CANCER_ID', 'DATE_OF_DIAGNOSIS', 'INDEX_DATE', 'AGE_AT_DIAGNOSIS', 'AGE_AT_INDEX', 'EVENT_DATE', 'EVENT_AGE', 'MONTHS_BEFORE_INDEX', 'TIME_WINDOW', 'EVENT_TYPE', 'CATEGORY', 'SNOMED_ID', 'TERM', 'ASSOCIATED_TEXT', 'VALUE', 'DURATION_IN_DAYS', 'LABEL']
+
+Missing clinical cols: NONE ✅
+Missing meds cols:     ['DMD_CODE']
+
+============================================================
+CHECK 2: PATIENT COUNTS PER LABEL
+============================================================
+
+Clinical:
+       unique_patients  total_rows
+LABEL                             
+0               229307    14007874
+1                 6319      360640
+
+Meds:
+       unique_patients  total_rows
+LABEL                             
+0                72448      208769
+1                 2481        7942
+
+============================================================
+CHECK 3: CANCER TO NON-CANCER RATIO
+============================================================
+Clinical ratio: 1:36.3  (cancer=6319, non-cancer=229307)
+Meds ratio:     1:29.2  (cancer=2481, non-cancer=72448)
+
+============================================================
+CHECK 4: PATIENT OVERLAP BETWEEN QUERIES
+============================================================
+Non-cancer: Meds patients ⊂ Clinical patients? False
+Cancer:     Meds patients ⊂ Clinical patients? False
+
+Non-cancer patients ONLY in meds (not clinical): 419
+Cancer patients ONLY in meds (not clinical):     16
+
+============================================================
+CHECK 5: EVENT TYPES BREAKDOWN
+============================================================
+
+Clinical event types:
+EVENT_TYPE  COMORBIDITY  ...  RISK FACTOR
+LABEL                    ...             
+0               2820596  ...      4008312
+1                 86600  ...       102885
+
+[2 rows x 4 columns]
+
+Meds event types:
+EVENT_TYPE  MEDICATION
+LABEL                 
+0               208769
+1                 7942
+
+============================================================
+CHECK 6: TIME WINDOWS
+============================================================
+
+Clinical time windows:
+TIME_WINDOW        A  ...       RF
+LABEL                 ...         
+0            3570507  ...  4008312
+1              84067  ...   102885
+
+[2 rows x 4 columns]
+
+Meds time windows:
+TIME_WINDOW       A       B
+LABEL                      
+0            105223  103546
+1              3848    4094
+
+============================================================
+CHECK 7: MONTHS_BEFORE_INDEX RANGE
+============================================================
+
+Clinical:
+  Label 0: min=12, max=913, mean=79.6
+  Label 1: min=12, max=904, mean=76.1
+
+Meds:
+  Label 0: min=12, max=36, mean=23.7
+  Label 1: min=12, max=36, mean=23.4
+
+============================================================
+CHECK 8: SEX DISTRIBUTION (patients)
+============================================================
+
+Clinical:
+SEX        F   I       M
+LABEL                   
+0      60479  24  168804
+1       1641   1    4677
+
+Meds:
+SEX        F  I      M
+LABEL                 
+0      22838  4  49606
+1        763  0   1718
+
+============================================================
+CHECK 9: AGE AT INDEX DISTRIBUTION
+============================================================
+
+Clinical:
+  Label 0: min=19, max=99, mean=68.9, median=70.0
+  Label 1: min=9, max=99, mean=69.8, median=71.0
+
+Meds:
+  Label 0: min=19, max=99, mean=72.3, median=74.0
+  Label 1: min=21, max=99, mean=71.9, median=73.0
+
+============================================================
+CHECK 10: TOP 10 CATEGORIES BY ROWS
+============================================================
+
+Clinical — Cancer (label=1):
+CATEGORY
+HAEMATOLOGY       67668
+HYPERTENSION      41872
+ALCOHOL           40354
+EX SMOKER         38691
+DIABETES          26750
+CURRENT SMOKER    22009
+VITALS            21452
+RENAL             19254
+METABOLIC         14695
+LIVER             13274
+Name: count, dtype: int64
+
+Clinical — Non-cancer (label=0):
+CATEGORY
+HAEMATOLOGY       2790245
+ALCOHOL           1950193
+EX SMOKER         1253221
+HYPERTENSION      1222720
+VITALS            1123098
+DIABETES           998122
+RENAL              923314
+CURRENT SMOKER     726404
+METABOLIC          584940
+LIVER              537960
+Name: count, dtype: int64
+
+Meds — Cancer (label=1):
+CATEGORY
+UTI ANTIBIOTICS            3040
+OPIOID ANALGESICS          1380
+ANTICOAGULANTS              808
+IRON SUPPLEMENTS            625
+LAXATIVES                   587
+LUTS MEDICATIONS            510
+GI ANTISPASMODICS           200
+URINARY RETENTION DRUGS     136
+BLADDER ANTISPASMODICS      127
+SMOKING CESSATION MEDS      117
+Name: count, dtype: int64
+
+Meds — Non-cancer (label=0):
+CATEGORY
+UTI ANTIBIOTICS                   85142
+OPIOID ANALGESICS                 39552
+IRON SUPPLEMENTS                  22669
+LAXATIVES                         18417
+ANTICOAGULANTS                     9243
+LUTS MEDICATIONS                   8916
+GI ANTISPASMODICS                  3764
+CATHETER MAINTENANCE               3219
+CATHETER SUPPLIES - LEG BAGS       3074
+CATHETER SUPPLIES - NIGHT BAGS     2727
+Name: count, dtype: int64
+
+============================================================
+SUMMARY — WHAT TO LOOK FOR
+============================================================
+
+✅ GOOD if:
+  - Expected columns present (no missing)
+  - Non-cancer ratio in reasonable range (e.g. ~1:10)
+  - Meds patients are SUBSET of clinical patients
+  - MONTHS_BEFORE_INDEX in expected range (e.g. 0–60)
+  - Age/sex distribution similar between cancer and non-cancer
+  - No excessive NULL time_windows
+
+⚠️ INVESTIGATE if:
+  - Missing required columns
+  - Ratio much higher or lower than expected
+  - Meds patients NOT subset of clinical
+  - Large age/sex mismatch between cohorts
+  - MONTHS_BEFORE_INDEX outside expected range
+
+
+Summary CSV: sanity_check_summary_12mo_250k.csv

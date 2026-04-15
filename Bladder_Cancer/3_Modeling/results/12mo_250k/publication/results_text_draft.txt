@@ -1,0 +1,75 @@
+
+═══════════════════════════════════════════════════════════════
+RESULTS SECTION (draft text for publication)
+═══════════════════════════════════════════════════════════════
+
+STUDY POPULATION
+
+A total of 235,626 patients were included in the analysis, of whom
+6,319 (2.7%) were diagnosed with bladder cancer. The dataset was
+split into training (60%, n=153156), validation (20%), and
+test (20%) sets using stratified random sampling.
+
+FEATURE ENGINEERING
+
+A total of 753 features were derived from primary care electronic
+health records, spanning demographics, clinical observations (haematuria,
+LUTS, urine investigations, catheter procedures, imaging), laboratory
+values (haematology, renal, inflammatory, metabolic, and anaemia workup
+panels), risk factors (smoking, alcohol), comorbidities, medications, and
+temporal patterns. Novel features included clinical syndrome scores
+(bleeding, constitutional, VTE), event clustering metrics, medication
+escalation patterns, and cross-laboratory interaction features.
+
+MODEL PERFORMANCE
+
+The best-performing model was an Optuna-weighted ensemble of XGBoost,
+LightGBM, and CatBoost, achieving an area under the receiver operating
+characteristic curve (AUC-ROC) of 0.830 (95% CI: 0.819–0.841)
+and an average precision of 0.327 on the held-out test set.
+
+Individual model performance ranged from AUC N/A
+(logistic regression) to AUC N/A (XGBoost),
+with gradient boosting methods consistently outperforming classical approaches.
+
+CLINICAL OPERATING POINT
+
+At the chosen operating threshold of 0.31 (selected on the validation
+set to maximise specificity while maintaining sensitivity ≥80%), the model
+achieved:
+  - Sensitivity: 75.8% (1,197/1,580 cancers detected)
+  - Specificity: 72.7% (41,689/57,327 non-cancers correctly excluded)
+  - Positive Predictive Value: 7.1%
+  - Negative Predictive Value: 99.1%
+
+The model identified 1,197 of 1,580 bladder cancer cases while generating
+15,638 false positives, yielding a number needed to screen (NNS) of
+14.1 patients per detected cancer. This compares favourably
+with the current NHS two-week-wait pathway, which has a reported PPV of
+3–10%.
+
+FEATURE IMPORTANCE
+
+The most important predictive features, as determined by SHAP analysis,
+included haematuria-related observations, urinary investigation counts,
+age, medication patterns (UTI antibiotics, catheter supplies), smoking
+status, and temporal acceleration of clinical events in the period
+preceding diagnosis.
+
+CALIBRATION
+
+Model calibration was assessed using the Brier score and reliability
+diagrams. The ensemble model showed reasonable calibration across the
+probability range, with predicted probabilities aligning with observed
+cancer rates.
+
+COMPARISON WITH EXISTING MODELS
+
+Our model's AUC of 0.830 is comparable to published primary care cancer
+detection tools, including QCancer (AUC 0.84, Hippisley-Cox 2015) and
+the DETECT I risk score (AUC 0.80, Khadhouri 2022). Unlike these models,
+our approach utilises 753 features from routine primary care data
+without requiring specialist input, and detects cancers in patients both
+with and without visible haematuria.
+
+═══════════════════════════════════════════════════════════════

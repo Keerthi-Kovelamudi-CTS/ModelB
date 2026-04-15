@@ -1,0 +1,37 @@
+2026-02-27 02:11:25 | INFO     | ================================================================================
+2026-02-27 02:11:25 | INFO     | PRODUCTION — BLADDER CANCER — Phase 1.3: Feature Ranking FINAL
+2026-02-27 02:11:25 | INFO     | Timestamp: 2026-02-27 02:11:25
+2026-02-27 02:11:25 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-02-27 02:11:25 | INFO     | ================================================================================
+2026-02-27 02:11:25 | INFO     | 
+📂 Loading input files...
+2026-02-27 02:11:25 | INFO     |   ✅ pos_obs: 4,829 rows validated
+2026-02-27 02:11:25 | INFO     |   ✅ neg_obs: 20,317 rows validated
+2026-02-27 02:11:25 | INFO     |   ✅ pos_meds: 827 rows validated
+2026-02-27 02:11:25 | INFO     |   ✅ neg_meds: 5,482 rows validated
+2026-02-27 02:11:25 | INFO     |   ✅ Patient matrix found: /Users/keerthikovelamudi/Documents/Model B/Bladder_cursor/1_Top_Snomed/Scores/../Data/PROD_bladder_patient_binary_matrix.csv
+2026-02-27 02:11:31 | INFO     |      284,307 patients, 43,406 features
+2026-02-27 02:11:31 | INFO     | 
+================================================================================
+2026-02-27 02:11:31 | INFO     | PART 1: OBSERVATIONS
+2026-02-27 02:11:31 | INFO     | ================================================================================
+2026-02-27 02:11:31 | INFO     | 
+============================================================
+2026-02-27 02:11:31 | INFO     | STATISTICAL RANKING: observations
+2026-02-27 02:11:31 | INFO     | ============================================================
+2026-02-27 02:11:31 | INFO     |   Positive: 6,480 patients, 4,829 terms
+2026-02-27 02:11:31 | INFO     |   Negative: 277,829 patients, 20,317 terms
+2026-02-27 02:11:33 | INFO     |   After filter (>=5): 4,829 terms
+2026-02-27 02:11:33 | INFO     |   OR > 2.0: 1905
+2026-02-27 02:11:33 | INFO     |   OR > 5.0: 506
+2026-02-27 02:11:33 | INFO     |   Significant (p<0.05): 2375
+2026-02-27 02:11:33 | INFO     |   Bonferroni sig (p<0.05): 1005
+2026-02-27 02:11:33 | INFO     | 
+============================================================
+2026-02-27 02:11:33 | INFO     | ML RANKING (Real Patient Data): observations
+2026-02-27 02:11:33 | INFO     | ============================================================
+2026-02-27 02:11:34 | INFO     |   Cohort: 5,197 pos + 25,985 neg (5:1)
+2026-02-27 02:11:34 | INFO     |   Pivoting to wide format...
+2026-02-27 02:11:34 | INFO     |   Matrix: 31,182 × 500
+2026-02-27 02:11:34 | INFO     |   Balance: 5,197 pos (16.7%), 25,985 neg (83.3%)
+2026-02-27 02:11:34 | INFO     |   Training L1 Logistic Regression...

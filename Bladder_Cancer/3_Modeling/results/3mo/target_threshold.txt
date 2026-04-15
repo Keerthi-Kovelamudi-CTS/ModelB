@@ -1,0 +1,7 @@
+model=Ensemble (XGB+CB 40/60)
+threshold=0.2350
+sensitivity=0.8589
+specificity=0.6942
+ppv=0.2375
+npv=0.9780
+target_met=True

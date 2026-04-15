@@ -1,0 +1,27 @@
+Diagnostics (window=3mo)
+Input: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/cleanupfeatures/3mo/bladder_feature_matrix_3mo_cleaned.csv
+Patients: 64,204  Cancer: 6,409  Features: 753
+Train AUC: 0.9420  Val AUC: 0.8796  Test AUC: 0.8676
+Gap (Train-Test): +0.0744
+Constant features: 0  >99%% zero: 16  >95%% NaN: 0
+
+Group solo AUC:
+  Lab Values: 0.7724
+  Risk Factors: 0.7705
+  Temporal: 0.7143
+  Ratios: 0.6707
+  Interactions: 0.6676
+  Consultation: 0.6577
+  Recency: 0.6529
+  Syndromes: 0.6437
+  Observations: 0.6247
+  Diversity: 0.6194
+  Medications: 0.6192
+  Pathways: 0.6131
+  Comorbidities: 0.5859
+  Urine: 0.5824
+  Haematuria: 0.5650
+  New Obs: 0.5362
+  Cross-lab: 0.5334
+  Sequences: 0.5283
+  Demographics: 0.5071

@@ -1,0 +1,260 @@
+======================================================================
+LOADING DATA
+======================================================================
+Clinical: 3,970,400 rows
+Meds:     62,153 rows
+Dropped 0 meds-only rows
+
+======================================================================
+BUILDING MASTER PATIENT TABLE
+======================================================================
+Master: 63,950 patients
+  Cancer:     6,362
+  Non-cancer: 57,588
+Observations:  114,133
+Lab values:    1,907,584
+Risk factors:  1,133,247
+Comorbidities: 815,436
+
+======================================================================
+LEVEL 1: DEMOGRAPHICS
+======================================================================
+  Demographics: 9 features
+  Patients: 63,950  |  Records: — (demographics)
+
+======================================================================
+LEVEL 2: OBSERVATION FEATURES
+======================================================================
+  Observation features: 374 features
+  Patients: 22,596  |  Records: 114,133
+
+======================================================================
+LEVEL 3: HAEMATURIA DEEP FEATURES
+======================================================================
+  Haematuria features: 19 features
+  Patients: 1,413  |  Records: 3,093
+
+======================================================================
+LEVEL 4: URINE FEATURES
+======================================================================
+  Urine features: 28 features
+  Patients: 10,433  |  Records: 59,636
+
+======================================================================
+LEVEL 5: LUTS FEATURES
+======================================================================
+  LUTS features: 14 features
+  Patients: 458  |  Records: 781
+
+======================================================================
+LEVEL 6: CATHETER / IMAGING / UROLOGICAL / GYNAECOLOGICAL
+======================================================================
+  Other obs features: 40 features
+  Patients: 1,181  |  Records: 2,353
+
+======================================================================
+LEVEL 7: RISK FACTORS
+======================================================================
+  Risk factor features: 45 features
+  Patients: 61,713  |  Records: 1,133,247
+
+======================================================================
+LEVEL 8: COMORBIDITIES
+======================================================================
+  Comorbidity features: 63 features
+  Patients: 41,055  |  Records: 815,436
+
+======================================================================
+LEVEL 9: LAB VALUES
+======================================================================
+  Lab features: 471 features
+  Patients: 52,430  |  Records: 1,907,584
+
+======================================================================
+LEVEL 10: MEDICATION FEATURES
+======================================================================
+  Medication features: 258 features
+  Patients: 20,964  |  Records: 62,153
+
+======================================================================
+LEVEL 11: TEMPORAL PATTERNS
+======================================================================
+  Temporal features: 48 features
+  Patients: 53,610  |  Records: 2,021,717
+
+======================================================================
+LEVEL 12: EVENT CLUSTERING
+======================================================================
+  Clustering features: 4 features
+  Patients: 53,610  |  Records: 2,021,717
+
+======================================================================
+LEVEL 13: NEW OBS CATEGORIES (v4)
+======================================================================
+  New obs features: 103 features
+  Patients: 15,864  |  Records: 48,270
+
+======================================================================
+LEVEL 14: TEMPORAL SEQUENCES (v4 NEW)
+======================================================================
+  Sequence features: 16 features
+  Patients: 22,596  |  Records: 114,133
+
+======================================================================
+LEVEL 15: SYNDROME SCORES (v4 NEW)
+======================================================================
+  Syndrome features: 23 features
+  Patients: 63,950  |  Records: — (derived)
+
+======================================================================
+LEVEL 16: CLINICAL PATHWAYS
+======================================================================
+  Pathway features: 7 features
+  Patients: 63,950  |  Records: — (derived)
+
+======================================================================
+MERGING ALL FEATURES
+======================================================================
+  Joining demo: 9 cols
+  Joining obs: 374 cols
+  Joining haem: 19 cols
+  Joining urine: 28 cols
+  Joining luts: 14 cols
+  Joining other_obs: 40 cols
+  Joining rf: 45 cols
+  Joining comorb: 63 cols
+  Joining lab: 471 cols
+  Joining med: 258 cols
+  Joining temp: 48 cols
+  Joining cluster: 4 cols
+  Joining new_obs: 103 cols
+  Joining seq: 16 cols
+  Joining syn: 23 cols
+  Joining path: 7 cols
+
+Merged shape: (63950, 1525)
+
+======================================================================
+LEVEL 17: INTERACTION FEATURES
+======================================================================
+  Interaction features: 39 features
+  Patients: 63,950  |  Records: — (from merged matrix)
+
+======================================================================
+LEVEL 18: RATIO FEATURES
+======================================================================
+  Ratio features: 7 features
+  Patients: 63,950  |  Records: — (from merged matrix)
+
+======================================================================
+EXTRA 1: Recency features...
+======================================================================
+  Recency features: 47
+
+EXTRA 2: First occurrence + span features...
+  First/Span features: 39
+
+EXTRA 3: Cross-lab interaction features...
+  Cross-lab features: 12
+
+EXTRA 4: Symptom diversity features...
+  Diversity features: 13
+
+EXTRA 5: Lab-to-event timing features...
+  Lab-timing features: 2
+
+EXTRA 6: Consultation pattern features...
+  Consultation features: 9
+
+  TOTAL EXTRA FEATURES: 122
+
+======================================================================
+CLEANING UP
+======================================================================
+
+======================================================================
+FINAL FEATURE MATRIX SUMMARY
+======================================================================
+Patients:             63,950
+Total features:       1690
+Cancer (label=1):     6,362
+Non-cancer (label=0): 57,588
+Ratio:                1:9.1
+
+Feature groups:
+  Demographics                  :    9 features
+  Observations                  :  374 features
+  Haematuria                    :   19 features
+  Urine                         :   28 features
+  LUTS                          :   14 features
+  Cath/Img/Uro/Gynae/Oth        :   40 features
+  Risk Factors                  :   45 features
+  Comorbidities                 :   63 features
+  Lab Values                    :  471 features
+  Medications                   :  258 features
+  Temporal                      :   48 features
+  Clustering                    :    4 features
+  New Obs (v4)                  :  103 features
+  Sequences (v4)                :   16 features
+  Syndromes (v4)                :   23 features
+  Pathways                      :    7 features
+  Interactions                  :   39 features
+  Ratios                        :    7 features
+  Recency (extra)               :   47 features
+  First/Span (extra)            :   39 features
+  Cross-lab XLAB (extra)        :   12 features
+  Diversity (extra)             :   13 features
+  Lab-timing (extra)            :    2 features
+  Consultation (extra)          :    9 features
+
+Top 15 features with most NaN (%):
+MED_MEAN_DURATION                       100.0
+LAB_HBA1C_W4_MEAN                       100.0
+SEQ_LUTS_TO_IMAGING_DAYS                 99.9
+SEQ_HAEM_TO_IMAGING_DAYS                 99.9
+NOBS_SUPRAPUBIC_PAIN_LAST_MONTHS         99.9
+NOBS_SUPRAPUBIC_PAIN_FIRST_MONTHS        99.9
+RECENCY_MED_HAEMOSTATIC_MONTHS           99.8
+NOBS_APPETITE_LOSS_FIRST_MONTHS          99.8
+NOBS_APPETITE_LOSS_LAST_MONTHS           99.8
+NOBS_NIGHT_SWEATS_LAST_MONTHS            99.8
+NOBS_NIGHT_SWEATS_FIRST_MONTHS           99.8
+LAB_HBA1C_MAX_STEP                       99.7
+LAB_HBA1C_IQR                            99.7
+LAB_HBA1C_CV                             99.7
+RECENCY_UROLOGICAL_CONDITIONS_MONTHS     99.7
+dtype: float64
+
+Top 15 most-zero features (%):
+MED_LAXATIVES_TOTAL_DURATION                        100.0
+MED_OPIOID_ANALGESICS_TOTAL_DURATION                100.0
+MED_TOTAL_DURATION                                  100.0
+MED_CATHETER_SUPPLIES__VALVES_TOTAL_DURATION        100.0
+MED_IRON_SUPPLEMENTS_TOTAL_DURATION                 100.0
+MED_HAEMOSTATIC_TOTAL_DURATION                      100.0
+MED_UTI_ANTIBIOTICS_TOTAL_DURATION                  100.0
+MED_ANTICOAGULANTS_TOTAL_DURATION                   100.0
+MED_CATHETER_SUPPLIES__CATHETERS_TOTAL_DURATION     100.0
+MED_CATHETER_SUPPLIES__NIGHT_BAGS_TOTAL_DURATION    100.0
+MED_NORETHISTERONE_TOTAL_DURATION                   100.0
+MED_COPD_RESPIRATORY_TOTAL_DURATION                 100.0
+MED_GI_ANTISPASMODICS_TOTAL_DURATION                100.0
+MED_BLADDER_ANTISPASMODICS_TOTAL_DURATION           100.0
+MED_SMOKING_CESSATION_MEDS_TOTAL_DURATION           100.0
+dtype: float64
+
+======================================================================
+SAVING
+======================================================================
+Feature matrix saved to: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/FE_Results/6mo/bladder_feature_matrix_6mo.csv
+  Shape: (63950, 1691)
+Meta saved to: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/FE_Results/6mo/bladder_feature_meta_6mo.csv
+Feature list saved to: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/FE_Results/6mo/bladder_feature_list_6mo.txt
+Log saved to: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/2_Feature_Engineering/FE_Results/6mo/feature_engineering_20260303_051824.log
+
+======================================================================
+FEATURE ENGINEERING v4 FINAL COMPLETE ✅
+  63,950 patients × 1690 features
+  YOUR ORIGINAL v2: Levels 1-12 (all preserved)
+  NEW v4 ADDITIONS: Levels 13-18
+======================================================================
