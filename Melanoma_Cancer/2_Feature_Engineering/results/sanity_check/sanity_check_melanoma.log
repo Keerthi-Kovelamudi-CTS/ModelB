@@ -1,0 +1,595 @@
+Sanity check + Patient overlap check — Melanoma pipeline
+Log: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/results/sanity_check/sanity_check_melanoma.log
+
+✅ 3mo clinical: 151,653 rows × 18 cols
+✅ 3mo med: 24,369 rows × 18 cols
+✅ 6mo clinical: 122,153 rows × 18 cols
+✅ 6mo med: 21,757 rows × 18 cols
+✅ 12mo clinical: 111,721 rows × 18 cols
+✅ 12mo med: 21,114 rows × 18 cols
+
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    133934
+1     17719
+
+Medication:
+LABEL
+0    21883
+1     2486
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    39070
+1     3913
+  Ratio (neg:pos): 10.0:1
+
+Medication:
+LABEL
+0    12239
+1     1291
+  Ratio (neg:pos): 9.5:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1981-01-01 00:00:00 → 2025-11-22 00:00:00
+Clinical index dates: 1982-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1995-04-24 00:00:00 → 2025-11-23 00:00:00
+Med index dates:      1997-06-13 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    151653
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+DERMATOLOGY_PATHWAY      51711
+SKIN_LESION              21689
+DERMATOSCOPY             15293
+SKIN_TREATMENT           12595
+PRIOR_SKIN_PROCEDURES     7635
+MOLE_NAEVUS               7059
+SUN_DAMAGE                6225
+SKIN_CONDITIONS           5270
+HISTOLOGY                 4211
+SUTURE_POSTOP             4190
+SKIN_SYMPTOMS             3461
+PLASTIC_SURGERY           3403
+CRYOTHERAPY               1868
+OTHER_SKIN_LESIONS        1628
+SKIN_INFECTION            1162
+PRIOR_SKIN_CANCER         1058
+CLINICAL_SIGNS             967
+FAMILY_HISTORY             655
+RISK_FACTOR                612
+VIROLOGY_SKIN              315
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+SKIN_ANTIBIOTICS_ORAL                8968
+TOPICAL_ANTIBIOTICS                  2963
+ACTINIC_TREATMENT                    2849
+TOPICAL_STEROIDS                     2685
+WOUND_DRESSINGS                      1522
+LOCAL_ANAESTHETICS                   1278
+ANTIFUNGAL_SYSTEMIC                  1020
+IMMUNOSUPPRESSANT_CORTICOSTEROIDS     961
+ANTIVIRAL_SYSTEMIC                    660
+SUTURES                               378
+IMMUNOSUPPRESSANT_SYSTEMIC            301
+TOPICAL_SKIN_OTHER                    252
+ANTIVIRAL_SKIN                        194
+WOUND_CARE                            149
+ANTIBIOTIC_IMMUNOCOMPROMISE           102
+TOPICAL_STEROID_SCALP                  87
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 133,934 (88.3%)
+  AGE_AT_DIAGNOSIS: 133,934 (88.3%)
+  ASSOCIATED_TEXT: 89,277 (58.9%)
+  VALUE: 150,921 (99.5%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 21,883 (89.8%)
+  AGE_AT_DIAGNOSIS: 21,883 (89.8%)
+  ASSOCIATED_TEXT: 24,369 (100.0%)
+  VALUE: 24,369 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            66133  67801
+1             6515  11204
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A     B
+LABEL                   
+0            12630  9253
+1             1239  1247
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    151653.000000
+mean         14.195130
+std           7.035259
+min           3.000000
+25%           8.000000
+50%          14.000000
+75%          20.000000
+max          27.000000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    108144
+1     14009
+
+Medication:
+LABEL
+0    19557
+1     2200
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    31360
+1     3138
+  Ratio (neg:pos): 10.0:1
+
+Medication:
+LABEL
+0    10615
+1     1120
+  Ratio (neg:pos): 9.5:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1981-01-01 00:00:00 → 2025-08-22 00:00:00
+Clinical index dates: 1982-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1994-12-22 00:00:00 → 2025-08-22 00:00:00
+Med index dates:      1996-09-22 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    122153
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+DERMATOLOGY_PATHWAY      41281
+SKIN_LESION              17513
+DERMATOSCOPY             11092
+SKIN_TREATMENT           10689
+PRIOR_SKIN_PROCEDURES     6062
+MOLE_NAEVUS               5506
+SUN_DAMAGE                5289
+SKIN_CONDITIONS           4397
+SUTURE_POSTOP             3527
+HISTOLOGY                 3320
+SKIN_SYMPTOMS             3251
+PLASTIC_SURGERY           2784
+CRYOTHERAPY               1713
+OTHER_SKIN_LESIONS        1286
+SKIN_INFECTION            1018
+PRIOR_SKIN_CANCER          895
+CLINICAL_SIGNS             792
+FAMILY_HISTORY             553
+RISK_FACTOR                404
+NICE_7PCL                  254
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+SKIN_ANTIBIOTICS_ORAL                7876
+ACTINIC_TREATMENT                    2643
+TOPICAL_STEROIDS                     2581
+TOPICAL_ANTIBIOTICS                  2544
+WOUND_DRESSINGS                      1365
+LOCAL_ANAESTHETICS                   1144
+ANTIFUNGAL_SYSTEMIC                   874
+IMMUNOSUPPRESSANT_CORTICOSTEROIDS     809
+ANTIVIRAL_SYSTEMIC                    610
+SUTURES                               325
+IMMUNOSUPPRESSANT_SYSTEMIC            269
+TOPICAL_SKIN_OTHER                    236
+ANTIVIRAL_SKIN                        181
+WOUND_CARE                            129
+TOPICAL_STEROID_SCALP                  86
+ANTIBIOTIC_IMMUNOCOMPROMISE            85
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 108,144 (88.5%)
+  AGE_AT_DIAGNOSIS: 108,144 (88.5%)
+  ASSOCIATED_TEXT: 72,897 (59.7%)
+  VALUE: 121,647 (99.6%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 19,557 (89.9%)
+  AGE_AT_DIAGNOSIS: 19,557 (89.9%)
+  ASSOCIATED_TEXT: 21,757 (100.0%)
+  VALUE: 21,757 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            53659  54485
+1             6428   7581
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A     B
+LABEL                   
+0            10574  8983
+1             1120  1080
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    122153.000000
+mean         17.495624
+std           7.021276
+min           6.000000
+25%          11.000000
+50%          17.000000
+75%          23.000000
+max          30.000000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    98890
+1    12831
+
+Medication:
+LABEL
+0    19056
+1     2058
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    29331
+1     2936
+  Ratio (neg:pos): 10.0:1
+
+Medication:
+LABEL
+0    10209
+1     1030
+  Ratio (neg:pos): 9.9:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1980-01-01 00:00:00 → 2025-02-23 00:00:00
+Clinical index dates: 1983-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1995-02-27 00:00:00 → 2025-02-21 00:00:00
+Med index dates:      1996-09-22 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    111721
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+DERMATOLOGY_PATHWAY      37082
+SKIN_LESION              15779
+SKIN_TREATMENT           10513
+DERMATOSCOPY              8551
+PRIOR_SKIN_PROCEDURES     5580
+MOLE_NAEVUS               5123
+SUN_DAMAGE                4917
+SKIN_CONDITIONS           4168
+SKIN_SYMPTOMS             3931
+SUTURE_POSTOP             3369
+HISTOLOGY                 3192
+PLASTIC_SURGERY           2593
+CRYOTHERAPY               1770
+OTHER_SKIN_LESIONS        1174
+SKIN_INFECTION             975
+PRIOR_SKIN_CANCER          845
+CLINICAL_SIGNS             719
+FAMILY_HISTORY             492
+RISK_FACTOR                273
+NICE_7PCL                  242
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+SKIN_ANTIBIOTICS_ORAL                7353
+TOPICAL_STEROIDS                     2914
+ACTINIC_TREATMENT                    2512
+TOPICAL_ANTIBIOTICS                  2389
+WOUND_DRESSINGS                      1294
+LOCAL_ANAESTHETICS                   1144
+ANTIFUNGAL_SYSTEMIC                   903
+IMMUNOSUPPRESSANT_CORTICOSTEROIDS     814
+ANTIVIRAL_SYSTEMIC                    565
+IMMUNOSUPPRESSANT_SYSTEMIC            293
+SUTURES                               280
+TOPICAL_SKIN_OTHER                    227
+ANTIVIRAL_SKIN                        156
+WOUND_CARE                            111
+ANTIBIOTIC_IMMUNOCOMPROMISE            83
+TOPICAL_STEROID_SCALP                  76
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 98,890 (88.5%)
+  AGE_AT_DIAGNOSIS: 98,890 (88.5%)
+  ASSOCIATED_TEXT: 68,001 (60.9%)
+  VALUE: 111,353 (99.7%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 19,056 (90.3%)
+  AGE_AT_DIAGNOSIS: 19,056 (90.3%)
+  ASSOCIATED_TEXT: 21,114 (100.0%)
+  VALUE: 21,114 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            49640  49250
+1             6530   6301
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A     B
+LABEL                   
+0            10188  8868
+1             1035  1023
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    111721.000000
+mean         23.753967
+std           6.913633
+min          12.000000
+25%          18.000000
+50%          24.000000
+75%          30.000000
+max          36.000000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 3,913
+  Clinical — Negative patients: 39,070
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,291
+  Medication — Negative patients: 12,239
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 29,453 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 0 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              13,530 — ✅ KEEP
+
+── 2c. DEDUP ROWS ──
+  Clinical: 151,653 → 113,844 (37,809 duplicates removed)
+  Medication: 24,369 → 24,273 (96 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    61275
+M    52569
+  (Both sexes expected for melanoma — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    113844.000000
+mean         64.216428
+std          16.352677
+min          -4.000000
+25%          54.000000
+50%          66.000000
+75%          77.000000
+max          99.000000
+  ⚠️ 10 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=3,903 | Neg=39,070 | Ratio=10.0:1
+  Medication: Pos=1,289 | Neg=12,239 | Ratio=9.5:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 42,973 patients
+    Positive: 3,903
+    Negative: 39,070
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 3,138
+  Clinical — Negative patients: 31,360
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,120
+  Medication — Negative patients: 10,615
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 22,763 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 0 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              11,735 — ✅ KEEP
+
+── 2c. DEDUP ROWS ──
+  Clinical: 122,153 → 91,663 (30,490 duplicates removed)
+  Medication: 21,757 → 21,669 (88 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    49707
+M    41956
+  (Both sexes expected for melanoma — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    91663.000000
+mean        64.686122
+std         16.304858
+min          6.000000
+25%         55.000000
+50%         67.000000
+75%         77.000000
+max         99.000000
+  ⚠️ 5 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=3,133 | Neg=31,360 | Ratio=10.0:1
+  Medication: Pos=1,119 | Neg=10,615 | Ratio=9.5:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 34,493 patients
+    Positive: 3,133
+    Negative: 31,360
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 2,936
+  Clinical — Negative patients: 29,331
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,030
+  Medication — Negative patients: 10,209
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 21,028 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 0 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              11,239 — ✅ KEEP
+
+── 2c. DEDUP ROWS ──
+  Clinical: 111,721 → 84,896 (26,825 duplicates removed)
+  Medication: 21,114 → 21,039 (75 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    45881
+M    39010
+I        5
+  (Both sexes expected for melanoma — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    84896.000000
+mean        65.132974
+std         16.132481
+min          6.000000
+25%         55.000000
+50%         68.000000
+75%         77.000000
+max        104.000000
+  ⚠️ 6 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=2,930 | Neg=29,331 | Ratio=10.0:1
+  Medication: Pos=1,029 | Neg=10,209 | Ratio=9.9:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 32,261 patients
+    Positive: 2,930
+    Negative: 29,331
+
+══════════════════════════════════════════════════════════════════════
+  FINAL SUMMARY — ALL WINDOWS
+══════════════════════════════════════════════════════════════════════
+
+  3mo:
+    Clinical rows:  113,826
+    Med rows:       24,271
+    Total patients: 42,973
+    Positive:       3,903
+    Negative:       39,070
+    Ratio:          10.0:1
+
+  6mo:
+    Clinical rows:  91,654
+    Med rows:       21,668
+    Total patients: 34,493
+    Positive:       3,133
+    Negative:       31,360
+    Ratio:          10.0:1
+
+  12mo:
+    Clinical rows:  84,889
+    Med rows:       21,038
+    Total patients: 32,261
+    Positive:       2,930
+    Negative:       29,331
+    Ratio:          10.0:1
+
+══════════════════════════════════════════════════════════════════════
+  ✅ STEP 0+1+2 COMPLETE — Ready for STEP 3 (Data Cleaning)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SAVING CLEANED DATA
+══════════════════════════════════════════════════════════════════════
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/3mo/FE_mel_dropped_patients_obs_windowed_3m.csv (113,826 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/3mo/FE_mel_dropped_patients_med_windowed_3m.csv (24,271 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_3mo.csv (42,973 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/6mo/FE_mel_dropped_patients_obs_windowed_6m.csv (91,654 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/6mo/FE_mel_dropped_patients_med_windowed_6m.csv (21,668 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_6mo.csv (34,493 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/12mo/FE_mel_dropped_patients_obs_windowed_12m.csv (84,889 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/data/12mo/FE_mel_dropped_patients_med_windowed_12m.csv (21,038 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_12mo.csv (32,261 patients)
+
+══════════════════════════════════════════════════════════════════════
+  ✅ ALL FILES SAVED — Pipeline complete
+══════════════════════════════════════════════════════════════════════

@@ -1,0 +1,81 @@
+Diagnostics: MELANOMA (window=12mo)
+Input: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/2_Feature_Engineering/results/Cleanup_Finalresults/12mo/feature_matrix_clean_12mo.csv
+Patients: 32,261  Cancer: 2,930  Features: 604
+Cancer rate: 9.08%
+
+Train AUC: 0.8827  Val AUC: 0.7305  Test AUC: 0.7075
+Gap (Train-Test): +0.1752
+
+Constant features: 0
+>99% zero: 0
+>95% NaN: 0
+Redundant (corr>0.95): 117
+
+Signal features (AUC>0.55): 20
+Noise features (AUC<=0.52): 448
+
+AUC without noise: 0.7075
+AUC with noise:    0.7049
+
+Feature group solo AUC:
+  OBS: 0.6864
+  CODE: 0.6859
+  RECENCY: 0.6844
+  CAT: 0.6827
+  TREND: 0.6724
+  RxP: 0.6661
+  AGEX: 0.6545
+  CLUSTER: 0.6417
+  DECAY: 0.6381
+  RATE: 0.6272
+  AGG: 0.6203
+  RECUR: 0.6180
+  INV: 0.6112
+  SEQ: 0.6108
+  MEL: 0.6106
+  PAIR: 0.5883
+  VISITS: 0.5836
+  VISIT: 0.5800
+  CROSS: 0.5659
+  TRAJ: 0.5489
+  MONTHLY: 0.5457
+  ROLLING3M: 0.5405
+  CMPAIR: 0.5337
+  MEDREC: 0.5287
+  INT: 0.5248
+  MED: 0.5216
+  MEDCAT: 0.5148
+  MEDTREND: 0.5082
+  AGE: 0.5052
+
+Top 30 features by univariate AUC:
+  1. INV_PATTERN_symptom_count: 0.6133
+  2. DECAY_symptom_weighted_score: 0.6124
+  3. INV_PATTERN_symptom_to_inv_ratio: 0.6050
+  4. AGG_symptom_unique_categories: 0.6037
+  5. RATE_symptom_proportion: 0.5851
+  6. CLUSTER_LESION_count: 0.5816
+  7. CLUSTER_LESION_breadth: 0.5764
+  8. CLUSTER_LESION_any: 0.5750
+  9. AGG_unique_categories: 0.5748
+  10. AGG_symptom_count_B: 0.5711
+  11. AGG_symptom_count_A: 0.5650
+  12. TEMP_event_span_days: 0.5638
+  13. VISIT_unique_dates: 0.5637
+  14. DECAY_total_weighted_score: 0.5590
+  15. AGG_total_events: 0.5577
+  16. RATE_events_per_day: 0.5557
+  17. AGG_unique_code_ids: 0.5547
+  18. RATE_categories_per_month: 0.5515
+  19. CAT_DERMATOLOGY_PATHWAY_days_last_to_index: 0.5506
+  20. MONTHLY_nonzero_months: 0.5502
+  21. CLUSTER_multi_system_count: 0.5499
+  22. RxP_MOLE_NAEVUS_score: 0.5496
+  23. RECENCY_MOLE_NAEVUS_score: 0.5495
+  24. DECAY_MOLE_NAEVUS_weighted: 0.5493
+  25. RECENCY_MOLE_NAEVUS_cumulative: 0.5491
+  26. CAT_MOLE_NAEVUS_unique_visit_dates: 0.5490
+  27. CLUSTER_LESION_count_B: 0.5486
+  28. OBS_MOLE_NAEVUS_has_ever: 0.5485
+  29. OBS_MOLE_NAEVUS_count_total: 0.5485
+  30. MONTHLY_mean_events: 0.5485

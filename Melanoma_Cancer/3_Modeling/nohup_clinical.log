@@ -1,0 +1,32 @@
+✅ 3mo: 16721 × 629 | Pos: 3894 | Neg: 12827
+✅ 6mo: 15616 × 620 | Pos: 3123 | Neg: 12493
+✅ 12mo: 15100 × 597 | Pos: 2919 | Neg: 12181
+
+══════════════════════════════════════════════════════════════════════
+  FILTERING TO CLINICAL-ONLY FEATURES
+══════════════════════════════════════════════════════════════════════
+
+  3mo: 628 → 452 features (removed 176 generic)
+  Removed groups: {'TREND': 69, 'MONTHLY': 31, 'ROLLING3M': 22, 'MEDTREND': 20, 'VISIT': 7, 'RATE': 7, 'MED': 5, 'TRAJ': 5, 'INV': 4, 'AGG': 4, 'TEMP': 2}
+  Final: 16721 × 453
+
+  6mo: 619 → 447 features (removed 172 generic)
+  Removed groups: {'TREND': 68, 'MONTHLY': 28, 'ROLLING3M': 21, 'MEDTREND': 21, 'VISIT': 7, 'RATE': 7, 'AGG': 5, 'MED': 5, 'INV': 4, 'TRAJ': 4, 'TEMP': 2}
+  Final: 15616 × 448
+
+  12mo: 596 → 433 features (removed 163 generic)
+  Removed groups: {'TREND': 72, 'MONTHLY': 21, 'MEDTREND': 21, 'ROLLING3M': 15, 'VISIT': 7, 'RATE': 7, 'AGG': 5, 'MED': 5, 'INV': 4, 'TRAJ': 4, 'TEMP': 2}
+  Final: 15100 × 434
+
+######################################################################
+  SEED 44 — 3MO  (Train/Val/Test 75/10/15)
+  Target: Sens>=75% + Spec>=65% → 70/65 → 70/60
+######################################################################
+  Train: 12539 (2920 pos, 9619 neg) | Val: 1673 | Test: 2509
+
+  ── Feature selection (top 225) ──
+  Selected 225 features from 452
+
+  ── Tuning XGBoost (75 trials, AUC) ──
+  0%|          | 0/75 [00:00<?, ?it/s]Best trial: 0. Best value: 0.786047:   0%|          | 0/75 [00:05<?, ?it/s]Best trial: 0. Best value: 0.786047:   1%|▏         | 1/75 [00:05<06:16,  5.09s/it]Best trial: 0. Best value: 0.786047:   1%|▏         | 1/75 [00:09<06:16,  5.09s/it]Best trial: 0. Best value: 0.786047:   3%|▎         | 2/75 [00:09<05:59,  4.92s/it]Best trial: 0. Best value: 0.786047:   3%|▎         | 2/75 [00:23<05:59,  4.92s/it]Best trial: 0. Best value: 0.786047:   4%|▍         | 3/75 [00:23<10:43,  8.94s/it]Best trial: 0. Best value: 0.786047:   4%|▍         | 3/75 [00:37<10:43,  8.94s/it]Best trial: 0. Best value: 0.786047:   5%|▌         | 4/75 [00:37<12:58, 10.97s/it]Best trial: 0. Best value: 0.786047:   5%|▌         | 4/75 [00:47<12:58, 10.97s/it]Best trial: 0. Best value: 0.786047:   7%|▋         | 5/75 [00:47<12:12, 10.46s/it]Best trial: 0. Best value: 0.786047:   7%|▋         | 5/75 [00:50<12:12, 10.46s/it]Best trial: 0. Best value: 0.786047:   8%|▊         | 6/75 [00:50<09:22,  8.15s/it]Best trial: 0. Best value: 0.786047:   8%|▊         | 6/75 [00:55<09:22,  8.15s/it]Best trial: 0. Best value: 0.786047:   9%|▉         | 7/75 [00:55<07:52,  6.95s/it]Best trial: 0. Best value: 0.786047:   9%|▉         | 7/75 [01:12<07:52,  6.95s/it]Best trial: 0. Best value: 0.786047:  11%|█         | 8/75 [01:12<11:30, 10.31s/it]Best trial: 0. Best value: 0.786047:  11%|█         | 8/75 [01:25<11:30, 10.31s/it]Best trial: 0. Best value: 0.786047:  12%|█▏        | 9/75 [01:25<12:01, 10.94s/it]Best trial: 0. Best value: 0.786047:  12%|█▏        | 9/75 [01:29<12:01, 10.94s/it]Best trial: 0. Best value: 0.786047:  13%|█▎        | 10/75 [01:29<09:47,  9.03s/it]Best trial: 0. Best value: 0.786047:  13%|█▎        | 10/75 [01:37<09:47,  9.03s/it]Best trial: 0. Best value: 0.786047:  15%|█▍        | 11/75 [01:37<09:07,  8.55s/it]Best trial: 0. Best value: 0.786047:  15%|█▍        | 11/75 [01:46<09:07,  8.55s/it]Best trial: 0. Best value: 0.786047:  16%|█▌        | 12/75 [01:46<09:07,  8.68s/it]Best trial: 12. Best value: 0.786059:  16%|█▌        | 12/75 [02:00<09:07,  8.68s/it]Best trial: 12. Best value: 0.786059:  17%|█▋        | 13/75 [02:00<10:30, 10.16s/it]Best trial: 12. Best value: 0.786059:  17%|█▋        | 13/75 [02:06<10:30, 10.16s/it]Best trial: 12. Best value: 0.786059:  19%|█▊        | 14/75 [02:06<09:09,  9.01s/it]Best trial: 12. Best value: 0.786059:  19%|█▊        | 14/75 [02:27<09:09,  9.01s/it]Best trial: 12. Best value: 0.786059:  20%|██        | 15/75 [02:27<12:31, 12.52s/it]Best trial: 12. Best value: 0.786059:  20%|██        | 15/75 [02:39<12:31, 12.52s/it]Best trial: 12. Best value: 0.786059:  21%|██▏       | 16/75 [02:39<12:25, 12.63s/it]Best trial: 16. Best value: 0.78662:  21%|██▏       | 16/75 [02:49<12:25, 12.63s/it] Best trial: 16. Best value: 0.78662:  23%|██▎       | 17/75 [02:49<11:22, 11.77s/it]Best trial: 16. Best value: 0.78662:  23%|██▎       | 17/75 [02:59<11:22, 11.77s/it]Best trial: 16. Best value: 0.78662:  24%|██▍       | 18/75 [02:59<10:32, 11.09s/it]Best trial: 16. Best value: 0.78662:  24%|██▍       | 18/75 [03:16<10:32, 11.09s/it]Best trial: 16. Best value: 0.78662:  25%|██▌       | 19/75 [03:16<12:12, 13.07s/it]Best trial: 16. Best value: 0.78662:  25%|██▌       | 19/75 [03:25<12:12, 13.07s/it]Best trial: 16. Best value: 0.78662:  27%|██▋       | 20/75 [03:25<10:51, 11.84s/it]Best trial: 16. Best value: 0.78662:  27%|██▋       | 20/75 [03:33<10:51, 11.84s/it]Best trial: 16. Best value: 0.78662:  28%|██▊       | 21/75 [03:33<09:31, 10.59s/it]Best trial: 16. Best value: 0.78662:  28%|██▊       | 21/75 [03:44<09:31, 10.59s/it]Best trial: 16. Best value: 0.78662:  29%|██▉       | 22/75 [03:44<09:35, 10.85s/it]Best trial: 16. Best value: 0.78662:  29%|██▉       | 22/75 [03:55<09:35, 10.85s/it]Best trial: 16. Best value: 0.78662:  31%|███       | 23/75 [03:55<09:17, 10.72s/it]Best trial: 16. Best value: 0.78662:  31%|███       | 23/75 [04:04<09:17, 10.72s/it]Best trial: 16. Best value: 0.78662:  32%|███▏      | 24/75 [04:04<08:39, 10.18s/it]/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

@@ -1,0 +1,206 @@
+2026-03-27 20:28:53 | INFO     | ================================================================================
+2026-03-27 20:28:53 | INFO     | PRODUCTION — MELANOMA — Phase 1.3: Feature Ranking FINAL v1.1
+2026-03-27 20:28:53 | INFO     | Timestamp: 2026-03-27 20:28:53
+2026-03-27 20:28:53 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-03-27 20:28:53 | INFO     | ================================================================================
+2026-03-27 20:28:53 | INFO     | 
+📂 Loading input files...
+2026-03-27 20:28:53 | INFO     |   ✅ pos_obs: 4,715 rows validated
+2026-03-27 20:28:53 | INFO     |   ✅ neg_obs: 13,409 rows validated
+2026-03-27 20:28:53 | INFO     |   ✅ pos_meds: 841 rows validated
+2026-03-27 20:28:53 | INFO     |   ✅ neg_meds: 2,738 rows validated
+2026-03-27 20:28:53 | WARNING  |   ⚠️ Observation matrix not found — will use fallback
+2026-03-27 20:28:53 | WARNING  |   ⚠️ Medication matrix not found — will use fallback
+2026-03-27 20:28:53 | INFO     | 
+================================================================================
+2026-03-27 20:28:53 | INFO     | PART 1: OBSERVATIONS
+2026-03-27 20:28:53 | INFO     | ================================================================================
+2026-03-27 20:28:53 | INFO     | 
+============================================================
+2026-03-27 20:28:53 | INFO     | STATISTICAL RANKING: observations
+2026-03-27 20:28:53 | INFO     | ============================================================
+2026-03-27 20:28:53 | INFO     |   Positive: 10,489 patients, 4,715 terms
+2026-03-27 20:28:53 | INFO     |   Negative: 104,889 patients, 13,409 terms
+2026-03-27 20:28:54 | INFO     |   After filter (>=3): 4,715 terms
+2026-03-27 20:28:54 | INFO     |   OR > 2.0: 1416
+2026-03-27 20:28:54 | INFO     |   OR > 5.0: 695
+2026-03-27 20:28:54 | INFO     |   Significant (p<0.05): 2736
+2026-03-27 20:28:54 | INFO     |   Bonferroni sig (p<0.05): 1416
+2026-03-27 20:28:54 | INFO     | 
+============================================================
+2026-03-27 20:28:54 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-03-27 20:28:54 | INFO     | ============================================================
+2026-03-27 20:28:54 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-03-27 20:28:54 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-03-27 20:28:55 | INFO     |   Training L1 Logistic Regression...
+2026-03-27 20:29:06 | INFO     |     AUROC: 0.9515 ± 0.0031 | Non-zero: 488 | 11.0s
+2026-03-27 20:29:06 | INFO     |   Training Random Forest (200 trees)...
+2026-03-27 20:29:08 | INFO     |     AUROC: 0.9090 ± 0.0022 | 1.9s
+2026-03-27 20:29:08 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-27 20:29:43 | INFO     |     AUROC: 0.9143 ± 0.0015 | 35.4s
+2026-03-27 20:29:43 | INFO     |   ✅ Complete: 48.4s total
+2026-03-27 20:29:43 | INFO     |   Building combined ranking for observations...
+2026-03-27 20:29:43 | WARNING  |   ⚠️ 2 ML terms not found in stat ranking
+2026-03-27 20:29:43 | INFO     |   Total: 4,719 | Both agree (top 150): 50
+2026-03-27 20:29:43 | INFO     | 
+📋 Top 20 Observations:
+2026-03-27 20:29:43 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:29:43 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:29:43 | INFO     |   1      observation  Fast track referral for suspected skin ca     38.52   35.69   41.58   0.00e+00    268      1   0.887 Very High       
+2026-03-27 20:29:43 | INFO     |   2      observation  Skin lesion                                   15.34   14.38   16.35   0.00e+00    342      2   0.632 High            
+2026-03-27 20:29:43 | INFO     |   3      observation  [X]Melanocytic naevi, unspecified             58.10   51.23   65.88   0.00e+00    252      4   0.616 High            
+2026-03-27 20:29:43 | INFO     |   4      observation  Seen in dermatology clinic                    11.83   11.13   12.57   0.00e+00    389      3   0.586 High            
+2026-03-27 20:29:43 | INFO     |   5      observation  2 week rule referral - skin                   29.24   26.30   32.51   0.00e+00    279      5   0.539 High            
+2026-03-27 20:29:43 | INFO     |   6      observation  Referral to dermatology service               13.78   12.58   15.09   0.00e+00    357      6   0.407 Medium          
+2026-03-27 20:29:43 | INFO     |   7      observation  Large unstained cells                         17.82   16.06   19.76   0.00e+00    319      7   0.376 Medium          
+2026-03-27 20:29:43 | INFO     |   8      observation  [M]Pigmented naevus NOS                     2499.18  155.43 40185.18  2.35e-267      1     39   0.343 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   9      observation  Pigmented skin lesion                        108.52   76.09  154.77   0.00e+00    244     11   0.341 Medium          
+2026-03-27 20:29:43 | INFO     |   10     observation  Excision of melanoma                        1968.10  122.22 31693.04  9.69e-211      2     32   0.338 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   11     observation  Skin - benign mole and naevus               1196.67   73.98 19357.79  5.21e-128      3     40   0.315 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   12     observation  Suspected skin cancer                         26.12   21.69   31.45   0.00e+00    288      8   0.313 Medium          
+2026-03-27 20:29:43 | INFO     |   13     observation  Skin - benign mole and naevus               1196.67   73.98 19357.79  5.21e-128      3     47   0.310 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   14     observation  Skin - benign mole and naevus                893.70   55.03 14513.47   2.39e-95      6     40   0.305 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   15     observation  Seen in fast track suspected skin cancer      18.43   16.13   21.06   0.00e+00    316      9   0.301 Medium          
+2026-03-27 20:29:43 | INFO     |   16     observation  Skin - benign mole and naevus                893.70   55.03 14513.47   2.39e-95      6     47   0.301 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   17     observation  FP1001 up to date                            853.37   52.51 13868.63   5.43e-91      7     45   0.300 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   18     observation  Urea and electrolytes                        772.76   47.47 12579.70   2.80e-82     11     42   0.299 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   19     observation  [M]Lentigo maligna melanoma                  954.23   58.82 15481.21  7.01e-102      5     60   0.298 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   20     observation  O/E - pigmented skin lesion                  954.23   58.82 15481.21  7.01e-102      4     72   0.297 Medium     ✅    
+2026-03-27 20:29:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_obs_all.csv (4,719 rows)
+2026-03-27 20:29:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_obs_top150.csv (150 rows)
+2026-03-27 20:29:43 | INFO     | 
+================================================================================
+2026-03-27 20:29:43 | INFO     | PART 2: MEDICATIONS
+2026-03-27 20:29:43 | INFO     | ================================================================================
+2026-03-27 20:29:43 | INFO     | 
+============================================================
+2026-03-27 20:29:43 | INFO     | STATISTICAL RANKING: medications
+2026-03-27 20:29:43 | INFO     | ============================================================
+2026-03-27 20:29:43 | INFO     |   Positive: 10,489 patients, 841 terms
+2026-03-27 20:29:43 | INFO     |   Negative: 104,889 patients, 2,738 terms
+2026-03-27 20:29:43 | INFO     |   After filter (>=3): 841 terms
+2026-03-27 20:29:43 | INFO     |   OR > 2.0: 358
+2026-03-27 20:29:43 | INFO     |   OR > 5.0: 174
+2026-03-27 20:29:43 | INFO     |   Significant (p<0.05): 444
+2026-03-27 20:29:43 | INFO     |   Bonferroni sig (p<0.05): 216
+2026-03-27 20:29:43 | INFO     | 
+============================================================
+2026-03-27 20:29:43 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-03-27 20:29:43 | INFO     | ============================================================
+2026-03-27 20:29:43 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-03-27 20:29:43 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-03-27 20:29:43 | INFO     |   Training L1 Logistic Regression...
+2026-03-27 20:30:03 | INFO     |     AUROC: 0.7437 ± 0.0023 | Non-zero: 495 | 19.1s
+2026-03-27 20:30:03 | INFO     |   Training Random Forest (200 trees)...
+2026-03-27 20:30:04 | INFO     |     AUROC: 0.6834 ± 0.0051 | 1.8s
+2026-03-27 20:30:04 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-27 20:30:46 | INFO     |     AUROC: 0.6866 ± 0.0074 | 41.8s
+2026-03-27 20:30:46 | INFO     |   ✅ Complete: 62.8s total
+2026-03-27 20:30:46 | INFO     |   Building combined ranking for medications...
+2026-03-27 20:30:46 | INFO     |   Total: 841 | Both agree (top 150): 88
+2026-03-27 20:30:46 | INFO     | 
+📋 Top 20 Medications:
+2026-03-27 20:30:46 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:30:46 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:30:46 | INFO     |   1      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    109.77   83.87  143.68   0.00e+00     76      1   0.917 Very High  ✅    
+2026-03-27 20:30:46 | INFO     |   2      medication   Influenza vaccine (split virion, inactiva    424.64  182.23  989.54   0.00e+00     10      3   0.610 High       ✅    
+2026-03-27 20:30:46 | INFO     |   3      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    142.61   91.05  223.36   0.00e+00     42      5   0.575 High       ✅    
+2026-03-27 20:30:46 | INFO     |   4      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     52.67   38.58   71.92   0.00e+00     79      4   0.540 High       ✅    
+2026-03-27 20:30:46 | INFO     |   5      medication   Spikevax COVID-19 mRNA (nucleoside modifi    121.57   77.42  190.89   0.00e+00     55      6   0.535 High       ✅    
+2026-03-27 20:30:46 | INFO     |   6      medication   Comirnaty Original/Omicron BA.1 COVID-19      25.58   20.13   32.50   0.00e+00     85      2   0.535 High       ✅    
+2026-03-27 20:30:46 | INFO     |   7      medication   Fluad vaccine suspension for injection 0.   2151.63  133.69 34627.81  2.45e-230      1     11   0.446 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   8      medication   Influenza vaccine (surface antigen, inact   1338.35   82.84 21623.29  3.00e-143      2     19   0.370 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   9      medication   Comirnaty Original/Omicron BA.4-5 COVID-1      6.47    5.50    7.60  4.83e-148    145      7   0.350 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   10     medication   Amoxicillin 250mg capsules                    25.54   18.31   35.64  2.42e-176     86      8   0.346 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   11     medication   Mepradec 20mg gastro-resistant capsules (    974.41   60.08 15803.91  4.66e-104      3     25   0.342 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   12     medication   Enzira vaccine suspension for injection 0    893.70   55.03 14513.47   2.39e-95      4     31   0.330 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   13     medication   Imuvac vaccine suspension for injection 0    712.34   43.69 11613.66   9.60e-76      5     34   0.318 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   14     medication   Fluarix vaccine suspension for injection     511.19   31.12 8397.74   5.96e-54      7     28   0.309 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   15     medication   Flucelvax Tetra vaccine suspension for in    571.50   34.89 9361.83   1.72e-60      6     37   0.307 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   16     medication   Diprobase cream (Bayer Plc)                  491.10   29.86 8076.51   9.04e-52      8     50   0.293 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   17     medication   Hepatyrix vaccine suspension for injectio    410.76   24.84 6792.29   4.80e-43     11     38   0.293 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   18     medication   Fluad Tetra vaccine suspension for inject     93.27   43.90  198.16  1.90e-133     77     20   0.293 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   19     medication   Xylocaine 2% with Adrenaline 100microgram    450.92   27.35 7434.26   2.08e-47      9     55   0.289 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   20     medication   Locorten Vioform ear drops (Advanz Pharma    350.55   21.08 5829.88   1.69e-36     18     42   0.284 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_meds_all.csv (841 rows)
+2026-03-27 20:30:46 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_meds_top150.csv (150 rows)
+2026-03-27 20:30:46 | INFO     | 
+================================================================================
+2026-03-27 20:30:46 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-03-27 20:30:46 | INFO     | ================================================================================
+2026-03-27 20:30:46 | INFO     | 
+📋 Top 20 Combined Features:
+2026-03-27 20:30:46 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:30:46 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:30:46 | INFO     |   1      observation  Fast track referral for suspected skin ca     38.52   35.69   41.58   0.00e+00    268      1   0.887 Very High       
+2026-03-27 20:30:46 | INFO     |   2      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    109.77   83.87  143.68   0.00e+00     76      1   0.770 High       ✅    
+2026-03-27 20:30:46 | INFO     |   3      observation  Skin lesion                                   15.34   14.38   16.35   0.00e+00    342      2   0.632 High            
+2026-03-27 20:30:46 | INFO     |   4      observation  [X]Melanocytic naevi, unspecified             58.10   51.23   65.88   0.00e+00    252      4   0.616 High            
+2026-03-27 20:30:46 | INFO     |   5      observation  Seen in dermatology clinic                    11.83   11.13   12.57   0.00e+00    389      3   0.586 High            
+2026-03-27 20:30:46 | INFO     |   6      medication   Influenza vaccine (split virion, inactiva    424.64  182.23  989.54   0.00e+00     10      3   0.548 High       ✅    
+2026-03-27 20:30:46 | INFO     |   7      observation  2 week rule referral - skin                   29.24   26.30   32.51   0.00e+00    279      5   0.539 High            
+2026-03-27 20:30:46 | INFO     |   8      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    142.61   91.05  223.36   0.00e+00     42      5   0.503 High       ✅    
+2026-03-27 20:30:46 | INFO     |   9      medication   Comirnaty Original/Omicron BA.1 COVID-19      25.58   20.13   32.50   0.00e+00     85      2   0.493 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   10     medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     52.67   38.58   71.92   0.00e+00     79      4   0.487 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   11     medication   Spikevax COVID-19 mRNA (nucleoside modifi    121.57   77.42  190.89   0.00e+00     55      6   0.475 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   12     medication   Fluad vaccine suspension for injection 0.   2151.63  133.69 34627.81  2.45e-230      1     11   0.414 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   13     observation  Referral to dermatology service               13.78   12.58   15.09   0.00e+00    357      6   0.407 Medium          
+2026-03-27 20:30:46 | INFO     |   14     observation  Large unstained cells                         17.82   16.06   19.76   0.00e+00    319      7   0.376 Medium          
+2026-03-27 20:30:46 | INFO     |   15     medication   Influenza vaccine (surface antigen, inact   1338.35   82.84 21623.29  3.00e-143      2     19   0.349 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   16     observation  [M]Pigmented naevus NOS                     2499.18  155.43 40185.18  2.35e-267      1     39   0.343 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   17     observation  Pigmented skin lesion                        108.52   76.09  154.77   0.00e+00    244     11   0.341 Medium          
+2026-03-27 20:30:46 | INFO     |   18     observation  Excision of melanoma                        1968.10  122.22 31693.04  9.69e-211      2     32   0.338 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   19     medication   Comirnaty Original/Omicron BA.4-5 COVID-1      6.47    5.50    7.60  4.83e-148    145      7   0.333 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   20     medication   Mepradec 20mg gastro-resistant capsules (    974.41   60.08 15803.91  4.66e-104      3     25   0.326 Medium     ✅    
+2026-03-27 20:30:46 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_combined_all.csv (5,560 rows)
+2026-03-27 20:30:46 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/melanoma_combined_top150.csv (150 rows)
+2026-03-27 20:30:46 | INFO     | 
+================================================================================
+2026-03-27 20:30:46 | INFO     | FINAL SUMMARY
+2026-03-27 20:30:46 | INFO     | ================================================================================
+2026-03-27 20:30:46 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Melanoma_Cancer/1_Top_Snomed/output/Scores_melanoma/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   melanoma_obs_top150.csv       →  150 observations          │
+  │   melanoma_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   melanoma_combined_top150.csv  →  101 obs +   49 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   melanoma_obs_all.csv          →   4719 observations       │
+  │   melanoma_meds_all.csv         →    841 medications        │
+  │   melanoma_combined_all.csv     →   5560 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: SIMULATED (fallback) ⚠️
+  Medications:  SIMULATED (fallback) ⚠️
+
+📊 Observations:  4,719 scored | OR>2: 1420 | Sig: 2740
+📊 Medications:   841 scored | OR>2: 358 | Sig: 444
+
+📊 Combined Top 150: 101 obs (67%) + 49 meds (33%)
+
+📊 Confidence: VeryHigh=1 | High=7 | Medium=142 | Low=0
+2026-03-27 20:30:46 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-03-27 20:30:46 | INFO     |   #1 Fast track referral for suspected skin cancer (OR=38.52 [35.69-41.58], p=0.00e+00, score=0.887)
+2026-03-27 20:30:46 | INFO     |   #3 Skin lesion (OR=15.34 [14.38-16.35], p=0.00e+00, score=0.632)
+2026-03-27 20:30:46 | INFO     |   #4 [X]Melanocytic naevi, unspecified (OR=58.10 [51.23-65.88], p=0.00e+00, score=0.616)
+2026-03-27 20:30:46 | INFO     |   #5 Seen in dermatology clinic (OR=11.83 [11.13-12.57], p=0.00e+00, score=0.586)
+2026-03-27 20:30:46 | INFO     |   #7 2 week rule referral - skin (OR=29.24 [26.30-32.51], p=0.00e+00, score=0.539)
+2026-03-27 20:30:46 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-03-27 20:30:46 | INFO     |   #2 Comirnaty COVID-19 mRNA Vaccine 30micrograms/0.3ml dose concentrate for dispersion for injection multidose vials (Pfizer Ltd) (OR=109.77 [83.87-143.68], p=0.00e+00, score=0.770)
+2026-03-27 20:30:46 | INFO     |   #6 Influenza vaccine (split virion, inactivated) suspension for injection 0.5ml pre-filled syringes (OR=424.64 [182.23-989.54], p=0.00e+00, score=0.548)
+2026-03-27 20:30:46 | INFO     |   #8 COVID-19 Vaccine Vaxzevria (ChAdOx1 S [recombinant]) not less than 2.5x100,000,000 infectious units/0.5ml dose suspension for injection multidose vials (AstraZeneca UK Ltd) (OR=142.61 [91.05-223.36], p=0.00e+00, score=0.503)
+2026-03-27 20:30:46 | INFO     |   #9 Comirnaty Original/Omicron BA.1 COVID-19 mRNA Vaccine 15micrograms/15micrograms/0.3ml dose dispersion for injection multidose vials (Pfizer Ltd) (OR=25.58 [20.13-32.50], p=0.00e+00, score=0.493)
+2026-03-27 20:30:46 | INFO     |   #10 COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc) (OR=52.67 [38.58-71.92], p=0.00e+00, score=0.487)
+2026-03-27 20:30:46 | INFO     | 
+⏱️  Total execution time: 112.9s (1.9 min)
+2026-03-27 20:30:46 | INFO     | 
+================================================================================
+2026-03-27 20:30:46 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-03-27 20:30:46 | INFO     | ================================================================================
