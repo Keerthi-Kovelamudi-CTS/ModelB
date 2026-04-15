@@ -1,0 +1,579 @@
+Sanity check + Patient overlap check — Leukaemia pipeline
+Log: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/sanity_check/sanity_check_leukaemia.log
+
+✅ 3mo clinical: 100,772 rows × 18 cols
+✅ 3mo med: 41,073 rows × 18 cols
+✅ 6mo clinical: 96,119 rows × 18 cols
+✅ 6mo med: 43,429 rows × 18 cols
+✅ 12mo clinical: 90,185 rows × 18 cols
+✅ 12mo med: 42,919 rows × 18 cols
+
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    74927
+1    25845
+
+Medication:
+LABEL
+0    35209
+1     5864
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    12158
+1     2689
+  Ratio (neg:pos): 4.5:1
+
+Medication:
+LABEL
+0    13688
+1     2000
+  Ratio (neg:pos): 6.8:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1984-08-20 00:00:00 → 2025-11-22 00:00:00
+Clinical index dates: 1986-10-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1991-08-14 00:00:00 → 2025-11-21 00:00:00
+Med index dates:      1993-02-16 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    100772
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEM_INVESTIGATIONS         71441
+INFECTION                    9996
+BLOOD_COUNT                  8496
+KEY_BLOOD_TESTS              5538
+AUTOIMMUNE                   2167
+B_SYMPTOMS                   1024
+LYMPHADENOPATHY               577
+SKIN_LYMPHOPROLIFERATIVE      522
+BLEEDING                      395
+GI_SYMPTOMS                   362
+IMAGING                       168
+LYMPH_NODE_WORKUP              71
+BONE_PAIN                      15
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                    28073
+CORTICOSTEROIDS                 4474
+NSAIDS_BONE_PAIN                2906
+ANTI_EMETICS                    1313
+ANTIHISTAMINES                  1225
+ANTIFUNGALS                      991
+IRON_SUPPLEMENTS                 787
+ANTIVIRALS                       488
+ALLOPURINOL                      285
+ORAL_ULCER                       241
+TRANEXAMIC                       218
+ANTIBIOTIC_IMMUNOCOMPROMISE       72
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 74,927 (74.4%)
+  AGE_AT_DIAGNOSIS: 74,927 (74.4%)
+  ASSOCIATED_TEXT: 55,877 (55.4%)
+  VALUE: 50,235 (49.9%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 35,209 (85.7%)
+  AGE_AT_DIAGNOSIS: 35,209 (85.7%)
+  ASSOCIATED_TEXT: 41,073 (100.0%)
+  VALUE: 41,073 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            37216  37711
+1             9333  16512
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            19742  15467
+1             2709   3155
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    100772.000000
+mean         14.077879
+std           6.991712
+min           3.000000
+25%           8.000000
+50%          14.000000
+75%          20.000000
+max          27.000000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    74618
+1    21501
+
+Medication:
+LABEL
+0    37756
+1     5673
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    12216
+1     2460
+  Ratio (neg:pos): 5.0:1
+
+Medication:
+LABEL
+0    14069
+1     1965
+  Ratio (neg:pos): 7.2:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1984-08-20 00:00:00 → 2025-08-22 00:00:00
+Clinical index dates: 1986-10-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1991-08-14 00:00:00 → 2025-08-22 00:00:00
+Med index dates:      1993-02-16 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    96119
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEM_INVESTIGATIONS         68822
+INFECTION                    9644
+BLOOD_COUNT                  7372
+KEY_BLOOD_TESTS              5117
+AUTOIMMUNE                   2070
+B_SYMPTOMS                   1010
+SKIN_LYMPHOPROLIFERATIVE      548
+LYMPHADENOPATHY               534
+BLEEDING                      383
+GI_SYMPTOMS                   371
+IMAGING                       165
+LYMPH_NODE_WORKUP              67
+BONE_PAIN                      16
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                    29655
+CORTICOSTEROIDS                 4802
+NSAIDS_BONE_PAIN                3107
+ANTI_EMETICS                    1398
+ANTIHISTAMINES                  1258
+ANTIFUNGALS                     1029
+IRON_SUPPLEMENTS                 808
+ANTIVIRALS                       519
+ALLOPURINOL                      300
+ORAL_ULCER                       253
+TRANEXAMIC                       226
+ANTIBIOTIC_IMMUNOCOMPROMISE       74
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 74,618 (77.6%)
+  AGE_AT_DIAGNOSIS: 74,618 (77.6%)
+  ASSOCIATED_TEXT: 53,286 (55.4%)
+  VALUE: 46,343 (48.2%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 37,756 (86.9%)
+  AGE_AT_DIAGNOSIS: 37,756 (86.9%)
+  ASSOCIATED_TEXT: 43,429 (100.0%)
+  VALUE: 43,429 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            36956  37662
+1             8962  12539
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            19604  18152
+1             2706   2967
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    96119.00000
+mean        17.33753
+std          7.02288
+min          6.00000
+25%         11.00000
+50%         17.00000
+75%         23.00000
+max         30.00000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    72719
+1    17466
+
+Medication:
+LABEL
+0    37697
+1     5222
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    12233
+1     2309
+  Ratio (neg:pos): 5.3:1
+
+Medication:
+LABEL
+0    13941
+1     1841
+  Ratio (neg:pos): 7.6:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1984-08-20 00:00:00 → 2025-02-22 00:00:00
+Clinical index dates: 1986-10-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1991-08-14 00:00:00 → 2025-02-21 00:00:00
+Med index dates:      1993-02-16 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    90185
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEM_INVESTIGATIONS         64399
+INFECTION                    9551
+BLOOD_COUNT                  6487
+KEY_BLOOD_TESTS              4503
+AUTOIMMUNE                   2019
+B_SYMPTOMS                   1052
+SKIN_LYMPHOPROLIFERATIVE      632
+LYMPHADENOPATHY               547
+GI_SYMPTOMS                   421
+BLEEDING                      334
+IMAGING                       162
+LYMPH_NODE_WORKUP              63
+BONE_PAIN                      15
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                    29276
+CORTICOSTEROIDS                 4711
+NSAIDS_BONE_PAIN                3150
+ANTI_EMETICS                    1423
+ANTIHISTAMINES                  1253
+ANTIFUNGALS                      975
+IRON_SUPPLEMENTS                 797
+ANTIVIRALS                       513
+ALLOPURINOL                      293
+ORAL_ULCER                       266
+TRANEXAMIC                       207
+ANTIBIOTIC_IMMUNOCOMPROMISE       55
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 72,719 (80.6%)
+  AGE_AT_DIAGNOSIS: 72,719 (80.6%)
+  ASSOCIATED_TEXT: 49,767 (55.2%)
+  VALUE: 41,987 (46.6%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 37,697 (87.8%)
+  AGE_AT_DIAGNOSIS: 37,697 (87.8%)
+  ASSOCIATED_TEXT: 42,919 (100.0%)
+  VALUE: 42,919 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            37018  35701
+1             8360   9106
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            19317  18380
+1             2661   2561
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    90185.000000
+mean        23.651982
+std          7.010043
+min         12.000000
+25%         17.000000
+50%         24.000000
+75%         30.000000
+max         36.000000
+  ✅ All within expected range
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 2,689
+  Clinical — Negative patients: 12,158
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 2,000
+  Medication — Negative patients: 13,688
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 6,697 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 7,538 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              8,150 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 483
+    Negative (label=0): 7055
+
+  ✅ Removed med-only patients. New med rows: 24,780
+
+── 2c. DEDUP ROWS ──
+  Clinical: 100,772 → 66,132 (34,640 duplicates removed)
+  Medication: 24,780 → 24,703 (77 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+M    36311
+F    29821
+  (Both sexes expected for leukaemia — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    66132.000000
+mean        67.638783
+std         14.954214
+min          0.000000
+25%         60.000000
+50%         70.000000
+75%         78.000000
+max        101.000000
+  ⚠️ 194 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=2,495 | Neg=12,158 | Ratio=4.9:1
+  Medication: Pos=1,471 | Neg=6,633 | Ratio=4.5:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 14,653 patients
+    Positive: 2,495
+    Negative: 12,158
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 2,460
+  Clinical — Negative patients: 12,216
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,965
+  Medication — Negative patients: 14,069
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 6,388 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 7,746 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              8,288 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 577
+    Negative (label=0): 7169
+
+  ✅ Removed med-only patients. New med rows: 26,215
+
+── 2c. DEDUP ROWS ──
+  Clinical: 96,119 → 63,964 (32,155 duplicates removed)
+  Medication: 26,215 → 26,130 (85 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+M    34880
+F    29084
+  (Both sexes expected for leukaemia — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    63964.000000
+mean        67.710822
+std         15.032568
+min          1.000000
+25%         60.000000
+50%         70.000000
+75%         78.000000
+max        101.000000
+  ⚠️ 182 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=2,278 | Neg=12,216 | Ratio=5.4:1
+  Medication: Pos=1,345 | Neg=6,900 | Ratio=5.1:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 14,494 patients
+    Positive: 2,278
+    Negative: 12,216
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 2,309
+  Clinical — Negative patients: 12,233
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,841
+  Medication — Negative patients: 13,941
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 6,388 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 7,628 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              8,154 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 575
+    Negative (label=0): 7053
+
+  ✅ Removed med-only patients. New med rows: 25,928
+
+── 2c. DEDUP ROWS ──
+  Clinical: 90,185 → 61,979 (28,206 duplicates removed)
+  Medication: 25,928 → 25,852 (76 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+M    33556
+F    28423
+  (Both sexes expected for leukaemia — no sex filter applied)
+
+  Clinical AGE_AT_INDEX:
+  count    61979.000000
+mean        67.650607
+std         14.945346
+min          1.000000
+25%         60.000000
+50%         70.000000
+75%         78.000000
+max        101.000000
+  ⚠️ 183 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=2,126 | Neg=12,233 | Ratio=5.8:1
+  Medication: Pos=1,228 | Neg=6,888 | Ratio=5.6:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 14,359 patients
+    Positive: 2,126
+    Negative: 12,233
+
+══════════════════════════════════════════════════════════════════════
+  FINAL SUMMARY — ALL WINDOWS
+══════════════════════════════════════════════════════════════════════
+
+  3mo:
+    Clinical rows:  65,634
+    Med rows:       24,623
+    Total patients: 14,653
+    Positive:       2,495
+    Negative:       12,158
+    Ratio:          4.9:1
+
+  6mo:
+    Clinical rows:  63,492
+    Med rows:       26,060
+    Total patients: 14,494
+    Positive:       2,278
+    Negative:       12,216
+    Ratio:          5.4:1
+
+  12mo:
+    Clinical rows:  61,531
+    Med rows:       25,798
+    Total patients: 14,359
+    Positive:       2,126
+    Negative:       12,233
+    Ratio:          5.8:1
+
+══════════════════════════════════════════════════════════════════════
+  ✅ STEP 0+1+2 COMPLETE — Ready for STEP 3 (Data Cleaning)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SAVING CLEANED DATA
+══════════════════════════════════════════════════════════════════════
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/3mo/FE_leuk_dropped_patients_clinical_windowed_3m.csv (65,634 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/3mo/FE_leuk_dropped_patients_med_windowed_3m.csv (24,623 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_3mo.csv (14,653 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/6mo/FE_leuk_dropped_patients_clinical_windowed_6m.csv (63,492 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/6mo/FE_leuk_dropped_patients_med_windowed_6m.csv (26,060 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_6mo.csv (14,494 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/12mo/FE_leuk_dropped_patients_clinical_windowed_12m.csv (61,531 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/12mo/FE_leuk_dropped_patients_med_windowed_12m.csv (25,798 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/sanity_check/master_patients_12mo.csv (14,359 patients)
+
+══════════════════════════════════════════════════════════════════════
+  ✅ ALL FILES SAVED — Pipeline complete
+══════════════════════════════════════════════════════════════════════

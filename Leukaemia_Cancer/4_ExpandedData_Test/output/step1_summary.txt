@@ -1,0 +1,10 @@
+Step 1 — Holdout patient list
+Elapsed_sec: 70.7
+Pool_file: 300K_NonCancer_Patients.csv
+Train_guid_file: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data/unique_patient_guids_all_data.csv
+Pool_distinct_patients: 299,291
+Training_distinct_patients: 25,413
+Overlap_removed: 21,976
+Holdout_patients: 277,315
+Output_holdout: holdout_patient_guids.csv
+Output_overlap: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/4_ExpandedData_Test/output/training_overlap_guids.csv

@@ -1,0 +1,639 @@
+Sanity check + Patient overlap check — Ovarian pipeline
+Log: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/results/sanity_check/sanity_check_ovarian.log
+
+✅ 3mo clinical: 413,334 rows × 18 cols
+✅ 3mo med: 67,233 rows × 19 cols
+✅ 6mo clinical: 404,251 rows × 18 cols
+✅ 6mo med: 70,676 rows × 19 cols
+✅ 12mo clinical: 383,157 rows × 18 cols
+✅ 12mo med: 69,507 rows × 19 cols
+
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    380492
+1     32842
+
+Medication:
+LABEL
+0    59322
+1     7911
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    15547
+1     1602
+  Ratio (neg:pos): 9.7:1
+
+Medication:
+LABEL
+0    10537
+1     1226
+  Ratio (neg:pos): 8.6:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1956-05-02 00:00:00 → 2025-11-23 00:00:00
+Clinical index dates: 1985-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1990-06-21 00:00:00 → 2025-11-22 00:00:00
+Med index dates:      1991-04-07 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+LAB VALUE      355538
+OBSERVATION     35168
+COMORBIDITY     19610
+RISK FACTOR      3018
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEMATOLOGY                182272
+RENAL                       65595
+INFLAMMATORY                48361
+METABOLIC                   41286
+ANAEMIA                      9836
+HORMONAL                     8287
+GI_INVESTIGATION             7187
+IMAGING                      4462
+CLINICAL_ASSESSMENT          4151
+REPRODUCTIVE                 3980
+ABDOMINAL_PAIN               3170
+MICROBIOLOGY                 3160
+ATRIAL_FIBRILLATION          2896
+CANDIDA                      2703
+CONTRACEPTION                2445
+GYNAECOLOGICAL_BLEEDING      2212
+COAGULATION                  2026
+GI_SYMPTOMS                  1727
+HRT                          1249
+FAMILY_HISTORY               1241
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+GENERAL ANTIBIOTICS       9210
+PPI                       9189
+UTI ANTIBIOTICS           6255
+CARDIOVASCULAR            5767
+OPIOID ANALGESICS         5430
+NSAIDS                    5162
+IRON SUPPLEMENTS          4487
+ANTIDEPRESSANTS           4379
+HRT                       2760
+LAXATIVES                 2589
+ANTIFUNGALS               2356
+THYROID                   1344
+ORAL CONTRACEPTIVE        1290
+NEUROPATHIC PAIN          1191
+DIURETICS                 1173
+ANTIHISTAMINES            1171
+ANTIEMETICS               1037
+HAEMOSTATIC                696
+ANTICOAGULANTS             564
+BLADDER ANTISPASMODICS     475
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 380,492 (92.1%)
+  AGE_AT_DIAGNOSIS: 380,492 (92.1%)
+  ASSOCIATED_TEXT: 330,063 (79.9%)
+  VALUE: 71,595 (17.3%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 59,322 (88.2%)
+  AGE_AT_DIAGNOSIS: 59,322 (88.2%)
+  ASSOCIATED_TEXT: 6 (0.0%)
+  DURATION_IN_DAYS: 67,233 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW       A       B  COMORB    RF
+LABEL                                    
+0            178642  180867   18189  2794
+1             13051   18146    1421   224
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            32474  26848
+1             3649   4262
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    413334.000000
+mean         21.049870
+std          38.425961
+min           3.000000
+25%           9.000000
+50%          15.000000
+75%          21.000000
+max         836.000000
+  ⚠️ 17131 rows outside expected range!
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    374756
+1     29495
+
+Medication:
+LABEL
+0    63269
+1     7407
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    15428
+1     1529
+  Ratio (neg:pos): 10.1:1
+
+Medication:
+LABEL
+0    10719
+1     1161
+  Ratio (neg:pos): 9.2:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1956-05-02 00:00:00 → 2025-08-23 00:00:00
+Clinical index dates: 1985-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1990-06-21 00:00:00 → 2025-08-22 00:00:00
+Med index dates:      1991-04-07 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+LAB VALUE      347854
+OBSERVATION     34266
+COMORBIDITY     19174
+RISK FACTOR      2957
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEMATOLOGY                178544
+RENAL                       64231
+INFLAMMATORY                47251
+METABOLIC                   40602
+ANAEMIA                      9617
+HORMONAL                     8073
+GI_INVESTIGATION             6616
+CLINICAL_ASSESSMENT          4341
+IMAGING                      4116
+REPRODUCTIVE                 3968
+MICROBIOLOGY                 3139
+ABDOMINAL_PAIN               3044
+ATRIAL_FIBRILLATION          2837
+CANDIDA                      2698
+CONTRACEPTION                2608
+GYNAECOLOGICAL_BLEEDING      2097
+COAGULATION                  2044
+GI_SYMPTOMS                  1598
+FAMILY_HISTORY               1229
+HRT                          1221
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+GENERAL ANTIBIOTICS       9721
+PPI                       9667
+UTI ANTIBIOTICS           6620
+CARDIOVASCULAR            5975
+OPIOID ANALGESICS         5738
+NSAIDS                    5522
+IRON SUPPLEMENTS          4805
+ANTIDEPRESSANTS           4671
+HRT                       2880
+LAXATIVES                 2597
+ANTIFUNGALS               2484
+ORAL CONTRACEPTIVE        1382
+THYROID                   1350
+NEUROPATHIC PAIN          1270
+ANTIHISTAMINES            1220
+DIURETICS                 1188
+ANTIEMETICS               1078
+HAEMOSTATIC                736
+ANTICOAGULANTS             546
+BLADDER ANTISPASMODICS     491
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 374,756 (92.7%)
+  AGE_AT_DIAGNOSIS: 374,756 (92.7%)
+  ASSOCIATED_TEXT: 323,581 (80.0%)
+  VALUE: 68,962 (17.1%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 63,269 (89.5%)
+  AGE_AT_DIAGNOSIS: 63,269 (89.5%)
+  ASSOCIATED_TEXT: 6 (0.0%)
+  DURATION_IN_DAYS: 70,676 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW       A       B  COMORB    RF
+LABEL                                    
+0            175625  178564   17828  2739
+1             12986   14945    1346   218
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            32635  30634
+1             3641   3766
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    404251.000000
+mean         24.083755
+std          38.340016
+min           6.000000
+25%          12.000000
+50%          18.000000
+75%          24.000000
+max         836.000000
+  ⚠️ 17131 rows outside expected range!
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Clinical:
+LABEL
+0    356557
+1     26600
+
+Medication:
+LABEL
+0    62542
+1     6965
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Clinical:
+LABEL
+0    15255
+1     1438
+  Ratio (neg:pos): 10.6:1
+
+Medication:
+LABEL
+0    10569
+1     1094
+  Ratio (neg:pos): 9.7:1
+
+── 1c. DATE RANGES ──
+
+Clinical event dates: 1956-05-02 00:00:00 → 2025-02-22 00:00:00
+Clinical index dates: 1980-01-01 00:00:00 → 2026-02-24 00:00:00
+Med event dates:      1989-08-30 00:00:00 → 2025-02-23 00:00:00
+Med index dates:      1992-03-27 00:00:00 → 2026-02-24 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Clinical — EVENT_TYPE counts:
+EVENT_TYPE
+LAB VALUE      328813
+OBSERVATION     33173
+COMORBIDITY     18367
+RISK FACTOR      2804
+
+Clinical — Top 20 CATEGORY counts:
+CATEGORY
+HAEMATOLOGY                169684
+RENAL                       59370
+INFLAMMATORY                44734
+METABOLIC                   38803
+ANAEMIA                      9225
+HORMONAL                     7652
+GI_INVESTIGATION             6035
+CLINICAL_ASSESSMENT          4282
+REPRODUCTIVE                 3712
+IMAGING                      3702
+MICROBIOLOGY                 3212
+CONTRACEPTION                2996
+ABDOMINAL_PAIN               2946
+CANDIDA                      2694
+ATRIAL_FIBRILLATION          2655
+COAGULATION                  2111
+GYNAECOLOGICAL_BLEEDING      2021
+GI_SYMPTOMS                  1551
+FAMILY_HISTORY               1199
+HRT                          1151
+
+Medication — Top 20 CATEGORY counts:
+CATEGORY
+GENERAL ANTIBIOTICS    9786
+PPI                    9358
+UTI ANTIBIOTICS        6640
+CARDIOVASCULAR         5852
+OPIOID ANALGESICS      5614
+NSAIDS                 5405
+ANTIDEPRESSANTS        4717
+IRON SUPPLEMENTS       4698
+HRT                    2854
+LAXATIVES              2430
+ANTIFUNGALS            2358
+ORAL CONTRACEPTIVE     1416
+THYROID                1353
+NEUROPATHIC PAIN       1273
+ANTIHISTAMINES         1208
+ANTIEMETICS            1069
+DIURETICS              1046
+HAEMOSTATIC             656
+ANTICOAGULANTS          555
+GI ANTISPASMODICS       493
+
+── 1e. NULL VALUE AUDIT ──
+
+Clinical nulls:
+  DATE_OF_DIAGNOSIS: 356,557 (93.1%)
+  AGE_AT_DIAGNOSIS: 356,557 (93.1%)
+  ASSOCIATED_TEXT: 310,370 (81.0%)
+  VALUE: 65,549 (17.1%)
+
+Medication nulls:
+  DATE_OF_DIAGNOSIS: 62,542 (90.0%)
+  AGE_AT_DIAGNOSIS: 62,542 (90.0%)
+  ASSOCIATED_TEXT: 7 (0.0%)
+  DURATION_IN_DAYS: 69,507 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Clinical TIME_WINDOW:
+TIME_WINDOW       A       B  COMORB    RF
+LABEL                                    
+0            167603  169270   17088  2596
+1             12653   12460    1279   208
+
+Medication TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            32392  30150
+1             3531   3434
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Clinical MONTHS_BEFORE_INDEX:
+count    383157.000000
+mean         30.211751
+std          38.308822
+min          12.000000
+25%          18.000000
+50%          24.000000
+75%          30.000000
+max         836.000000
+  ⚠️ 17131 rows outside expected range!
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 1,602
+  Clinical — Negative patients: 15,547
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,226
+  Medication — Negative patients: 10,537
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 6,301 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 915 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              10,848 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 121
+    Negative (label=0): 794
+
+  ✅ Removed med-only patients. New med rows: 64,343
+
+── 2c. DEDUP ROWS ──
+  Clinical: 413,334 → 320,705 (92,629 duplicates removed)
+  Medication: 64,343 → 63,511 (832 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    320659
+I        34
+M        12
+  ⚠️ Non-female patients found!
+  Removing 3 non-female patients...
+
+  Clinical AGE_AT_INDEX:
+  count    320659.000000
+mean         61.720264
+std          15.481776
+min           3.000000
+25%          51.000000
+50%          63.000000
+75%          74.000000
+max          98.000000
+  ⚠️ 4 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=1,595 | Neg=15,547 | Ratio=9.7:1
+  Medication: Pos=1,105 | Neg=9,743 | Ratio=8.8:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 17,142 patients
+    Positive: 1,595
+    Negative: 15,547
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 1,529
+  Clinical — Negative patients: 15,428
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,161
+  Medication — Negative patients: 10,719
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 6,015 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 938 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              10,942 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 126
+    Negative (label=0): 812
+
+  ✅ Removed med-only patients. New med rows: 67,682
+
+── 2c. DEDUP ROWS ──
+  Clinical: 404,251 → 313,570 (90,681 duplicates removed)
+  Medication: 67,682 → 66,849 (833 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    313518
+I        41
+M        11
+  ⚠️ Non-female patients found!
+  Removing 3 non-female patients...
+
+  Clinical AGE_AT_INDEX:
+  count    313518.000000
+mean         61.766090
+std          15.417129
+min           3.000000
+25%          51.000000
+50%          63.000000
+75%          74.000000
+max          98.000000
+  ⚠️ 2 patients under 18 — removing...
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=1,524 | Neg=15,428 | Ratio=10.1:1
+  Medication: Pos=1,035 | Neg=9,907 | Ratio=9.6:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 16,952 patients
+    Positive: 1,524
+    Negative: 15,428
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. PATIENT OVERLAP CHECK ──
+  Clinical — Positive patients: 1,438
+  Clinical — Negative patients: 15,255
+  Clinical — Overlap: 0
+  ✅ No overlap
+
+  Medication — Positive patients: 1,094
+  Medication — Negative patients: 10,569
+  Medication — Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Patients in clinical only (no meds): 5,994 — ✅ KEEP (have clinical signal)
+  Patients in meds only (no clinical): 964 — ❌ REMOVE (no clinical signal)
+  Patients in both files:              10,699 — ✅ KEEP
+
+  Med-only patients by label:
+    Positive (label=1): 150
+    Negative (label=0): 814
+
+  ✅ Removed med-only patients. New med rows: 66,334
+
+── 2c. DEDUP ROWS ──
+  Clinical: 383,157 → 300,385 (82,772 duplicates removed)
+  Medication: 66,334 → 65,561 (773 duplicates removed)
+
+── 2d. AGE/SEX VERIFICATION ──
+  Clinical SEX distribution:
+  SEX
+F    300334
+I        46
+M         5
+  ⚠️ Non-female patients found!
+  Removing 3 non-female patients...
+
+  Clinical AGE_AT_INDEX:
+  count    300334.000000
+mean         61.851342
+std          15.253767
+min          18.000000
+25%          52.000000
+50%          63.000000
+75%          74.000000
+max          98.000000
+  ✅ All 18+
+
+── 2e. FINAL PATIENT COUNTS ──
+  Clinical: Pos=1,435 | Neg=15,255 | Ratio=10.6:1
+  Medication: Pos=944 | Neg=9,755 | Ratio=10.3:1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 16,690 patients
+    Positive: 1,435
+    Negative: 15,255
+
+══════════════════════════════════════════════════════════════════════
+  FINAL SUMMARY — ALL WINDOWS
+══════════════════════════════════════════════════════════════════════
+
+  3mo:
+    Clinical rows:  320,652
+    Med rows:       63,511
+    Total patients: 17,142
+    Positive:       1,595
+    Negative:       15,547
+    Ratio:          9.7:1
+
+  6mo:
+    Clinical rows:  313,515
+    Med rows:       66,849
+    Total patients: 16,952
+    Positive:       1,524
+    Negative:       15,428
+    Ratio:          10.1:1
+
+  12mo:
+    Clinical rows:  300,334
+    Med rows:       65,561
+    Total patients: 16,690
+    Positive:       1,435
+    Negative:       15,255
+    Ratio:          10.6:1
+
+══════════════════════════════════════════════════════════════════════
+  ✅ STEP 0+1+2 COMPLETE — Ready for STEP 3 (Data Cleaning)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SAVING CLEANED DATA
+══════════════════════════════════════════════════════════════════════
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/3mo/FE_ovarian_dropped_patients_clinical_windowed_3m.csv (320,652 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/3mo/FE_ovarian_dropped_patients_med_windowed_3m.csv (63,511 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/3mo/master_patients_3mo.csv (17,142 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/6mo/FE_ovarian_dropped_patients_clinical_windowed_6m.csv (313,515 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/6mo/FE_ovarian_dropped_patients_med_windowed_6m.csv (66,849 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/6mo/master_patients_6mo.csv (16,952 patients)
+
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/12mo/FE_ovarian_dropped_patients_clinical_windowed_12m.csv (300,334 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/12mo/FE_ovarian_dropped_patients_med_windowed_12m.csv (65,561 rows)
+  ✅ Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/2_Feature_Engineering/data/12mo/master_patients_12mo.csv (16,690 patients)
+
+══════════════════════════════════════════════════════════════════════
+  ✅ ALL FILES SAVED — Pipeline complete
+══════════════════════════════════════════════════════════════════════

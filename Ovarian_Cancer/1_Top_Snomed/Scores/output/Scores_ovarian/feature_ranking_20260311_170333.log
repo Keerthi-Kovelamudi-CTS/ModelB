@@ -1,0 +1,213 @@
+2026-03-11 17:03:33 | INFO     | ================================================================================
+2026-03-11 17:03:33 | INFO     | PRODUCTION — OVARIAN CANCER — Phase 1.3: Feature Ranking FINAL v1.1
+2026-03-11 17:03:33 | INFO     | Timestamp: 2026-03-11 17:03:33
+2026-03-11 17:03:33 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-03-11 17:03:33 | INFO     | ================================================================================
+2026-03-11 17:03:33 | INFO     | 
+📂 Loading input files...
+2026-03-11 17:03:33 | INFO     |   ✅ pos_obs: 1,896 rows validated
+2026-03-11 17:03:33 | INFO     |   ✅ neg_obs: 15,386 rows validated
+2026-03-11 17:03:33 | INFO     |   ✅ pos_meds: 251 rows validated
+2026-03-11 17:03:33 | INFO     |   ✅ neg_meds: 4,203 rows validated
+2026-03-11 17:03:33 | INFO     |   ✅ Observation matrix found
+2026-03-11 17:03:36 | INFO     |      208,909 patients, 38,033 features
+2026-03-11 17:03:36 | INFO     |   ✅ Medication matrix found
+2026-03-11 17:03:36 | INFO     |      140,953 patients, 11,120 features
+2026-03-11 17:03:36 | INFO     | 
+================================================================================
+2026-03-11 17:03:36 | INFO     | PART 1: OBSERVATIONS
+2026-03-11 17:03:36 | INFO     | ================================================================================
+2026-03-11 17:03:36 | INFO     | 
+============================================================
+2026-03-11 17:03:36 | INFO     | STATISTICAL RANKING: observations
+2026-03-11 17:03:36 | INFO     | ============================================================
+2026-03-11 17:03:36 | INFO     |   Positive: 2,011 patients, 1,896 terms
+2026-03-11 17:03:36 | INFO     |   Negative: 311,974 patients, 15,386 terms
+2026-03-11 17:03:37 | INFO     |   After filter (>=3): 1,896 terms
+2026-03-11 17:03:37 | INFO     |   OR > 2.0: 1028
+2026-03-11 17:03:37 | INFO     |   OR > 5.0: 326
+2026-03-11 17:03:37 | INFO     |   Significant (p<0.05): 1101
+2026-03-11 17:03:37 | INFO     |   Bonferroni sig (p<0.05): 559
+2026-03-11 17:03:37 | INFO     | 
+============================================================
+2026-03-11 17:03:37 | INFO     | ML RANKING (Real Patient Data): observations
+2026-03-11 17:03:37 | INFO     | ============================================================
+2026-03-11 17:03:37 | INFO     |   Cohort: 1,389 pos + 6,945 neg (5:1)
+2026-03-11 17:03:37 | INFO     |   Pivoting to wide format...
+2026-03-11 17:03:37 | INFO     |   Matrix: 8,334 × 500
+2026-03-11 17:03:37 | INFO     |   Balance: 1,389 pos (16.7%), 6,945 neg (83.3%)
+2026-03-11 17:03:37 | INFO     |   Training L1 Logistic Regression...
+2026-03-11 17:03:46 | INFO     |     AUROC: 0.8200 ± 0.0126 | Non-zero: 493 | 8.7s
+2026-03-11 17:03:46 | INFO     |   Training Random Forest (200 trees)...
+2026-03-11 17:03:47 | INFO     |     AUROC: 0.7954 ± 0.0023 | 1.2s
+2026-03-11 17:03:47 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-11 17:03:54 | INFO     |     AUROC: 0.8190 ± 0.0042 | 6.4s
+2026-03-11 17:03:54 | INFO     |   ✅ Complete: 16.6s total
+2026-03-11 17:03:54 | INFO     |   Building combined ranking for observations...
+2026-03-11 17:03:54 | INFO     |   Total: 1,896 | Both agree (top 150): 87
+2026-03-11 17:03:54 | INFO     | 
+📋 Top 20 Observations:
+2026-03-11 17:03:54 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-11 17:03:54 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-11 17:03:54 | INFO     |   1      observation  Fast track referral for suspected gynaeco     52.19   45.73   59.55   0.00e+00     67      2   0.720 High       ✅    
+2026-03-11 17:03:54 | INFO     |   2      observation  Pelvic mass                                  920.76  567.56 1493.77   0.00e+00     31      3   0.691 High       ✅    
+2026-03-11 17:03:54 | INFO     |   3      observation  Seen in gynaecology clinic                    22.02   19.67   24.65   0.00e+00    107      1   0.669 High       ✅    
+2026-03-11 17:03:54 | INFO     |   4      observation  Serum CA 125 (cancer antigen 125) level       21.38   19.16   23.86   0.00e+00    109      4   0.450 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   5      observation  Seen in oncology clinic                       63.20   51.11   78.14   0.00e+00     66      5   0.436 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   6      observation  Ovarian cysts                                140.82  115.26  172.05   0.00e+00     45     19   0.419 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   7      observation  2 week rule referral - gynaecology            46.97   39.47   55.89   0.00e+00     74      6   0.397 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   8      observation  Left salpingo-oophorectomy                  6106.40  368.55 101175.19   0.00e+00      2     22   0.384 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   9      observation  Finding of serum tumour marker level        8009.41  487.42 131613.15   0.00e+00      1    106   0.372 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   10     observation  Pregnant                                    4844.08  289.73 80988.94   0.00e+00      3     42   0.350 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   11     observation  Abdominal mass                               180.47  120.32  270.69   0.00e+00     40     10   0.337 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   12     observation  Urine pregnancy test negative               3586.81  211.28 60890.66   0.00e+00      4     34   0.336 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   13     observation  Ascites                                      396.94  205.84  765.46   0.00e+00     34     16   0.323 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   14     observation  Omentectomy                                  641.49  252.25 1631.32   0.00e+00     32     21   0.318 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   15     observation  Oral contraceptive repeat                   3273.28  191.74 55880.74  3.17e-306      5     78   0.318 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   16     observation  Salpingo-oophorectomy                       2960.06  172.22 50877.21  1.32e-272      7     66   0.317 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   17     observation  Right salpingo-oophorectomy                 2647.15  152.73 45880.54  5.24e-239     11     53   0.314 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   18     observation  O/E - ascites                               2647.15  152.73 45880.54  5.24e-239     12     67   0.311 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   19     observation  O/E - abdominal mass palpated               2334.56  133.28 40891.48  1.94e-205     15     43   0.311 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   20     observation  Intra-abdominal and pelvic swelling, mass   2334.56  133.28 40891.48  1.94e-205     17     49   0.309 Medium     ✅    
+2026-03-11 17:03:54 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_obs_all.csv (1,896 rows)
+2026-03-11 17:03:54 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_obs_top150.csv (150 rows)
+2026-03-11 17:03:54 | INFO     | 
+================================================================================
+2026-03-11 17:03:54 | INFO     | PART 2: MEDICATIONS
+2026-03-11 17:03:54 | INFO     | ================================================================================
+2026-03-11 17:03:54 | INFO     | 
+============================================================
+2026-03-11 17:03:54 | INFO     | STATISTICAL RANKING: medications
+2026-03-11 17:03:54 | INFO     | ============================================================
+2026-03-11 17:03:54 | INFO     |   Positive: 2,011 patients, 251 terms
+2026-03-11 17:03:54 | INFO     |   Negative: 311,974 patients, 4,203 terms
+2026-03-11 17:03:54 | INFO     |   After filter (>=3): 255 terms
+2026-03-11 17:03:54 | INFO     |   OR > 2.0: 118
+2026-03-11 17:03:54 | INFO     |   OR > 5.0: 32
+2026-03-11 17:03:54 | INFO     |   Significant (p<0.05): 120
+2026-03-11 17:03:54 | INFO     |   Bonferroni sig (p<0.05): 52
+2026-03-11 17:03:54 | INFO     | 
+============================================================
+2026-03-11 17:03:54 | INFO     | ML RANKING (Real Patient Data): medications
+2026-03-11 17:03:54 | INFO     | ============================================================
+2026-03-11 17:03:54 | INFO     |   Cohort: 1,174 pos + 5,870 neg (5:1)
+2026-03-11 17:03:54 | INFO     |   Pivoting to wide format...
+2026-03-11 17:03:54 | INFO     |   Matrix: 7,044 × 263
+2026-03-11 17:03:54 | INFO     |   Balance: 1,174 pos (16.7%), 5,870 neg (83.3%)
+2026-03-11 17:03:54 | INFO     |   Training L1 Logistic Regression...
+2026-03-11 17:03:57 | INFO     |     AUROC: 0.6679 ± 0.0039 | Non-zero: 260 | 3.0s
+2026-03-11 17:03:57 | INFO     |   Training Random Forest (200 trees)...
+2026-03-11 17:03:58 | INFO     |     AUROC: 0.6342 ± 0.0047 | 1.2s
+2026-03-11 17:03:58 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-11 17:04:02 | INFO     |     AUROC: 0.6401 ± 0.0116 | 3.2s
+2026-03-11 17:04:02 | WARNING  |   ⚠️ feature_list length (255) != X columns (263); aligning to X
+2026-03-11 17:04:02 | INFO     |   ✅ Complete: 7.4s total
+2026-03-11 17:04:02 | INFO     |   Building combined ranking for medications...
+2026-03-11 17:04:02 | WARNING  |   ⚠️ 12 ML terms not found in stat ranking
+2026-03-11 17:04:02 | INFO     |   Total: 263 | Both agree (top 150): 93
+2026-03-11 17:04:02 | INFO     | 
+📋 Top 20 Medications:
+2026-03-11 17:04:02 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-11 17:04:02 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-11 17:04:02 | INFO     |   1      medication   Amoxicillin 500mg capsules                  2130.34 1166.87 3889.31   0.00e+00      5     24   0.563 High       ✅    
+2026-03-11 17:04:02 | INFO     |   2      medication   Omeprazole 20mg gastro-resistant capsules   3532.66 1695.70 7359.60   0.00e+00      1     97   0.530 High       ✅    
+2026-03-11 17:04:02 | INFO     |   3      medication   Omeprazole 20mg gastro-resistant capsules   3532.66 1695.70 7359.60   0.00e+00      1    242   0.502 High            
+2026-03-11 17:04:02 | INFO     |   4      medication   Aveeno cream (Kenvue UK Ltd)                   3.41    1.46    7.95   2.44e-02     55      1   0.502 High       ✅    
+2026-03-11 17:04:02 | INFO     |   5      medication   Amoxicillin 500mg capsules                  2130.34 1166.87 3889.31   0.00e+00      5     91   0.495 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   6      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr   3327.79 1412.01 7842.89   0.00e+00      2     66   0.483 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   7      medication   Comirnaty Original/Omicron BA.4-5 COVID-1      5.21    3.68    7.37   1.03e-23     30      2   0.477 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   8      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr   3327.79 1412.01 7842.89   0.00e+00      2    183   0.451 Medium          
+2026-03-11 17:04:02 | INFO     |   9      medication   Cerelle 75microgram tablets (Gedeon Richt   1710.30   94.54 30941.99  1.84e-138      6     26   0.379 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   10     medication   Nitrofurantoin 100mg capsules                  4.26    2.06    8.82   4.19e-04     40      3   0.353 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   11     medication   Amlodipine 5mg tablets                       984.07  454.49 2130.74   0.00e+00      7    148   0.327 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   12     medication   Desogestrel 75microgram tablets             2960.06  172.22 50877.21  1.32e-272      3    132   0.327 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   13     medication   Amlodipine 5mg tablets                       984.07  454.49 2130.74   0.00e+00      7    174   0.322 Medium          
+2026-03-11 17:04:02 | INFO     |   14     medication   Microgynon 30 tablets (Bayer Plc)           2334.56  133.28 40891.48  1.94e-205      4    125   0.318 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   15     medication   Tranexamic acid 500mg tablets                 90.45   52.42  156.07  7.71e-230     13     20   0.304 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   16     medication   Adjuvanted quadrivalent influenza vaccine    218.65  123.74  386.37   0.00e+00      9     48   0.291 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   17     medication   Ferrous fumarate 322mg tablets                 5.72    2.44   13.40   3.85e-04     29      4   0.288 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   18     medication   Colecalciferol 800unit capsules                4.73    2.02   11.07   2.24e-03     35      5   0.279 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   19     medication   Mefenamic acid 500mg tablets                  50.65   26.72   96.02   1.96e-87     15     22   0.268 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   20     medication   Mebeverine 135mg tablets                       3.53    2.51    4.97   9.10e-14     52      6   0.267 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_meds_all.csv (263 rows)
+2026-03-11 17:04:02 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_meds_top150.csv (150 rows)
+2026-03-11 17:04:02 | INFO     | 
+================================================================================
+2026-03-11 17:04:02 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-03-11 17:04:02 | INFO     | ================================================================================
+2026-03-11 17:04:02 | INFO     | 
+📋 Top 20 Combined Features:
+2026-03-11 17:04:02 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-11 17:04:02 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-11 17:04:02 | INFO     |   1      observation  Fast track referral for suspected gynaeco     52.19   45.73   59.55   0.00e+00     67      2   0.703 High       ✅    
+2026-03-11 17:04:02 | INFO     |   2      observation  Seen in gynaecology clinic                    22.02   19.67   24.65   0.00e+00    107      1   0.682 High       ✅    
+2026-03-11 17:04:02 | INFO     |   3      observation  Pelvic mass                                  920.76  567.56 1493.77   0.00e+00     31      3   0.639 High       ✅    
+2026-03-11 17:04:02 | INFO     |   4      medication   Aveeno cream (Kenvue UK Ltd)                   3.41    1.46    7.95   2.44e-02     55      1   0.560 High       ✅    
+2026-03-11 17:04:02 | INFO     |   5      medication   Amoxicillin 500mg capsules                  2130.34 1166.87 3889.31   0.00e+00      5     24   0.552 High       ✅    
+2026-03-11 17:04:02 | INFO     |   6      medication   Comirnaty Original/Omicron BA.4-5 COVID-1      5.21    3.68    7.37   1.03e-23     30      2   0.529 High       ✅    
+2026-03-11 17:04:02 | INFO     |   7      medication   Omeprazole 20mg gastro-resistant capsules   3532.66 1695.70 7359.60   0.00e+00      1     97   0.510 High       ✅    
+2026-03-11 17:04:02 | INFO     |   8      medication   Omeprazole 20mg gastro-resistant capsules   3532.66 1695.70 7359.60   0.00e+00      1    242   0.479 Medium          
+2026-03-11 17:04:02 | INFO     |   9      medication   Amoxicillin 500mg capsules                  2130.34 1166.87 3889.31   0.00e+00      5     91   0.477 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   10     medication   Comirnaty COVID-19 mRNA Vaccine 30microgr   3327.79 1412.01 7842.89   0.00e+00      2     66   0.464 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   11     observation  Serum CA 125 (cancer antigen 125) level       21.38   19.16   23.86   0.00e+00    109      4   0.440 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   12     medication   Comirnaty COVID-19 mRNA Vaccine 30microgr   3327.79 1412.01 7842.89   0.00e+00      2    183   0.429 Medium          
+2026-03-11 17:04:02 | INFO     |   13     observation  Seen in oncology clinic                       63.20   51.11   78.14   0.00e+00     66      5   0.429 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   14     medication   Nitrofurantoin 100mg capsules                  4.26    2.06    8.82   4.19e-04     40      3   0.395 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   15     observation  2 week rule referral - gynaecology            46.97   39.47   55.89   0.00e+00     74      6   0.383 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   16     observation  Left salpingo-oophorectomy                  6106.40  368.55 101175.19   0.00e+00      2     22   0.374 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   17     medication   Cerelle 75microgram tablets (Gedeon Richt   1710.30   94.54 30941.99  1.84e-138      6     26   0.369 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   18     observation  Ovarian cysts                                140.82  115.26  172.05   0.00e+00     45     19   0.356 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   19     observation  Finding of serum tumour marker level        8009.41  487.42 131613.15   0.00e+00      1    106   0.354 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   20     observation  Pregnant                                    4844.08  289.73 80988.94   0.00e+00      3     42   0.341 Medium     ✅    
+2026-03-11 17:04:02 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_combined_all.csv (2,159 rows)
+2026-03-11 17:04:02 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_combined_top150.csv (150 rows)
+2026-03-11 17:04:02 | INFO     | 
+================================================================================
+2026-03-11 17:04:02 | INFO     | FINAL SUMMARY
+2026-03-11 17:04:02 | INFO     | ================================================================================
+2026-03-11 17:04:02 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/):
+  ┌──────────────────────────────────────────────────���───────────┐
+  │ SEPARATE:                                                    │
+  │   ovarian_obs_top150.csv       →  150 observations          │
+  │   ovarian_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   ovarian_combined_top150.csv  →  103 obs +   47 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   ovarian_obs_all.csv          →   1896 observations       │
+  │   ovarian_meds_all.csv         →    263 medications        │
+  │   ovarian_combined_all.csv     →   2159 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: REAL patient matrix ✅
+  Medications:  REAL patient matrix ✅
+
+📊 Observations:  1,896 scored | OR>2: 1028 | Sig: 1101
+📊 Medications:   263 scored | OR>2: 123 | Sig: 128
+
+📊 Combined Top 150: 103 obs (69%) + 47 meds (31%)
+
+📊 Confidence: VeryHigh=0 | High=7 | Medium=93 | Low=50
+2026-03-11 17:04:02 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-03-11 17:04:02 | INFO     |   #1 Fast track referral for suspected gynaecological cancer (OR=52.19 [45.73-59.55], p=0.00e+00, score=0.703)
+2026-03-11 17:04:02 | INFO     |   #2 Seen in gynaecology clinic (OR=22.02 [19.67-24.65], p=0.00e+00, score=0.682)
+2026-03-11 17:04:02 | INFO     |   #3 Pelvic mass (OR=920.76 [567.56-1493.77], p=0.00e+00, score=0.639)
+2026-03-11 17:04:02 | INFO     |   #11 Serum CA 125 (cancer antigen 125) level (OR=21.38 [19.16-23.86], p=0.00e+00, score=0.440)
+2026-03-11 17:04:02 | INFO     |   #13 Seen in oncology clinic (OR=63.20 [51.11-78.14], p=0.00e+00, score=0.429)
+2026-03-11 17:04:02 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-03-11 17:04:02 | INFO     |   #4 Aveeno cream (Kenvue UK Ltd) (OR=3.41 [1.46-7.95], p=2.44e-02, score=0.560)
+2026-03-11 17:04:02 | INFO     |   #5 Amoxicillin 500mg capsules (OR=2130.34 [1166.87-3889.31], p=0.00e+00, score=0.552)
+2026-03-11 17:04:02 | INFO     |   #6 Comirnaty Original/Omicron BA.4-5 COVID-19 mRNA Vaccine 15micrograms/15micrograms/0.3ml dose dispersion for injection multidose vials (Pfizer Ltd) (OR=5.21 [3.68-7.37], p=1.03e-23, score=0.529)
+2026-03-11 17:04:02 | INFO     |   #7 Omeprazole 20mg gastro-resistant capsules (OR=3532.66 [1695.70-7359.60], p=0.00e+00, score=0.510)
+2026-03-11 17:04:02 | INFO     |   #8 Omeprazole 20mg gastro-resistant capsules (OR=3532.66 [1695.70-7359.60], p=0.00e+00, score=0.479)
+2026-03-11 17:04:02 | INFO     | 
+⏱️  Total execution time: 28.6s (0.5 min)
+2026-03-11 17:04:02 | INFO     | 
+================================================================================
+2026-03-11 17:04:02 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-03-11 17:04:02 | INFO     | ================================================================================

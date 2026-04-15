@@ -1,0 +1,82 @@
+Diagnostics: LEUKAEMIA (window=12mo)
+Input: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/Cleanup_Finalresults/12mo/feature_matrix_clean_12mo.csv
+Patients: 14,359  Cancer: 2,126  Features: 564
+Cancer rate: 14.81%
+
+Train AUC: 0.9288  Val AUC: 0.8228  Test AUC: 0.8256
+Gap (Train-Test): +0.1033
+
+Constant features: 0
+>99% zero: 0
+>95% NaN: 0
+Redundant (corr>0.95): 86
+
+Signal features (AUC>0.55): 70
+Noise features (AUC<=0.52): 408
+
+AUC without noise: 0.8256
+AUC with noise:    0.8153
+
+Feature group solo AUC:
+  CODE: 0.8030
+  RATE: 0.7332
+  TREND: 0.7253
+  CAT: 0.7220
+  OBS: 0.7215
+  RECENCY: 0.7209
+  LAB: 0.7080
+  RxP: 0.7024
+  LABTERM: 0.6893
+  AGG: 0.6722
+  VISITS: 0.6659
+  CLUSTER: 0.6529
+  VISIT: 0.6529
+  RECUR: 0.6497
+  PAIR: 0.6470
+  SEQ: 0.6424
+  LABTREND: 0.6099
+  MONTHLY: 0.5847
+  TRAJ: 0.5820
+  ROLLING3M: 0.5706
+  LTTREND: 0.5580
+  LEUK: 0.5540
+  AGEX: 0.5517
+  DECAY: 0.5464
+  MEDREC: 0.5343
+  CMPAIR: 0.5309
+  MED: 0.5237
+  MEDTREND: 0.5160
+  MEDCAT: 0.5137
+  AGE: 0.5124
+
+Top 30 features by univariate AUC:
+  1. RECENCY_BLOOD_COUNT_cumulative: 0.6488
+  2. RxP_BLOOD_COUNT_score: 0.6480
+  3. OBS_BLOOD_COUNT_count_total: 0.6477
+  4. RECENCY_BLOOD_COUNT_score: 0.6470
+  5. CAT_BLOOD_COUNT_unique_visit_dates: 0.6467
+  6. TREND_BLOOD_COUNT_second_half_freq: 0.6464
+  7. CODE_OBS_Blood_film_microscopy: 0.6457
+  8. OBS_BLOOD_COUNT_has_ever: 0.6421
+  9. CAT_BLOOD_COUNT_days_first_to_index: 0.6410
+  10. TREND_BLOOD_COUNT_acceleration_ratio: 0.6409
+  11. CAT_BLOOD_COUNT_days_last_to_index: 0.6370
+  12. RATE_symptom_proportion: 0.6192
+  13. VISIT_unique_dates: 0.6161
+  14. LAB_BLOOD_COUNT_has_ever: 0.6143
+  15. AGG_unique_categories: 0.6085
+  16. OBS_BLOOD_COUNT_count_B: 0.6085
+  17. VISITS_BLOOD_COUNT_B_distinct: 0.6080
+  18. PAIR_HAEM_INVESTIGAT_X_BLOOD_COUNT: 0.6072
+  19. CAT_BLOOD_COUNT_B_concentration: 0.6059
+  20. LAB_BLOOD_COUNT_max: 0.6024
+  21. CODE_OBS_Large_unstained_cells: 0.5983
+  22. RECUR_BLOOD_COUNT_is_recurring: 0.5964
+  23. TEMP_event_span_days: 0.5960
+  24. MONTHLY_nonzero_months: 0.5918
+  25. CLUSTER_HAEM_breadth: 0.5916
+  26. VISIT_unique_dates_B: 0.5905
+  27. CAT_BLOOD_COUNT_duration_days: 0.5890
+  28. OBS_BLOOD_COUNT_count_A: 0.5888
+  29. TREND_BLOOD_COUNT_freq_per_month: 0.5887
+  30. TREND_BLOOD_COUNT_max_interval_days: 0.5886

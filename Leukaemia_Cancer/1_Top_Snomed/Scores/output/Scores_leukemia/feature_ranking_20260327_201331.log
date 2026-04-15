@@ -1,0 +1,206 @@
+2026-03-27 20:13:31 | INFO     | ================================================================================
+2026-03-27 20:13:31 | INFO     | PRODUCTION — LEUKEMIA — Phase 1.3: Feature Ranking FINAL v1.1
+2026-03-27 20:13:31 | INFO     | Timestamp: 2026-03-27 20:13:31
+2026-03-27 20:13:31 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-03-27 20:13:31 | INFO     | ================================================================================
+2026-03-27 20:13:31 | INFO     | 
+📂 Loading input files...
+2026-03-27 20:13:31 | INFO     |   ✅ pos_obs: 3,465 rows validated
+2026-03-27 20:13:31 | INFO     |   ✅ neg_obs: 9,765 rows validated
+2026-03-27 20:13:31 | INFO     |   ✅ pos_meds: 536 rows validated
+2026-03-27 20:13:31 | INFO     |   ✅ neg_meds: 1,787 rows validated
+2026-03-27 20:13:31 | WARNING  |   ⚠️ Observation matrix not found — will use fallback
+2026-03-27 20:13:31 | WARNING  |   ⚠️ Medication matrix not found — will use fallback
+2026-03-27 20:13:31 | INFO     | 
+================================================================================
+2026-03-27 20:13:31 | INFO     | PART 1: OBSERVATIONS
+2026-03-27 20:13:31 | INFO     | ================================================================================
+2026-03-27 20:13:31 | INFO     | 
+============================================================
+2026-03-27 20:13:31 | INFO     | STATISTICAL RANKING: observations
+2026-03-27 20:13:31 | INFO     | ============================================================
+2026-03-27 20:13:31 | INFO     |   Positive: 4,433 patients, 3,465 terms
+2026-03-27 20:13:31 | INFO     |   Negative: 44,330 patients, 9,765 terms
+2026-03-27 20:13:32 | INFO     |   After filter (>=3): 3,465 terms
+2026-03-27 20:13:32 | INFO     |   OR > 2.0: 1151
+2026-03-27 20:13:32 | INFO     |   OR > 5.0: 521
+2026-03-27 20:13:32 | INFO     |   Significant (p<0.05): 1804
+2026-03-27 20:13:32 | INFO     |   Bonferroni sig (p<0.05): 841
+2026-03-27 20:13:32 | INFO     | 
+============================================================
+2026-03-27 20:13:32 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-03-27 20:13:32 | INFO     | ============================================================
+2026-03-27 20:13:32 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-03-27 20:13:32 | INFO     |   Simulating 4,433 pos + 22,165 neg, 500 features
+2026-03-27 20:13:32 | INFO     |   Training L1 Logistic Regression...
+2026-03-27 20:13:51 | INFO     |     AUROC: 0.9739 ± 0.0011 | Non-zero: 496 | 18.5s
+2026-03-27 20:13:51 | INFO     |   Training Random Forest (200 trees)...
+2026-03-27 20:13:53 | INFO     |     AUROC: 0.9321 ± 0.0016 | 2.0s
+2026-03-27 20:13:53 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-27 20:14:23 | INFO     |     AUROC: 0.9439 ± 0.0028 | 30.8s
+2026-03-27 20:14:23 | INFO     |   ✅ Complete: 51.6s total
+2026-03-27 20:14:23 | INFO     |   Building combined ranking for observations...
+2026-03-27 20:14:23 | WARNING  |   ⚠️ 2 ML terms not found in stat ranking
+2026-03-27 20:14:23 | INFO     |   Total: 3,469 | Both agree (top 150): 55
+2026-03-27 20:14:23 | INFO     | 
+📋 Top 20 Observations:
+2026-03-27 20:14:23 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:14:23 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:14:23 | INFO     |   1      observation  Blood film microscopy                         35.88   32.39   39.74   0.00e+00    191      1   0.881 Very High       
+2026-03-27 20:14:23 | INFO     |   2      observation  Seen in hematology clinic                     36.79   31.91   42.42   0.00e+00    189      2   0.596 High            
+2026-03-27 20:14:23 | INFO     |   3      observation  Lymphocytosis                                602.85  305.65 1189.05   0.00e+00     14      4   0.586 High       ✅    
+2026-03-27 20:14:23 | INFO     |   4      observation  Referral to haematologist                    111.19   84.59  146.15   0.00e+00    105      3   0.553 High       ✅    
+2026-03-27 20:14:23 | INFO     |   5      observation  Large unstained cells                         19.89   17.10   23.13   0.00e+00    220      5   0.397 Medium          
+2026-03-27 20:14:23 | INFO     |   6      observation  Percentage CD4 count                        1826.48  113.34 29434.22  1.59e-193      3     14   0.389 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   7      observation  Percentage FMC 7 count                      1805.66  112.04 29101.18  2.41e-191      8     16   0.380 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   8      observation  Percentage CD3 count                        1826.48  113.34 29434.22  1.59e-193      7     19   0.374 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   9      observation  Percentage CD79B count                      1826.48  113.34 29434.22  1.59e-193      2     21   0.373 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   10     observation  Percentage CD10 count                       1826.48  113.34 29434.22  1.59e-193      1     22   0.373 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   11     observation  Percentage CD5 count                        1826.48  113.34 29434.22  1.59e-193      6     23   0.372 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   12     observation  Percentage lambda cells count               1826.48  113.34 29434.22  1.59e-193      4     24   0.371 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   13     observation  Percentage kappa cells count                1826.48  113.34 29434.22  1.59e-193      5     29   0.364 Medium     ✅    
+2026-03-27 20:14:23 | INFO     |   14     observation  Blast cell count                             104.81   68.50  160.37   0.00e+00    165      8   0.360 Medium          
+2026-03-27 20:14:23 | INFO     |   15     observation  Promyelocyte count                            95.85   62.53  146.91   0.00e+00    168      6   0.356 Medium          
+2026-03-27 20:14:23 | INFO     |   16     observation  Myelocyte count                              103.86   67.87  158.95   0.00e+00    166      9   0.355 Medium          
+2026-03-27 20:14:23 | INFO     |   17     observation  Fast track referral for suspected haemato     81.62   56.56  117.78   0.00e+00    170     11   0.346 Medium          
+2026-03-27 20:14:23 | INFO     |   18     observation  Metamyelocyte count                          105.17   61.27  180.53  4.31e-287    164     10   0.340 Medium          
+2026-03-27 20:14:23 | INFO     |   19     observation  Haematology referral                          42.70   32.17   56.69   0.00e+00    184      7   0.331 Medium          
+2026-03-27 20:14:23 | INFO     |   20     observation  Urea and electrolytes                        674.96   41.35 11018.01   2.05e-71      9     49   0.303 Medium     ✅    
+2026-03-27 20:14:24 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_obs_all.csv (3,469 rows)
+2026-03-27 20:14:24 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_obs_top150.csv (150 rows)
+2026-03-27 20:14:24 | INFO     | 
+================================================================================
+2026-03-27 20:14:24 | INFO     | PART 2: MEDICATIONS
+2026-03-27 20:14:24 | INFO     | ================================================================================
+2026-03-27 20:14:24 | INFO     | 
+============================================================
+2026-03-27 20:14:24 | INFO     | STATISTICAL RANKING: medications
+2026-03-27 20:14:24 | INFO     | ============================================================
+2026-03-27 20:14:24 | INFO     |   Positive: 4,433 patients, 536 terms
+2026-03-27 20:14:24 | INFO     |   Negative: 44,330 patients, 1,787 terms
+2026-03-27 20:14:24 | INFO     |   After filter (>=3): 536 terms
+2026-03-27 20:14:24 | INFO     |   OR > 2.0: 253
+2026-03-27 20:14:24 | INFO     |   OR > 5.0: 96
+2026-03-27 20:14:24 | INFO     |   Significant (p<0.05): 269
+2026-03-27 20:14:24 | INFO     |   Bonferroni sig (p<0.05): 137
+2026-03-27 20:14:24 | INFO     | 
+============================================================
+2026-03-27 20:14:24 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-03-27 20:14:24 | INFO     | ============================================================
+2026-03-27 20:14:24 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-03-27 20:14:24 | INFO     |   Simulating 4,433 pos + 22,165 neg, 500 features
+2026-03-27 20:14:24 | INFO     |   Training L1 Logistic Regression...
+2026-03-27 20:14:37 | INFO     |     AUROC: 0.7880 ± 0.0029 | Non-zero: 496 | 13.5s
+2026-03-27 20:14:37 | INFO     |   Training Random Forest (200 trees)...
+2026-03-27 20:14:39 | INFO     |     AUROC: 0.7346 ± 0.0018 | 1.7s
+2026-03-27 20:14:39 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-27 20:15:14 | INFO     |     AUROC: 0.7391 ± 0.0011 | 34.8s
+2026-03-27 20:15:14 | INFO     |   ✅ Complete: 50.2s total
+2026-03-27 20:15:14 | INFO     |   Building combined ranking for medications...
+2026-03-27 20:15:14 | INFO     |   Total: 536 | Both agree (top 150): 94
+2026-03-27 20:15:14 | INFO     | 
+📋 Top 20 Medications:
+2026-03-27 20:15:14 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:15:14 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:15:14 | INFO     |   1      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    104.90   71.73  153.41   0.00e+00     38      1   0.911 Very High  ✅    
+2026-03-27 20:15:14 | INFO     |   2      medication   Influenza vaccine (split virion, inactiva   1868.16  115.94 30100.75  6.86e-198      1      5   0.571 High       ✅    
+2026-03-27 20:15:14 | INFO     |   3      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    159.41   82.64  307.49  4.77e-296     23      2   0.571 High       ✅    
+2026-03-27 20:15:14 | INFO     |   4      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     48.46   30.72   76.45  1.29e-183     40      3   0.471 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   5      medication   Spikevax COVID-19 mRNA (nucleoside modifi     85.58   47.56  153.98  1.75e-198     39      6   0.466 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   6      medication   Comirnaty Original/Omicron BA.1 COVID-19      31.04   21.53   44.75  1.31e-178     42      4   0.446 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   7      medication   Fluad vaccine suspension for injection 0.   1144.34   70.69 18524.56  1.47e-121      2     12   0.439 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   8      medication   Amoxicillin 250mg capsules                    26.62   17.00   41.69  1.83e-101     43     11   0.323 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   9      medication   Imuvac vaccine suspension for injection 0    472.40   28.69 7779.09   1.33e-49      4     27   0.318 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   10     medication   Influenza vaccine (surface antigen, inact    492.62   29.95 8102.30   8.74e-52      3     31   0.318 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   11     medication   Influenza vaccine (split virion, inactiva    432.00   26.16 7133.14   3.08e-45      5     23   0.316 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   12     medication   Enzira vaccine suspension for injection 0    371.47   22.38 6165.39   1.09e-38      8     24   0.309 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   13     medication   Mepradec 20mg gastro-resistant capsules (    391.64   23.64 6487.81   7.14e-41      6     34   0.306 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   14     medication   Ranitidine 150mg tablets                     391.64   23.64 6487.81   7.14e-41      7     35   0.305 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   15     medication   Fluarix vaccine suspension for injection     311.02   18.61 5199.10   3.89e-32     10     43   0.290 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   16     medication   Diprobase cream (Bayer Plc)                  311.02   18.61 5199.10   3.89e-32      9     44   0.290 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   17     medication   Ovestin 1mg/g vaginal cream with applicat    230.55   13.58 3913.18   2.17e-23     12     30   0.285 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   18     medication   Comirnaty Original/Omicron BA.4-5 COVID-1      5.65    4.44    7.19   1.25e-55     89      7   0.285 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   19     medication   Flucelvax Tetra vaccine suspension for in    250.65   14.84 4234.37   1.41e-25     11     46   0.279 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   20     medication   Ibuprofen 400mg tablets                        9.67    6.85   13.66   1.15e-54     60      9   0.278 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_meds_all.csv (536 rows)
+2026-03-27 20:15:14 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_meds_top150.csv (150 rows)
+2026-03-27 20:15:14 | INFO     | 
+================================================================================
+2026-03-27 20:15:14 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-03-27 20:15:14 | INFO     | ================================================================================
+2026-03-27 20:15:14 | INFO     | 
+📋 Top 20 Combined Features:
+2026-03-27 20:15:14 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-27 20:15:14 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-27 20:15:14 | INFO     |   1      observation  Blood film microscopy                         35.88   32.39   39.74   0.00e+00    191      1   0.881 Very High       
+2026-03-27 20:15:14 | INFO     |   2      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    104.90   71.73  153.41   0.00e+00     38      1   0.765 High       ✅    
+2026-03-27 20:15:14 | INFO     |   3      observation  Seen in hematology clinic                     36.79   31.91   42.42   0.00e+00    189      2   0.596 High            
+2026-03-27 20:15:14 | INFO     |   4      observation  Lymphocytosis                                602.85  305.65 1189.05   0.00e+00     14      4   0.585 High       ✅    
+2026-03-27 20:15:14 | INFO     |   5      observation  Referral to haematologist                    111.19   84.59  146.15   0.00e+00    105      3   0.553 High       ✅    
+2026-03-27 20:15:14 | INFO     |   6      medication   Influenza vaccine (split virion, inactiva   1868.16  115.94 30100.75  6.86e-198      1      5   0.519 High       ✅    
+2026-03-27 20:15:14 | INFO     |   7      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    159.41   82.64  307.49  4.77e-296     23      2   0.495 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   8      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     48.46   30.72   76.45  1.29e-183     40      3   0.425 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   9      medication   Spikevax COVID-19 mRNA (nucleoside modifi     85.58   47.56  153.98  1.75e-198     39      6   0.416 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   10     medication   Fluad vaccine suspension for injection 0.   1144.34   70.69 18524.56  1.47e-121      2     12   0.408 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   11     medication   Comirnaty Original/Omicron BA.1 COVID-19      31.04   21.53   44.75  1.31e-178     42      4   0.402 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   12     observation  Large unstained cells                         19.89   17.10   23.13   0.00e+00    220      5   0.397 Medium          
+2026-03-27 20:15:14 | INFO     |   13     observation  Percentage CD4 count                        1826.48  113.34 29434.22  1.59e-193      3     14   0.388 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   14     observation  Percentage FMC 7 count                      1805.66  112.04 29101.18  2.41e-191      8     16   0.379 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   15     observation  Percentage CD3 count                        1826.48  113.34 29434.22  1.59e-193      7     19   0.374 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   16     observation  Percentage CD79B count                      1826.48  113.34 29434.22  1.59e-193      2     21   0.372 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   17     observation  Percentage CD10 count                       1826.48  113.34 29434.22  1.59e-193      1     22   0.372 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   18     observation  Percentage CD5 count                        1826.48  113.34 29434.22  1.59e-193      6     23   0.372 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   19     observation  Percentage lambda cells count               1826.48  113.34 29434.22  1.59e-193      4     24   0.370 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   20     observation  Percentage kappa cells count                1826.48  113.34 29434.22  1.59e-193      5     29   0.363 Medium     ✅    
+2026-03-27 20:15:14 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_combined_all.csv (4,005 rows)
+2026-03-27 20:15:14 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/leukemia_combined_top150.csv (150 rows)
+2026-03-27 20:15:14 | INFO     | 
+================================================================================
+2026-03-27 20:15:14 | INFO     | FINAL SUMMARY
+2026-03-27 20:15:14 | INFO     | ================================================================================
+2026-03-27 20:15:14 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/1_Top_Snomed/Scores/output/Scores_leukemia/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   leukemia_obs_top150.csv       →  150 observations          │
+  │   leukemia_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   leukemia_combined_top150.csv  →  106 obs +   44 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   leukemia_obs_all.csv          →   3469 observations       │
+  │   leukemia_meds_all.csv         →    536 medications        │
+  │   leukemia_combined_all.csv     →   4005 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: SIMULATED (fallback) ⚠️
+  Medications:  SIMULATED (fallback) ⚠️
+
+📊 Observations:  3,469 scored | OR>2: 1155 | Sig: 1808
+📊 Medications:   536 scored | OR>2: 253 | Sig: 269
+
+📊 Combined Top 150: 106 obs (71%) + 44 meds (29%)
+
+📊 Confidence: VeryHigh=1 | High=5 | Medium=144 | Low=0
+2026-03-27 20:15:14 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-03-27 20:15:14 | INFO     |   #1 Blood film microscopy (OR=35.88 [32.39-39.74], p=0.00e+00, score=0.881)
+2026-03-27 20:15:14 | INFO     |   #3 Seen in hematology clinic (OR=36.79 [31.91-42.42], p=0.00e+00, score=0.596)
+2026-03-27 20:15:14 | INFO     |   #4 Lymphocytosis (OR=602.85 [305.65-1189.05], p=0.00e+00, score=0.585)
+2026-03-27 20:15:14 | INFO     |   #5 Referral to haematologist (OR=111.19 [84.59-146.15], p=0.00e+00, score=0.553)
+2026-03-27 20:15:14 | INFO     |   #12 Large unstained cells (OR=19.89 [17.10-23.13], p=0.00e+00, score=0.397)
+2026-03-27 20:15:14 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-03-27 20:15:14 | INFO     |   #2 Comirnaty COVID-19 mRNA Vaccine 30micrograms/0.3ml dose concentrate for dispersion for injection multidose vials (Pfizer Ltd) (OR=104.90 [71.73-153.41], p=0.00e+00, score=0.765)
+2026-03-27 20:15:14 | INFO     |   #6 Influenza vaccine (split virion, inactivated) suspension for injection 0.5ml pre-filled syringes (OR=1868.16 [115.94-30100.75], p=6.86e-198, score=0.519)
+2026-03-27 20:15:14 | INFO     |   #7 COVID-19 Vaccine Vaxzevria (ChAdOx1 S [recombinant]) not less than 2.5x100,000,000 infectious units/0.5ml dose suspension for injection multidose vials (AstraZeneca UK Ltd) (OR=159.41 [82.64-307.49], p=4.77e-296, score=0.495)
+2026-03-27 20:15:14 | INFO     |   #8 COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc) (OR=48.46 [30.72-76.45], p=1.29e-183, score=0.425)
+2026-03-27 20:15:14 | INFO     |   #9 Spikevax COVID-19 mRNA (nucleoside modified) Vaccine 0.1mg/0.5ml dose dispersion for injection multidose vials (Moderna, Inc) (OR=85.58 [47.56-153.98], p=1.75e-198, score=0.416)
+2026-03-27 20:15:14 | INFO     | 
+⏱️  Total execution time: 103.0s (1.7 min)
+2026-03-27 20:15:14 | INFO     | 
+================================================================================
+2026-03-27 20:15:14 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-03-27 20:15:14 | INFO     | ================================================================================

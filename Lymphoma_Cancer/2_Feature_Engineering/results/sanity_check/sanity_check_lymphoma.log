@@ -1,0 +1,548 @@
+Sanity check + Patient overlap check — Lymphoma pipeline
+Log: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/2_Feature_Engineering/results/sanity_check/sanity_check_lymphoma.log
+
+✅ 3mo obs: 175,267 rows × 18 cols
+✅ 3mo med: 84,776 rows × 18 cols
+✅ 6mo obs: 155,954 rows × 18 cols
+✅ 6mo med: 76,865 rows × 18 cols
+✅ 12mo obs: 141,157 rows × 18 cols
+✅ 12mo med: 71,006 rows × 18 cols
+
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Observations:
+LABEL
+0    152279
+1     22988
+
+Medications:
+LABEL
+0    74962
+1     9814
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Observations:
+LABEL
+0    36400
+1     3640
+  Ratio (neg:pos): 10.0:1
+
+Medications:
+LABEL
+0    22738
+1     2511
+  Ratio (neg:pos): 9.1:1
+
+── 1c. DATE RANGES ──
+
+Observations event dates: 1977-07-25 00:00:00 → 2025-10-28 00:00:00
+Observations index dates: 1979-09-13 00:00:00 → 2026-04-08 00:00:00
+
+Medications event dates: 1989-06-12 00:00:00 → 2025-11-11 00:00:00
+Medications index dates: 1990-04-08 00:00:00 → 2026-04-08 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Observations — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    175267
+
+Observations — Top 20 CATEGORY counts:
+CATEGORY
+LAB_MARKERS                            76429
+CALCIUM_BONE                           36742
+HAEMATOLOGY_INVESTIGATION_SELECTIVE    31369
+HAEMATOLOGICAL_ABNORMALITIES            8420
+PROTEIN_STUDIES                         4663
+ADDITIONAL_SYMPTOMS                     2722
+LYMPHADENOPATHY                         2126
+CONSTITUTIONAL_SYMPTOMS                 2113
+UNEXPLAINED_MASSES                      2051
+AUTOIMMUNE_IMMUNE                       1915
+INFECTION_MARKERS                       1376
+B_SYMPTOMS                              1307
+SKIN_SYMPTOMS                           1026
+RECURRENT_INFECTIONS                     783
+NEUROPATHY                               756
+PAIN_SYMPTOMS                            630
+SICKNESS_ABSENCE                         414
+ABNORMAL_IMAGING                         313
+SPLENOMEGALY                             112
+
+Medications — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                31772
+PAIN_ANTIHISTAMINES        21151
+GI_MEDICATIONS             14353
+CORTICOSTEROIDS             7998
+ANAEMIA_TREATMENT           4851
+ANTIFUNGALS                 3125
+ANTIVIRALS                   655
+NUTRITIONAL_SUPPLEMENTS      483
+COUGH_SUPPRESSANTS           388
+
+── 1e. NULL VALUE AUDIT ──
+
+Observations nulls:
+  DATE_OF_DIAGNOSIS: 152,279 (86.9%)
+  AGE_AT_DIAGNOSIS: 152,279 (86.9%)
+  ASSOCIATED_TEXT: 95,124 (54.3%)
+  VALUE: 57,673 (32.9%)
+
+Medications nulls:
+  DATE_OF_DIAGNOSIS: 74,962 (88.4%)
+  AGE_AT_DIAGNOSIS: 74,962 (88.4%)
+  ASSOCIATED_TEXT: 84,776 (100.0%)
+  VALUE: 84,776 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Observations TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            76970  75309
+1             9082  13906
+
+Medications TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            38540  36422
+1             4553   5261
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Observations MONTHS_BEFORE_INDEX:
+count    175267.000000
+mean         14.462403
+std           7.096093
+min           3.000000
+25%           8.000000
+50%          14.000000
+75%          21.000000
+max          27.000000
+  ✅ All within [0, 40]
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Observations:
+LABEL
+0    136602
+1     19352
+
+Medications:
+LABEL
+0    67977
+1     8888
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Observations:
+LABEL
+0    33090
+1     3309
+  Ratio (neg:pos): 10.0:1
+
+Medications:
+LABEL
+0    20611
+1     2282
+  Ratio (neg:pos): 9.0:1
+
+── 1c. DATE RANGES ──
+
+Observations event dates: 1977-07-25 00:00:00 → 2025-07-17 00:00:00
+Observations index dates: 1979-09-13 00:00:00 → 2026-03-30 00:00:00
+
+Medications event dates: 1989-06-12 00:00:00 → 2025-07-11 00:00:00
+Medications index dates: 1990-04-08 00:00:00 → 2026-03-30 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Observations — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    155954
+
+Observations — Top 20 CATEGORY counts:
+CATEGORY
+LAB_MARKERS                            66627
+CALCIUM_BONE                           33856
+HAEMATOLOGY_INVESTIGATION_SELECTIVE    27687
+HAEMATOLOGICAL_ABNORMALITIES            7623
+PROTEIN_STUDIES                         4139
+ADDITIONAL_SYMPTOMS                     2634
+CONSTITUTIONAL_SYMPTOMS                 1970
+AUTOIMMUNE_IMMUNE                       1844
+UNEXPLAINED_MASSES                      1773
+LYMPHADENOPATHY                         1694
+B_SYMPTOMS                              1141
+INFECTION_MARKERS                       1082
+SKIN_SYMPTOMS                           1020
+RECURRENT_INFECTIONS                     801
+NEUROPATHY                               719
+PAIN_SYMPTOMS                            570
+SICKNESS_ABSENCE                         404
+ABNORMAL_IMAGING                         293
+SPLENOMEGALY                              77
+
+Medications — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                29019
+PAIN_ANTIHISTAMINES        19065
+GI_MEDICATIONS             12885
+CORTICOSTEROIDS             7439
+ANAEMIA_TREATMENT           4244
+ANTIFUNGALS                 2694
+ANTIVIRALS                   712
+NUTRITIONAL_SUPPLEMENTS      418
+COUGH_SUPPRESSANTS           389
+
+── 1e. NULL VALUE AUDIT ──
+
+Observations nulls:
+  DATE_OF_DIAGNOSIS: 136,602 (87.6%)
+  AGE_AT_DIAGNOSIS: 136,602 (87.6%)
+  ASSOCIATED_TEXT: 82,849 (53.1%)
+  VALUE: 50,281 (32.2%)
+
+Medications nulls:
+  DATE_OF_DIAGNOSIS: 67,977 (88.4%)
+  AGE_AT_DIAGNOSIS: 67,977 (88.4%)
+  ASSOCIATED_TEXT: 76,865 (100.0%)
+  VALUE: 76,865 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Observations TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            70061  66541
+1             8744  10608
+
+Medications TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            35491  32486
+1             4354   4534
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Observations MONTHS_BEFORE_INDEX:
+count    155954.000000
+mean         17.789393
+std           6.982005
+min           6.000000
+25%          12.000000
+50%          18.000000
+75%          24.000000
+max          30.000000
+  ✅ All within [0, 40]
+
+══════════════════════════════════════════════════════════════════════
+  SANITY CHECKS — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 1a. ROW COUNTS PER LABEL ──
+
+Observations:
+LABEL
+0    124334
+1     16823
+
+Medications:
+LABEL
+0    62953
+1     8053
+
+── 1b. UNIQUE PATIENTS PER LABEL ──
+
+Observations:
+LABEL
+0    30350
+1     3035
+  Ratio (neg:pos): 10.0:1
+
+Medications:
+LABEL
+0    18988
+1     2072
+  Ratio (neg:pos): 9.2:1
+
+── 1c. DATE RANGES ──
+
+Observations event dates: 1977-07-25 00:00:00 → 2025-03-24 00:00:00
+Observations index dates: 1979-09-13 00:00:00 → 2026-04-01 00:00:00
+
+Medications event dates: 1991-09-30 00:00:00 → 2025-03-10 00:00:00
+Medications index dates: 1994-06-28 00:00:00 → 2026-03-30 00:00:00
+
+── 1d. CATEGORY DISTRIBUTION ──
+
+Observations — EVENT_TYPE counts:
+EVENT_TYPE
+OBSERVATION    141157
+
+Observations — Top 20 CATEGORY counts:
+CATEGORY
+LAB_MARKERS                            58493
+CALCIUM_BONE                           31043
+HAEMATOLOGY_INVESTIGATION_SELECTIVE    24622
+HAEMATOLOGICAL_ABNORMALITIES            7328
+PROTEIN_STUDIES                         3609
+ADDITIONAL_SYMPTOMS                     2782
+AUTOIMMUNE_IMMUNE                       2236
+CONSTITUTIONAL_SYMPTOMS                 2076
+UNEXPLAINED_MASSES                      1611
+LYMPHADENOPATHY                         1290
+SKIN_SYMPTOMS                           1289
+B_SYMPTOMS                              1149
+INFECTION_MARKERS                        834
+NEUROPATHY                               796
+RECURRENT_INFECTIONS                     782
+PAIN_SYMPTOMS                            510
+SICKNESS_ABSENCE                         384
+ABNORMAL_IMAGING                         257
+SPLENOMEGALY                              66
+
+Medications — Top 20 CATEGORY counts:
+CATEGORY
+ANTIBIOTICS                27317
+PAIN_ANTIHISTAMINES        17513
+GI_MEDICATIONS             11795
+CORTICOSTEROIDS             7047
+ANAEMIA_TREATMENT           3590
+ANTIFUNGALS                 2442
+ANTIVIRALS                   625
+COUGH_SUPPRESSANTS           362
+NUTRITIONAL_SUPPLEMENTS      315
+
+── 1e. NULL VALUE AUDIT ──
+
+Observations nulls:
+  DATE_OF_DIAGNOSIS: 124,334 (88.1%)
+  AGE_AT_DIAGNOSIS: 124,334 (88.1%)
+  ASSOCIATED_TEXT: 74,805 (53.0%)
+  VALUE: 45,186 (32.0%)
+
+Medications nulls:
+  DATE_OF_DIAGNOSIS: 62,953 (88.7%)
+  AGE_AT_DIAGNOSIS: 62,953 (88.7%)
+  ASSOCIATED_TEXT: 71,006 (100.0%)
+  VALUE: 71,006 (100.0%)
+
+── 1f. TIME WINDOW DISTRIBUTION ──
+
+Observations TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            64886  59448
+1             8295   8528
+
+Medications TIME_WINDOW:
+TIME_WINDOW      A      B
+LABEL                    
+0            33270  29683
+1             4076   3977
+
+── 1g. MONTHS BEFORE INDEX STATS ──
+
+Observations MONTHS_BEFORE_INDEX:
+count    141157.000000
+mean         23.880318
+std           6.933899
+min          12.000000
+25%          18.000000
+50%          24.000000
+75%          30.000000
+max          36.000000
+  ✅ All within [0, 40]
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 3mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. LABEL OVERLAP CHECK ──
+  Observations — Pos: 3,640 | Neg: 36,400 | Overlap: 0
+  ✅ No overlap
+
+  Medications — Pos: 2,511 | Neg: 22,738 | Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Obs only (no meds):  14,791 — ✅ KEEP (have obs signal)
+  Meds only (no obs):  0 — ❌ REMOVE (no obs signal)
+  In both:             25,249 — ✅ KEEP
+
+── 2c. DEDUP ROWS (verification) ──
+  obs: 175,267 → 146,869 (28,398 removed)
+  med: 84,776 → 84,761 (15 removed)
+
+── 2d. AGE/SEX CHECK ──
+  Observations SEX distribution:
+  SEX
+F    75077
+M    71792
+  (Both sexes expected for lymphoma — no sex filter)
+
+  AGE_AT_INDEX stats:
+  count    146869.000000
+mean         65.828630
+std          15.844637
+min          19.000000
+25%          57.000000
+50%          69.000000
+75%          78.000000
+max          99.000000
+  ✅ All ≥ 18
+
+── 2e. FINAL PATIENT COUNTS ──
+  Observations: Pos=3,640 | Neg=36,400 | Ratio=1:10.0
+  Medications:  Pos=2,511 | Neg=22,738 | Ratio=1:9.1
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 40,040 patients
+    Positive: 3,640
+    Negative: 36,400
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 6mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. LABEL OVERLAP CHECK ──
+  Observations — Pos: 3,309 | Neg: 33,090 | Overlap: 0
+  ✅ No overlap
+
+  Medications — Pos: 2,282 | Neg: 20,611 | Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Obs only (no meds):  13,506 — ✅ KEEP (have obs signal)
+  Meds only (no obs):  0 — ❌ REMOVE (no obs signal)
+  In both:             22,893 — ✅ KEEP
+
+── 2c. DEDUP ROWS (verification) ──
+  obs: 155,954 → 133,801 (22,153 removed)
+  med: 76,865 → 76,838 (27 removed)
+
+── 2d. AGE/SEX CHECK ──
+  Observations SEX distribution:
+  SEX
+F    69635
+M    64166
+  (Both sexes expected for lymphoma — no sex filter)
+
+  AGE_AT_INDEX stats:
+  count    133801.000000
+mean         66.307666
+std          15.549778
+min          19.000000
+25%          58.000000
+50%          70.000000
+75%          78.000000
+max          99.000000
+  ✅ All ≥ 18
+
+── 2e. FINAL PATIENT COUNTS ──
+  Observations: Pos=3,309 | Neg=33,090 | Ratio=1:10.0
+  Medications:  Pos=2,282 | Neg=20,611 | Ratio=1:9.0
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 36,399 patients
+    Positive: 3,309
+    Negative: 33,090
+
+══════════════════════════════════════════════════════════════════════
+  PATIENT-LEVEL FIXES — 12mo WINDOW
+══════════════════════════════════════════════════════════════════════
+
+── 2a. LABEL OVERLAP CHECK ──
+  Observations — Pos: 3,035 | Neg: 30,350 | Overlap: 0
+  ✅ No overlap
+
+  Medications — Pos: 2,072 | Neg: 18,988 | Overlap: 0
+  ✅ No overlap
+
+── 2b. CROSS-FILE PATIENT CHECK ──
+  Obs only (no meds):  12,325 — ✅ KEEP (have obs signal)
+  Meds only (no obs):  0 — ❌ REMOVE (no obs signal)
+  In both:             21,060 — ✅ KEEP
+
+── 2c. DEDUP ROWS (verification) ──
+  obs: 141,157 → 124,126 (17,031 removed)
+  med: 71,006 → 70,993 (13 removed)
+
+── 2d. AGE/SEX CHECK ──
+  Observations SEX distribution:
+  SEX
+F    63749
+M    60377
+  (Both sexes expected for lymphoma — no sex filter)
+
+  AGE_AT_INDEX stats:
+  count    124126.000000
+mean         67.002159
+std          15.061202
+min          19.000000
+25%          59.000000
+50%          70.000000
+75%          78.000000
+max          99.000000
+  ✅ All ≥ 18
+
+── 2e. FINAL PATIENT COUNTS ──
+  Observations: Pos=3,035 | Neg=30,350 | Ratio=1:10.0
+  Medications:  Pos=2,072 | Neg=18,988 | Ratio=1:9.2
+
+── 2f. MASTER PATIENT LIST ──
+  Master patient list: 33,385 patients
+    Positive: 3,035
+    Negative: 30,350
+
+══════════════════════════════════════════════════════════════════════
+  FINAL SUMMARY — ALL WINDOWS
+══════════════════════════════════════════════════════════════════════
+
+  3mo:
+    Obs rows:       146,869
+    Med rows:       84,761
+    Total patients: 40,040  (pos=3,640 | neg=36,400 | 1:10.0)
+
+  6mo:
+    Obs rows:       133,801
+    Med rows:       76,838
+    Total patients: 36,399  (pos=3,309 | neg=33,090 | 1:10.0)
+
+  12mo:
+    Obs rows:       124,126
+    Med rows:       70,993
+    Total patients: 33,385  (pos=3,035 | neg=30,350 | 1:10.0)
+
+══════════════════════════════════════════════════════════════════════
+  SAVING CLEANED DATA
+══════════════════════════════════════════════════════════════════════
+
+  ✅ Saved: lymphoma_3mo_obs_dropped.csv (146,869 rows)
+  ✅ Saved: lymphoma_3mo_med_dropped.csv (84,761 rows)
+  ✅ Saved: master_patients_3mo.csv (40,040 patients)
+
+  ✅ Saved: lymphoma_6mo_obs_dropped.csv (133,801 rows)
+  ✅ Saved: lymphoma_6mo_med_dropped.csv (76,838 rows)
+  ✅ Saved: master_patients_6mo.csv (36,399 patients)
+
+  ✅ Saved: lymphoma_12mo_obs_dropped.csv (124,126 rows)
+  ✅ Saved: lymphoma_12mo_med_dropped.csv (70,993 rows)
+  ✅ Saved: master_patients_12mo.csv (33,385 patients)
+
+══════════════════════════════════════════════════════════════════════
+  ✅ STEP 0+1+2 COMPLETE — Ready for STEP 3 (3_droppatients.py)
+══════════════════════════════════════════════════════════════════════

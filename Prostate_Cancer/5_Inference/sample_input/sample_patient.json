@@ -1,0 +1,89 @@
+{
+  "patient_guid": "SAMPLE_PATIENT_001",
+  "sex": "M",
+  "age_at_index": 68,
+  "index_date": "2026-03-01",
+  "events": [
+    {
+      "event_date": "2025-04-10",
+      "code_id": "63476009",
+      "event_type": "observation",
+      "category": "PSA_MONITORING",
+      "term": "Prostate specific antigen level",
+      "value": 3.2,
+      "associated_text": ""
+    },
+    {
+      "event_date": "2025-09-15",
+      "code_id": "63476009",
+      "event_type": "observation",
+      "category": "PSA_MONITORING",
+      "term": "Prostate specific antigen level",
+      "value": 6.8,
+      "associated_text": "<value>PSA raised, repeat advised</value>"
+    },
+    {
+      "event_date": "2026-01-20",
+      "code_id": "63476009",
+      "event_type": "observation",
+      "category": "PSA_MONITORING",
+      "term": "Prostate specific antigen level",
+      "value": 11.4,
+      "associated_text": "<value>PSA elevated, urology referral</value>"
+    },
+    {
+      "event_date": "2025-06-01",
+      "code_id": "249274008",
+      "event_type": "observation",
+      "category": "URINARY_SYMPTOMS",
+      "term": "Urinary frequency",
+      "value": null,
+      "associated_text": "<value>increased urinary frequency, nocturia x3</value>"
+    },
+    {
+      "event_date": "2025-11-10",
+      "code_id": "249274008",
+      "event_type": "observation",
+      "category": "URINARY_SYMPTOMS",
+      "term": "Urinary hesitancy",
+      "value": null,
+      "associated_text": "<value>worsening hesitancy and weak stream</value>"
+    },
+    {
+      "event_date": "2026-01-05",
+      "code_id": "12345678",
+      "event_type": "observation",
+      "category": "LOWER_BACK_PAIN",
+      "term": "Low back pain",
+      "value": null,
+      "associated_text": "<value>persistent lower back pain, new onset</value>"
+    },
+    {
+      "event_date": "2025-07-01",
+      "code_id": "372756006",
+      "event_type": "medication",
+      "category": "ALPHA_BLOCKERS",
+      "term": "Tamsulosin 400microgram modified-release capsules",
+      "value": null,
+      "associated_text": ""
+    },
+    {
+      "event_date": "2025-12-01",
+      "code_id": "77384006",
+      "event_type": "medication",
+      "category": "PAIN_MEDICATIONS",
+      "term": "Paracetamol 500mg tablets",
+      "value": null,
+      "associated_text": ""
+    },
+    {
+      "event_date": "2026-02-01",
+      "code_id": "77384006",
+      "event_type": "medication",
+      "category": "PAIN_MEDICATIONS",
+      "term": "Ibuprofen 400mg tablets",
+      "value": null,
+      "associated_text": ""
+    }
+  ]
+}

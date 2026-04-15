@@ -1,0 +1,284 @@
+======================================================================
+  METRICS REPORT
+======================================================================
+  Total patients: 293,065
+  Cancer (LABEL=1): 0
+  Non-cancer (LABEL=0): 293,065
+
+──────────────────────────────────────────────────────────────────────
+  XGBoost (threshold=0.3247)
+──────────────────────────────────────────────────────────────────────
+  TP=0  FP=51,364  TN=241,701  FN=0
+
+  ACCURACY AT THRESHOLD 0.3247:
+    Correctly predicted: 241,701 / 293,065 (82.5%)
+    Non-cancer correctly cleared: 241,701 / 293,065 (82.5%)
+    Non-cancer incorrectly flagged: 51,364 / 293,065 (17.53%)
+
+  PROBABILITY DISTRIBUTION:
+    Mean:   0.1188
+    Median: 0.0000
+    Std:    0.2159
+    25th percentile: 0.0000
+    50th percentile: 0.0000
+    75th percentile: 0.1870
+    90th percentile: 0.5283
+    95th percentile: 0.6252
+    99th percentile: 0.7679
+    Max: 0.9698
+
+  NON-CANCER PROBABILITY DISTRIBUTION:
+    Mean:   0.1188  (ideal: close to 0)
+    Median: 0.0000
+    90th percentile: 0.5283
+    95th percentile: 0.6252
+    99th percentile: 0.7679
+    Max: 0.9698
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :  211,511 ( 72.2%)  [Cancer: 0 | Non-cancer: 211,511]
+    Low (5-10%)              :      677 (  0.2%)  [Cancer: 0 | Non-cancer: 677]
+    Moderate (10-20%)        :    9,279 (  3.2%)  [Cancer: 0 | Non-cancer: 9,279]
+    Elevated (20-30%)        :   15,991 (  5.5%)  [Cancer: 0 | Non-cancer: 15,991]
+    High (30-50%)            :   24,070 (  8.2%)  [Cancer: 0 | Non-cancer: 24,070]
+    Very High (50%+)         :   31,537 ( 10.8%)  [Cancer: 0 | Non-cancer: 31,537]
+
+  FALSE POSITIVE RATE AT VARIOUS THRESHOLDS:
+    Threshold 0.05:   81,554 false positives (27.83%) | 211,511 correctly cleared
+    Threshold 0.10:   80,877 false positives (27.60%) | 212,188 correctly cleared
+    Threshold 0.15:   77,543 false positives (26.46%) | 215,522 correctly cleared
+    Threshold 0.20:   71,598 false positives (24.43%) | 221,467 correctly cleared
+    Threshold 0.25:   64,480 false positives (22.00%) | 228,585 correctly cleared
+    Threshold 0.30:   55,607 false positives (18.97%) | 237,458 correctly cleared
+    Threshold 0.35:   47,525 false positives (16.22%) | 245,540 correctly cleared
+    Threshold 0.40:   41,288 false positives (14.09%) | 251,777 correctly cleared
+    Threshold 0.50:   31,537 false positives (10.76%) | 261,528 correctly cleared
+
+  RESULTS BY CONFIDENCE LEVEL:
+
+    HIGH CONFIDENCE (81,560 patients, 0 cancer, 81,560 non-cancer):
+      Avg probability: 0.4271
+      Median probability: 0.4051
+      Non-cancer avg: 0.4271
+      Flagged at threshold: 51,364 (63.0%)
+
+  MODEL QUALITY SUMMARY:
+    Avg probability for non-cancer (ALL): 0.1188
+    Non-cancer with prob < 5%:  72.2%
+    Non-cancer with prob < 10%: 72.4%
+    Non-cancer with prob < 20%: 75.6%
+
+    HIGH CONFIDENCE non-cancer only (81,560 patients):
+      Avg probability: 0.4271 (ideal: close to 0)
+      Prob < 10%: 0.8%
+      Prob < 20%: 12.2%
+      Prob < 30%: 31.8%
+
+──────────────────────────────────────────────────────────────────────
+  LightGBM (threshold=0.1465)
+──────────────────────────────────────────────────────────────────────
+  TP=0  FP=34,510  TN=258,555  FN=0
+
+  ACCURACY AT THRESHOLD 0.1465:
+    Correctly predicted: 258,555 / 293,065 (88.2%)
+    Non-cancer correctly cleared: 258,555 / 293,065 (88.2%)
+    Non-cancer incorrectly flagged: 34,510 / 293,065 (11.78%)
+
+  PROBABILITY DISTRIBUTION:
+    Mean:   0.0385
+    Median: 0.0000
+    Std:    0.0635
+    25th percentile: 0.0000
+    50th percentile: 0.0000
+    75th percentile: 0.1080
+    90th percentile: 0.1523
+    95th percentile: 0.1600
+    99th percentile: 0.1894
+    Max: 0.2422
+
+  NON-CANCER PROBABILITY DISTRIBUTION:
+    Mean:   0.0385  (ideal: close to 0)
+    Median: 0.0000
+    90th percentile: 0.1523
+    95th percentile: 0.1600
+    99th percentile: 0.1894
+    Max: 0.2422
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :  211,505 ( 72.2%)  [Cancer: 0 | Non-cancer: 211,505]
+    Low (5-10%)              :    1,159 (  0.4%)  [Cancer: 0 | Non-cancer: 1,159]
+    Moderate (10-20%)        :   78,743 ( 26.9%)  [Cancer: 0 | Non-cancer: 78,743]
+    Elevated (20-30%)        :    1,658 (  0.6%)  [Cancer: 0 | Non-cancer: 1,658]
+    High (30-50%)            :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+    Very High (50%+)         :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+
+  FALSE POSITIVE RATE AT VARIOUS THRESHOLDS:
+    Threshold 0.05:   81,560 false positives (27.83%) | 211,505 correctly cleared
+    Threshold 0.10:   80,401 false positives (27.43%) | 212,664 correctly cleared
+    Threshold 0.15:   32,423 false positives (11.06%) | 260,642 correctly cleared
+    Threshold 0.20:    1,658 false positives (0.57%) | 291,407 correctly cleared
+    Threshold 0.25:        0 false positives (0.00%) | 293,065 correctly cleared
+    Threshold 0.30:        0 false positives (0.00%) | 293,065 correctly cleared
+    Threshold 0.35:        0 false positives (0.00%) | 293,065 correctly cleared
+    Threshold 0.40:        0 false positives (0.00%) | 293,065 correctly cleared
+    Threshold 0.50:        0 false positives (0.00%) | 293,065 correctly cleared
+
+  RESULTS BY CONFIDENCE LEVEL:
+
+    HIGH CONFIDENCE (81,560 patients, 0 cancer, 81,560 non-cancer):
+      Avg probability: 0.1382
+      Median probability: 0.1332
+      Non-cancer avg: 0.1382
+      Flagged at threshold: 34,510 (42.3%)
+
+  MODEL QUALITY SUMMARY:
+    Avg probability for non-cancer (ALL): 0.0385
+    Non-cancer with prob < 5%:  72.2%
+    Non-cancer with prob < 10%: 72.6%
+    Non-cancer with prob < 20%: 99.4%
+
+    HIGH CONFIDENCE non-cancer only (81,560 patients):
+      Avg probability: 0.1382 (ideal: close to 0)
+      Prob < 10%: 1.4%
+      Prob < 20%: 98.0%
+      Prob < 30%: 100.0%
+
+──────────────────────────────────────────────────────────────────────
+  CatBoost (threshold=0.3392)
+──────────────────────────────────────────────────────────────────────
+  TP=0  FP=50,144  TN=242,921  FN=0
+
+  ACCURACY AT THRESHOLD 0.3392:
+    Correctly predicted: 242,921 / 293,065 (82.9%)
+    Non-cancer correctly cleared: 242,921 / 293,065 (82.9%)
+    Non-cancer incorrectly flagged: 50,144 / 293,065 (17.11%)
+
+  PROBABILITY DISTRIBUTION:
+    Mean:   0.1140
+    Median: 0.0000
+    Std:    0.2046
+    25th percentile: 0.0000
+    50th percentile: 0.0000
+    75th percentile: 0.1995
+    90th percentile: 0.4772
+    95th percentile: 0.5411
+    99th percentile: 0.7740
+    Max: 0.9874
+
+  NON-CANCER PROBABILITY DISTRIBUTION:
+    Mean:   0.1140  (ideal: close to 0)
+    Median: 0.0000
+    90th percentile: 0.4772
+    95th percentile: 0.5411
+    99th percentile: 0.7740
+    Max: 0.9874
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :  211,524 ( 72.2%)  [Cancer: 0 | Non-cancer: 211,524]
+    Low (5-10%)              :      640 (  0.2%)  [Cancer: 0 | Non-cancer: 640]
+    Moderate (10-20%)        :    7,723 (  2.6%)  [Cancer: 0 | Non-cancer: 7,723]
+    Elevated (20-30%)        :   16,327 (  5.6%)  [Cancer: 0 | Non-cancer: 16,327]
+    High (30-50%)            :   37,754 ( 12.9%)  [Cancer: 0 | Non-cancer: 37,754]
+    Very High (50%+)         :   19,097 (  6.5%)  [Cancer: 0 | Non-cancer: 19,097]
+
+  FALSE POSITIVE RATE AT VARIOUS THRESHOLDS:
+    Threshold 0.05:   81,541 false positives (27.82%) | 211,524 correctly cleared
+    Threshold 0.10:   80,901 false positives (27.61%) | 212,164 correctly cleared
+    Threshold 0.15:   78,369 false positives (26.74%) | 214,696 correctly cleared
+    Threshold 0.20:   73,178 false positives (24.97%) | 219,887 correctly cleared
+    Threshold 0.25:   65,985 false positives (22.52%) | 227,080 correctly cleared
+    Threshold 0.30:   56,851 false positives (19.40%) | 236,214 correctly cleared
+    Threshold 0.35:   48,786 false positives (16.65%) | 244,279 correctly cleared
+    Threshold 0.40:   41,554 false positives (14.18%) | 251,511 correctly cleared
+    Threshold 0.50:   19,097 false positives (6.52%) | 273,968 correctly cleared
+
+  RESULTS BY CONFIDENCE LEVEL:
+
+    HIGH CONFIDENCE (81,560 patients, 0 cancer, 81,560 non-cancer):
+      Avg probability: 0.4098
+      Median probability: 0.4065
+      Non-cancer avg: 0.4098
+      Flagged at threshold: 50,144 (61.5%)
+
+  MODEL QUALITY SUMMARY:
+    Avg probability for non-cancer (ALL): 0.1140
+    Non-cancer with prob < 5%:  72.2%
+    Non-cancer with prob < 10%: 72.4%
+    Non-cancer with prob < 20%: 75.0%
+
+    HIGH CONFIDENCE non-cancer only (81,560 patients):
+      Avg probability: 0.4098 (ideal: close to 0)
+      Prob < 10%: 0.8%
+      Prob < 20%: 10.3%
+      Prob < 30%: 30.3%
+
+──────────────────────────────────────────────────────────────────────
+  Ensemble (threshold=0.3450)
+──────────────────────────────────────────────────────────────────────
+  TP=0  FP=49,128  TN=243,937  FN=0
+
+  ACCURACY AT THRESHOLD 0.3450:
+    Correctly predicted: 243,937 / 293,065 (83.2%)
+    Non-cancer correctly cleared: 243,937 / 293,065 (83.2%)
+    Non-cancer incorrectly flagged: 49,128 / 293,065 (16.76%)
+
+  PROBABILITY DISTRIBUTION:
+    Mean:   0.1155
+    Median: 0.0000
+    Std:    0.2072
+    25th percentile: 0.0000
+    50th percentile: 0.0000
+    75th percentile: 0.1978
+    90th percentile: 0.4958
+    95th percentile: 0.5430
+    99th percentile: 0.7698
+    Max: 0.9816
+
+  NON-CANCER PROBABILITY DISTRIBUTION:
+    Mean:   0.1155  (ideal: close to 0)
+    Median: 0.0000
+    90th percentile: 0.4958
+    95th percentile: 0.5430
+    99th percentile: 0.7698
+    Max: 0.9816
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :  211,514 ( 72.2%)  [Cancer: 0 | Non-cancer: 211,514]
+    Low (5-10%)              :      559 (  0.2%)  [Cancer: 0 | Non-cancer: 559]
+    Moderate (10-20%)        :    8,000 (  2.7%)  [Cancer: 0 | Non-cancer: 8,000]
+    Elevated (20-30%)        :   16,314 (  5.6%)  [Cancer: 0 | Non-cancer: 16,314]
+    High (30-50%)            :   27,700 (  9.5%)  [Cancer: 0 | Non-cancer: 27,700]
+    Very High (50%+)         :   28,978 (  9.9%)  [Cancer: 0 | Non-cancer: 28,978]
+
+  FALSE POSITIVE RATE AT VARIOUS THRESHOLDS:
+    Threshold 0.05:   81,551 false positives (27.83%) | 211,514 correctly cleared
+    Threshold 0.10:   80,992 false positives (27.64%) | 212,073 correctly cleared
+    Threshold 0.15:   78,437 false positives (26.76%) | 214,628 correctly cleared
+    Threshold 0.20:   72,992 false positives (24.91%) | 220,073 correctly cleared
+    Threshold 0.25:   65,938 false positives (22.50%) | 227,127 correctly cleared
+    Threshold 0.30:   56,678 false positives (19.34%) | 236,387 correctly cleared
+    Threshold 0.35:   48,454 false positives (16.53%) | 244,611 correctly cleared
+    Threshold 0.40:   41,592 false positives (14.19%) | 251,473 correctly cleared
+    Threshold 0.50:   28,978 false positives (9.89%) | 264,087 correctly cleared
+
+  RESULTS BY CONFIDENCE LEVEL:
+
+    HIGH CONFIDENCE (81,560 patients, 0 cancer, 81,560 non-cancer):
+      Avg probability: 0.4150
+      Median probability: 0.4063
+      Non-cancer avg: 0.4150
+      Flagged at threshold: 49,128 (60.2%)
+
+  MODEL QUALITY SUMMARY:
+    Avg probability for non-cancer (ALL): 0.1155
+    Non-cancer with prob < 5%:  72.2%
+    Non-cancer with prob < 10%: 72.4%
+    Non-cancer with prob < 20%: 75.1%
+
+    HIGH CONFIDENCE non-cancer only (81,560 patients):
+      Avg probability: 0.4150 (ideal: close to 0)
+      Prob < 10%: 0.7%
+      Prob < 20%: 10.5%
+      Prob < 30%: 30.5%
+
+======================================================================

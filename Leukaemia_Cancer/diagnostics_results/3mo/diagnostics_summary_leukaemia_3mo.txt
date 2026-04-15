@@ -1,0 +1,82 @@
+Diagnostics: LEUKAEMIA (window=3mo)
+Input: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/results/Cleanup_Finalresults/3mo/feature_matrix_clean_3mo.csv
+Patients: 14,653  Cancer: 2,495  Features: 585
+Cancer rate: 17.03%
+
+Train AUC: 0.9522  Val AUC: 0.8782  Test AUC: 0.8728
+Gap (Train-Test): +0.0794
+
+Constant features: 0
+>99% zero: 0
+>95% NaN: 0
+Redundant (corr>0.95): 70
+
+Signal features (AUC>0.55): 111
+Noise features (AUC<=0.52): 384
+
+AUC without noise: 0.8728
+AUC with noise:    0.8691
+
+Feature group solo AUC:
+  CODE: 0.8443
+  RATE: 0.7903
+  CAT: 0.7861
+  RECENCY: 0.7782
+  OBS: 0.7718
+  RxP: 0.7718
+  TREND: 0.7693
+  AGG: 0.7454
+  VISIT: 0.7350
+  CLUSTER: 0.7295
+  VISITS: 0.7185
+  LAB: 0.7146
+  MONTHLY: 0.7026
+  PAIR: 0.6999
+  TRAJ: 0.6938
+  ROLLING3M: 0.6884
+  RECUR: 0.6647
+  DECAY: 0.6618
+  LABTERM: 0.6534
+  SEQ: 0.6478
+  LABTREND: 0.5993
+  AGEX: 0.5946
+  LEUK: 0.5804
+  MEDCAT: 0.5802
+  MED: 0.5663
+  LTTREND: 0.5512
+  CMPAIR: 0.5488
+  MEDREC: 0.5363
+  MEDTREND: 0.5345
+  AGE: 0.5044
+
+Top 30 features by univariate AUC:
+  1. CODE_OBS_Blood_film_microscopy: 0.7088
+  2. RECENCY_BLOOD_COUNT_cumulative: 0.6954
+  3. RxP_BLOOD_COUNT_score: 0.6941
+  4. RECENCY_BLOOD_COUNT_score: 0.6935
+  5. OBS_BLOOD_COUNT_count_total: 0.6930
+  6. TREND_BLOOD_COUNT_second_half_freq: 0.6916
+  7. CAT_BLOOD_COUNT_unique_visit_dates: 0.6911
+  8. OBS_BLOOD_COUNT_has_ever: 0.6855
+  9. TREND_BLOOD_COUNT_acceleration_ratio: 0.6855
+  10. VISIT_unique_dates_B: 0.6828
+  11. CAT_BLOOD_COUNT_days_first_to_index: 0.6820
+  12. TEMP_days_last_event_to_index: 0.6781
+  13. CAT_BLOOD_COUNT_days_last_to_index: 0.6772
+  14. VISIT_unique_dates: 0.6755
+  15. DECAY_total_weighted_score: 0.6732
+  16. AGG_unique_categories: 0.6682
+  17. AGG_events_B: 0.6666
+  18. PAIR_HAEM_INVESTIGAT_X_BLOOD_COUNT: 0.6618
+  19. OBS_BLOOD_COUNT_count_B: 0.6587
+  20. VISITS_BLOOD_COUNT_B_distinct: 0.6577
+  21. CAT_BLOOD_COUNT_B_concentration: 0.6551
+  22. VISIT_ratio_B_to_A: 0.6542
+  23. CLUSTER_HAEM_breadth: 0.6506
+  24. TRAJ_trend_ratio: 0.6501
+  25. MONTHLY_nonzero_months: 0.6486
+  26. RATE_symptom_proportion: 0.6482
+  27. CLUSTER_HAEM_count_B: 0.6453
+  28. TEMP_event_span_days: 0.6399
+  29. TRAJ_haem_Q1_0-6m: 0.6334
+  30. TRAJ_increasing_trend: 0.6334

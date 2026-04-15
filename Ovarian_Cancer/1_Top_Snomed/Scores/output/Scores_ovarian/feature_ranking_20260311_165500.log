@@ -1,0 +1,122 @@
+2026-03-11 16:55:00 | INFO     | ================================================================================
+2026-03-11 16:55:00 | INFO     | PRODUCTION — OVARIAN CANCER — Phase 1.3: Feature Ranking FINAL v1.1
+2026-03-11 16:55:00 | INFO     | Timestamp: 2026-03-11 16:55:00
+2026-03-11 16:55:00 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-03-11 16:55:00 | INFO     | ================================================================================
+2026-03-11 16:55:00 | INFO     | 
+📂 Loading input files...
+2026-03-11 16:55:00 | INFO     |   ✅ pos_obs: 1,896 rows validated
+2026-03-11 16:55:00 | INFO     |   ✅ neg_obs: 15,386 rows validated
+2026-03-11 16:55:00 | INFO     |   ✅ pos_meds: 251 rows validated
+2026-03-11 16:55:00 | INFO     |   ✅ neg_meds: 4,203 rows validated
+2026-03-11 16:55:00 | INFO     |   ✅ Observation matrix found
+2026-03-11 16:55:03 | INFO     |      208,909 patients, 38,033 features
+2026-03-11 16:55:03 | INFO     |   ✅ Medication matrix found
+2026-03-11 16:55:03 | INFO     |      140,953 patients, 11,120 features
+2026-03-11 16:55:03 | INFO     | 
+================================================================================
+2026-03-11 16:55:03 | INFO     | PART 1: OBSERVATIONS
+2026-03-11 16:55:03 | INFO     | ================================================================================
+2026-03-11 16:55:03 | INFO     | 
+============================================================
+2026-03-11 16:55:03 | INFO     | STATISTICAL RANKING: observations
+2026-03-11 16:55:03 | INFO     | ============================================================
+2026-03-11 16:55:03 | INFO     |   Positive: 2,011 patients, 1,896 terms
+2026-03-11 16:55:03 | INFO     |   Negative: 311,974 patients, 15,386 terms
+2026-03-11 16:55:04 | INFO     |   After filter (>=3): 1,896 terms
+2026-03-11 16:55:04 | INFO     |   OR > 2.0: 1028
+2026-03-11 16:55:04 | INFO     |   OR > 5.0: 326
+2026-03-11 16:55:04 | INFO     |   Significant (p<0.05): 1101
+2026-03-11 16:55:04 | INFO     |   Bonferroni sig (p<0.05): 559
+2026-03-11 16:55:04 | INFO     | 
+============================================================
+2026-03-11 16:55:04 | INFO     | ML RANKING (Real Patient Data): observations
+2026-03-11 16:55:04 | INFO     | ============================================================
+2026-03-11 16:55:04 | INFO     |   Cohort: 1,389 pos + 6,945 neg (5:1)
+2026-03-11 16:55:04 | INFO     |   Pivoting to wide format...
+2026-03-11 16:55:04 | INFO     |   Matrix: 8,334 × 500
+2026-03-11 16:55:04 | INFO     |   Balance: 1,389 pos (16.7%), 6,945 neg (83.3%)
+2026-03-11 16:55:04 | INFO     |   Training L1 Logistic Regression...
+2026-03-11 16:55:13 | INFO     |     AUROC: 0.8200 ± 0.0126 | Non-zero: 493 | 8.9s
+2026-03-11 16:55:13 | INFO     |   Training Random Forest (200 trees)...
+2026-03-11 16:55:15 | INFO     |     AUROC: 0.7954 ± 0.0023 | 1.3s
+2026-03-11 16:55:15 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-11 16:55:21 | INFO     |     AUROC: 0.8190 ± 0.0042 | 6.4s
+2026-03-11 16:55:21 | INFO     |   ✅ Complete: 16.9s total
+2026-03-11 16:55:21 | INFO     |   Building combined ranking for observations...
+2026-03-11 16:55:21 | INFO     |   Total: 1,896 | Both agree (top 150): 87
+2026-03-11 16:55:21 | INFO     | 
+📋 Top 20 Observations:
+2026-03-11 16:55:21 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-03-11 16:55:21 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-03-11 16:55:21 | INFO     |   1      observation  Fast track referral for suspected gynaeco     52.19   45.73   59.55   0.00e+00     67      2   0.720 High       ✅    
+2026-03-11 16:55:21 | INFO     |   2      observation  Pelvic mass                                  920.76  567.56 1493.77   0.00e+00     31      3   0.691 High       ✅    
+2026-03-11 16:55:21 | INFO     |   3      observation  Seen in gynaecology clinic                    22.02   19.67   24.65   0.00e+00    107      1   0.669 High       ✅    
+2026-03-11 16:55:21 | INFO     |   4      observation  Serum CA 125 (cancer antigen 125) level       21.38   19.16   23.86   0.00e+00    109      4   0.450 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   5      observation  Seen in oncology clinic                       63.20   51.11   78.14   0.00e+00     66      5   0.436 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   6      observation  Ovarian cysts                                140.82  115.26  172.05   0.00e+00     45     19   0.419 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   7      observation  2 week rule referral - gynaecology            46.97   39.47   55.89   0.00e+00     74      6   0.397 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   8      observation  Left salpingo-oophorectomy                  6106.40  368.55 101175.19   0.00e+00      2     22   0.384 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   9      observation  Finding of serum tumour marker level        8009.41  487.42 131613.15   0.00e+00      1    106   0.372 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   10     observation  Pregnant                                    4844.08  289.73 80988.94   0.00e+00      3     42   0.350 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   11     observation  Abdominal mass                               180.47  120.32  270.69   0.00e+00     40     10   0.337 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   12     observation  Urine pregnancy test negative               3586.81  211.28 60890.66   0.00e+00      4     34   0.336 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   13     observation  Ascites                                      396.94  205.84  765.46   0.00e+00     34     16   0.323 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   14     observation  Omentectomy                                  641.49  252.25 1631.32   0.00e+00     32     21   0.318 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   15     observation  Oral contraceptive repeat                   3273.28  191.74 55880.74  3.17e-306      5     78   0.318 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   16     observation  Salpingo-oophorectomy                       2960.06  172.22 50877.21  1.32e-272      7     66   0.317 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   17     observation  Right salpingo-oophorectomy                 2647.15  152.73 45880.54  5.24e-239     11     53   0.314 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   18     observation  O/E - ascites                               2647.15  152.73 45880.54  5.24e-239     12     67   0.311 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   19     observation  O/E - abdominal mass palpated               2334.56  133.28 40891.48  1.94e-205     15     43   0.311 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   20     observation  Intra-abdominal and pelvic swelling, mass   2334.56  133.28 40891.48  1.94e-205     17     49   0.309 Medium     ✅    
+2026-03-11 16:55:21 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_obs_all.csv (1,896 rows)
+2026-03-11 16:55:21 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/output/Scores_ovarian/ovarian_obs_top150.csv (150 rows)
+2026-03-11 16:55:21 | INFO     | 
+================================================================================
+2026-03-11 16:55:21 | INFO     | PART 2: MEDICATIONS
+2026-03-11 16:55:21 | INFO     | ================================================================================
+2026-03-11 16:55:21 | INFO     | 
+============================================================
+2026-03-11 16:55:21 | INFO     | STATISTICAL RANKING: medications
+2026-03-11 16:55:21 | INFO     | ============================================================
+2026-03-11 16:55:21 | INFO     |   Positive: 2,011 patients, 251 terms
+2026-03-11 16:55:21 | INFO     |   Negative: 311,974 patients, 4,203 terms
+2026-03-11 16:55:21 | INFO     |   After filter (>=3): 255 terms
+2026-03-11 16:55:21 | INFO     |   OR > 2.0: 118
+2026-03-11 16:55:21 | INFO     |   OR > 5.0: 32
+2026-03-11 16:55:21 | INFO     |   Significant (p<0.05): 120
+2026-03-11 16:55:21 | INFO     |   Bonferroni sig (p<0.05): 52
+2026-03-11 16:55:21 | INFO     | 
+============================================================
+2026-03-11 16:55:21 | INFO     | ML RANKING (Real Patient Data): medications
+2026-03-11 16:55:21 | INFO     | ============================================================
+2026-03-11 16:55:21 | INFO     |   Cohort: 1,174 pos + 5,870 neg (5:1)
+2026-03-11 16:55:21 | INFO     |   Pivoting to wide format...
+2026-03-11 16:55:21 | INFO     |   Matrix: 7,044 × 263
+2026-03-11 16:55:21 | INFO     |   Balance: 1,174 pos (16.7%), 5,870 neg (83.3%)
+2026-03-11 16:55:21 | INFO     |   Training L1 Logistic Regression...
+2026-03-11 16:55:24 | INFO     |     AUROC: 0.6679 ± 0.0039 | Non-zero: 260 | 2.8s
+2026-03-11 16:55:24 | INFO     |   Training Random Forest (200 trees)...
+2026-03-11 16:55:25 | INFO     |     AUROC: 0.6342 ± 0.0047 | 1.2s
+2026-03-11 16:55:25 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-03-11 16:55:29 | INFO     |     AUROC: 0.6401 ± 0.0116 | 3.2s
+2026-03-11 16:55:29 | ERROR    | 
+❌ FATAL: All arrays must be of the same length
+Traceback (most recent call last):
+  File "/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/Combined Scoring (ML+Stat).py", line 798, in <module>
+    all_features, obs_full, meds_full = main()
+  File "/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/Combined Scoring (ML+Stat).py", line 686, in main
+    meds_ml = compute_ml_ranking_from_patient_matrix(meds_matrix, meds_features, 'medication')
+  File "/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/Combined Scoring (ML+Stat).py", line 361, in compute_ml_ranking_from_patient_matrix
+    return _train_ml_models(X, y, feature_list, feature_type, t_start)
+  File "/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Ovarian_Cancer/1_Top_Snomed/Scores/Combined Scoring (ML+Stat).py", line 479, in _train_ml_models
+    ml_scores = pd.DataFrame({
+  File "/Users/keerthikovelamudi/Library/Python/3.9/lib/python/site-packages/pandas/core/frame.py", line 782, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+  File "/Users/keerthikovelamudi/Library/Python/3.9/lib/python/site-packages/pandas/core/internals/construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+  File "/Users/keerthikovelamudi/Library/Python/3.9/lib/python/site-packages/pandas/core/internals/construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+  File "/Users/keerthikovelamudi/Library/Python/3.9/lib/python/site-packages/pandas/core/internals/construction.py", line 677, in _extract_index
+    raise ValueError("All arrays must be of the same length")
+ValueError: All arrays must be of the same length

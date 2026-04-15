@@ -1,0 +1,210 @@
+2026-04-13 00:55:29 | INFO     | ================================================================================
+2026-04-13 00:55:29 | INFO     | PRODUCTION — LYMPHOMA — Phase 1.3: Feature Ranking FINAL v1.1
+2026-04-13 00:55:29 | INFO     | Timestamp: 2026-04-13 00:55:29
+2026-04-13 00:55:29 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-04-13 00:55:29 | INFO     | ================================================================================
+2026-04-13 00:55:29 | INFO     | 
+📂 Loading input files...
+2026-04-13 00:55:29 | INFO     |   ✅ pos_obs: 4,278 rows validated
+2026-04-13 00:55:29 | INFO     |   ✅ neg_obs: 12,686 rows validated
+2026-04-13 00:55:29 | INFO     |   ✅ pos_meds: 701 rows validated
+2026-04-13 00:55:29 | INFO     |   ✅ neg_meds: 2,873 rows validated
+2026-04-13 00:55:29 | WARNING  |   ⚠️ Observation matrix not found — will use fallback
+2026-04-13 00:55:29 | WARNING  |   ⚠️ Medication matrix not found — will use fallback
+2026-04-13 00:55:29 | INFO     | 
+================================================================================
+2026-04-13 00:55:29 | INFO     | PART 1: OBSERVATIONS
+2026-04-13 00:55:29 | INFO     | ================================================================================
+2026-04-13 00:55:29 | INFO     | 
+============================================================
+2026-04-13 00:55:29 | INFO     | STATISTICAL RANKING: observations
+2026-04-13 00:55:29 | INFO     | ============================================================
+2026-04-13 00:55:29 | INFO     |   Positive: 6,471 patients, 4,278 terms
+2026-04-13 00:55:29 | INFO     |   Negative: 98,140 patients, 12,686 terms
+2026-04-13 00:55:30 | INFO     |   After min cases (>=3): 4,278 terms
+2026-04-13 00:55:30 | INFO     |   Case-enriched only (OR > 1): 2,945 terms (dropped 1,333 control-enriched or invalid OR)
+2026-04-13 00:55:30 | INFO     |   After all filters: 2,945 terms
+2026-04-13 00:55:30 | INFO     |   OR > 2.0: 1718
+2026-04-13 00:55:30 | INFO     |   OR > 5.0: 782
+2026-04-13 00:55:30 | INFO     |   Significant (p<0.05): 1877
+2026-04-13 00:55:30 | INFO     |   Bonferroni sig (p<0.05): 1148
+2026-04-13 00:55:30 | INFO     | 
+============================================================
+2026-04-13 00:55:30 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-13 00:55:30 | INFO     | ============================================================
+2026-04-13 00:55:30 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-13 00:55:30 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-13 00:55:30 | INFO     |   Training L1 Logistic Regression...
+2026-04-13 00:55:44 | INFO     |     AUROC: 0.9326 ± 0.0024 | Non-zero: 498 | 14.0s
+2026-04-13 00:55:44 | INFO     |   Training Random Forest (200 trees)...
+2026-04-13 00:55:46 | INFO     |     AUROC: 0.8361 ± 0.0025 | 1.7s
+2026-04-13 00:55:46 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-13 00:56:22 | INFO     |     AUROC: 0.8542 ± 0.0025 | 35.9s
+2026-04-13 00:56:22 | INFO     |   ✅ Complete: 51.9s total
+2026-04-13 00:56:22 | INFO     |   Building combined ranking for observations...
+2026-04-13 00:56:22 | WARNING  |   ⚠️ 1 ML terms not found in stat ranking
+2026-04-13 00:56:22 | INFO     |   Total: 2,947 | Both agree (top 150): 51
+2026-04-13 00:56:22 | INFO     | 
+📋 Top 20 Observations:
+2026-04-13 00:56:22 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-13 00:56:22 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-13 00:56:22 | INFO     |   1      observation  Seen in hematology clinic                     25.61   22.85   28.70   0.00e+00    254      1   0.805 Very High       
+2026-04-13 00:56:22 | INFO     |   2      observation  Large unstained cells                         20.81   18.72   23.12   0.00e+00    270      2   0.780 High            
+2026-04-13 00:56:22 | INFO     |   3      observation  Fast track referral for suspected haemato     85.00   63.06  114.58   0.00e+00    201      5   0.480 Medium          
+2026-04-13 00:56:22 | INFO     |   4      observation  [D]Swollen glands                             70.76   54.68   91.57   0.00e+00    204      6   0.475 Medium          
+2026-04-13 00:56:22 | INFO     |   5      observation  Mass of neck                                  35.58   29.17   43.39   0.00e+00    231      3   0.472 Medium          
+2026-04-13 00:56:22 | INFO     |   6      observation  Other specified excision or biopsy of lym   2596.59  161.06 41861.35  9.90e-276      1     28   0.409 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   7      observation  2 week rule referral - haematology            70.53   50.34   98.81   0.00e+00    205      7   0.406 Medium          
+2026-04-13 00:56:22 | INFO     |   8      observation  Fast track referral for suspected head an     12.22   10.69   13.96   0.00e+00    405      4   0.401 Medium          
+2026-04-13 00:56:22 | INFO     |   9      observation  [M]Lymphoma NOS                             2099.67  129.99 33914.83  6.43e-223      2     31   0.390 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   10     observation  Suspected lymphoma                          1975.83  122.25 31934.42  1.02e-209      3     29   0.389 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   11     observation  QAdmissions risk of emergency hospital ad     59.45   42.37   83.41   0.00e+00    208     14   0.339 Medium          
+2026-04-13 00:56:22 | INFO     |   12     observation  [D]Lump in head or neck                     1358.93   83.68 22069.51  1.05e-143      4     53   0.338 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   13     observation  Fax sent to:                                 115.39   70.01  190.16   0.00e+00    197     19   0.335 Medium          
+2026-04-13 00:56:22 | INFO     |   14     observation  Test request : Blood Glucose                 898.76   54.91 14711.50   3.43e-94      7     41   0.326 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   15     observation  [D]Tiredness                                1021.26   62.57 16670.21  2.13e-107      5     48   0.325 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   16     observation  O/E - vibration sense normal                 990.63   60.65 16180.30  4.27e-104      6     50   0.322 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   17     observation  Referral to haematologist                     24.89   19.93   31.08   0.00e+00    257     12   0.318 Medium          
+2026-04-13 00:56:22 | INFO     |   18     observation  Glomerular filtration rate                    12.07   10.28   14.17   0.00e+00    408      8   0.310 Medium          
+2026-04-13 00:56:22 | INFO     |   19     observation  Serum appearance                             776.42   47.26 12755.32   5.53e-81      9     64   0.304 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   20     observation  Bone marrow aspiration procedure             715.30   43.44 11778.19   2.23e-74     11     58   0.301 Medium     ✅    
+2026-04-13 00:56:22 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_obs_all.csv (2,947 rows)
+2026-04-13 00:56:22 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_obs_top150.csv (150 rows)
+2026-04-13 00:56:22 | INFO     | 
+================================================================================
+2026-04-13 00:56:22 | INFO     | PART 2: MEDICATIONS
+2026-04-13 00:56:22 | INFO     | ================================================================================
+2026-04-13 00:56:22 | INFO     | 
+============================================================
+2026-04-13 00:56:22 | INFO     | STATISTICAL RANKING: medications
+2026-04-13 00:56:22 | INFO     | ============================================================
+2026-04-13 00:56:22 | INFO     |   Positive: 6,471 patients, 701 terms
+2026-04-13 00:56:22 | INFO     |   Negative: 98,140 patients, 2,873 terms
+2026-04-13 00:56:22 | INFO     |   After min cases (>=3): 701 terms
+2026-04-13 00:56:22 | INFO     |   Case-enriched only (OR > 1): 560 terms (dropped 141 control-enriched or invalid OR)
+2026-04-13 00:56:22 | INFO     |   After all filters: 560 terms
+2026-04-13 00:56:22 | INFO     |   OR > 2.0: 304
+2026-04-13 00:56:22 | INFO     |   OR > 5.0: 121
+2026-04-13 00:56:22 | INFO     |   Significant (p<0.05): 339
+2026-04-13 00:56:22 | INFO     |   Bonferroni sig (p<0.05): 197
+2026-04-13 00:56:22 | INFO     | 
+============================================================
+2026-04-13 00:56:22 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-13 00:56:22 | INFO     | ============================================================
+2026-04-13 00:56:22 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-13 00:56:22 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-13 00:56:22 | INFO     |   Training L1 Logistic Regression...
+2026-04-13 00:56:37 | INFO     |     AUROC: 0.7921 ± 0.0007 | Non-zero: 500 | 14.8s
+2026-04-13 00:56:37 | INFO     |   Training Random Forest (200 trees)...
+2026-04-13 00:56:39 | INFO     |     AUROC: 0.7368 ± 0.0037 | 2.0s
+2026-04-13 00:56:39 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-13 00:57:16 | INFO     |     AUROC: 0.7447 ± 0.0043 | 36.6s
+2026-04-13 00:57:16 | INFO     |   ✅ Complete: 53.5s total
+2026-04-13 00:57:16 | INFO     |   Building combined ranking for medications...
+2026-04-13 00:57:16 | INFO     |   Total: 560 | Both agree (top 150): 85
+2026-04-13 00:57:16 | INFO     | 
+📋 Top 20 Medications:
+2026-04-13 00:57:16 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-13 00:57:16 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-13 00:57:16 | INFO     |   1      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr     59.14   47.85   73.11   0.00e+00     45      1   0.858 Very High  ✅    
+2026-04-13 00:57:16 | INFO     |   2      medication   Influenza vaccine (split virion, inactiva    403.58  184.29  883.81   0.00e+00     14      3   0.666 High       ✅    
+2026-04-13 00:57:16 | INFO     |   3      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    128.72   85.26  194.32   0.00e+00     44      2   0.658 High       ✅    
+2026-04-13 00:57:16 | INFO     |   4      medication   Fluad vaccine suspension for injection 0.   2285.73  141.62 36890.11  1.01e-242      1     11   0.486 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   5      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     32.01   23.86   42.95  4.25e-286     52      4   0.432 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   6      medication   Spikevax COVID-19 mRNA (nucleoside modifi     48.31   33.74   69.19  4.54e-295     47      5   0.432 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   7      medication   Ranitidine 150mg tablets                    1236.01   75.99 20103.96  1.67e-130      2     29   0.359 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   8      medication   Fluad Tetra vaccine suspension for inject   1082.57   66.40 17650.50  5.33e-114      3     31   0.349 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   9      medication   Mepradec 20mg gastro-resistant capsules (    960.00   58.74 15690.54  8.54e-101      4     38   0.338 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   10     medication   Influenza vaccine (surface antigen, inact    929.38   56.82 15200.94   1.71e-97      5     35   0.338 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   11     medication   Enzira vaccine suspension for injection 0    806.99   49.17 13244.12   2.76e-84      6     37   0.328 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   12     medication   Amoxicillin 250mg capsules                    28.96   20.83   40.27  5.66e-205     54     10   0.324 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   13     medication   Imuvac vaccine suspension for injection 0    654.22   39.62 10801.71   8.99e-68      7     30   0.321 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   14     medication   Diprobase cream (Bayer Plc)                  654.22   39.62 10801.71   8.99e-68      8     43   0.309 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   15     medication   Comirnaty Original/Omicron BA.1 COVID-19      20.46   15.35   27.25  9.23e-186     56      9   0.308 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   16     medication   Diclofenac sodium 50mg gastro-resistant t     17.54   12.92   23.82  6.36e-138     57      7   0.302 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   17     medication   Pholcodine 5mg/5ml linctus sugar free        440.74   26.29 7389.46   1.22e-44     11     41   0.290 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   18     medication   Flucelvax Tetra vaccine suspension for in    440.74   26.29 7389.46   1.22e-44     10     52   0.279 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   19     medication   Influvac Sub-unit vaccine suspension for     471.21   28.19 7876.38   6.02e-48      9     71   0.275 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   20     medication   Pneumovax II vaccine solution for injecti    410.28   24.39 6902.75   2.46e-41     13     57   0.273 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_meds_all.csv (560 rows)
+2026-04-13 00:57:16 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_meds_top150.csv (150 rows)
+2026-04-13 00:57:16 | INFO     | 
+================================================================================
+2026-04-13 00:57:16 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-04-13 00:57:16 | INFO     | ================================================================================
+2026-04-13 00:57:16 | INFO     | 
+📋 Top 20 Combined Features:
+2026-04-13 00:57:16 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-13 00:57:16 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-13 00:57:16 | INFO     |   1      observation  Seen in hematology clinic                     25.61   22.85   28.70   0.00e+00    254      1   0.805 Very High       
+2026-04-13 00:57:16 | INFO     |   2      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr     59.14   47.85   73.11   0.00e+00     45      1   0.798 High       ✅    
+2026-04-13 00:57:16 | INFO     |   3      observation  Large unstained cells                         20.81   18.72   23.12   0.00e+00    270      2   0.780 High            
+2026-04-13 00:57:16 | INFO     |   4      medication   Influenza vaccine (split virion, inactiva    403.58  184.29  883.81   0.00e+00     14      3   0.632 High       ✅    
+2026-04-13 00:57:16 | INFO     |   5      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    128.72   85.26  194.32   0.00e+00     44      2   0.620 High       ✅    
+2026-04-13 00:57:16 | INFO     |   6      observation  Fast track referral for suspected haemato     85.00   63.06  114.58   0.00e+00    201      5   0.480 Medium          
+2026-04-13 00:57:16 | INFO     |   7      observation  [D]Swollen glands                             70.76   54.68   91.57   0.00e+00    204      6   0.475 Medium          
+2026-04-13 00:57:16 | INFO     |   8      observation  Mass of neck                                  35.58   29.17   43.39   0.00e+00    231      3   0.472 Medium          
+2026-04-13 00:57:16 | INFO     |   9      medication   Fluad vaccine suspension for injection 0.   2285.73  141.62 36890.11  1.01e-242      1     11   0.468 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   10     medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     32.01   23.86   42.95  4.25e-286     52      4   0.414 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   11     medication   Spikevax COVID-19 mRNA (nucleoside modifi     48.31   33.74   69.19  4.54e-295     47      5   0.412 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   12     observation  Other specified excision or biopsy of lym   2596.59  161.06 41861.35  9.90e-276      1     28   0.409 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   13     observation  2 week rule referral - haematology            70.53   50.34   98.81   0.00e+00    205      7   0.406 Medium          
+2026-04-13 00:57:16 | INFO     |   14     observation  Fast track referral for suspected head an     12.22   10.69   13.96   0.00e+00    405      4   0.401 Medium          
+2026-04-13 00:57:16 | INFO     |   15     observation  [M]Lymphoma NOS                             2099.67  129.99 33914.83  6.43e-223      2     31   0.390 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   16     observation  Suspected lymphoma                          1975.83  122.25 31934.42  1.02e-209      3     29   0.389 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   17     medication   Ranitidine 150mg tablets                    1236.01   75.99 20103.96  1.67e-130      2     29   0.347 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   18     observation  QAdmissions risk of emergency hospital ad     59.45   42.37   83.41   0.00e+00    208     14   0.339 Medium          
+2026-04-13 00:57:16 | INFO     |   19     medication   Fluad Tetra vaccine suspension for inject   1082.57   66.40 17650.50  5.33e-114      3     31   0.338 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   20     observation  [D]Lump in head or neck                     1358.93   83.68 22069.51  1.05e-143      4     53   0.338 Medium     ✅    
+2026-04-13 00:57:16 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_combined_all.csv (3,507 rows)
+2026-04-13 00:57:16 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/lymphoma_combined_top150.csv (150 rows)
+2026-04-13 00:57:16 | INFO     | 
+================================================================================
+2026-04-13 00:57:16 | INFO     | FINAL SUMMARY
+2026-04-13 00:57:16 | INFO     | ================================================================================
+2026-04-13 00:57:16 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Lymphoma_Cancer/1_Top_Snomed/output/Scores_lymphoma/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   lymphoma_obs_top150.csv       →  150 observations          │
+  │   lymphoma_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   lymphoma_combined_top150.csv  →  119 obs +   31 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   lymphoma_obs_all.csv          →   2947 observations       │
+  │   lymphoma_meds_all.csv         →    560 medications        │
+  │   lymphoma_combined_all.csv     →   3507 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: SIMULATED (fallback) ⚠️
+  Medications:  SIMULATED (fallback) ⚠️
+
+📊 Observations:  2,947 scored | OR>2: 1720 | Sig: 1879
+📊 Medications:   560 scored | OR>2: 304 | Sig: 339
+
+📊 Combined Top 150: 119 obs (79%) + 31 meds (21%)
+
+📊 Confidence: VeryHigh=1 | High=4 | Medium=145 | Low=0
+2026-04-13 00:57:16 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-04-13 00:57:16 | INFO     |   #1 Seen in hematology clinic (OR=25.61 [22.85-28.70], p=0.00e+00, score=0.805)
+2026-04-13 00:57:16 | INFO     |   #3 Large unstained cells (OR=20.81 [18.72-23.12], p=0.00e+00, score=0.780)
+2026-04-13 00:57:16 | INFO     |   #6 Fast track referral for suspected haematology malignancy (OR=85.00 [63.06-114.58], p=0.00e+00, score=0.480)
+2026-04-13 00:57:16 | INFO     |   #7 [D]Swollen glands (OR=70.76 [54.68-91.57], p=0.00e+00, score=0.475)
+2026-04-13 00:57:16 | INFO     |   #8 Mass of neck (OR=35.58 [29.17-43.39], p=0.00e+00, score=0.472)
+2026-04-13 00:57:16 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-04-13 00:57:16 | INFO     |   #2 Comirnaty COVID-19 mRNA Vaccine 30micrograms/0.3ml dose concentrate for dispersion for injection multidose vials (Pfizer Ltd) (OR=59.14 [47.85-73.11], p=0.00e+00, score=0.798)
+2026-04-13 00:57:16 | INFO     |   #4 Influenza vaccine (split virion, inactivated) suspension for injection 0.5ml pre-filled syringes (OR=403.58 [184.29-883.81], p=0.00e+00, score=0.632)
+2026-04-13 00:57:16 | INFO     |   #5 COVID-19 Vaccine Vaxzevria (ChAdOx1 S [recombinant]) not less than 2.5x100,000,000 infectious units/0.5ml dose suspension for injection multidose vials (AstraZeneca UK Ltd) (OR=128.72 [85.26-194.32], p=0.00e+00, score=0.620)
+2026-04-13 00:57:16 | INFO     |   #9 Fluad vaccine suspension for injection 0.5ml pre-filled syringes (Seqirus UK Ltd) (OR=2285.73 [141.62-36890.11], p=1.01e-242, score=0.468)
+2026-04-13 00:57:16 | INFO     |   #10 COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc) (OR=32.01 [23.86-42.95], p=4.25e-286, score=0.414)
+2026-04-13 00:57:16 | INFO     | 
+⏱️  Total execution time: 106.9s (1.8 min)
+2026-04-13 00:57:16 | INFO     | 
+================================================================================
+2026-04-13 00:57:16 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-04-13 00:57:16 | INFO     | ================================================================================

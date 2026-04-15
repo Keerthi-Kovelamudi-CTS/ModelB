@@ -1,2 +1,6 @@
-# Tabular exports under Bladder_Cancer — keep local only
+# Tabular exports — keep local only (large / sensitive)
 Bladder_Cancer/**/*.csv
+Leukaemia_Cancer/**/*.csv
+Lymphoma_Cancer/**/*.csv
+Ovarian_Cancer/**/*.csv
+Prostate_Cancer/**/*.csv

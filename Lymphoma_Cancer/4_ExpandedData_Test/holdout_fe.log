@@ -1,0 +1,969 @@
+Loaded 3mo: obs 470,996 rows, med 42 rows
+Loaded 6mo: obs 467,925 rows, med 42 rows
+Loaded 12mo: obs 463,948 rows, med 38 rows
+
+######################################################################
+  FEATURE ENGINEERING — 3MO WINDOW
+######################################################################
+
+  Building clinical features...
+  Clinical features: 201 features for 293064 patients
+
+  Building medication features...
+  Medication features: 16 features for 31 patients
+
+  Merging clinical + medication features...
+  Merged: 217 features for 293064 patients
+
+  Building interaction features...
+  Added 4 interaction features
+  Final: 221 features for 293064 patients
+
+  -- FEATURE SUMMARY --
+  Total features: 221
+  Total patients: 293064
+  Positive (label=1): 0
+  Negative (label=0): 293064
+
+  Feature breakdown:
+    Demographics:     2
+    Observation:      117
+    Lab values:       60
+    Investigation:    8
+    Aggregate:        11
+    Temporal:         2
+    Medication:       16
+    Interaction:      4
+    ─────────────────────────
+    TOTAL:            221
+
+  Features with >50% null:
+    LAB_CALCIUM_BONE_mean: 87.4%
+    LAB_CALCIUM_BONE_min: 87.4%
+    LAB_CALCIUM_BONE_max: 87.4%
+    LAB_CALCIUM_BONE_std: 96.4%
+    LAB_CALCIUM_BONE_count: 87.4%
+    LAB_CALCIUM_BONE_last: 87.4%
+    LAB_CALCIUM_BONE_first: 87.4%
+    LAB_CALCIUM_BONE_mean_A: 91.9%
+    LAB_CALCIUM_BONE_mean_B: 93.4%
+    LAB_CALCIUM_BONE_delta: 97.9%
+    LAB_CALCIUM_BONE_slope: 96.6%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_min: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_max: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_std: 98.6%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_last: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_first: 94.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_A: 96.9%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_B: 97.6%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_delta: 99.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_slope: 99.0%
+    LAB_LAB_MARKERS_mean: 86.8%
+    LAB_LAB_MARKERS_min: 86.8%
+    LAB_LAB_MARKERS_max: 86.8%
+    LAB_LAB_MARKERS_std: 94.1%
+    LAB_LAB_MARKERS_count: 86.8%
+    LAB_LAB_MARKERS_last: 86.8%
+    LAB_LAB_MARKERS_first: 86.8%
+    LAB_LAB_MARKERS_mean_A: 92.2%
+    LAB_LAB_MARKERS_mean_B: 92.5%
+    LAB_LAB_MARKERS_delta: 97.9%
+    LAB_LAB_MARKERS_slope: 96.2%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_min: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_max: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_std: 99.8%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_count: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_last: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_first: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_A: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_B: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_delta: 99.9%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_slope: 99.8%
+    LAB_PROTEIN_STUDIES_mean: 100.0%
+    LAB_PROTEIN_STUDIES_min: 100.0%
+    LAB_PROTEIN_STUDIES_max: 100.0%
+    LAB_PROTEIN_STUDIES_std: 100.0%
+    LAB_PROTEIN_STUDIES_count: 100.0%
+    LAB_PROTEIN_STUDIES_last: 100.0%
+    LAB_PROTEIN_STUDIES_first: 100.0%
+    LAB_PROTEIN_STUDIES_mean_A: 100.0%
+    LAB_PROTEIN_STUDIES_mean_B: 100.0%
+    LAB_PROTEIN_STUDIES_delta: 100.0%
+    LAB_PROTEIN_STUDIES_slope: 100.0%
+
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_3mo.csv
+
+######################################################################
+  FEATURE ENGINEERING — 6MO WINDOW
+######################################################################
+
+  Building clinical features...
+  Clinical features: 201 features for 293065 patients
+
+  Building medication features...
+  Medication features: 16 features for 30 patients
+
+  Merging clinical + medication features...
+  Merged: 217 features for 293065 patients
+
+  Building interaction features...
+  Added 4 interaction features
+  Final: 221 features for 293065 patients
+
+  -- FEATURE SUMMARY --
+  Total features: 221
+  Total patients: 293065
+  Positive (label=1): 0
+  Negative (label=0): 293065
+
+  Feature breakdown:
+    Demographics:     2
+    Observation:      117
+    Lab values:       60
+    Investigation:    8
+    Aggregate:        11
+    Temporal:         2
+    Medication:       16
+    Interaction:      4
+    ─────────────────────────
+    TOTAL:            221
+
+  Features with >50% null:
+    LAB_CALCIUM_BONE_mean: 87.2%
+    LAB_CALCIUM_BONE_min: 87.2%
+    LAB_CALCIUM_BONE_max: 87.2%
+    LAB_CALCIUM_BONE_std: 96.4%
+    LAB_CALCIUM_BONE_count: 87.2%
+    LAB_CALCIUM_BONE_last: 87.2%
+    LAB_CALCIUM_BONE_first: 87.2%
+    LAB_CALCIUM_BONE_mean_A: 91.9%
+    LAB_CALCIUM_BONE_mean_B: 93.2%
+    LAB_CALCIUM_BONE_delta: 97.9%
+    LAB_CALCIUM_BONE_slope: 96.6%
+    LAB_LAB_MARKERS_mean: 86.9%
+    LAB_LAB_MARKERS_min: 86.9%
+    LAB_LAB_MARKERS_max: 86.9%
+    LAB_LAB_MARKERS_std: 94.4%
+    LAB_LAB_MARKERS_count: 86.9%
+    LAB_LAB_MARKERS_last: 86.9%
+    LAB_LAB_MARKERS_first: 86.9%
+    LAB_LAB_MARKERS_mean_A: 92.3%
+    LAB_LAB_MARKERS_mean_B: 92.6%
+    LAB_LAB_MARKERS_delta: 98.0%
+    LAB_LAB_MARKERS_slope: 96.2%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_min: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_max: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_std: 98.6%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_last: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_first: 94.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_A: 96.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_B: 97.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_delta: 99.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_slope: 99.0%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_min: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_max: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_std: 99.8%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_count: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_last: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_first: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_A: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_B: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_delta: 99.9%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_slope: 99.8%
+    LAB_PROTEIN_STUDIES_mean: 100.0%
+    LAB_PROTEIN_STUDIES_min: 100.0%
+    LAB_PROTEIN_STUDIES_max: 100.0%
+    LAB_PROTEIN_STUDIES_std: 100.0%
+    LAB_PROTEIN_STUDIES_count: 100.0%
+    LAB_PROTEIN_STUDIES_last: 100.0%
+    LAB_PROTEIN_STUDIES_first: 100.0%
+    LAB_PROTEIN_STUDIES_mean_A: 100.0%
+    LAB_PROTEIN_STUDIES_mean_B: 100.0%
+    LAB_PROTEIN_STUDIES_delta: 100.0%
+    LAB_PROTEIN_STUDIES_slope: 100.0%
+
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_6mo.csv
+
+######################################################################
+  FEATURE ENGINEERING — 12MO WINDOW
+######################################################################
+
+  Building clinical features...
+  Clinical features: 201 features for 293070 patients
+
+  Building medication features...
+  Medication features: 16 features for 25 patients
+
+  Merging clinical + medication features...
+  Merged: 217 features for 293070 patients
+
+  Building interaction features...
+  Added 4 interaction features
+  Final: 221 features for 293070 patients
+
+  -- FEATURE SUMMARY --
+  Total features: 221
+  Total patients: 293070
+  Positive (label=1): 0
+  Negative (label=0): 293070
+
+  Feature breakdown:
+    Demographics:     2
+    Observation:      117
+    Lab values:       60
+    Investigation:    8
+    Aggregate:        11
+    Temporal:         2
+    Medication:       16
+    Interaction:      4
+    ─────────────────────────
+    TOTAL:            221
+
+  Features with >50% null:
+    LAB_CALCIUM_BONE_mean: 87.0%
+    LAB_CALCIUM_BONE_min: 87.0%
+    LAB_CALCIUM_BONE_max: 87.0%
+    LAB_CALCIUM_BONE_std: 96.4%
+    LAB_CALCIUM_BONE_count: 87.0%
+    LAB_CALCIUM_BONE_last: 87.0%
+    LAB_CALCIUM_BONE_first: 87.0%
+    LAB_CALCIUM_BONE_mean_A: 92.0%
+    LAB_CALCIUM_BONE_mean_B: 92.6%
+    LAB_CALCIUM_BONE_delta: 97.7%
+    LAB_CALCIUM_BONE_slope: 96.5%
+    LAB_LAB_MARKERS_mean: 87.0%
+    LAB_LAB_MARKERS_min: 87.0%
+    LAB_LAB_MARKERS_max: 87.0%
+    LAB_LAB_MARKERS_std: 94.8%
+    LAB_LAB_MARKERS_count: 87.0%
+    LAB_LAB_MARKERS_last: 87.0%
+    LAB_LAB_MARKERS_first: 87.0%
+    LAB_LAB_MARKERS_mean_A: 92.3%
+    LAB_LAB_MARKERS_mean_B: 92.6%
+    LAB_LAB_MARKERS_delta: 97.9%
+    LAB_LAB_MARKERS_slope: 96.2%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_min: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_max: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_std: 98.7%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_last: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_first: 94.5%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_A: 96.8%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_mean_B: 97.2%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_delta: 99.4%
+    LAB_HAEMATOLOGY_INVESTIGATION_SELECTIVE_slope: 98.9%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_min: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_max: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_std: 99.8%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_count: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_last: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_first: 99.5%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_A: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_mean_B: 99.7%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_delta: 99.9%
+    LAB_HAEMATOLOGICAL_ABNORMALITIES_slope: 99.8%
+    LAB_PROTEIN_STUDIES_mean: 100.0%
+    LAB_PROTEIN_STUDIES_min: 100.0%
+    LAB_PROTEIN_STUDIES_max: 100.0%
+    LAB_PROTEIN_STUDIES_std: 100.0%
+    LAB_PROTEIN_STUDIES_count: 100.0%
+    LAB_PROTEIN_STUDIES_last: 100.0%
+    LAB_PROTEIN_STUDIES_first: 100.0%
+    LAB_PROTEIN_STUDIES_mean_A: 100.0%
+    LAB_PROTEIN_STUDIES_mean_B: 100.0%
+    LAB_PROTEIN_STUDIES_delta: 100.0%
+    LAB_PROTEIN_STUDIES_slope: 100.0%
+
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_12mo.csv
+
+======================================================================
+  STEP 4 COMPLETE — FEATURE MATRICES BUILT
+======================================================================
+
+  3mo: 293064 patients x 221 features
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 patients x 221 features
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 patients x 221 features
+    Pos: 0 | Neg: 293070
+
+======================================================================
+  Ready for STEP 4b (Advanced Features)
+======================================================================
+
+######################################################################
+  STEP 4b — PROCESSING 3MO
+######################################################################
+
+======================================================================
+  ADVANCED FEATURES — 3mo
+======================================================================
+  Building symptom clusters...
+  Building visit patterns...
+  Building temporal trajectories...
+  Building lab trajectories...
+  Building medication escalation patterns...
+  Building investigation patterns...
+  Building cross-domain interactions...
+  Building time-decay features...
+
+  Advanced features built: 115 new features
+    CLUSTER: 31 | VISIT: 7 | TRAJ: 20 | LAB_TRAJ: 25 | MED_ESC: 15 | INV_PATTERN: 6 | CROSS: 5 | DECAY: 6
+
+  Final enhanced matrix: 293064 patients x 336 features
+  (was 221 features, added 115)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_enhanced_3mo.csv
+
+######################################################################
+  STEP 4b — PROCESSING 6MO
+######################################################################
+
+======================================================================
+  ADVANCED FEATURES — 6mo
+======================================================================
+  Building symptom clusters...
+  Building visit patterns...
+  Building temporal trajectories...
+  Building lab trajectories...
+  Building medication escalation patterns...
+  Building investigation patterns...
+  Building cross-domain interactions...
+  Building time-decay features...
+
+  Advanced features built: 115 new features
+    CLUSTER: 31 | VISIT: 7 | TRAJ: 20 | LAB_TRAJ: 25 | MED_ESC: 15 | INV_PATTERN: 6 | CROSS: 5 | DECAY: 6
+
+  Final enhanced matrix: 293065 patients x 336 features
+  (was 221 features, added 115)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_enhanced_6mo.csv
+
+######################################################################
+  STEP 4b — PROCESSING 12MO
+######################################################################
+
+======================================================================
+  ADVANCED FEATURES — 12mo
+======================================================================
+  Building symptom clusters...
+  Building visit patterns...
+  Building temporal trajectories...
+  Building lab trajectories...
+  Building medication escalation patterns...
+  Building investigation patterns...
+  Building cross-domain interactions...
+  Building time-decay features...
+
+  Advanced features built: 115 new features
+    CLUSTER: 31 | VISIT: 7 | TRAJ: 20 | LAB_TRAJ: 25 | MED_ESC: 15 | INV_PATTERN: 6 | CROSS: 5 | DECAY: 6
+
+  Final enhanced matrix: 293070 patients x 336 features
+  (was 221 features, added 115)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_enhanced_12mo.csv
+
+======================================================================
+  STEP 4b COMPLETE — ENHANCED FEATURE MATRICES
+======================================================================
+
+  3mo: 293064 patients x 336 features
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 patients x 336 features
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 patients x 336 features
+    Pos: 0 | Neg: 293070
+
+======================================================================
+  Run Step 4c maximum features, then Step 4d lymphoma-specific, then Step 5 cleanup -> modeling.
+======================================================================
+
+
+######################################################################
+  STEP 4c — 3MO
+######################################################################
+
+======================================================================
+  MAXIMUM FEATURE EXTRACTION — 3mo
+======================================================================
+
+  BLOCK 1: Monthly time bins...
+    Added 54 features
+
+  BLOCK 2: Per-category granular features...
+    Added 120 features for 20 categories
+
+  BLOCK 3: Per-category medication granular features...
+    Added 8 features for 1 med categories
+
+  BLOCK 4: Per-term lab features...
+    Added 160 features for 16 lab terms
+
+  BLOCK 5: Pairwise co-occurrence...
+    Added 197 co-occurrence features
+
+  BLOCK 6: Sequence features...
+    Added 29 sequence features
+
+  BLOCK 7: Recurrence features...
+    Added 83 recurrence features
+
+  BLOCK 8: Ratio & rate features...
+    Added 8 rate features
+
+  BLOCK 9: Age interaction features...
+    Added 15 age features
+
+  BLOCK 11: Entropy & diversity...
+    Added 5 entropy features
+
+  Removed 46 constant columns
+
+  TOTAL NEW FEATURES: 633
+
+  FINAL MATRIX: 293064 patients x 969 features
+  (Enhanced had 336, added 633)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_mega_3mo.csv
+
+
+######################################################################
+  STEP 4c — 6MO
+######################################################################
+
+======================================================================
+  MAXIMUM FEATURE EXTRACTION — 6mo
+======================================================================
+
+  BLOCK 1: Monthly time bins...
+    Added 54 features
+
+  BLOCK 2: Per-category granular features...
+    Added 120 features for 20 categories
+
+  BLOCK 3: Per-category medication granular features...
+    Added 8 features for 1 med categories
+
+  BLOCK 4: Per-term lab features...
+    Added 170 features for 17 lab terms
+
+  BLOCK 5: Pairwise co-occurrence...
+    Added 197 co-occurrence features
+
+  BLOCK 6: Sequence features...
+    Added 29 sequence features
+
+  BLOCK 7: Recurrence features...
+    Added 83 recurrence features
+
+  BLOCK 8: Ratio & rate features...
+    Added 8 rate features
+
+  BLOCK 9: Age interaction features...
+    Added 15 age features
+
+  BLOCK 11: Entropy & diversity...
+    Added 5 entropy features
+
+  Removed 49 constant columns
+
+  TOTAL NEW FEATURES: 640
+
+  FINAL MATRIX: 293065 patients x 976 features
+  (Enhanced had 336, added 640)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_mega_6mo.csv
+
+
+######################################################################
+  STEP 4c — 12MO
+######################################################################
+
+======================================================================
+  MAXIMUM FEATURE EXTRACTION — 12mo
+======================================================================
+
+  BLOCK 1: Monthly time bins...
+    Added 54 features
+
+  BLOCK 2: Per-category granular features...
+    Added 120 features for 20 categories
+
+  BLOCK 3: Per-category medication granular features...
+    Added 8 features for 1 med categories
+
+  BLOCK 4: Per-term lab features...
+    Added 180 features for 18 lab terms
+
+  BLOCK 5: Pairwise co-occurrence...
+    Added 197 co-occurrence features
+
+  BLOCK 6: Sequence features...
+    Added 29 sequence features
+
+  BLOCK 7: Recurrence features...
+    Added 83 recurrence features
+
+  BLOCK 8: Ratio & rate features...
+    Added 8 rate features
+
+  BLOCK 9: Age interaction features...
+    Added 15 age features
+
+  BLOCK 11: Entropy & diversity...
+    Added 5 entropy features
+
+  Removed 61 constant columns
+
+  TOTAL NEW FEATURES: 638
+
+  FINAL MATRIX: 293070 patients x 974 features
+  (Enhanced had 336, added 638)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_mega_12mo.csv
+
+======================================================================
+  STEP 4c COMPLETE — MEGA FEATURE MATRICES
+======================================================================
+
+  3mo: 293064 patients x 969 features
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 patients x 976 features
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 patients x 974 features
+    Pos: 0 | Neg: 293070
+
+======================================================================
+  MEGA FEATURES COMPLETE — Next: Step 4d lymphoma-specific, then Step 5 cleanup -> modeling
+======================================================================
+
+
+######################################################################
+  STEP 4d — 3MO
+######################################################################
+
+======================================================================
+  LYMPHOMA-SPECIFIC FEATURES — 3mo
+======================================================================
+  BLOCK 1: Nodal/mass features...
+  BLOCK 2: B symptoms / constitutional features...
+  BLOCK 3: Lab prognostic features...
+  BLOCK 4: Infection pattern features...
+  BLOCK 5: Treatment / steroid flags...
+  BLOCK 6: IPI-like surrogate score...
+  BLOCK 7: Risk factors...
+  Removed 9 constant columns
+
+  Lymphoma-specific features: 35 features
+    Binary flags             : 8
+    Nodal/mass               : 4
+    B-symptoms               : 3
+    Constitutional           : 1
+    Lab prognostic           : 13
+    IPI surrogate            : 1
+    Risk factors             : 5
+  Removed 19 near-zero-var lymphoma features
+
+  FINAL: 293064 x 985 features (added 16 lymphoma-specific)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_final_3mo.csv
+
+  Top 20 features:
+       1. AGE_AT_INDEX: nan
+       2. AGE_BAND: nan
+       3. OBS_ABNORMAL_IMAGING_count_A: nan
+       4. OBS_ADDITIONAL_SYMPTOMS_count_A: nan
+       5. OBS_AUTOIMMUNE_IMMUNE_count_A: nan
+       6. OBS_B_SYMPTOMS_count_A: nan
+       7. OBS_CALCIUM_BONE_count_A: nan
+       8. OBS_CONSTITUTIONAL_SYMPTOMS_count_A: nan
+       9. OBS_HAEMATOLOGICAL_ABNORMALITIES_count_A: nan
+      10. OBS_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count_A: nan
+      11. OBS_INFECTION_MARKERS_count_A: nan
+      12. OBS_LAB_MARKERS_count_A: nan
+      13. OBS_LYMPHADENOPATHY_count_A: nan
+      14. OBS_NEUROPATHY_count_A: nan
+      15. OBS_PAIN_SYMPTOMS_count_A: nan
+      16. OBS_PROTEIN_STUDIES_count_A: nan
+      17. OBS_RECURRENT_INFECTIONS_count_A: nan
+      18. OBS_SICKNESS_ABSENCE_count_A: nan
+      19. OBS_SKIN_SYMPTOMS_count_A: nan
+      20. OBS_SPLENOMEGALY_count_A: nan
+
+  Lymphoma-specific feature rankings:
+    Rank 969: LYM_has_lymphadenopathy: nan
+    Rank 970: LYM_has_unexplained_masses: nan
+    Rank 971: LYM_nodal_event_count_A: nan
+    Rank 972: LYM_nodal_event_count_B: nan
+    Rank 973: LYM_nodal_event_count_total: nan
+    Rank 974: LYM_nodal_acceleration: nan
+    Rank 975: LYM_has_bsymptoms: nan
+    Rank 976: LYM_has_constitutional_symptoms: nan
+    Rank 977: LYM_LAB_crp_latest: nan
+    Rank 978: LYM_LAB_crp_elevated: nan
+    Rank 979: LYM_LAB_esr_latest: nan
+    Rank 980: LYM_has_infection_markers: nan
+    Rank 981: LYM_IPI_surrogate_score: nan
+    Rank 982: LYM_RF_peak_age: nan
+    Rank 983: LYM_RF_elderly: nan
+
+
+######################################################################
+  STEP 4d — 6MO
+######################################################################
+
+======================================================================
+  LYMPHOMA-SPECIFIC FEATURES — 6mo
+======================================================================
+  BLOCK 1: Nodal/mass features...
+  BLOCK 2: B symptoms / constitutional features...
+  BLOCK 3: Lab prognostic features...
+  BLOCK 4: Infection pattern features...
+  BLOCK 5: Treatment / steroid flags...
+  BLOCK 6: IPI-like surrogate score...
+  BLOCK 7: Risk factors...
+  Removed 9 constant columns
+
+  Lymphoma-specific features: 35 features
+    Binary flags             : 8
+    Nodal/mass               : 4
+    B-symptoms               : 3
+    Constitutional           : 1
+    Lab prognostic           : 13
+    IPI surrogate            : 1
+    Risk factors             : 5
+  Removed 18 near-zero-var lymphoma features
+
+  FINAL: 293065 x 993 features (added 17 lymphoma-specific)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_final_6mo.csv
+
+  Top 20 features:
+       1. AGE_AT_INDEX: nan
+       2. AGE_BAND: nan
+       3. OBS_ABNORMAL_IMAGING_count_A: nan
+       4. OBS_ADDITIONAL_SYMPTOMS_count_A: nan
+       5. OBS_AUTOIMMUNE_IMMUNE_count_A: nan
+       6. OBS_B_SYMPTOMS_count_A: nan
+       7. OBS_CALCIUM_BONE_count_A: nan
+       8. OBS_CONSTITUTIONAL_SYMPTOMS_count_A: nan
+       9. OBS_HAEMATOLOGICAL_ABNORMALITIES_count_A: nan
+      10. OBS_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count_A: nan
+      11. OBS_INFECTION_MARKERS_count_A: nan
+      12. OBS_LAB_MARKERS_count_A: nan
+      13. OBS_LYMPHADENOPATHY_count_A: nan
+      14. OBS_NEUROPATHY_count_A: nan
+      15. OBS_PAIN_SYMPTOMS_count_A: nan
+      16. OBS_PROTEIN_STUDIES_count_A: nan
+      17. OBS_RECURRENT_INFECTIONS_count_A: nan
+      18. OBS_SICKNESS_ABSENCE_count_A: nan
+      19. OBS_SKIN_SYMPTOMS_count_A: nan
+      20. OBS_SPLENOMEGALY_count_A: nan
+
+  Lymphoma-specific feature rankings:
+    Rank 976: LYM_has_lymphadenopathy: nan
+    Rank 977: LYM_has_unexplained_masses: nan
+    Rank 978: LYM_nodal_event_count_A: nan
+    Rank 979: LYM_nodal_event_count_B: nan
+    Rank 980: LYM_nodal_event_count_total: nan
+    Rank 981: LYM_nodal_acceleration: nan
+    Rank 982: LYM_has_bsymptoms: nan
+    Rank 983: LYM_has_constitutional_symptoms: nan
+    Rank 984: LYM_LAB_crp_latest: nan
+    Rank 985: LYM_LAB_crp_elevated: nan
+    Rank 986: LYM_LAB_esr_latest: nan
+    Rank 987: LYM_LAB_esr_elevated: nan
+    Rank 988: LYM_has_infection_markers: nan
+    Rank 989: LYM_IPI_surrogate_score: nan
+    Rank 990: LYM_RF_peak_age: nan
+
+
+######################################################################
+  STEP 4d — 12MO
+######################################################################
+
+======================================================================
+  LYMPHOMA-SPECIFIC FEATURES — 12mo
+======================================================================
+  BLOCK 1: Nodal/mass features...
+  BLOCK 2: B symptoms / constitutional features...
+  BLOCK 3: Lab prognostic features...
+  BLOCK 4: Infection pattern features...
+  BLOCK 5: Treatment / steroid flags...
+  BLOCK 6: IPI-like surrogate score...
+  BLOCK 7: Risk factors...
+  Removed 10 constant columns
+
+  Lymphoma-specific features: 34 features
+    Binary flags             : 8
+    Nodal/mass               : 4
+    B-symptoms               : 3
+    Constitutional           : 1
+    Lab prognostic           : 12
+    IPI surrogate            : 1
+    Risk factors             : 5
+  Removed 17 near-zero-var lymphoma features
+
+  FINAL: 293070 x 991 features (added 17 lymphoma-specific)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_final_12mo.csv
+
+  Top 20 features:
+       1. AGE_AT_INDEX: nan
+       2. AGE_BAND: nan
+       3. OBS_ABNORMAL_IMAGING_count_A: nan
+       4. OBS_ADDITIONAL_SYMPTOMS_count_A: nan
+       5. OBS_AUTOIMMUNE_IMMUNE_count_A: nan
+       6. OBS_B_SYMPTOMS_count_A: nan
+       7. OBS_CALCIUM_BONE_count_A: nan
+       8. OBS_CONSTITUTIONAL_SYMPTOMS_count_A: nan
+       9. OBS_HAEMATOLOGICAL_ABNORMALITIES_count_A: nan
+      10. OBS_HAEMATOLOGY_INVESTIGATION_SELECTIVE_count_A: nan
+      11. OBS_INFECTION_MARKERS_count_A: nan
+      12. OBS_LAB_MARKERS_count_A: nan
+      13. OBS_LYMPHADENOPATHY_count_A: nan
+      14. OBS_NEUROPATHY_count_A: nan
+      15. OBS_PAIN_SYMPTOMS_count_A: nan
+      16. OBS_PROTEIN_STUDIES_count_A: nan
+      17. OBS_RECURRENT_INFECTIONS_count_A: nan
+      18. OBS_SICKNESS_ABSENCE_count_A: nan
+      19. OBS_SKIN_SYMPTOMS_count_A: nan
+      20. OBS_SPLENOMEGALY_count_A: nan
+
+  Lymphoma-specific feature rankings:
+    Rank 974: LYM_has_lymphadenopathy: nan
+    Rank 975: LYM_has_unexplained_masses: nan
+    Rank 976: LYM_nodal_event_count_A: nan
+    Rank 977: LYM_nodal_event_count_B: nan
+    Rank 978: LYM_nodal_event_count_total: nan
+    Rank 979: LYM_nodal_acceleration: nan
+    Rank 980: LYM_has_bsymptoms: nan
+    Rank 981: LYM_has_constitutional_symptoms: nan
+    Rank 982: LYM_LAB_crp_latest: nan
+    Rank 983: LYM_LAB_crp_elevated: nan
+    Rank 984: LYM_LAB_esr_latest: nan
+    Rank 985: LYM_LAB_esr_elevated: nan
+    Rank 986: LYM_has_infection_markers: nan
+    Rank 987: LYM_IPI_surrogate_score: nan
+    Rank 988: LYM_RF_peak_age: nan
+
+======================================================================
+  STEP 4d COMPLETE — FINAL MATRICES (Lymphoma-specific features)
+======================================================================
+
+  3mo: 293064 x 985 features (16 lymphoma-specific)
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 x 993 features (17 lymphoma-specific)
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 x 991 features (17 lymphoma-specific)
+    Pos: 0 | Neg: 293070
+
+  Next: Run Step 4e (new signal features), then Step 5 cleanup -> modeling.
+======================================================================
+
+
+######################################################################
+  STEP 4e — 3MO
+######################################################################
+
+======================================================================
+  NEW SIGNAL FEATURES — 3mo
+======================================================================
+  BLOCK 1: Top CODE_ID-level binary features...
+    Added 50 obs CODE_ID features
+    Added 1 med CODE_ID/term features
+
+  BLOCK 2: Symptom recency scores...
+    Added 20 recency features
+
+  BLOCK 3: Distinct visit dates per symptom...
+    Added 30 visit-based features
+
+  BLOCK 4: Recency x persistence interactions...
+    Added 10 recency x persistence features
+
+  New signal features: 111 total
+    CODE_ID obs              : 50
+    CODE_ID med              : 1
+    Recency                  : 20
+    Distinct visits          : 30
+    Recency x Persistence    : 10
+
+  FINAL: 293064 x 1096 features (added 111 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_final_3mo.csv
+
+
+######################################################################
+  STEP 4e — 6MO
+######################################################################
+
+======================================================================
+  NEW SIGNAL FEATURES — 6mo
+======================================================================
+  BLOCK 1: Top CODE_ID-level binary features...
+    Added 50 obs CODE_ID features
+    Added 1 med CODE_ID/term features
+
+  BLOCK 2: Symptom recency scores...
+    Added 20 recency features
+
+  BLOCK 3: Distinct visit dates per symptom...
+    Added 30 visit-based features
+
+  BLOCK 4: Recency x persistence interactions...
+    Added 10 recency x persistence features
+
+  New signal features: 111 total
+    CODE_ID obs              : 50
+    CODE_ID med              : 1
+    Recency                  : 20
+    Distinct visits          : 30
+    Recency x Persistence    : 10
+
+  FINAL: 293065 x 1104 features (added 111 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_final_6mo.csv
+
+
+######################################################################
+  STEP 4e — 12MO
+######################################################################
+
+======================================================================
+  NEW SIGNAL FEATURES — 12mo
+======================================================================
+  BLOCK 1: Top CODE_ID-level binary features...
+    Added 50 obs CODE_ID features
+    Added 1 med CODE_ID/term features
+
+  BLOCK 2: Symptom recency scores...
+    Added 20 recency features
+
+  BLOCK 3: Distinct visit dates per symptom...
+    Added 30 visit-based features
+
+  BLOCK 4: Recency x persistence interactions...
+    Added 10 recency x persistence features
+
+  New signal features: 111 total
+    CODE_ID obs              : 50
+    CODE_ID med              : 1
+    Recency                  : 20
+    Distinct visits          : 30
+    Recency x Persistence    : 10
+
+  FINAL: 293070 x 1102 features (added 111 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_final_12mo.csv
+
+======================================================================
+  STEP 4e COMPLETE — NEW SIGNAL FEATURES ADDED
+======================================================================
+
+  3mo: 293064 x 1096 features
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 x 1104 features
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 x 1102 features
+    Pos: 0 | Neg: 293070
+
+  Next: Run Step 4f (trend features), then Step 5 cleanup -> modeling.
+======================================================================
+
+
+######################################################################
+  STEP 4f — 3MO
+######################################################################
+
+======================================================================
+  TREND FEATURES — 3mo
+======================================================================
+  BLOCK 1: Per-symptom frequency & trend...
+    Added 96 per-symptom trend features
+
+  BLOCK 2: Per-medication frequency & trend...
+    Added 7 per-medication trend features
+
+  BLOCK 3: Lab percent change & trend R-squared...
+    Added 45 lab trend features
+
+  Trend features: 148 total
+    Symptom trends           : 96
+    Med trends               : 7
+    Lab category trends      : 15
+    Lab term trends          : 30
+
+  FINAL: 293064 x 1244 features (added 148 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_final_3mo.csv
+
+
+######################################################################
+  STEP 4f — 6MO
+######################################################################
+
+======================================================================
+  TREND FEATURES — 6mo
+======================================================================
+  BLOCK 1: Per-symptom frequency & trend...
+    Added 96 per-symptom trend features
+
+  BLOCK 2: Per-medication frequency & trend...
+    Added 7 per-medication trend features
+
+  BLOCK 3: Lab percent change & trend R-squared...
+    Added 45 lab trend features
+
+  Trend features: 148 total
+    Symptom trends           : 96
+    Med trends               : 7
+    Lab category trends      : 15
+    Lab term trends          : 30
+
+  FINAL: 293065 x 1252 features (added 148 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/6mo/feature_matrix_final_6mo.csv
+
+
+######################################################################
+  STEP 4f — 12MO
+######################################################################
+
+======================================================================
+  TREND FEATURES — 12mo
+======================================================================
+  BLOCK 1: Per-symptom frequency & trend...
+    Added 96 per-symptom trend features
+
+  BLOCK 2: Per-medication frequency & trend...
+    Added 7 per-medication trend features
+
+  BLOCK 3: Lab percent change & trend R-squared...
+    Added 45 lab trend features
+
+  Trend features: 148 total
+    Symptom trends           : 96
+    Med trends               : 7
+    Lab category trends      : 15
+    Lab term trends          : 30
+
+  FINAL: 293070 x 1250 features (added 148 new)
+  Saved: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_results/FE/12mo/feature_matrix_final_12mo.csv
+
+======================================================================
+  STEP 4f COMPLETE — TREND FEATURES ADDED
+======================================================================
+
+  3mo: 293064 x 1244 features
+    Pos: 0 | Neg: 293064
+
+  6mo: 293065 x 1252 features
+    Pos: 0 | Neg: 293065
+
+  12mo: 293070 x 1250 features
+    Pos: 0 | Neg: 293070

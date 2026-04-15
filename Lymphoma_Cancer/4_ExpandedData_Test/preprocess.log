@@ -1,0 +1,92 @@
+════════════════════════════════════════════════════════════
+  PREPROCESS RAW DATA → FE FORMAT
+  Input: 300K_raw.csv
+  Index date: 2026-02-25
+════════════════════════════════════════════════════════════
+
+  Loading category mapping...
+  Loaded mapping: 204 obs codes, 111 med codes
+
+  Loading patients to exclude...
+  Loaded 81,115 patients to EXCLUDE (training/test set)
+
+  Processing 300K_raw.csv in chunks of 500,000...
+  Filtering to 204 obs + 111 med approved codes
+  Excluding 81,115 training/test patients
+    Chunk 20: 10,000,000 rows processed → 21,057 kept | 15,714 patients seen
+    Chunk 40: 20,000,000 rows processed → 43,017 kept | 35,344 patients seen
+    Chunk 60: 30,000,000 rows processed → 65,823 kept | 55,763 patients seen
+    Chunk 80: 40,000,000 rows processed → 87,618 kept | 76,468 patients seen
+    Chunk 100: 50,000,000 rows processed → 110,676 kept | 96,636 patients seen
+    Chunk 120: 60,000,000 rows processed → 133,811 kept | 117,390 patients seen
+    Chunk 140: 70,000,000 rows processed → 157,539 kept | 137,743 patients seen
+    Chunk 160: 80,000,000 rows processed → 180,800 kept | 157,903 patients seen
+    Chunk 180: 90,000,000 rows processed → 204,457 kept | 178,747 patients seen
+    Chunk 200: 100,000,000 rows processed → 227,674 kept | 199,344 patients seen
+    Chunk 220: 110,000,000 rows processed → 251,707 kept | 220,132 patients seen
+    Chunk 240: 120,000,000 rows processed → 274,495 kept | 240,724 patients seen
+    Chunk 260: 130,000,000 rows processed → 298,197 kept | 261,701 patients seen
+    Chunk 280: 140,000,000 rows processed → 321,645 kept | 283,017 patients seen
+
+  Processing complete:
+    Total raw rows: 144,423,249
+    Kept (approved codes): 332,010 (0.2%)
+    Total patients: 293,074
+
+  Combining chunks...
+  Events data: 332,010 rows, 81,569 patients
+  Patients with 0 approved codes: 211,505 (will get all-zero features)
+
+  Category distribution:
+CATEGORY
+LAB_MARKERS                            145527
+CALCIUM_BONE                            73959
+HAEMATOLOGY_INVESTIGATION_SELECTIVE     57567
+ADDITIONAL_SYMPTOMS                      9253
+HAEMATOLOGICAL_ABNORMALITIES             8711
+PROTEIN_STUDIES                          6542
+UNEXPLAINED_MASSES                       5688
+LYMPHADENOPATHY                          5091
+INFECTION_MARKERS                        4137
+AUTOIMMUNE_IMMUNE                        3743
+CONSTITUTIONAL_SYMPTOMS                  3474
+B_SYMPTOMS                               2919
+PAIN_SYMPTOMS                            1350
+RECURRENT_INFECTIONS                     1280
+SKIN_SYMPTOMS                            1107
+NEUROPATHY                                640
+ABNORMAL_IMAGING                          445
+SICKNESS_ABSENCE                          376
+SPLENOMEGALY                              152
+NUTRITIONAL_SUPPLEMENTS                    49
+
+  Windowing and saving...
+  3mo:
+    Clinical: 470,996 rows | Medication: 42 rows
+    Patients with events: 66,886 | Placeholder (zero features): 226,188 | Total: 293,074
+    Saved: lymphoma_3mo_obs_dropped.csv, lymphoma_3mo_med_dropped.csv
+  6mo:
+    Clinical: 467,925 rows | Medication: 42 rows
+    Patients with events: 67,131 | Placeholder (zero features): 225,943 | Total: 293,074
+    Saved: lymphoma_6mo_obs_dropped.csv, lymphoma_6mo_med_dropped.csv
+  12mo:
+    Clinical: 463,948 rows | Medication: 38 rows
+    Patients with events: 68,090 | Placeholder (zero features): 224,984 | Total: 293,074
+    Saved: lymphoma_12mo_obs_dropped.csv, lymphoma_12mo_med_dropped.csv
+
+════════════════════════════════════════════════════════════
+  PREPROCESSING COMPLETE
+  Output: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/4_ExpandedData_Test/fe_holdout_workspace/fe_input
+════════════════════════════════════════════════════════════
+  Total patients: 293,074
+    With approved codes: 81,569 (27.8%)
+    Zero codes (placeholder): 211,505 (72.2%)
+
+  Next steps:
+    1. python3 4_Feature_engineering_holdout.py
+       → reads fe_holdout_workspace/fe_input/ and writes fe_holdout_workspace/fe_results/FE/
+    2. python3 ../3_Modeling/predict_unseen.py --window 3mo \
+         --feature_matrix fe_holdout_workspace/fe_results/FE/3mo/feature_matrix_final_3mo.csv
+    3. python3 ../3_Modeling/predict_combined_evaluation.py --window 3mo \
+         --unseen_predictions predictions_unseen.csv
+════════════════════════════════════════════════════════════

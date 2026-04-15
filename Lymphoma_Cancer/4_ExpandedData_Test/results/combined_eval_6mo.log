@@ -1,0 +1,377 @@
+============================================================
+  LYMPHOMA — COMBINED EVALUATION
+  Window: 6mo
+============================================================
+  Models from: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/3_Modeling/results_text_emb_4seeds
+
+  Loading unseen predictions: ../4_ExpandedData_Test/results/predictions_unseen_6mo.csv
+  Unseen: 293,065 patients (Cancer: 0, Non-cancer: 293,065)
+
+  Loading training test predictions: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/3_Modeling/results_text_emb_4seeds/6mo/predictions_6mo.csv
+  Training test set: 5,460 total, 496 cancer (held-out, NOT used for training)
+
+  Running evaluation A: Non-cancer only...
+
+======================================================================
+  RUN A: NON-CANCER ONLY (293,065 patients)
+======================================================================
+  Total patients: 293,065
+  Cancer (LABEL=1): 0
+  Non-cancer (LABEL=0): 293,065
+
+  ─────────────────────────────────────────────────────────────────
+  XGBoost (threshold=0.3247)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=0  FP=262,869  TN=30,196  FN=0
+
+  ACCURACY: 30,196 / 293,065 (10.30%)
+
+  NON-CANCER METRICS:
+    Specificity: 10.3%
+    False positive rate: 89.70%
+    Flagged as at-risk: 262,869 / 293,065
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :        6 (  0.0%)  [Cancer: 0 | Non-cancer: 6]
+    Low (5-10%)              :      677 (  0.2%)  [Cancer: 0 | Non-cancer: 677]
+    Moderate (10-20%)        :    9,279 (  3.2%)  [Cancer: 0 | Non-cancer: 9,279]
+    Elevated (20-30%)        :   15,991 (  5.5%)  [Cancer: 0 | Non-cancer: 15,991]
+    High (30-50%)            :   30,675 ( 10.5%)  [Cancer: 0 | Non-cancer: 30,675]
+    Very High (50%+)         :  236,437 ( 80.7%)  [Cancer: 0 | Non-cancer: 236,437]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.5597 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   3.4%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,059 (100.00%)
+    Threshold 0.10: FP= 292,382 (99.77%)
+    Threshold 0.15: FP= 289,048 (98.63%)
+    Threshold 0.20: FP= 283,103 (96.60%)
+    Threshold 0.25: FP= 275,985 (94.17%)
+    Threshold 0.30: FP= 267,112 (91.14%)
+    Threshold 0.40: FP= 252,793 (86.26%)
+    Threshold 0.50: FP= 236,437 (80.68%)
+
+  ─────────────────────────────────────────────────────────────────
+  LightGBM (threshold=0.1465)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=0  FP=241,717  TN=51,348  FN=0
+
+  ACCURACY: 51,348 / 293,065 (17.52%)
+
+  NON-CANCER METRICS:
+    Specificity: 17.5%
+    False positive rate: 82.48%
+    Flagged as at-risk: 241,717 / 293,065
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+    Low (5-10%)              :    1,159 (  0.4%)  [Cancer: 0 | Non-cancer: 1,159]
+    Moderate (10-20%)        :  290,248 ( 99.0%)  [Cancer: 0 | Non-cancer: 290,248]
+    Elevated (20-30%)        :    1,658 (  0.6%)  [Cancer: 0 | Non-cancer: 1,658]
+    High (30-50%)            :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+    Very High (50%+)         :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.1533 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.4%
+    Non-cancer < 20%:   99.4%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,065 (100.00%)
+    Threshold 0.10: FP= 291,906 (99.60%)
+    Threshold 0.15: FP= 237,323 (80.98%)
+    Threshold 0.20: FP=   1,658 (0.57%)
+    Threshold 0.25: FP=       0 (0.00%)
+    Threshold 0.30: FP=       0 (0.00%)
+    Threshold 0.40: FP=       0 (0.00%)
+    Threshold 0.50: FP=       0 (0.00%)
+
+  ─────────────────────────────────────────────────────────────────
+  CatBoost (threshold=0.3392)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=0  FP=257,791  TN=35,274  FN=0
+
+  ACCURACY: 35,274 / 293,065 (12.04%)
+
+  NON-CANCER METRICS:
+    Specificity: 12.0%
+    False positive rate: 87.96%
+    Flagged as at-risk: 257,791 / 293,065
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :       19 (  0.0%)  [Cancer: 0 | Non-cancer: 19]
+    Low (5-10%)              :      640 (  0.2%)  [Cancer: 0 | Non-cancer: 640]
+    Moderate (10-20%)        :    7,723 (  2.6%)  [Cancer: 0 | Non-cancer: 7,723]
+    Elevated (20-30%)        :   18,655 (  6.4%)  [Cancer: 0 | Non-cancer: 18,655]
+    High (30-50%)            :  232,969 ( 79.5%)  [Cancer: 0 | Non-cancer: 232,969]
+    Very High (50%+)         :   33,059 ( 11.3%)  [Cancer: 0 | Non-cancer: 33,059]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.4592 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   2.9%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,046 (99.99%)
+    Threshold 0.10: FP= 292,406 (99.78%)
+    Threshold 0.15: FP= 289,874 (98.91%)
+    Threshold 0.20: FP= 284,683 (97.14%)
+    Threshold 0.25: FP= 277,490 (94.69%)
+    Threshold 0.30: FP= 266,028 (90.77%)
+    Threshold 0.40: FP= 245,789 (83.87%)
+    Threshold 0.50: FP=  33,059 (11.28%)
+
+  ─────────────────────────────────────────────────────────────────
+  Ensemble (threshold=0.3450)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=0  FP=258,305  TN=34,760  FN=0
+
+  ACCURACY: 34,760 / 293,065 (11.86%)
+
+  NON-CANCER METRICS:
+    Specificity: 11.9%
+    False positive rate: 88.14%
+    Flagged as at-risk: 258,305 / 293,065
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :        9 (  0.0%)  [Cancer: 0 | Non-cancer: 9]
+    Low (5-10%)              :      559 (  0.2%)  [Cancer: 0 | Non-cancer: 559]
+    Moderate (10-20%)        :    8,000 (  2.7%)  [Cancer: 0 | Non-cancer: 8,000]
+    Elevated (20-30%)        :   16,314 (  5.6%)  [Cancer: 0 | Non-cancer: 16,314]
+    High (30-50%)            :   61,311 ( 20.9%)  [Cancer: 0 | Non-cancer: 61,311]
+    Very High (50%+)         :  206,872 ( 70.6%)  [Cancer: 0 | Non-cancer: 206,872]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.4894 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   2.9%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,056 (100.00%)
+    Threshold 0.10: FP= 292,497 (99.81%)
+    Threshold 0.15: FP= 289,942 (98.93%)
+    Threshold 0.20: FP= 284,497 (97.08%)
+    Threshold 0.25: FP= 277,443 (94.67%)
+    Threshold 0.30: FP= 268,183 (91.51%)
+    Threshold 0.40: FP= 247,163 (84.34%)
+    Threshold 0.50: FP= 206,872 (70.59%)
+
+  Running evaluation B: Cancer + Non-cancer...
+  Combined: 496 cancer + 293,065 non-cancer = 293,561 total (ratio 1:590)
+
+======================================================================
+  RUN B: HELD-OUT CANCER (496) + NON-CANCER (293,065) — REAL-WORLD RATIO 1:590
+======================================================================
+  Total patients: 293,561
+  Cancer (LABEL=1): 496
+  Non-cancer (LABEL=0): 293,065
+  Ratio: 1:590
+
+  ─────────────────────────────────────────────────────────────────
+  XGBoost (threshold=0.3247)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=412  FP=262,869  TN=30,196  FN=84
+
+  ACCURACY: 30,608 / 293,561 (10.43%)
+
+  FULL METRICS:
+    AUC-ROC:     0.6069
+    AUC-PR:      0.1501
+    Sensitivity: 83.1% (412 / 496 cancer detected)
+    Specificity: 10.3% (30,196 / 293,065 non-cancer cleared)
+    PPV:         0.2% (of those flagged, 0.2% actually have cancer)
+    NPV:         99.7% (of those cleared, 99.72% truly non-cancer)
+    F1:          0.0031
+
+  OPERATING POINTS:
+    Sens>=85%: Sens=85.3% Spec=7.4% PPV=0.16% NPV=99.6662% (thresh=0.277)
+    Sens>=80%: Sens=80.0% Spec=11.6% PPV=0.15% NPV=99.7089% (thresh=0.349)
+    Sens>=75%: Sens=75.0% Spec=13.8% PPV=0.15% NPV=99.6952% (thresh=0.403)
+    Sens>=70%: Sens=70.2% Spec=17.0% PPV=0.14% NPV=99.7044% (thresh=0.457)
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :       10 (  0.0%)  [Cancer: 4 | Non-cancer: 6]
+    Low (5-10%)              :      689 (  0.2%)  [Cancer: 12 | Non-cancer: 677]
+    Moderate (10-20%)        :    9,312 (  3.2%)  [Cancer: 33 | Non-cancer: 9,279]
+    Elevated (20-30%)        :   16,019 (  5.5%)  [Cancer: 28 | Non-cancer: 15,991]
+    High (30-50%)            :   30,763 ( 10.5%)  [Cancer: 88 | Non-cancer: 30,675]
+    Very High (50%+)         :  236,768 ( 80.7%)  [Cancer: 331 | Non-cancer: 236,437]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.5597 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   3.4%
+    Cancer avg prob:     0.6247 (ideal: 1)
+    Cancer >= 30%:      84.5%
+    Cancer >= 50%:      66.7%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,059 (100.00%) | TP=492/496 (99.2%)
+    Threshold 0.10: FP= 292,382 (99.77%) | TP=480/496 (96.8%)
+    Threshold 0.15: FP= 289,048 (98.63%) | TP=467/496 (94.2%)
+    Threshold 0.20: FP= 283,103 (96.60%) | TP=447/496 (90.1%)
+    Threshold 0.25: FP= 275,985 (94.17%) | TP=434/496 (87.5%)
+    Threshold 0.30: FP= 267,112 (91.14%) | TP=419/496 (84.5%)
+    Threshold 0.40: FP= 252,793 (86.26%) | TP=375/496 (75.6%)
+    Threshold 0.50: FP= 236,437 (80.68%) | TP=331/496 (66.7%)
+
+  ─────────────────────────────────────────────────────────────────
+  LightGBM (threshold=0.1465)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=382  FP=241,717  TN=51,348  FN=114
+
+  ACCURACY: 51,730 / 293,561 (17.62%)
+
+  FULL METRICS:
+    AUC-ROC:     0.7139
+    AUC-PR:      0.1401
+    Sensitivity: 77.0% (382 / 496 cancer detected)
+    Specificity: 17.5% (51,348 / 293,065 non-cancer cleared)
+    PPV:         0.2% (of those flagged, 0.2% actually have cancer)
+    NPV:         99.8% (of those cleared, 99.78% truly non-cancer)
+    F1:          0.0031
+
+  OPERATING POINTS:
+    Sens>=85%: Sens=85.9% Spec=12.7% PPV=0.17% NPV=99.8125% (thresh=0.127)
+    Sens>=80%: Sens=80.2% Spec=14.9% PPV=0.16% NPV=99.7768% (thresh=0.139)
+    Sens>=75%: Sens=75.6% Spec=19.3% PPV=0.16% NPV=99.7870% (thresh=0.151)
+    Sens>=70%: Sens=71.6% Spec=20.8% PPV=0.15% NPV=99.7696% (thresh=0.157)
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+    Low (5-10%)              :    1,166 (  0.4%)  [Cancer: 7 | Non-cancer: 1,159]
+    Moderate (10-20%)        :  290,559 ( 99.0%)  [Cancer: 311 | Non-cancer: 290,248]
+    Elevated (20-30%)        :    1,836 (  0.6%)  [Cancer: 178 | Non-cancer: 1,658]
+    High (30-50%)            :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+    Very High (50%+)         :        0 (  0.0%)  [Cancer: 0 | Non-cancer: 0]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.1533 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.4%
+    Non-cancer < 20%:   99.4%
+    Cancer avg prob:     0.1810 (ideal: 1)
+    Cancer >= 30%:      0.0%
+    Cancer >= 50%:      0.0%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,065 (100.00%) | TP=496/496 (100.0%)
+    Threshold 0.10: FP= 291,906 (99.60%) | TP=489/496 (98.6%)
+    Threshold 0.15: FP= 237,323 (80.98%) | TP=379/496 (76.4%)
+    Threshold 0.20: FP=   1,658 (0.57%) | TP=178/496 (35.9%)
+    Threshold 0.25: FP=       0 (0.00%) | TP=0/496 (0.0%)
+    Threshold 0.30: FP=       0 (0.00%) | TP=0/496 (0.0%)
+    Threshold 0.40: FP=       0 (0.00%) | TP=0/496 (0.0%)
+    Threshold 0.50: FP=       0 (0.00%) | TP=0/496 (0.0%)
+
+  ─────────────────────────────────────────────────────────────────
+  CatBoost (threshold=0.3392)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=405  FP=257,791  TN=35,274  FN=91
+
+  ACCURACY: 35,679 / 293,561 (12.15%)
+
+  FULL METRICS:
+    AUC-ROC:     0.7100
+    AUC-PR:      0.1249
+    Sensitivity: 81.7% (405 / 496 cancer detected)
+    Specificity: 12.0% (35,274 / 293,065 non-cancer cleared)
+    PPV:         0.2% (of those flagged, 0.2% actually have cancer)
+    NPV:         99.7% (of those cleared, 99.74% truly non-cancer)
+    F1:          0.0031
+
+  OPERATING POINTS:
+    Sens>=85%: Sens=85.5% Spec=8.0% PPV=0.16% NPV=99.6935% (thresh=0.280)
+    Sens>=80%: Sens=80.0% Spec=14.3% PPV=0.16% NPV=99.7645% (thresh=0.373)
+    Sens>=75%: Sens=75.0% Spec=17.2% PPV=0.15% NPV=99.7541% (thresh=0.418)
+    Sens>=70%: Sens=70.6% Spec=28.4% PPV=0.17% NPV=99.8246% (thresh=0.466)
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :       21 (  0.0%)  [Cancer: 2 | Non-cancer: 19]
+    Low (5-10%)              :      648 (  0.2%)  [Cancer: 8 | Non-cancer: 640]
+    Moderate (10-20%)        :    7,757 (  2.6%)  [Cancer: 34 | Non-cancer: 7,723]
+    Elevated (20-30%)        :   18,689 (  6.4%)  [Cancer: 34 | Non-cancer: 18,655]
+    High (30-50%)            :  233,048 ( 79.4%)  [Cancer: 79 | Non-cancer: 232,969]
+    Very High (50%+)         :   33,398 ( 11.4%)  [Cancer: 339 | Non-cancer: 33,059]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.4592 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   2.9%
+    Cancer avg prob:     0.6276 (ideal: 1)
+    Cancer >= 30%:      84.3%
+    Cancer >= 50%:      68.3%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,046 (99.99%) | TP=494/496 (99.6%)
+    Threshold 0.10: FP= 292,406 (99.78%) | TP=486/496 (98.0%)
+    Threshold 0.15: FP= 289,874 (98.91%) | TP=472/496 (95.2%)
+    Threshold 0.20: FP= 284,683 (97.14%) | TP=452/496 (91.1%)
+    Threshold 0.25: FP= 277,490 (94.69%) | TP=436/496 (87.9%)
+    Threshold 0.30: FP= 266,028 (90.77%) | TP=418/496 (84.3%)
+    Threshold 0.40: FP= 245,789 (83.87%) | TP=386/496 (77.8%)
+    Threshold 0.50: FP=  33,059 (11.28%) | TP=339/496 (68.3%)
+
+  ─────────────────────────────────────────────────────────────────
+  Ensemble (threshold=0.3450)
+  ─────────────────────────────────────────────────────────────────
+  Confusion: TP=401  FP=258,305  TN=34,760  FN=95
+
+  ACCURACY: 35,161 / 293,561 (11.98%)
+
+  FULL METRICS:
+    AUC-ROC:     0.6823
+    AUC-PR:      0.1338
+    Sensitivity: 80.8% (401 / 496 cancer detected)
+    Specificity: 11.9% (34,760 / 293,065 non-cancer cleared)
+    PPV:         0.2% (of those flagged, 0.2% actually have cancer)
+    NPV:         99.7% (of those cleared, 99.73% truly non-cancer)
+    F1:          0.0031
+
+  OPERATING POINTS:
+    Sens>=85%: Sens=85.1% Spec=7.8% PPV=0.16% NPV=99.6762% (thresh=0.289)
+    Sens>=80%: Sens=80.2% Spec=13.3% PPV=0.16% NPV=99.7487% (thresh=0.367)
+    Sens>=75%: Sens=75.4% Spec=16.6% PPV=0.15% NPV=99.7498% (thresh=0.415)
+    Sens>=70%: Sens=70.2% Spec=20.0% PPV=0.15% NPV=99.7476% (thresh=0.466)
+
+  RISK STRATIFICATION:
+    Very Low (0-5%)          :       12 (  0.0%)  [Cancer: 3 | Non-cancer: 9]
+    Low (5-10%)              :      566 (  0.2%)  [Cancer: 7 | Non-cancer: 559]
+    Moderate (10-20%)        :    8,033 (  2.7%)  [Cancer: 33 | Non-cancer: 8,000]
+    Elevated (20-30%)        :   16,350 (  5.6%)  [Cancer: 36 | Non-cancer: 16,314]
+    High (30-50%)            :   61,394 ( 20.9%)  [Cancer: 83 | Non-cancer: 61,311]
+    Very High (50%+)         :  207,206 ( 70.6%)  [Cancer: 334 | Non-cancer: 206,872]
+
+  MODEL QUALITY:
+    Non-cancer avg prob: 0.4894 (ideal: 0)
+    Non-cancer < 5%:    0.0%
+    Non-cancer < 10%:   0.2%
+    Non-cancer < 20%:   2.9%
+    Cancer avg prob:     0.6267 (ideal: 1)
+    Cancer >= 30%:      84.1%
+    Cancer >= 50%:      67.3%
+
+  FALSE POSITIVES AT THRESHOLDS:
+    Threshold 0.05: FP= 293,056 (100.00%) | TP=493/496 (99.4%)
+    Threshold 0.10: FP= 292,497 (99.81%) | TP=486/496 (98.0%)
+    Threshold 0.15: FP= 289,942 (98.93%) | TP=473/496 (95.4%)
+    Threshold 0.20: FP= 284,497 (97.08%) | TP=453/496 (91.3%)
+    Threshold 0.25: FP= 277,443 (94.67%) | TP=438/496 (88.3%)
+    Threshold 0.30: FP= 268,183 (91.51%) | TP=417/496 (84.1%)
+    Threshold 0.40: FP= 247,163 (84.34%) | TP=381/496 (76.8%)
+    Threshold 0.50: FP= 206,872 (70.59%) | TP=334/496 (67.3%)
+
+============================================================
+  SAVED:
+    Report: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/3_Modeling/../4_ExpandedData_Test/results/combined_eval_6mo.txt
+    Combined predictions: /home/keerthikovelamudi_cthesigns_com/Lymphoma_Cancer/3_Modeling/../4_ExpandedData_Test/results/combined_eval_6mo_predictions.csv
+============================================================
