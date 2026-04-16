@@ -317,8 +317,14 @@ def predict(fm, artifacts):
     for name in model_names:
         preds[name] = float(artifacts['models'][name].predict_proba(X)[:, 1][0])
 
-    # Ensemble
-    risk_score = weights[0] * preds[model_names[0]] + weights[1] * preds[model_names[1]]
+    # Ensemble (N-model weighted sum)
+    risk_score = sum(w * preds[n] for w, n in zip(weights, model_names))
+
+    # Apply calibration if present
+    calibrator = config.get('calibrator')
+    if calibrator is not None:
+        risk_score = float(calibrator.transform([risk_score])[0])
+
     prediction = 'HIGH RISK' if risk_score >= threshold else 'LOW RISK'
 
     return risk_score, prediction, threshold, preds

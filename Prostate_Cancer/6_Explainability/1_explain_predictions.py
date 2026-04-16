@@ -57,8 +57,10 @@ def load_model_and_data(window):
     selected = config['selected_features']
     threshold = config['threshold']
 
-    # Load the best individual model (first in ensemble) for SHAP
-    model_name = config['ensemble_models'][0]
+    # Load the highest-weight ensemble model for SHAP (most representative of the ensemble)
+    ens_models = config['ensemble_models']
+    ens_weights = config['ensemble_weights']
+    model_name = ens_models[int(np.argmax(ens_weights))]
     model = joblib.load(model_dir / f'{model_name}_model.pkl')
 
     # Load feature matrix

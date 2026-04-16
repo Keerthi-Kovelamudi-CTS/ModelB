@@ -16,12 +16,27 @@ warnings.filterwarnings('ignore')
 logger = logging.getLogger(__name__)
 
 
+def _assert_no_post_index_events(df, kind):
+    """Safety net: every event must occur strictly before its INDEX_DATE (no leakage from
+    the prediction window). Logs a warning and drops offending rows rather than crashing."""
+    mask = df['EVENT_DATE'].notna() & df['INDEX_DATE'].notna() & (df['EVENT_DATE'] >= df['INDEX_DATE'])
+    n_bad = int(mask.sum())
+    if n_bad > 0:
+        logger.warning(f"  [LEAK GUARD] {kind}: {n_bad:,} rows with EVENT_DATE >= INDEX_DATE — dropping")
+        df = df[~mask].copy()
+    else:
+        logger.info(f"  [LEAK GUARD] {kind}: all events before INDEX_DATE ✓")
+    return df
+
+
 def clean_obs(df, cfg):
     """Clean observations dataframe: dates, numeric VALUE, lab outlier clamping."""
     logger.info(f"  Cleaning observations... ({len(df):,} rows)")
 
     df['EVENT_DATE'] = pd.to_datetime(df['EVENT_DATE'], errors='coerce')
     df['INDEX_DATE'] = pd.to_datetime(df['INDEX_DATE'], errors='coerce')
+
+    df = _assert_no_post_index_events(df, 'obs')
 
     df['VALUE'] = pd.to_numeric(df['VALUE'], errors='coerce')
     outliers_removed = 0
@@ -46,6 +61,8 @@ def clean_med(df, cfg):
 
     df['EVENT_DATE'] = pd.to_datetime(df['EVENT_DATE'], errors='coerce')
     df['INDEX_DATE'] = pd.to_datetime(df['INDEX_DATE'], errors='coerce')
+
+    df = _assert_no_post_index_events(df, 'med')
 
     df['VALUE'] = pd.to_numeric(df['VALUE'], errors='coerce')
     impossible = df['VALUE'].notna() & ((df['VALUE'] < 0) | (df['VALUE'] > 10000))

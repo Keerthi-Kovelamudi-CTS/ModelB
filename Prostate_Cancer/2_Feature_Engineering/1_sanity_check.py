@@ -188,38 +188,8 @@ def patient_fixes(clin_df, med_df, window_name, cfg):
         else:
             logger.info(f"  All 18+")
 
-    # ── 2e. Downsample controls to max ratio ──
-    MAX_NEG_POS_RATIO = None  # set to an integer (e.g. 5) to cap negatives; None = keep natural ratio
-    if MAX_NEG_POS_RATIO is None:
-        logger.info(f"\n-- 2e. DOWNSAMPLE CONTROLS (disabled — keeping natural ratio) --")
-    else:
-        logger.info(f"\n-- 2e. DOWNSAMPLE CONTROLS (max {MAX_NEG_POS_RATIO}:1) --")
-        if clin_df is not None:
-            pos_guids = set(clin_df[clin_df['LABEL'] == 1]['PATIENT_GUID'].unique())
-            neg_guids = list(clin_df[clin_df['LABEL'] == 0]['PATIENT_GUID'].unique())
-            n_pos = len(pos_guids)
-            n_neg = len(neg_guids)
-            max_neg = n_pos * MAX_NEG_POS_RATIO
-
-            if n_neg > max_neg:
-                np.random.seed(42)
-                keep_neg = set(np.random.choice(neg_guids, size=max_neg, replace=False))
-                remove_neg = set(neg_guids) - keep_neg
-
-                clin_df = clin_df[~clin_df['PATIENT_GUID'].isin(remove_neg)]
-                if med_df is not None:
-                    med_df = med_df[~med_df['PATIENT_GUID'].isin(remove_neg)]
-
-                logger.info(f"  Pos: {n_pos:,} | Neg: {n_neg:,} -> {max_neg:,} ({MAX_NEG_POS_RATIO}:1)")
-                logger.info(f"  Removed {len(remove_neg):,} negative patients")
-                logger.info(f"  Clinical rows: {len(clin_df):,}")
-                if med_df is not None:
-                    logger.info(f"  Med rows: {len(med_df):,}")
-            else:
-                logger.info(f"  Ratio already <= {MAX_NEG_POS_RATIO}:1 ({n_neg/max(n_pos,1):.1f}:1). No downsampling needed.")
-
-    # ── 2f. Final counts ──
-    logger.info(f"\n-- 2f. FINAL PATIENT COUNTS --")
+    # ── 2e. Final counts ──
+    logger.info(f"\n-- 2e. FINAL PATIENT COUNTS --")
     master_patients = None
     if clin_df is not None:
         final = clin_df.groupby('LABEL')['PATIENT_GUID'].nunique()

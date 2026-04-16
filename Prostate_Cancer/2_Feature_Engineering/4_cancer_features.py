@@ -187,6 +187,17 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
             pf[f'{PREFIX}LAB_psa_top10pct'] = (m(percentiles) >= 0.90).astype(int)
             pf[f'{PREFIX}LAB_psa_top25pct'] = (m(percentiles) >= 0.75).astype(int)
 
+        # Age-banded PSA percentile: rank PSA within each 10-year age band.
+        # PSA>4 means different things at 50 vs 75 — within-band percentile captures that.
+        age_bands = pd.cut(age, bins=[0, 50, 60, 70, 80, 150],
+                           labels=['<50', '50-59', '60-69', '70-79', '80+'],
+                           include_lowest=True)
+        psa_with_band = pd.DataFrame({'psa': psa_latest, 'band': age_bands})
+        band_pct = psa_with_band.groupby('band', observed=True)['psa'].rank(pct=True)
+        pf[f'{PREFIX}LAB_psa_age_band_percentile'] = m(band_pct, default=0.5)
+        pf[f'{PREFIX}LAB_psa_age_band_top10pct'] = (m(band_pct) >= 0.90).astype(int)
+        pf[f'{PREFIX}LAB_psa_age_band_top5pct'] = (m(band_pct) >= 0.95).astype(int)
+
         # PSA age-adjusted: PSA / age (older men have naturally higher PSA)
         pf[f'{PREFIX}LAB_psa_age_ratio'] = np.where(
             age > 0, m(psa_latest, default=0) / age, 0

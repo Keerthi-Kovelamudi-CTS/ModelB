@@ -81,8 +81,14 @@ def predict_unseen(window, data_path=None):
         preds[name] = model.predict_proba(X)[:, 1]
         logger.info(f"  {name}: predicted")
 
-    # Ensemble
-    ens = ensemble_weights[0] * preds[ensemble_models[0]] + ensemble_weights[1] * preds[ensemble_models[1]]
+    # Ensemble (N-model weighted sum)
+    ens = sum(w * preds[n] for w, n in zip(ensemble_weights, ensemble_models))
+
+    # Apply calibration if present
+    calibrator = model_config.get('calibrator')
+    if calibrator is not None:
+        ens = calibrator.transform(ens)
+
     y_pred = (ens >= threshold).astype(int)
 
     # Save predictions

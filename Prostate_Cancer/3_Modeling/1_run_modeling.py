@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
+from sklearn.isotonic import IsotonicRegression
 from sklearn.metrics import (
     roc_auc_score, average_precision_score, precision_recall_curve,
     roc_curve, confusion_matrix, f1_score, precision_score, recall_score,
@@ -207,20 +208,38 @@ def load_data():
 # ═══════════════════════════════════════════════════════════════
 
 def select_features(X_train, y_train, n_top=None):
-    """Select top features using XGBoost importance. Force-include text/embedding features."""
+    """Select top features via averaged XGBoost + LightGBM importance.
+    Force-include text/embedding features."""
     if n_top is None:
         n_top = N_SELECT_FEATURES
 
     n_pos = (y_train == 1).sum()
     n_neg = (y_train == 0).sum()
-    model = xgb.XGBClassifier(
+
+    xgb_m = xgb.XGBClassifier(
         n_estimators=300, max_depth=5, learning_rate=0.05,
         subsample=0.8, colsample_bytree=0.7,
         scale_pos_weight=n_neg / n_pos,
         random_state=42, eval_metric='auc', verbosity=0,
     )
-    model.fit(X_train, y_train)
-    importances = pd.Series(model.feature_importances_, index=X_train.columns)
+    xgb_m.fit(X_train, y_train)
+    xgb_imp = pd.Series(xgb_m.feature_importances_, index=X_train.columns)
+
+    lgb_m = lgb.LGBMClassifier(
+        n_estimators=300, max_depth=5, learning_rate=0.05,
+        subsample=0.8, colsample_bytree=0.7, num_leaves=31,
+        scale_pos_weight=n_neg / n_pos,
+        random_state=42, verbose=-1,
+    )
+    lgb_m.fit(X_train, y_train)
+    lgb_imp = pd.Series(lgb_m.feature_importances_, index=X_train.columns)
+
+    # Rank-based fusion: each feature gets the sum of its (rank-normalized) importance in both models.
+    def _rank_norm(s):
+        r = s.rank(method='average')
+        return r / r.max()
+
+    importances = _rank_norm(xgb_imp) + _rank_norm(lgb_imp)
 
     text_feats = [f for f in X_train.columns if f.startswith(('TEXT_', 'EMB_', 'BERT_'))]
     clinical_feats = [f for f in X_train.columns if not f.startswith(('TEXT_', 'EMB_', 'BERT_'))]
@@ -277,7 +296,10 @@ def tiered_metric(y_true, y_pred_proba):
 
 
 def find_best_threshold(y_true, y_pred_proba):
-    """Tiered threshold search: 80/70 -> 75/65 -> 70/65 -> 70/60 -> balanced."""
+    """Tiered threshold search. Also reports a high-sens operating point (tier90: sens>=90%).
+
+    The high-sens tier is reported as an alternative operating point — not used as the
+    primary threshold unless `choose_tier` is called with prefer_high_sens=True."""
     fpr, tpr, thresholds = roc_curve(y_true, y_pred_proba)
     spec = 1 - fpr
     sens = tpr
@@ -306,11 +328,28 @@ def find_best_threshold(y_true, y_pred_proba):
         'threshold': thresholds[idx], 'sensitivity': sens[idx],
         'specificity': spec[idx], 'met': True, 'tier': 'Tier3 (balanced)',
     }
+
+    # Tier 90: high-sensitivity operating point (sens>=90%, maximise spec)
+    valid = sens >= 0.90
+    if valid.sum() > 0:
+        idx = np.argmax(spec * valid)
+        results['tier90'] = {
+            'threshold': thresholds[idx], 'sensitivity': sens[idx],
+            'specificity': spec[idx], 'met': True,
+            'tier': 'Tier90 (Sens>=90%, max Spec)',
+        }
+    else:
+        results['tier90'] = {'met': False, 'tier': 'tier90'}
+
     return results
 
 
-def choose_tier(thresh_results):
-    """Pick best achievable tier."""
+def choose_tier(thresh_results, prefer_high_sens=False):
+    """Pick best achievable tier.
+    If prefer_high_sens=True and tier90 is achievable, use it; otherwise fall back to the
+    standard tier ladder (tier0 -> ... -> tier3)."""
+    if prefer_high_sens and thresh_results.get('tier90', {}).get('met'):
+        return thresh_results['tier90'], thresh_results['tier90']['tier']
     for t in ['tier0', 'tier1', 'tier2', 'tier2b', 'tier3']:
         if thresh_results[t].get('met') and 'threshold' in thresh_results[t]:
             return thresh_results[t], thresh_results[t]['tier']
@@ -321,21 +360,40 @@ def choose_tier(thresh_results):
 # ENSEMBLE
 # ═══════════════════════════════════════════════════════════════
 
-def get_top2_models_by_auc(y_val, preds_dict):
+def get_topk_models_by_auc(y_val, preds_dict, k=3):
+    """Return up to k best models by val AUC."""
     aucs = {name: roc_auc_score(y_val, p) for name, p in preds_dict.items()}
-    return sorted(aucs.keys(), key=lambda n: aucs[n], reverse=True)[:2]
+    return sorted(aucs.keys(), key=lambda n: aucs[n], reverse=True)[:k]
 
 
 def optimize_ensemble_weights(y_val, preds_dict):
+    """Grid-search weights over N models (N can be 2 or 3). Weights sum to 1."""
     names = list(preds_dict.keys())
-    v1, v2 = preds_dict[names[0]], preds_dict[names[1]]
-    best_score, best_w = -np.inf, (0.5, 0.5)
-    for w1 in np.arange(0.05, 0.96, 0.05):
-        w2 = 1.0 - w1
-        score = tiered_metric(y_val, w1 * v1 + w2 * v2)
-        if score > best_score:
-            best_score = score
-            best_w = (w1, w2)
+    preds = [preds_dict[n] for n in names]
+    n = len(preds)
+    best_score, best_w = -np.inf, tuple([1.0 / n] * n)
+
+    if n == 2:
+        for w1 in np.arange(0.05, 0.96, 0.05):
+            w = (w1, 1.0 - w1)
+            score = tiered_metric(y_val, w[0] * preds[0] + w[1] * preds[1])
+            if score > best_score:
+                best_score, best_w = score, w
+    elif n == 3:
+        step = 0.1
+        for w1 in np.arange(0.0, 1.0 + step / 2, step):
+            for w2 in np.arange(0.0, 1.0 - w1 + step / 2, step):
+                w3 = 1.0 - w1 - w2
+                if w3 < -1e-9:
+                    continue
+                w = (round(w1, 4), round(w2, 4), round(max(w3, 0.0), 4))
+                score = tiered_metric(y_val, w[0] * preds[0] + w[1] * preds[1] + w[2] * preds[2])
+                if score > best_score:
+                    best_score, best_w = score, w
+    else:
+        # Fallback: equal weights
+        best_w = tuple([1.0 / n] * n)
+
     return best_w
 
 
@@ -349,14 +407,15 @@ def tune_xgboost(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS):
 
     def objective(trial):
         params = {
-            'n_estimators': trial.suggest_int('n_estimators', 200, 800),
-            'max_depth': trial.suggest_int('max_depth', 3, 8),
-            'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.15, log=True),
-            'subsample': trial.suggest_float('subsample', 0.6, 1.0),
-            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.5, 1.0),
+            'n_estimators': trial.suggest_int('n_estimators', 300, 1500),
+            'max_depth': trial.suggest_int('max_depth', 3, 10),
+            'learning_rate': trial.suggest_float('learning_rate', 0.003, 0.15, log=True),
+            'subsample': trial.suggest_float('subsample', 0.5, 1.0),
+            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.4, 1.0),
             'reg_alpha': trial.suggest_float('reg_alpha', 1e-8, 10, log=True),
             'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 10, log=True),
-            'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+            'min_child_weight': trial.suggest_int('min_child_weight', 1, 20),
+            'gamma': trial.suggest_float('gamma', 1e-8, 5.0, log=True),
             'scale_pos_weight': n_neg / n_pos,
             'random_state': 42, 'eval_metric': 'auc', 'verbosity': 0,
         }
@@ -376,15 +435,16 @@ def tune_lightgbm(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS):
 
     def objective(trial):
         params = {
-            'n_estimators': trial.suggest_int('n_estimators', 200, 800),
-            'max_depth': trial.suggest_int('max_depth', 3, 8),
-            'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.15, log=True),
-            'subsample': trial.suggest_float('subsample', 0.6, 1.0),
-            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.5, 1.0),
+            'n_estimators': trial.suggest_int('n_estimators', 300, 1500),
+            'max_depth': trial.suggest_int('max_depth', 3, 12),
+            'learning_rate': trial.suggest_float('learning_rate', 0.003, 0.15, log=True),
+            'subsample': trial.suggest_float('subsample', 0.5, 1.0),
+            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.4, 1.0),
             'reg_alpha': trial.suggest_float('reg_alpha', 1e-8, 10, log=True),
             'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 10, log=True),
-            'num_leaves': trial.suggest_int('num_leaves', 20, 100),
-            'min_child_samples': trial.suggest_int('min_child_samples', 5, 50),
+            'num_leaves': trial.suggest_int('num_leaves', 20, 255),
+            'min_child_samples': trial.suggest_int('min_child_samples', 5, 100),
+            'min_split_gain': trial.suggest_float('min_split_gain', 1e-8, 1.0, log=True),
             'scale_pos_weight': n_neg / n_pos,
             'random_state': 42, 'verbose': -1,
         }
@@ -405,11 +465,13 @@ def tune_catboost(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS):
 
     def objective(trial):
         params = {
-            'iterations': trial.suggest_int('iterations', 200, 800),
-            'depth': trial.suggest_int('depth', 3, 7),
-            'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.15, log=True),
-            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-4, 10, log=True),
+            'iterations': trial.suggest_int('iterations', 300, 1500),
+            'depth': trial.suggest_int('depth', 3, 10),
+            'learning_rate': trial.suggest_float('learning_rate', 0.003, 0.15, log=True),
+            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-4, 20, log=True),
             'border_count': trial.suggest_int('border_count', 32, 255),
+            'bagging_temperature': trial.suggest_float('bagging_temperature', 0.0, 1.0),
+            'random_strength': trial.suggest_float('random_strength', 1e-8, 10, log=True),
             'auto_class_weights': 'Balanced',
             'random_seed': 42, 'verbose': 0,
         }
@@ -507,28 +569,42 @@ def run_modeling():
                 models['catboost'] = cb_model
                 logger.info(f"    CatBoost val AUC: {roc_auc_score(y_val, preds_val['catboost']):.4f}")
 
-            # Ensemble: top 2 by val AUC
-            top2 = get_top2_models_by_auc(y_val, preds_val)
-            top2_val = {n: preds_val[n] for n in top2}
-            weights = optimize_ensemble_weights(y_val, top2_val)
-            ens_val = weights[0] * preds_val[top2[0]] + weights[1] * preds_val[top2[1]]
-            ens_test = weights[0] * preds_test[top2[0]] + weights[1] * preds_test[top2[1]]
+            # Ensemble: use all available models (up to 3), weighted by val AUC grid search
+            ens_models = get_topk_models_by_auc(y_val, preds_val, k=3)
+            ens_val_preds = {n: preds_val[n] for n in ens_models}
+            weights = optimize_ensemble_weights(y_val, ens_val_preds)
+            ens_val = sum(w * preds_val[n] for w, n in zip(weights, ens_models))
+            ens_test = sum(w * preds_test[n] for w, n in zip(weights, ens_models))
 
-            logger.info(f"\n  Ensemble: {top2[0]}({weights[0]:.2f}) + {top2[1]}({weights[1]:.2f})")
+            ens_desc = ' + '.join(f"{n}({w:.2f})" for w, n in zip(weights, ens_models))
+            logger.info(f"\n  Ensemble: {ens_desc}")
             logger.info(f"    Ensemble val AUC: {roc_auc_score(y_val, ens_val):.4f}")
             logger.info(f"    Ensemble test AUC: {roc_auc_score(y_test, ens_test):.4f}")
 
-            # Threshold on val, report on test
-            thresh_results = find_best_threshold(y_val, ens_val)
+            # Isotonic calibration: fit on a held-out slice of val, pick threshold on the rest.
+            # Avoids the fit-then-threshold-on-same-data double-dip.
+            cal_idx, th_idx = train_test_split(
+                np.arange(len(y_val)), test_size=0.30, random_state=seed, stratify=y_val
+            )
+            calibrator = IsotonicRegression(out_of_bounds='clip', y_min=0.0, y_max=1.0)
+            calibrator.fit(ens_val[cal_idx], y_val[cal_idx])
+
+            ens_val_th_cal = calibrator.transform(ens_val[th_idx])
+            ens_test_cal = calibrator.transform(ens_test)
+            y_val_th = y_val[th_idx]
+            logger.info(f"    Calibrated val-th AUC: {roc_auc_score(y_val_th, ens_val_th_cal):.4f}")
+
+            # Threshold on the held-out calibrated slice of val, report on calibrated test
+            thresh_results = find_best_threshold(y_val_th, ens_val_th_cal)
             best_tier, tier_name = choose_tier(thresh_results)
             threshold = best_tier['threshold']
 
-            y_pred = (ens_test >= threshold).astype(int)
+            y_pred = (ens_test_cal >= threshold).astype(int)
             cm = confusion_matrix(y_test, y_pred)
             tn, fp, fn, tp = cm.ravel()
             test_sens = tp / (tp + fn) if (tp + fn) > 0 else 0
             test_spec = tn / (tn + fp) if (tn + fp) > 0 else 0
-            test_auc = roc_auc_score(y_test, ens_test)
+            test_auc = roc_auc_score(y_test, ens_test_cal)
 
             logger.info(f"\n  TEST RESULTS ({tier_name}):")
             logger.info(f"    Threshold: {threshold:.4f}")
@@ -537,12 +613,28 @@ def run_modeling():
             logger.info(f"    AUC: {test_auc:.4f}")
             logger.info(f"    Confusion: TP={tp} FP={fp} FN={fn} TN={tn}")
 
+            # Also report the high-sens (Tier90) operating point if achievable
+            tier90_sens = tier90_spec = tier90_threshold = np.nan
+            if thresh_results.get('tier90', {}).get('met'):
+                t90 = thresh_results['tier90']['threshold']
+                y_pred_90 = (ens_test_cal >= t90).astype(int)
+                cm90 = confusion_matrix(y_test, y_pred_90)
+                tn90, fp90, fn90, tp90 = cm90.ravel()
+                tier90_sens = tp90 / (tp90 + fn90) if (tp90 + fn90) > 0 else 0
+                tier90_spec = tn90 / (tn90 + fp90) if (tn90 + fp90) > 0 else 0
+                tier90_threshold = t90
+                logger.info(f"  TIER90 (alt operating point, Sens>=90%):")
+                logger.info(f"    Threshold: {t90:.4f}  Sens: {tier90_sens:.4f}  Spec: {tier90_spec:.4f}")
+
             all_results.append({
                 'window': window, 'seed': seed, 'tier': tier_name,
                 'threshold': threshold, 'sensitivity': test_sens,
                 'specificity': test_spec, 'auc': test_auc,
                 'tp': tp, 'fp': fp, 'fn': fn, 'tn': tn,
-                'ensemble': f"{top2[0]}({weights[0]:.2f})+{top2[1]}({weights[1]:.2f})",
+                'ensemble': ens_desc,
+                'tier90_threshold': tier90_threshold,
+                'tier90_sensitivity': tier90_sens,
+                'tier90_specificity': tier90_spec,
             })
 
             # Save models
@@ -550,14 +642,17 @@ def run_modeling():
                 joblib.dump(model, train_dir / 'saved_models' / f'{name}_model.pkl')
             joblib.dump({
                 'selected_features': selected, 'threshold': threshold,
-                'ensemble_models': top2, 'ensemble_weights': weights,
+                'ensemble_models': ens_models, 'ensemble_weights': list(weights),
+                'calibrator': calibrator,
+                'tier90_threshold': tier90_threshold,
                 'seed': seed, 'window': window,
             }, train_dir / 'saved_models' / 'config.json')
 
-            # Save predictions
+            # Save predictions (both raw ensemble and calibrated)
             pred_df = pd.DataFrame({
                 'PATIENT_GUID': X_test.index, 'y_true': y_test,
-                'y_pred_proba': ens_test, 'y_pred': y_pred,
+                'y_pred_proba_raw': ens_test,
+                'y_pred_proba': ens_test_cal, 'y_pred': y_pred,
             })
             pred_df.to_csv(train_dir / f'predictions_{window}.csv', index=False)
 
