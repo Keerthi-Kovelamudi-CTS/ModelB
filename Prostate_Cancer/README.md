@@ -22,6 +22,53 @@ Prostate_Cancer/
 
 ---
 
+## Pipeline Overview (end-to-end)
+
+```
+        SNOMED codes & categories               Trained models
+        from clinical literature                 (for deployment)
+                 │                                     ▲
+                 ▼                                     │
+ ┌─── Phase 1 ────────┐        ┌───────── Phase 5 ────┴──────┐
+ │  Top_Snomed        │        │  Inference                   │
+ │  rank SNOMEDs by   │        │  single-patient JSON →       │
+ │  statistical       │        │  calibrated risk + top       │
+ │  signal            │        │  risk factors                │
+ └─────────┬──────────┘        └──────────────────────────────┘
+           │                                     ▲
+           ▼                                     │
+ ┌─── Phase 2 ────────┐        ┌───────── Phase 4 ────────────┐
+ │  Feature Eng.      │        │  Expanded-Data Test          │
+ │  cohort → clean →  │        │  ~300K holdout patients →    │
+ │  ~1000 features →  │◀──FE───│  apply saved transformers →  │
+ │  cleanup → text    │  funcs │  predict (calibrator + thr)  │
+ └─────────┬──────────┘        └──────────────────────────────┘
+           │                                     ▲
+           ▼                                     │
+ ┌─── Phase 3 ────────┐        ┌───────── Phase 6 ────────────┐
+ │  Modeling          │        │  Explainability              │
+ │  train/val/test →  │        │  SHAP on highest-weight      │
+ │  XGB+LGBM+CB Optuna│───────▶│  model → clinician reports   │
+ │  ensemble (top-3)+ │        │  → audit opaque features →   │
+ │  isotonic calib +  │        │  enhancement loop            │
+ │  Tier-0 + Tier-90  │        └──────────────────────────────┘
+ └────────────────────┘
+```
+
+---
+
+## Design Decisions (the "why")
+
+- **Temporal windows A vs B** are the core leakage defence. A = earlier observation period, B = later; both strictly before `INDEX_DATE`. `2_clean_data.py` enforces this with a leakage guard that drops any row where `EVENT_DATE >= INDEX_DATE`.
+- **No downsampling of negatives** — natural ~1:9 positive:negative ratio is preserved. Class imbalance is handled at modeling time via `scale_pos_weight` (XGBoost/LightGBM) and `auto_class_weights='Balanced'` (CatBoost).
+- **Config-driven** — everything cancer-specific lives in `config.py`. Porting to a new cancer only touches `config.py` + `4_cancer_features.py` + regenerating `code_category_mapping.json`.
+- **Isotonic calibration** — ensemble scores are mapped to probabilities via `IsotonicRegression` fit on a 70% slice of val; threshold is selected on the held-out 30% to avoid fit-and-threshold-on-same-data bias.
+- **Top-3 ensemble** — all three boosters (XGBoost, LightGBM, CatBoost) contribute; weights are grid-searched on a tiered sens/spec objective.
+- **Tier-0 primary + Tier-90 alternative** — Tier-0 (sens ≥ 80%, spec ≥ 70%) is the main operating point; Tier-90 (sens ≥ 90%, max achievable spec) is reported alongside for high-sensitivity screening use cases.
+- **Same FE code in training and holdout** — Phase 4's holdout pipeline imports FE functions directly from Phase 2 (no duplication, zero drift risk).
+
+---
+
 ## Quick Start
 
 ```bash
@@ -324,16 +371,6 @@ WHY THIS PATIENT IS FLAGGED:
   4. Urinary symptoms worsening over time
   5. Bone or back pain present (possible metastatic signal)
 ```
-
----
-
-## Design Decisions
-
-- **Temporal windows (A vs B)** are the core leakage defence — A = earlier observation period, B = later one, both **strictly before INDEX_DATE**. Phase 2 enforces this with a leakage guard in `2_clean_data.py`.
-- **No downsampling of negatives** — the natural ~1:9 positive:negative ratio is preserved. Class imbalance is handled at modeling time via `scale_pos_weight` (XGB/LGBM) and `auto_class_weights='Balanced'` (CatBoost).
-- **Isotonic calibration** — ensemble scores are mapped to probabilities via `IsotonicRegression` fit on a 70% slice of validation; threshold is selected on the held-out 30% slice to avoid fit-and-threshold-on-same-data bias.
-- **Top-3 ensemble** — all three boosters contribute; weights are grid-searched on the tiered sens/spec objective.
-- **Tier-90 alt operating point** — reported alongside the primary threshold to support high-sensitivity screening use cases.
 
 ---
 
