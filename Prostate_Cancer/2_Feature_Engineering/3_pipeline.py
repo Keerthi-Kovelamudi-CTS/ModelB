@@ -108,7 +108,11 @@ def build_clinical_features(clin_df, cfg):
                 return np.nan
             x = (group['EVENT_DATE'] - group['EVENT_DATE'].min()).dt.days.values.astype(float)
             y = group['VALUE'].values.astype(float)
-            if x[-1] == 0:
+            mask = ~(np.isnan(x) | np.isnan(y))
+            if mask.sum() < 2:
+                return np.nan
+            x, y = x[mask], y[mask]
+            if x.max() == x.min():
                 return np.nan
             try:
                 return np.polyfit(x, y, 1)[0]
@@ -421,9 +425,13 @@ def build_advanced_features(clin_df, med_df, existing_fm, window_name, cfg):
         def calc_slope(group):
             if len(group) < 2:
                 return np.nan
-            x = (group['EVENT_DATE'] - group['EVENT_DATE'].min()).dt.days.values
-            y = group['VALUE'].values
-            if x[-1] == 0:
+            x = (group['EVENT_DATE'] - group['EVENT_DATE'].min()).dt.days.values.astype(float)
+            y = group['VALUE'].values.astype(float)
+            mask = ~(np.isnan(x) | np.isnan(y))
+            if mask.sum() < 2:
+                return np.nan
+            x, y = x[mask], y[mask]
+            if x.max() == x.min():
                 return np.nan
             try:
                 return np.polyfit(x, y, 1)[0]
@@ -695,9 +703,13 @@ def build_new_signal_features(clin_df, med_df, existing_fm, window_name, cfg):
                 def term_slope(group):
                     if len(group) < 2:
                         return np.nan
-                    x = (group['EVENT_DATE'] - group['EVENT_DATE'].min()).dt.days.values
-                    y = group['VALUE'].values
-                    if x[-1] == 0:
+                    x = (group['EVENT_DATE'] - group['EVENT_DATE'].min()).dt.days.values.astype(float)
+                    y = group['VALUE'].values.astype(float)
+                    mask = ~(np.isnan(x) | np.isnan(y))
+                    if mask.sum() < 2:
+                        return np.nan
+                    x, y = x[mask], y[mask]
+                    if x.max() == x.min():
                         return np.nan
                     try:
                         return np.polyfit(x, y, 1)[0]

@@ -84,7 +84,9 @@ def run_clean_data(cfg=None):
         logger.info(f"{'='*60}")
 
         obs = pd.read_csv(obs_path, low_memory=False)
+        obs.columns = obs.columns.str.upper()
         med = pd.read_csv(med_path, low_memory=False)
+        med.columns = med.columns.str.upper()
 
         obs = clean_obs(obs, cfg)
         med = clean_med(med, cfg)

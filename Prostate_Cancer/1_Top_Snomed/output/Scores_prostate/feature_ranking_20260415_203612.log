@@ -1,0 +1,210 @@
+2026-04-15 20:36:12 | INFO     | ================================================================================
+2026-04-15 20:36:12 | INFO     | PRODUCTION — PROSTATE — Phase 1.3: Feature Ranking FINAL v1.1
+2026-04-15 20:36:12 | INFO     | Timestamp: 2026-04-15 20:36:12
+2026-04-15 20:36:12 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-04-15 20:36:12 | INFO     | ================================================================================
+2026-04-15 20:36:12 | INFO     | 
+📂 Loading input files...
+2026-04-15 20:36:12 | INFO     |   ✅ pos_obs: 7,306 rows validated
+2026-04-15 20:36:12 | INFO     |   ✅ neg_obs: 18,584 rows validated
+2026-04-15 20:36:12 | INFO     |   ✅ pos_meds: 1,532 rows validated
+2026-04-15 20:36:12 | INFO     |   ✅ neg_meds: 4,984 rows validated
+2026-04-15 20:36:12 | WARNING  |   ⚠️ Observation matrix not found — will use fallback
+2026-04-15 20:36:12 | WARNING  |   ⚠️ Medication matrix not found — will use fallback
+2026-04-15 20:36:12 | INFO     | 
+================================================================================
+2026-04-15 20:36:12 | INFO     | PART 1: OBSERVATIONS
+2026-04-15 20:36:12 | INFO     | ================================================================================
+2026-04-15 20:36:12 | INFO     | 
+============================================================
+2026-04-15 20:36:12 | INFO     | STATISTICAL RANKING: observations
+2026-04-15 20:36:12 | INFO     | ============================================================
+2026-04-15 20:36:12 | INFO     |   Positive: 23,251 patients, 7,306 terms
+2026-04-15 20:36:12 | INFO     |   Negative: 316,675 patients, 18,584 terms
+2026-04-15 20:36:14 | INFO     |   After min cases (>=3): 7,306 terms
+2026-04-15 20:36:14 | INFO     |   Case-enriched only (OR > 1): 4,485 terms (dropped 2,821 control-enriched or invalid OR)
+2026-04-15 20:36:14 | INFO     |   After all filters: 4,485 terms
+2026-04-15 20:36:14 | INFO     |   OR > 2.0: 2478
+2026-04-15 20:36:14 | INFO     |   OR > 5.0: 1169
+2026-04-15 20:36:14 | INFO     |   Significant (p<0.05): 2932
+2026-04-15 20:36:14 | INFO     |   Bonferroni sig (p<0.05): 1886
+2026-04-15 20:36:14 | INFO     | 
+============================================================
+2026-04-15 20:36:14 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-15 20:36:14 | INFO     | ============================================================
+2026-04-15 20:36:14 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-15 20:36:14 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-15 20:36:14 | INFO     |   Training L1 Logistic Regression...
+2026-04-15 20:36:23 | INFO     |     AUROC: 0.9465 ± 0.0010 | Non-zero: 440 | 9.3s
+2026-04-15 20:36:23 | INFO     |   Training Random Forest (200 trees)...
+2026-04-15 20:36:25 | INFO     |     AUROC: 0.9072 ± 0.0057 | 1.6s
+2026-04-15 20:36:25 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-15 20:36:54 | INFO     |     AUROC: 0.9153 ± 0.0048 | 28.7s
+2026-04-15 20:36:54 | INFO     |   ✅ Complete: 39.9s total
+2026-04-15 20:36:54 | INFO     |   Building combined ranking for observations...
+2026-04-15 20:36:54 | WARNING  |   ⚠️ 2 ML terms not found in stat ranking
+2026-04-15 20:36:54 | INFO     |   Total: 4,489 | Both agree (top 150): 32
+2026-04-15 20:36:54 | INFO     | 
+📋 Top 20 Observations:
+2026-04-15 20:36:54 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-15 20:36:54 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-15 20:36:54 | INFO     |   1      observation  Fast track referral for suspected urologi     37.66   36.21   39.18   0.00e+00    344      1   0.828 Very High       
+2026-04-15 20:36:54 | INFO     |   2      observation  Raised prostate specific antigen              54.42   51.73   57.24   0.00e+00    310      3   0.702 High            
+2026-04-15 20:36:54 | INFO     |   3      observation  Prostate specific antigen level               47.22   45.01   49.53   0.00e+00    319      2   0.699 High            
+2026-04-15 20:36:54 | INFO     |   4      observation  2 week rule referral - urology                29.53   28.08   31.06   0.00e+00    377      4   0.526 High            
+2026-04-15 20:36:54 | INFO     |   5      observation  Large unstained cells                         18.83   17.85   19.87   0.00e+00    481      5   0.349 Medium          
+2026-04-15 20:36:54 | INFO     |   6      observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     24   0.346 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   7      observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     27   0.332 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   8      observation  Serum appearance                            3795.15  236.18 60984.06   0.00e+00      2     80   0.309 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   9      observation  Referred to urologist                         22.63   21.19   24.16   0.00e+00    430      6   0.302 Medium          
+2026-04-15 20:36:54 | INFO     |   10     observation  Health education offered                    2859.28  177.65 46020.35  6.61e-307      3     72   0.299 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   11     observation  Urine microscopy: epithelial casts          1652.23  102.16 26720.95  1.34e-176      4     54   0.281 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   12     observation  Screening for malignant neoplasm of large   1323.83   81.63 21470.33  4.73e-141      6     60   0.271 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   13     observation  Suspected prostate cancer                     35.37   32.14   38.92   0.00e+00    352      7   0.271 Medium          
+2026-04-15 20:36:54 | INFO     |   14     observation  Ultrasensitive prostate specific antigen    1624.85  100.45 26283.19  1.23e-173      5    186   0.270 Medium          
+2026-04-15 20:36:54 | INFO     |   15     observation  Flexible check cystoscopy                   1105.09   67.95 17973.02  2.39e-117      7     45   0.267 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   16     observation  Transrectal needle biopsy of prostate        558.88   33.80 9241.23   4.71e-58     30     24   0.263 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   17     observation  Referral letter sent by fax                  995.77   61.11 16225.32  1.71e-105      9     69   0.259 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   18     observation  Blood chemistry NOS                          913.81   55.99 14914.96   1.33e-96     11     50   0.259 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   19     observation  Patient-initiated diet                        86.12   64.51  114.97   0.00e+00    285      8   0.259 Medium          
+2026-04-15 20:36:54 | INFO     |   20     observation  Moderate risk category for developing com   1023.10   62.82 16662.18  1.85e-108      8     86   0.258 Medium     ✅    
+2026-04-15 20:36:54 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_obs_all.csv (4,489 rows)
+2026-04-15 20:36:54 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_obs_top150.csv (150 rows)
+2026-04-15 20:36:54 | INFO     | 
+================================================================================
+2026-04-15 20:36:54 | INFO     | PART 2: MEDICATIONS
+2026-04-15 20:36:54 | INFO     | ================================================================================
+2026-04-15 20:36:54 | INFO     | 
+============================================================
+2026-04-15 20:36:54 | INFO     | STATISTICAL RANKING: medications
+2026-04-15 20:36:54 | INFO     | ============================================================
+2026-04-15 20:36:54 | INFO     |   Positive: 23,251 patients, 1,532 terms
+2026-04-15 20:36:54 | INFO     |   Negative: 316,675 patients, 4,984 terms
+2026-04-15 20:36:54 | INFO     |   After min cases (>=3): 1,532 terms
+2026-04-15 20:36:54 | INFO     |   Case-enriched only (OR > 1): 1,053 terms (dropped 479 control-enriched or invalid OR)
+2026-04-15 20:36:54 | INFO     |   After all filters: 1,053 terms
+2026-04-15 20:36:54 | INFO     |   OR > 2.0: 586
+2026-04-15 20:36:54 | INFO     |   OR > 5.0: 280
+2026-04-15 20:36:54 | INFO     |   Significant (p<0.05): 662
+2026-04-15 20:36:54 | INFO     |   Bonferroni sig (p<0.05): 408
+2026-04-15 20:36:54 | INFO     | 
+============================================================
+2026-04-15 20:36:54 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-15 20:36:54 | INFO     | ============================================================
+2026-04-15 20:36:54 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-15 20:36:54 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-15 20:36:55 | INFO     |   Training L1 Logistic Regression...
+2026-04-15 20:37:09 | INFO     |     AUROC: 0.7595 ± 0.0011 | Non-zero: 463 | 14.3s
+2026-04-15 20:37:09 | INFO     |   Training Random Forest (200 trees)...
+2026-04-15 20:37:11 | INFO     |     AUROC: 0.7003 ± 0.0027 | 1.9s
+2026-04-15 20:37:11 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-15 20:37:43 | INFO     |     AUROC: 0.7047 ± 0.0023 | 32.0s
+2026-04-15 20:37:43 | INFO     |   ✅ Complete: 48.4s total
+2026-04-15 20:37:43 | INFO     |   Building combined ranking for medications...
+2026-04-15 20:37:43 | INFO     |   Total: 1,053 | Both agree (top 150): 80
+2026-04-15 20:37:43 | INFO     | 
+📋 Top 20 Medications:
+2026-04-15 20:37:43 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-15 20:37:43 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-15 20:37:43 | INFO     |   1      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    163.74  140.27  191.13   0.00e+00     80      1   0.882 Very High  ✅    
+2026-04-15 20:37:43 | INFO     |   2      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    218.84  171.02  280.04   0.00e+00     56      2   0.575 High       ✅    
+2026-04-15 20:37:43 | INFO     |   3      medication   Influenza vaccine (split virion, inactiva    386.41  265.84  561.67   0.00e+00     26      6   0.476 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   4      medication   Fluad vaccine suspension for injection 0.    545.27  303.64  979.19   0.00e+00     19      5   0.469 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   5      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     54.57   47.29   62.96   0.00e+00    119      3   0.467 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   6      medication   Spikevax COVID-19 mRNA (nucleoside modifi    149.52  117.28  190.62   0.00e+00    109      7   0.427 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   7      medication   Comirnaty Original/Omicron BA.1 COVID-19      26.84   23.71   30.38   0.00e+00    132      4   0.382 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   8      medication   Enzira vaccine suspension for injection 0   4485.04  279.33 72014.94   0.00e+00      1     25   0.356 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   9      medication   Fluad Tetra vaccine suspension for inject    274.37  161.87  465.05   0.00e+00     45     11   0.353 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   10     medication   Imuvac vaccine suspension for injection 0   3436.99  213.78 55257.44   0.00e+00      2     28   0.339 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   11     medication   Pneumovax II vaccine solution for injecti   3079.24  191.41 49537.26   0.00e+00      3     29   0.331 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   12     medication   Influenza vaccine (surface antigen, inact    422.75  204.26  874.93   0.00e+00     22     15   0.318 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   13     medication   Mepradec 20mg gastro-resistant capsules (   2310.05  143.30 37238.75  1.12e-247      4     38   0.312 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   14     medication   Influvac Sub-unit vaccine suspension for    1980.97  122.72 31977.10  3.86e-212      5     31   0.308 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   15     medication   Flucelvax Tetra vaccine suspension for in   1843.96  114.15 29786.37  2.48e-197      6     41   0.301 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   16     medication   Influenza vaccine (split virion, inactiva    968.45   59.40 15788.49  1.57e-102      7     45   0.274 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   17     medication   Tabphyn MR 400microgram capsules (Genus P    831.87   50.86 13604.98   1.04e-87     11     44   0.268 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   18     medication   Lacri-lube eye ointment (Allergan Ltd)       886.49   54.28 14478.26   1.22e-93      9     48   0.268 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   19     medication   Ranitidine 300mg tablets                     941.13   57.70 15351.71   1.44e-99      8     65   0.265 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   20     medication   Simvador 40mg tablets (Dexcel-Pharma Ltd)    831.87   50.86 13604.98   1.04e-87     10     55   0.262 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_meds_all.csv (1,053 rows)
+2026-04-15 20:37:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_meds_top150.csv (150 rows)
+2026-04-15 20:37:43 | INFO     | 
+================================================================================
+2026-04-15 20:37:43 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-04-15 20:37:43 | INFO     | ================================================================================
+2026-04-15 20:37:43 | INFO     | 
+📋 Top 20 Combined Features:
+2026-04-15 20:37:43 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-15 20:37:43 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-15 20:37:43 | INFO     |   1      observation  Fast track referral for suspected urologi     37.66   36.21   39.18   0.00e+00    344      1   0.828 Very High       
+2026-04-15 20:37:43 | INFO     |   2      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    163.74  140.27  191.13   0.00e+00     80      1   0.749 High       ✅    
+2026-04-15 20:37:43 | INFO     |   3      observation  Raised prostate specific antigen              54.42   51.73   57.24   0.00e+00    310      3   0.702 High            
+2026-04-15 20:37:43 | INFO     |   4      observation  Prostate specific antigen level               47.22   45.01   49.53   0.00e+00    319      2   0.699 High            
+2026-04-15 20:37:43 | INFO     |   5      observation  2 week rule referral - urology                29.53   28.08   31.06   0.00e+00    377      4   0.526 High            
+2026-04-15 20:37:43 | INFO     |   6      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    218.84  171.02  280.04   0.00e+00     56      2   0.502 High       ✅    
+2026-04-15 20:37:43 | INFO     |   7      medication   Fluad vaccine suspension for injection 0.    545.27  303.64  979.19   0.00e+00     19      5   0.435 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   8      medication   Influenza vaccine (split virion, inactiva    386.41  265.84  561.67   0.00e+00     26      6   0.419 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   9      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     54.57   47.29   62.96   0.00e+00    119      3   0.413 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   10     medication   Spikevax COVID-19 mRNA (nucleoside modifi    149.52  117.28  190.62   0.00e+00    109      7   0.375 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   11     observation  Large unstained cells                         18.83   17.85   19.87   0.00e+00    481      5   0.349 Medium          
+2026-04-15 20:37:43 | INFO     |   12     medication   Comirnaty Original/Omicron BA.1 COVID-19      26.84   23.71   30.38   0.00e+00    132      4   0.348 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   13     observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     24   0.346 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   14     medication   Enzira vaccine suspension for injection 0   4485.04  279.33 72014.94   0.00e+00      1     25   0.342 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   15     observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     27   0.332 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   16     medication   Fluad Tetra vaccine suspension for inject    274.37  161.87  465.05   0.00e+00     45     11   0.331 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   17     medication   Imuvac vaccine suspension for injection 0   3436.99  213.78 55257.44   0.00e+00      2     28   0.328 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   18     medication   Pneumovax II vaccine solution for injecti   3079.24  191.41 49537.26   0.00e+00      3     29   0.321 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   19     observation  Serum appearance                            3795.15  236.18 60984.06   0.00e+00      2     80   0.309 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   20     medication   Mepradec 20mg gastro-resistant capsules (   2310.05  143.30 37238.75  1.12e-247      4     38   0.304 Medium     ✅    
+2026-04-15 20:37:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_combined_all.csv (5,542 rows)
+2026-04-15 20:37:43 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_combined_top150.csv (150 rows)
+2026-04-15 20:37:43 | INFO     | 
+================================================================================
+2026-04-15 20:37:43 | INFO     | FINAL SUMMARY
+2026-04-15 20:37:43 | INFO     | ================================================================================
+2026-04-15 20:37:43 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   prostate_obs_top150.csv       →  150 observations          │
+  │   prostate_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   prostate_combined_top150.csv  →   99 obs +   51 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   prostate_obs_all.csv          →   4489 observations       │
+  │   prostate_meds_all.csv         →   1053 medications        │
+  │   prostate_combined_all.csv     →   5542 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: SIMULATED (fallback) ⚠️
+  Medications:  SIMULATED (fallback) ⚠️
+
+📊 Observations:  4,489 scored | OR>2: 2482 | Sig: 2936
+📊 Medications:   1,053 scored | OR>2: 586 | Sig: 662
+
+📊 Combined Top 150: 99 obs (66%) + 51 meds (34%)
+
+📊 Confidence: VeryHigh=1 | High=5 | Medium=144 | Low=0
+2026-04-15 20:37:43 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-04-15 20:37:43 | INFO     |   #1 Fast track referral for suspected urological cancer (OR=37.66 [36.21-39.18], p=0.00e+00, score=0.828)
+2026-04-15 20:37:43 | INFO     |   #3 Raised prostate specific antigen (OR=54.42 [51.73-57.24], p=0.00e+00, score=0.702)
+2026-04-15 20:37:43 | INFO     |   #4 Prostate specific antigen level (OR=47.22 [45.01-49.53], p=0.00e+00, score=0.699)
+2026-04-15 20:37:43 | INFO     |   #5 2 week rule referral - urology (OR=29.53 [28.08-31.06], p=0.00e+00, score=0.526)
+2026-04-15 20:37:43 | INFO     |   #11 Large unstained cells (OR=18.83 [17.85-19.87], p=0.00e+00, score=0.349)
+2026-04-15 20:37:43 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-04-15 20:37:43 | INFO     |   #2 Comirnaty COVID-19 mRNA Vaccine 30micrograms/0.3ml dose concentrate for dispersion for injection multidose vials (Pfizer Ltd) (OR=163.74 [140.27-191.13], p=0.00e+00, score=0.749)
+2026-04-15 20:37:43 | INFO     |   #6 COVID-19 Vaccine Vaxzevria (ChAdOx1 S [recombinant]) not less than 2.5x100,000,000 infectious units/0.5ml dose suspension for injection multidose vials (AstraZeneca UK Ltd) (OR=218.84 [171.02-280.04], p=0.00e+00, score=0.502)
+2026-04-15 20:37:43 | INFO     |   #7 Fluad vaccine suspension for injection 0.5ml pre-filled syringes (Seqirus UK Ltd) (OR=545.27 [303.64-979.19], p=0.00e+00, score=0.435)
+2026-04-15 20:37:43 | INFO     |   #8 Influenza vaccine (split virion, inactivated) suspension for injection 0.5ml pre-filled syringes (OR=386.41 [265.84-561.67], p=0.00e+00, score=0.419)
+2026-04-15 20:37:43 | INFO     |   #9 COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc) (OR=54.57 [47.29-62.96], p=0.00e+00, score=0.413)
+2026-04-15 20:37:43 | INFO     | 
+⏱️  Total execution time: 90.5s (1.5 min)
+2026-04-15 20:37:43 | INFO     | 
+================================================================================
+2026-04-15 20:37:43 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-04-15 20:37:43 | INFO     | ================================================================================

@@ -79,34 +79,87 @@ RESULTS_PATH = SCRIPT_DIR / 'results'
 # ═══════════════════════════════════════════════════════════════
 
 def is_clinical_feature(col):
-    """Return True if the feature is clinically meaningful."""
+    """Return True if the feature is clinically meaningful.
+    Aggressively removes utilization/generic features that confound the model."""
+
+    # ALWAYS KEEP: demographics, cancer-specific, text
     if col in ['AGE_AT_INDEX', 'AGE_BAND', 'LABEL']:
-        return True
-    if col.startswith(('AGE_', 'AGEX_')):
-        return True
-    if col.startswith('OBS_'):
-        return True
-    if col.startswith(('LABTERM_', 'LAB_')):
-        if '_has_ever' in col:
-            return False
         return True
     if col.startswith(PREFIX):
         return True
-    if col.startswith(('CLUSTER_', 'CROSS_', 'INT_', 'CAT_', 'MEDCAT_',
-                       'MEDREC_', 'MED_ESC_', 'SEQ_', 'INV_PATTERN_',
-                       'PAIR_', 'CMPAIR_', 'RECUR_', 'DECAY_')):
+    if col.startswith(('TEXT_', 'EMB_', 'BERT_')):
+        return True
+
+    # KEEP: Age features
+    if col.startswith(('AGE_', 'AGEX_')):
+        return True
+
+    # KEEP: Per-category symptom features (counts, acceleration, recency)
+    if col.startswith('OBS_'):
+        return True
+
+    # KEEP: Lab VALUES (actual results, slopes, deltas) but NOT has_ever/count
+    if col.startswith(('LABTERM_', 'LAB_')):
+        if any(x in col for x in ['_has_ever', '_count']):
+            return False  # utilization: how many tests ordered
+        return True
+
+    # KEEP: Symptom clusters, cross-domain, interactions
+    if col.startswith(('CLUSTER_', 'CROSS_', 'INT_')):
+        return True
+
+    # KEEP: Investigation patterns (clinically specific)
+    if col.startswith('INV_PATTERN_'):
+        return True
+
+    # KEEP: Medication per-category (but NOT aggregates)
+    if col.startswith('MED_ESC_'):
         return True
     if col.startswith('MED_'):
-        generic_meds = [
-            'MED_AGG_total_prescriptions', 'MED_AGG_unique_categories',
-            'MED_AGG_unique_drugs', 'MED_AGG_count_A', 'MED_AGG_count_B',
-            'MED_AGG_acceleration', 'MED_AGG_polypharmacy',
-        ]
-        return col not in generic_meds
-    if col.startswith('TRAJ_'):
-        return any(x in col.lower() for x in ['trend', 'events_Q'])
-    if col.startswith('AGG_symptom_') or col == 'AGG_new_symptom_cats_in_B':
+        # Remove ALL generic aggregates
+        if col.startswith('MED_AGG_'):
+            return False
+        # Keep per-category counts
         return True
+
+    # KEEP: Sequence features (symptom timing)
+    if col.startswith('SEQ_'):
+        return True
+
+    # KEEP: Per-category recency
+    if col.startswith('RECUR_'):
+        if '_days_since_last' in col:
+            return True
+        return False
+
+    # KEEP: Time-decay (symptom-specific weighted scores)
+    if col.startswith('DECAY_'):
+        # Remove generic total, keep symptom-specific
+        if col == 'DECAY_total_weighted_score':
+            return False
+        return True
+
+    # ── REMOVE everything below (utilization confounds) ──
+    # AGG_* (total events, unique categories, unique codes, events_A/B)
+    # MONTHLY_* (raw monthly event bins — how active the patient is)
+    # ROLLING3M_* (rolling window counts)
+    # RATE_* (events per category)
+    # VISIT_* (how many times patient visited GP)
+    # TRAJ_* (generic temporal trajectory — events per quarter)
+    # CAT_* (per-category raw totals)
+    # MEDCAT_* (per-med-category raw totals)
+    # MEDREC_* (medication recurrence counts)
+    # PAIR_* (co-occurrence — statistical, not clinical)
+    # CMPAIR_* (clinical-med pairs — statistical)
+    # ENTROPY_* / GINI_* (diversity measures)
+    # INV_count_*, INV_acceleration (generic investigation counts)
+    # TEMP_* (generic event span)
+    # AGG_symptom_* (keep only unique categories, not raw counts)
+    if col.startswith('AGG_symptom_unique') or col == 'AGG_new_symptom_cats_in_B':
+        return True
+    if col.startswith('AGG_symptom_acceleration'):
+        return True
+
     return False
 
 
@@ -176,7 +229,7 @@ def select_features(X_train, y_train, n_top=None):
     clinical_imp = importances[clinical_feats]
     top_clinical = clinical_imp.nlargest(n_clinical * 2).index.tolist()
 
-    label_corr = X_train[top_clinical].corrwith(y_train).abs()
+    label_corr = X_train[top_clinical].corrwith(pd.Series(y_train, index=X_train.index)).abs()
     min_corr = label_corr.quantile(0.1)
     filtered = label_corr[label_corr >= min_corr].index.tolist()
     selected_clinical = [f for f in clinical_imp.nlargest(len(clinical_imp)).index if f in filtered][:n_clinical]
@@ -353,17 +406,21 @@ def tune_catboost(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS):
     def objective(trial):
         params = {
             'iterations': trial.suggest_int('iterations', 200, 800),
-            'depth': trial.suggest_int('depth', 3, 8),
+            'depth': trial.suggest_int('depth', 3, 7),
             'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.15, log=True),
-            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-8, 10, log=True),
+            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-4, 10, log=True),
             'border_count': trial.suggest_int('border_count', 32, 255),
             'auto_class_weights': 'Balanced',
             'random_seed': 42, 'verbose': 0,
         }
-        model = CatBoostClassifier(**params)
-        model.fit(X_train, y_train, eval_set=(X_val, y_val), early_stopping_rounds=50, verbose=0)
-        pred = model.predict_proba(X_val)[:, 1]
-        return tiered_metric(y_val, pred)
+        try:
+            model = CatBoostClassifier(**params)
+            model.fit(X_train, y_train, eval_set=(X_val, y_val), early_stopping_rounds=50, verbose=0)
+            pred = model.predict_proba(X_val)[:, 1]
+            return tiered_metric(y_val, pred)
+        except Exception as e:
+            logger.debug(f"  CatBoost trial failed: {e}")
+            return 0.0  # failed trial gets worst score
 
     study = optuna.create_study(direction='maximize', sampler=TPESampler(seed=42))
     study.optimize(objective, n_trials=n_trials, show_progress_bar=False)

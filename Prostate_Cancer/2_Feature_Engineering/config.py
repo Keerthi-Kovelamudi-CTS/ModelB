@@ -29,52 +29,88 @@ SAVE_INTERMEDIATES = False
 
 
 # ═══════════════════════════════════════════════════════════════
-# OBSERVATION CATEGORIES
-# UPDATE these based on your SQL/SNOMED groupings for prostate
+# OBSERVATION CATEGORIES (from actual prostate SQL data)
 # ═══════════════════════════════════════════════════════════════
 OBS_CATEGORIES = [
-    'URINARY_SYMPTOMS',
-    'PSA_MONITORING',
-    'HAEMATURIA',
-    'BONE_PAIN',
+    'ALBUMIN_PROTEIN',
+    'ALP_BONE_MARKER',
+    'BONE_MUSCLE',
+    'CALCIUM',
+    'CATHETER',
+    'COAGULATION',
+    'CONSTITUTIONAL',
+    'CYSTOSCOPY',
+    'DRE',
+    'ELECTROLYTES',
     'ERECTILE_DYSFUNCTION',
-    'LOWER_BACK_PAIN',
-    'WEIGHT_LOSS',
-    'FATIGUE',
-    'ABNORMAL_IMAGING',
-    'LAB_MARKERS',
-    'HAEMATOLOGICAL_ABNORMALITIES',
-    'PAIN_SYMPTOMS',
-    'ADDITIONAL_SYMPTOMS',
+    'EXAMINATION',
+    'FAMILY_HISTORY',
+    'FBC_HAEMATOLOGY',
+    'HAEMATOLOGY',
+    'HAEMATURIA',
+    'HORMONAL',
+    'IPSS',
+    'LAB_FLAGS',
+    'LIVER_FUNCTION',
+    'LUTS',
+    'PAIN_PELVIC_BONE',
+    'PROSTATIC_CONDITIONS',
+    'PSA',
+    'RENAL_FUNCTION',
+    'SCREENING_PATHWAY',
+    'SEXUAL_REPRODUCTIVE',
+    'SMOKING',
+    'URINARY_RETENTION',
+    'URINE_MARKERS',
+    'UROLOGY_IMAGING',
+    'UROLOGY_PATHWAY',
+    'UTI',
+    'VITAMIN_D',
+    'WEIGHT',
 ]
 
 # ═══════════════════════════════════════════════════════════════
-# MEDICATION CATEGORIES
+# MEDICATION CATEGORIES (from actual prostate SQL data)
 # ═══════════════════════════════════════════════════════════════
 MED_CATEGORIES = [
-    'ALPHA_BLOCKERS',                 # tamsulosin, alfuzosin
-    'FIVE_ALPHA_REDUCTASE_INHIBITORS', # finasteride, dutasteride
-    'ANTIBIOTICS',                     # UTI / prostatitis treatment
-    'PAIN_MEDICATIONS',
-    'CORTICOSTEROIDS',
-    'GI_MEDICATIONS',
-    'NUTRITIONAL_SUPPLEMENTS',
+    '5ARI',                  # finasteride, dutasteride
+    'ALPHA_BLOCKERS',        # tamsulosin, alfuzosin
+    'ANTICHOLINERGICS',      # overactive bladder
+    'ANTICOAGULANT',
+    'CATHETER_SUPPLIES',
+    'ED_MEDICATIONS',        # erectile dysfunction
+    'PAIN_ESCALATION',
+    'UTI_ANTIBIOTICS',       # UTI-specific antibiotics
+    'UTI_TREATMENT',         # other UTI treatments
 ]
 
 # ═══════════════════════════════════════════════════════════════
 # LAB CATEGORIES (obs rows that carry numeric VALUE)
 # ═══════════════════════════════════════════════════════════════
 LAB_CATEGORIES = [
-    'PSA_MONITORING',
-    'LAB_MARKERS',
-    'HAEMATOLOGICAL_ABNORMALITIES',
+    'PSA',
+    'RENAL_FUNCTION',
+    'ELECTROLYTES',
+    'HAEMATOLOGY',
+    'FBC_HAEMATOLOGY',
+    'ALP_BONE_MARKER',
+    'ALBUMIN_PROTEIN',
+    'LIVER_FUNCTION',
+    'CALCIUM',
+    'COAGULATION',
+    'HORMONAL',
+    'URINE_MARKERS',
+    'VITAMIN_D',
 ]
 
 # ═══════════════════════════════════════════════════════════════
 # INVESTIGATION CATEGORIES (imaging / specialist tests)
 # ═══════════════════════════════════════════════════════════════
 INVESTIGATION_CATEGORIES = [
-    'ABNORMAL_IMAGING',
+    'UROLOGY_IMAGING',
+    'CYSTOSCOPY',
+    'DRE',
+    'SCREENING_PATHWAY',
 ]
 
 # ═══════════════════════════════════════════════════════════════
@@ -83,20 +119,22 @@ INVESTIGATION_CATEGORIES = [
 # Used by build_advanced_features() for symptom clustering
 # ═══════════════════════════════════════════════════════════════
 CLUSTER_DEFINITIONS = [
-    ('URINARY',     ['URINARY_SYMPTOMS', 'HAEMATURIA']),
-    ('PSA',         ['PSA_MONITORING']),
-    ('BONE',        ['BONE_PAIN', 'LOWER_BACK_PAIN']),
-    ('CONSTITUTIONAL', ['WEIGHT_LOSS', 'FATIGUE']),
-    ('IMAGING',     ['ABNORMAL_IMAGING']),
-    ('SEXUAL',      ['ERECTILE_DYSFUNCTION']),
+    ('URINARY',        ['LUTS', 'URINARY_RETENTION', 'HAEMATURIA', 'UTI']),
+    ('PSA',            ['PSA']),
+    ('BONE',           ['PAIN_PELVIC_BONE', 'BONE_MUSCLE', 'ALP_BONE_MARKER']),
+    ('CONSTITUTIONAL', ['CONSTITUTIONAL', 'WEIGHT']),
+    ('INVESTIGATION',  ['UROLOGY_IMAGING', 'CYSTOSCOPY', 'DRE', 'SCREENING_PATHWAY']),
+    ('SEXUAL',         ['ERECTILE_DYSFUNCTION', 'SEXUAL_REPRODUCTIVE']),
+    ('PROSTATIC',      ['PROSTATIC_CONDITIONS', 'IPSS', 'CATHETER']),
+    ('UROLOGY',        ['UROLOGY_PATHWAY']),
 ]
 
 # Categories considered "symptoms" for aggregate features
 SYMPTOM_CATEGORIES = [
-    'URINARY_SYMPTOMS', 'HAEMATURIA', 'BONE_PAIN',
-    'LOWER_BACK_PAIN', 'WEIGHT_LOSS', 'FATIGUE',
-    'ERECTILE_DYSFUNCTION', 'PAIN_SYMPTOMS',
-    'ADDITIONAL_SYMPTOMS',
+    'LUTS', 'URINARY_RETENTION', 'HAEMATURIA', 'UTI',
+    'PAIN_PELVIC_BONE', 'BONE_MUSCLE', 'CONSTITUTIONAL',
+    'ERECTILE_DYSFUNCTION', 'PROSTATIC_CONDITIONS',
+    'CATHETER', 'WEIGHT',
 ]
 
 # ═══════════════════════════════════════════════════════════════
@@ -106,38 +144,47 @@ SYMPTOM_CATEGORIES = [
 # Columns must exist as has_ever flags in the merged feature matrix
 # ═══════════════════════════════════════════════════════════════
 INTERACTION_PAIRS = [
-    ('urinary_plus_psa',
-     'OBS_URINARY_SYMPTOMS_has_ever', 'OBS_PSA_MONITORING_has_ever'),
-    ('haematuria_plus_urinary',
-     'OBS_HAEMATURIA_has_ever', 'OBS_URINARY_SYMPTOMS_has_ever'),
+    ('luts_plus_psa',
+     'OBS_LUTS_has_ever', 'OBS_PSA_has_ever'),
+    ('haematuria_plus_luts',
+     'OBS_HAEMATURIA_has_ever', 'OBS_LUTS_has_ever'),
     ('bone_pain_plus_imaging',
-     'OBS_BONE_PAIN_has_ever', 'OBS_ABNORMAL_IMAGING_has_ever'),
-    ('urinary_plus_alpha_blockers',
-     'OBS_URINARY_SYMPTOMS_has_ever', 'MED_ALPHA_BLOCKERS_has_ever'),
+     'OBS_PAIN_PELVIC_BONE_has_ever', 'OBS_UROLOGY_IMAGING_has_ever'),
+    ('luts_plus_alpha_blockers',
+     'OBS_LUTS_has_ever', 'MED_ALPHA_BLOCKERS_has_ever'),
+    ('retention_plus_catheter',
+     'OBS_URINARY_RETENTION_has_ever', 'MED_CATHETER_SUPPLIES_has_ever'),
+    ('psa_plus_dre',
+     'OBS_PSA_has_ever', 'OBS_DRE_has_ever'),
+    ('luts_plus_5ari',
+     'OBS_LUTS_has_ever', 'MED_5ARI_has_ever'),
+    ('uti_plus_antibiotics',
+     'OBS_UTI_has_ever', 'MED_UTI_ANTIBIOTICS_has_ever'),
     ('pain_plus_pain_meds',
-     'OBS_PAIN_SYMPTOMS_has_ever', 'MED_PAIN_MEDICATIONS_has_ever'),
-    ('fatigue_plus_weight_loss',
-     'OBS_FATIGUE_has_ever', 'OBS_WEIGHT_LOSS_has_ever'),
-    ('bone_pain_plus_back_pain',
-     'OBS_BONE_PAIN_has_ever', 'OBS_LOWER_BACK_PAIN_has_ever'),
-    ('urinary_plus_antibiotics',
-     'OBS_URINARY_SYMPTOMS_has_ever', 'MED_ANTIBIOTICS_has_ever'),
+     'OBS_PAIN_PELVIC_BONE_has_ever', 'MED_PAIN_ESCALATION_has_ever'),
+    ('ed_plus_ed_meds',
+     'OBS_ERECTILE_DYSFUNCTION_has_ever', 'MED_ED_MEDICATIONS_has_ever'),
+    ('prostatic_plus_ipss',
+     'OBS_PROSTATIC_CONDITIONS_has_ever', 'OBS_IPSS_has_ever'),
+    ('psa_plus_urology_pathway',
+     'OBS_PSA_has_ever', 'OBS_UROLOGY_PATHWAY_has_ever'),
 ]
 
 # ═══════════════════════════════════════════════════════════════
 # MEDICATION ESCALATION CONFIG
 # ═══════════════════════════════════════════════════════════════
-PAIN_MED_CATEGORIES = ['PAIN_MEDICATIONS', 'CORTICOSTEROIDS']
-GI_MED_CATEGORIES = ['GI_MEDICATIONS']
-REPEAT_PRESCRIPTION_CATEGORY = 'ANTIBIOTICS'  # track repeat prescriptions
-STEROID_CATEGORY = 'CORTICOSTEROIDS'
+PAIN_MED_CATEGORIES = ['PAIN_ESCALATION']
+GI_MED_CATEGORIES = ['ANTICHOLINERGICS']
+REPEAT_PRESCRIPTION_CATEGORY = 'UTI_ANTIBIOTICS'
+STEROID_CATEGORY = 'PAIN_ESCALATION'  # closest to escalation tracking
 
 # ═══════════════════════════════════════════════════════════════
 # TIME-DECAY CATEGORIES
 # Categories whose events get exponential time-decay weighting
 # ═══════════════════════════════════════════════════════════════
 DECAY_CATEGORIES = [
-    'URINARY_SYMPTOMS', 'HAEMATURIA', 'BONE_PAIN', 'PSA_MONITORING',
+    'LUTS', 'HAEMATURIA', 'PAIN_PELVIC_BONE', 'PSA',
+    'URINARY_RETENTION', 'CONSTITUTIONAL',
 ]
 
 # ═══════════════════════════════════════════════════════════════
@@ -153,23 +200,42 @@ DECAY_CATEGORIES = [
 # Format: { category: { term_string: (low, high) } }
 # ═══════════════════════════════════════════════════════════════
 LAB_RANGES = {
-    'PSA_MONITORING': {
-        'Prostate specific antigen':                (0, 10000),   # ng/mL
-        'Prostate specific antigen level':          (0, 10000),
+    'PSA': {
+        'Serum PSA (prostate specific antigen) level': (0, 10000),   # ng/mL
+        'Prostate specific antigen level':             (0, 10000),
     },
-    'LAB_MARKERS': {
-        'Serum CRP (C reactive protein) level':     (0, 600),    # mg/L
-        'Plasma C reactive protein':                (0, 600),
+    'RENAL_FUNCTION': {
         'Glomerular filtration rate':               (0, 200),    # mL/min/1.73m2
-        'Serum alkaline phosphatase level':         (0, 2000),   # U/L (bone mets)
-        'Plasma total bilirubin level':             (0, 500),    # umol/L
-        'Serum testosterone level':                 (0, 60),     # nmol/L
         'Serum creatinine level':                   (0, 2000),   # umol/L
     },
-    'HAEMATOLOGICAL_ABNORMALITIES': {
+    'ALP_BONE_MARKER': {
+        'Serum alkaline phosphatase level':         (0, 2000),   # U/L (bone mets marker)
+    },
+    'ELECTROLYTES': {
+        'Serum sodium level':                       (100, 170),  # mmol/L
+        'Serum potassium level':                    (2.0, 8.0),  # mmol/L
+    },
+    'CALCIUM': {
+        'Serum adjusted calcium concentration':     (1.0, 4.0),  # mmol/L
+        'Plasma calcium level':                     (1.0, 4.0),
+    },
+    'FBC_HAEMATOLOGY': {
         'Haemoglobin concentration':                (20, 250),   # g/L
         'Platelet count':                           (0, 2000),   # x10^9/L
         'White blood cell count':                   (0, 500),    # x10^9/L
+    },
+    'HORMONAL': {
+        'Serum testosterone level':                 (0, 60),     # nmol/L
+    },
+    'ALBUMIN_PROTEIN': {
+        'Serum albumin level':                      (10, 60),    # g/L
+    },
+    'LIVER_FUNCTION': {
+        'Plasma total bilirubin level':             (0, 500),    # umol/L
+        'Serum alanine aminotransferase level':     (0, 2000),   # U/L
+    },
+    'VITAMIN_D': {
+        'Total 25-hydroxyvitamin D level':          (0, 300),    # nmol/L
     },
 }
 
@@ -179,10 +245,11 @@ LAB_RANGES = {
 
 # Observation categories with clinically meaningful text
 TEXT_CLINICAL_CATEGORIES = [
-    'URINARY_SYMPTOMS', 'PSA_MONITORING', 'BONE_PAIN',
-    'ABNORMAL_IMAGING', 'HAEMATURIA', 'ERECTILE_DYSFUNCTION',
-    'LAB_MARKERS', 'HAEMATOLOGICAL_ABNORMALITIES',
-    'PAIN_SYMPTOMS', 'ADDITIONAL_SYMPTOMS',
+    'LUTS', 'PSA', 'PAIN_PELVIC_BONE', 'UROLOGY_IMAGING',
+    'HAEMATURIA', 'ERECTILE_DYSFUNCTION', 'DRE',
+    'PROSTATIC_CONDITIONS', 'URINARY_RETENTION',
+    'CONSTITUTIONAL', 'UROLOGY_PATHWAY', 'CYSTOSCOPY',
+    'FAMILY_HISTORY', 'IPSS', 'CATHETER',
 ]
 
 # Regex for prostate-related terms (used to pull text from any category)
@@ -241,10 +308,10 @@ TEXT_CLINICAL_KEYWORDS = {
 
 # Severity categories for text extraction (non-lab)
 TEXT_SEVERITY_CATEGORIES = [
-    'URINARY_SYMPTOMS', 'HAEMATURIA', 'BONE_PAIN',
-    'LOWER_BACK_PAIN', 'WEIGHT_LOSS', 'FATIGUE',
-    'ABNORMAL_IMAGING', 'PAIN_SYMPTOMS',
-    'ERECTILE_DYSFUNCTION', 'ADDITIONAL_SYMPTOMS',
+    'LUTS', 'HAEMATURIA', 'PAIN_PELVIC_BONE',
+    'BONE_MUSCLE', 'CONSTITUTIONAL', 'WEIGHT',
+    'UROLOGY_IMAGING', 'URINARY_RETENTION',
+    'ERECTILE_DYSFUNCTION', 'PROSTATIC_CONDITIONS',
 ]
 
 # BERT model

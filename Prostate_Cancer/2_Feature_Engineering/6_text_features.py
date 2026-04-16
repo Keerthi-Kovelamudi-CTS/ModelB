@@ -262,17 +262,24 @@ def build_bert_embeddings(clin_df, existing_fm, window_name, cfg):
     logger.info(f"  Patients with text: {non_empty:,} / {len(patient_list):,}")
 
     try:
+        import torch
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    except Exception:
+        device = 'cpu'
+    batch_size = 256 if device == 'cuda' else 64
+
+    try:
         from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer(cfg.BERT_MODEL_NAME)
-        logger.info(f"  Model loaded: {cfg.BERT_MODEL_NAME}")
+        model = SentenceTransformer(cfg.BERT_MODEL_NAME, device=device)
+        logger.info(f"  Model loaded: {cfg.BERT_MODEL_NAME} on {device}")
     except Exception as e:
         logger.warning(f"  Failed to load {cfg.BERT_MODEL_NAME}: {e}")
         from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer('all-MiniLM-L6-v2')
+        model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
 
     docs_to_encode = [d if len(d) > 10 else 'no clinical text available' for d in aligned_docs]
     embeddings_raw = model.encode(
-        docs_to_encode, batch_size=64, show_progress_bar=True, normalize_embeddings=True
+        docs_to_encode, batch_size=batch_size, show_progress_bar=True, normalize_embeddings=True
     )
 
     pca = PCA(n_components=n_comp, random_state=42)

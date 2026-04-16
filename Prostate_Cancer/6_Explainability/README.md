@@ -22,7 +22,7 @@ Every feature in the model is classified into one of three categories:
 | Class | What It Means | Example | Clinician Sees? |
 |-------|--------------|---------|----------------|
 | **Direct** | Maps directly to something a GP understands | `PROST_LAB_psa_elevated_10` → "PSA above 10 ng/mL" | Yes |
-| **Indirect** | Needs a sentence but is clinically meaningful | `OBS_URINARY_SYMPTOMS_acceleration` → "Urinary symptoms worsening" | Yes |
+| **Indirect** | Needs a sentence but is clinically meaningful | `OBS_LUTS_acceleration` → "LUTS worsening over time" | Yes |
 | **Opaque** | Statistical/mathematical — cannot be explained | `EMB_text_dim_3`, `ENTROPY_category`, `GINI_category` | Never shown |
 
 ### The Enhancement Loop

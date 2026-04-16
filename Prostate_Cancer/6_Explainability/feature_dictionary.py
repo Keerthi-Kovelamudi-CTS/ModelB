@@ -142,17 +142,20 @@ CLINICAL_DESCRIPTIONS = {
     'PROST_psa_count_total':        '{value} PSA tests recorded',
 
     # ── Urinary ───────────────────────────────────────────────
-    'PROST_has_urinary_symptoms':   'Urinary symptoms present (frequency, hesitancy, weak stream)',
-    'PROST_urinary_acceleration':   'Urinary symptoms worsening over time',
-    'PROST_urinary_count_B':        '{value} urinary symptom events in recent period',
+    'PROST_has_luts':               'Lower urinary tract symptoms present (frequency, hesitancy, weak stream)',
+    'PROST_urinary_acceleration':   'LUTS worsening over time',
+    'PROST_urinary_count_B':        '{value} LUTS events in recent period',
     'PROST_has_haematuria':         'Blood in urine (haematuria) recorded',
     'PROST_has_erectile_dysfunction': 'Erectile dysfunction recorded',
+    'PROST_has_urinary_retention':  'Urinary retention recorded',
+    'PROST_has_prostatic_conditions': 'Prostatic condition recorded',
+    'PROST_has_ipss':               'IPSS (International Prostate Symptom Score) recorded',
 
     # ── Bone / Metastatic ─────────────────────────────────────
-    'PROST_has_bone_pain':          'Bone pain reported',
-    'PROST_has_lower_back_pain':    'Lower back pain reported',
-    'PROST_has_any_bone_symptom':   'Bone or back pain present (possible metastatic signal)',
-    'PROST_bone_acceleration':      'Bone/back pain worsening over time',
+    'PROST_has_pelvic_bone_pain':   'Pelvic or bone pain reported',
+    'PROST_has_bone_muscle':        'Bone/muscle symptoms reported',
+    'PROST_has_any_bone_symptom':   'Bone, pelvic, or musculoskeletal pain present (possible metastatic signal)',
+    'PROST_bone_acceleration':      'Bone/pelvic pain worsening over time',
     'PROST_LAB_alp_elevated':       'Alkaline phosphatase elevated (possible bone involvement)',
     'PROST_LAB_alp_latest':         'Alkaline phosphatase level: {value} U/L',
 
@@ -162,23 +165,30 @@ CLINICAL_DESCRIPTIONS = {
     'PROST_LAB_testosterone_low':   'Testosterone low <8 nmol/L',
 
     # ── Treatment ─────────────────────────────────────────────
-    'PROST_has_alpha_blockers':     'Prescribed alpha blockers (tamsulosin — for urinary symptoms)',
+    'PROST_has_alpha_blockers':     'Prescribed alpha blockers (tamsulosin — for LUTS)',
     'PROST_has_5ari':               'Prescribed 5-alpha reductase inhibitor (finasteride/dutasteride)',
     'PROST_bph_combo_treatment':    'On combination BPH treatment (alpha blocker + 5-ARI)',
-    'PROST_antibiotic_count_B':     '{value} antibiotic prescriptions recently',
-    'PROST_pain_med_count_B':       '{value} pain medication prescriptions recently',
-    'PROST_corticosteroid_count_B': '{value} corticosteroid prescriptions recently',
+    'PROST_uti_abx_count_A':        '{value} UTI antibiotic prescriptions in earlier period',
+    'PROST_uti_abx_count_B':        '{value} UTI antibiotic prescriptions recently',
+    'PROST_pain_med_count_B':       '{value} pain escalation prescriptions recently',
+    'PROST_has_anticholinergics':   'Prescribed anticholinergics (overactive bladder)',
+    'PROST_has_catheter_supplies':  'Catheter supplies prescribed',
+    'PROST_has_ed_meds':            'Erectile dysfunction medication prescribed',
 
     # ── Diagnostic Pathway ────────────────────────────────────
-    'PROST_has_abnormal_imaging':   'Abnormal imaging result recorded',
-    'PROST_DX_symptom_to_imaging_days': 'Time from first symptom to imaging: {value} days',
+    'PROST_has_urology_imaging':    'Urology imaging performed',
+    'PROST_has_dre':                'Digital rectal examination (DRE) performed',
+    'PROST_has_cystoscopy':         'Cystoscopy performed',
+    'PROST_has_urology_pathway':    'Patient on urology referral pathway',
+    'PROST_has_family_history':     'Family history recorded',
+    'PROST_DX_symptom_to_imaging_days': 'Time from first urinary symptom to investigation: {value} days',
 
     # ── Risk Score ────────────────────────────────────────────
-    'PROST_risk_score':             'Composite risk score: {value}/5 (age + PSA + symptoms + imaging)',
+    'PROST_risk_score':             'Composite risk score: {value}/5 (age + PSA + LUTS + bone + imaging)',
     'PROST_RF_peak_age':            'Patient in peak prostate cancer age range (50-80)',
     'PROST_RF_elderly':             'Patient over 70 (age is a significant risk factor)',
     'PROST_RF_over65_with_psa':     'Over 65 with PSA monitoring (targeted screening)',
-    'PROST_RF_over65_with_urinary': 'Over 65 with urinary symptoms',
+    'PROST_RF_over65_with_luts':    'Over 65 with lower urinary tract symptoms',
     'PROST_RF_psa_plus_bone':       'Elevated PSA combined with bone symptoms (high-risk combination)',
 
     # ── Observation symptoms (generic pattern) ────────────────
