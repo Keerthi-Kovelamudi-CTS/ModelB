@@ -321,7 +321,7 @@ N_EMBEDDING_COMPONENTS = 15
 # ═══════════════════════════════════════════════════════════════
 # MODELING CONFIGURATION
 # ═══════════════════════════════════════════════════════════════
-SEEDS = [13, 42, 45, 77]         # 4 seeds for robust evaluation
+SEEDS = [42]                     # single best seed for v3 pilot
 N_SELECT_FEATURES = 265           # 225 base + 10 text + 15 TF-IDF + 15 BERT
 OPTUNA_TRIALS = 75
 TRAIN_RATIO = 0.75

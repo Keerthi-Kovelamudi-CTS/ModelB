@@ -350,6 +350,24 @@ def run_cleanup(cfg=None):
         cleaned = cleanup_features(fm, window.upper(), cfg)
         cleaned_matrices[window] = cleaned
 
+        # Belt-and-suspenders: ensure column names are LightGBM-JSON and BigQuery safe.
+        # FE builders already emit clean names; this catches any future addition that slips through.
+        def _sanitize(name):
+            s = re.sub(r'[^A-Za-z0-9_]', '_', str(name))
+            return re.sub(r'_+', '_', s).strip('_') or 'FEATURE'
+        new_cols = [_sanitize(c) for c in cleaned.columns]
+        seen = {}; final = []
+        for c in new_cols:
+            if c in seen:
+                seen[c] += 1; final.append(f"{c}_{seen[c]}")
+            else:
+                seen[c] = 0; final.append(c)
+        n_changed = sum(1 for a, b in zip(list(cleaned.columns), final) if a != b)
+        if n_changed:
+            logger.info(f"  Sanitized {n_changed} feature names at cleanup-save boundary")
+            cleaned = cleaned.copy()
+            cleaned.columns = final
+
         out_path = cfg.CLEANUP_RESULTS / window / f'feature_matrix_clean_{window}.csv'
         cleaned.to_csv(out_path)
         logger.info(f"  Saved: {out_path}")

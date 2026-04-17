@@ -11,6 +11,7 @@ from collections import Counter
 from itertools import combinations
 
 import numpy as np
+import re
 import pandas as pd
 
 warnings.filterwarnings('ignore')
@@ -687,7 +688,10 @@ def build_new_signal_features(clin_df, med_df, existing_fm, window_name, cfg):
     if len(lab_obs) > 0:
         top_terms = lab_obs['TERM'].value_counts().head(30).index.tolist()
         for term in top_terms:
-            safe_name = term[:40].replace(' ', '_').replace('/', '_').replace('-', '_')
+            # Keep only [A-Za-z0-9_] so feature names are LightGBM-JSON-safe AND BigQuery-safe.
+            # Truncate to 40 chars to stay readable.
+            safe_name = re.sub(r'[^A-Za-z0-9_]', '_', term[:40])
+            safe_name = re.sub(r'_+', '_', safe_name).strip('_') or 'TERM'
             term_df = lab_obs[lab_obs['TERM'] == term]
             if len(term_df) < 20:
                 continue
