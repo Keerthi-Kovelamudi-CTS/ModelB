@@ -338,7 +338,16 @@ TEXT_SEVERITY_CATEGORIES = [
 ]
 
 # BERT model
-BERT_MODEL_NAME = 'pritamdeka/S-PubMedBert-MS-MARCO'
+# NeuML/pubmedbert-base-embeddings is a PubMedBERT checkpoint purpose-built
+# for sentence embeddings, shipped as safetensors (no torch.load CVE block)
+# and drop-in compatible with sentence-transformers. Previous choice
+# (pritamdeka/S-PubMedBert-MS-MARCO) failed to load under torch >= 2.6 and
+# silently fell back to MiniLM during training.
+BERT_MODEL_NAME = 'NeuML/pubmedbert-base-embeddings'
+BERT_FALLBACK_MODELS = [
+    'pritamdeka/S-PubMedBert-MS-MARCO',   # old choice, try as backup
+    'all-MiniLM-L6-v2',                   # last-resort general-purpose
+]
 N_EMBEDDING_COMPONENTS = 15
 
 # ═══════════════════════════════════════════════════════════════

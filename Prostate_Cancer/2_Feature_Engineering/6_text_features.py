@@ -268,14 +268,22 @@ def build_bert_embeddings(clin_df, existing_fm, window_name, cfg):
         device = 'cpu'
     batch_size = 256 if device == 'cuda' else 64
 
-    try:
-        from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer(cfg.BERT_MODEL_NAME, device=device)
-        logger.info(f"  Model loaded: {cfg.BERT_MODEL_NAME} on {device}")
-    except Exception as e:
-        logger.warning(f"  Failed to load {cfg.BERT_MODEL_NAME}: {e}")
-        from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
+    # Try primary model, then each fallback. Prefer safetensors to avoid
+    # the torch.load CVE safety check that blocks pickled checkpoints under
+    # torch >= 2.6.
+    from sentence_transformers import SentenceTransformer
+
+    candidates = [cfg.BERT_MODEL_NAME] + list(getattr(cfg, 'BERT_FALLBACK_MODELS', []))
+    model = None
+    for name in candidates:
+        try:
+            model = SentenceTransformer(name, device=device)
+            logger.info(f"  Model loaded: {name} on {device}")
+            break
+        except Exception as e:
+            logger.warning(f"  Failed to load {name}: {e}")
+    if model is None:
+        raise RuntimeError("All BERT candidates failed to load; check connectivity / safetensors support.")
 
     docs_to_encode = [d if len(d) > 10 else 'no clinical text available' for d in aligned_docs]
     embeddings_raw = model.encode(
