@@ -104,6 +104,29 @@ LAB_CATEGORIES = [
 ]
 
 # ═══════════════════════════════════════════════════════════════
+# LAB DIRECTION OF BADNESS
+# Per-category sign convention for slope → "worsening" boolean.
+# 'up' = higher values are clinically worse (slope > 0 = worsening)
+# 'down' = lower values are worse (slope < 0 = worsening)
+# Categories omitted → no _worsening flag emitted.
+# ═══════════════════════════════════════════════════════════════
+LAB_BAD_DIRECTION = {
+    'PSA':             'up',
+    'ALP_BONE_MARKER': 'up',
+    'RENAL_FUNCTION':  'down',   # eGFR low = bad
+    'FBC_HAEMATOLOGY': 'down',   # Hb low = bad
+    'HAEMATOLOGY':     'up',     # CRP high = bad
+    'ALBUMIN_PROTEIN': 'down',   # low albumin = advanced disease
+    'LIVER_FUNCTION':  'up',     # bilirubin/ALT high = bad
+    'CALCIUM':         'up',     # hypercalcaemia = mets marker
+    'ELECTROLYTES':    None,     # both directions matter → skip
+    'COAGULATION':     None,     # context-dependent
+    'HORMONAL':        'down',   # low testosterone = treatment failure / advanced
+    'URINE_MARKERS':   None,
+    'VITAMIN_D':       'down',
+}
+
+# ═══════════════════════════════════════════════════════════════
 # INVESTIGATION CATEGORIES (imaging / specialist tests)
 # ═══════════════════════════════════════════════════════════════
 INVESTIGATION_CATEGORIES = [

@@ -139,8 +139,11 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         pf[f'{PREFIX}LAB_psa_rising'] = (m(psa_delta) > 0).astype(int)
         pf[f'{PREFIX}LAB_psa_rapid_rise'] = (m(psa_delta) > 2.0).astype(int)
 
-        # PSA velocity (change per month)
-        def psa_velocity(group):
+        # PSA velocity (ng/mL/month, retained for backward compat) and the
+        # clinically-standard per-year version. The previous _velocity_high flag
+        # compared a per-month value against a per-year threshold (0.75 ng/mL/yr),
+        # so it only fired at ~9 ng/mL/yr — 12x too strict. Fixed below.
+        def psa_velocity_per_month(group):
             if len(group) < 2:
                 return np.nan
             first_date = group['EVENT_DATE'].iloc[0]
@@ -149,9 +152,26 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
             if months < 1:
                 return np.nan
             return (group['VALUE'].iloc[-1] - group['VALUE'].iloc[0]) / months
-        psa_vel = psa_all.groupby('PATIENT_GUID').apply(psa_velocity)
-        pf[f'{PREFIX}LAB_psa_velocity'] = m(psa_vel, default=0)
-        pf[f'{PREFIX}LAB_psa_velocity_high'] = (m(psa_vel) > 0.75).astype(int)  # >0.75 ng/mL/yr is suspicious
+        psa_vel = psa_all.groupby('PATIENT_GUID').apply(psa_velocity_per_month)
+        psa_vel_yr = psa_vel * 12.0
+        pf[f'{PREFIX}LAB_psa_velocity'] = m(psa_vel, default=0)              # ng/mL per month
+        pf[f'{PREFIX}LAB_psa_velocity_per_year'] = m(psa_vel_yr, default=0)  # ng/mL per year — clinical standard
+        pf[f'{PREFIX}LAB_psa_velocity_high'] = (m(psa_vel_yr) > 0.75).astype(int)   # >0.75 ng/mL/yr suspicious
+        pf[f'{PREFIX}LAB_psa_velocity_very_high'] = (m(psa_vel_yr) > 2.0).astype(int)  # >2.0 ng/mL/yr high concern
+
+        # PSA percent change across the window (first vs last reading, guarded)
+        def psa_pct_change(group):
+            if len(group) < 2:
+                return np.nan
+            first = float(group['VALUE'].iloc[0])
+            last = float(group['VALUE'].iloc[-1])
+            if first <= 0.1:
+                return np.nan
+            return (last - first) / first * 100.0
+        psa_pct = psa_all.groupby('PATIENT_GUID').apply(psa_pct_change)
+        pf[f'{PREFIX}LAB_psa_pct_change'] = m(psa_pct, default=0)
+        pf[f'{PREFIX}LAB_psa_pct_up_50'] = (m(psa_pct) > 50).astype(int)
+        pf[f'{PREFIX}LAB_psa_pct_up_100'] = (m(psa_pct) > 100).astype(int)
 
         # PSA doubling time (months) — ln(2) / slope
         def psa_doubling_time(group):
@@ -347,6 +367,44 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
     first_imaging = imaging_df.groupby('PATIENT_GUID')['EVENT_DATE'].min()
     gap = first_imaging.subtract(first_symptom).dt.days
     pf[f'{PREFIX}DX_symptom_to_imaging_days'] = m(gap, default=-1)
+
+    # ══════════════════════════════════════════════════════════
+    # BLOCK 6b: EXPLICIT CRITICAL-CODE FLAGS
+    # Boolean flags for high-signal SNOMED terms that would otherwise be
+    # diluted inside category-level counts.
+    # ══════════════════════════════════════════════════════════
+    logger.info(f"  BLOCK 6b: Critical-code flags...")
+
+    def _term_flag(df, pattern, category=None):
+        """1 if any row matches TERM regex (optionally within a CATEGORY), else 0."""
+        sub = df
+        if category is not None:
+            sub = sub[sub['CATEGORY'] == category]
+        if sub.empty:
+            return pd.Series(0, index=pf.index, dtype=int)
+        mask = sub['TERM'].astype(str).str.contains(pattern, case=False, na=False, regex=True)
+        has = sub[mask].groupby('PATIENT_GUID').size() > 0
+        return pf.index.map(has).fillna(False).astype(int)
+
+    # Critical clinical codes — matched at the TERM level for clarity
+    pf[f'{PREFIX}HAS_FRANK_HAEMATURIA'] = _term_flag(obs_AB, r'frank\s+haematuria|macroscopic\s+haematuria|visible\s+haematuria', 'HAEMATURIA')
+    pf[f'{PREFIX}HAS_MICROSCOPIC_HAEMATURIA'] = _term_flag(obs_AB, r'microscopic\s+haematuria|non[\s-]*visible\s+haematuria', 'HAEMATURIA')
+    pf[f'{PREFIX}HAS_DRE_ABNORMAL'] = _term_flag(obs_AB, r'abnormal|hard|nodul|irregular|suspicious', 'DRE')
+    pf[f'{PREFIX}HAS_RAISED_PSA'] = _term_flag(obs_AB, r'rais(e|ed)\s+psa|psa\s+raised|elevated\s+psa|psa\s+elevated', 'PSA')
+    pf[f'{PREFIX}HAS_PSA_ABNORMAL'] = _term_flag(obs_AB, r'abnormal.*psa|psa.*abnormal|serum\s+psa.*abnormal', 'PSA')
+    pf[f'{PREFIX}HAS_URINARY_RETENTION_CODE'] = _term_flag(obs_AB, r'retention\s+of\s+urine|urinary\s+retention', 'URINARY_RETENTION')
+    pf[f'{PREFIX}HAS_BONE_METS_CODE'] = _term_flag(obs_AB, r'bone\s+metasta|metastat.*bone|secondary\s+malignant.*bone')
+    pf[f'{PREFIX}HAS_PROSTATE_BIOPSY'] = _term_flag(obs_AB, r'biopsy.*prostat|prostat.*biopsy|trus\s+biopsy')
+
+    # Granular smoking flags (was collapsed into OBS_SMOKING_has_ever)
+    pf[f'{PREFIX}HAS_CURRENT_SMOKER'] = _term_flag(obs_AB, r'current\s+smoker|smokes|daily\s+smok', 'SMOKING')
+    pf[f'{PREFIX}HAS_FORMER_SMOKER'] = _term_flag(obs_AB, r'ex[\s-]*smoker|former\s+smoker|stopped\s+smoking|smoking\s+cessation', 'SMOKING')
+    pf[f'{PREFIX}HAS_NEVER_SMOKER'] = _term_flag(obs_AB, r'never\s+smok|non[\s-]*smoker|lifetime\s+non[\s-]*smoker', 'SMOKING')
+
+    # Granular family-history flags (was collapsed into OBS_FAMILY_HISTORY_has_ever)
+    pf[f'{PREFIX}HAS_FAMHX_PROSTATE_CA'] = _term_flag(obs_AB, r'family\s+history.*prostat|prostat.*family\s+history', 'FAMILY_HISTORY')
+    pf[f'{PREFIX}HAS_FAMHX_ANY_CANCER'] = _term_flag(obs_AB, r'family\s+history.*(cancer|malignan|neoplasm|carcinoma)', 'FAMILY_HISTORY')
+    pf[f'{PREFIX}HAS_FAMHX_MALE_GENITAL_CA'] = _term_flag(obs_AB, r'family\s+history.*(male\s+genital|testic|penile)', 'FAMILY_HISTORY')
 
     # ══════════════════════════════════════════════════════════
     # BLOCK 7: RISK SURROGATE SCORE

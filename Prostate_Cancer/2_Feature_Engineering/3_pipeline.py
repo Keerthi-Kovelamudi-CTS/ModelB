@@ -86,6 +86,7 @@ def build_clinical_features(clin_df, cfg):
     lab_df = df[df['VALUE'].notna() & df['CATEGORY'].isin(cfg.LAB_CATEGORIES)].copy()
     lab_categories = lab_df['CATEGORY'].unique()
     lab_features = pd.DataFrame()
+    bad_dir = getattr(cfg, 'LAB_BAD_DIRECTION', {})
 
     for cat in lab_categories:
         cat_df = lab_df[lab_df['CATEGORY'] == cat]
@@ -124,7 +125,25 @@ def build_clinical_features(clin_df, cfg):
         has_ever = (stats[f"LAB_{cat}_count"] > 0).astype(int)
         has_ever.name = f"LAB_{cat}_has_ever"
 
-        cat_features = pd.concat([stats, last_val, first_val, mean_A, mean_B, delta, slope, has_ever], axis=1)
+        # Missingness indicator: 1 if patient has NO values for this lab category.
+        # Distinguishes "true zero" from "not measured" — tree models often use this strongly.
+        is_missing = (stats[f"LAB_{cat}_count"].fillna(0) == 0).astype(int)
+        is_missing.name = f"LAB_{cat}_is_missing"
+
+        # Direction-aware worsening flag (only if category has a defined bad direction).
+        direction = bad_dir.get(cat)
+        worsening = None
+        if direction == 'up':
+            worsening = (slope > 0).astype(int)
+            worsening.name = f"LAB_{cat}_worsening"
+        elif direction == 'down':
+            worsening = (slope < 0).astype(int)
+            worsening.name = f"LAB_{cat}_worsening"
+
+        parts = [stats, last_val, first_val, mean_A, mean_B, delta, slope, has_ever, is_missing]
+        if worsening is not None:
+            parts.append(worsening)
+        cat_features = pd.concat(parts, axis=1)
         lab_features = cat_features if lab_features.empty else lab_features.join(cat_features, how='outer')
 
     # 4f. INVESTIGATION PATTERN FEATURES
@@ -213,8 +232,15 @@ def build_clinical_features(clin_df, cfg):
     features = features.join(last_event[['TEMP_days_last_event_to_index']], how='left')
 
     count_cols = [c for c in features.columns if any(x in c for x in
-                  ['_count_', '_has_ever', '_flag', '_acceleration', '_new_in_B', '_total', 'AGG_', 'INV_'])]
+                  ['_count_', '_has_ever', '_flag', '_acceleration', '_new_in_B', '_total', 'AGG_', 'INV_',
+                   '_worsening'])]
     features[count_cols] = features[count_cols].fillna(0)
+
+    # Missingness indicators: NaN after left-join means the patient had zero rows for
+    # that lab category → fill with 1 (truly missing), not 0.
+    missing_cols = [c for c in features.columns if c.endswith('_is_missing')]
+    if missing_cols:
+        features[missing_cols] = features[missing_cols].fillna(1).astype(int)
     return features
 
 
