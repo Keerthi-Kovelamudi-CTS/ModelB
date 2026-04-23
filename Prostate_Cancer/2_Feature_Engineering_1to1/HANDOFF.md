@@ -92,13 +92,6 @@ FE expects one obs CSV and one med CSV per window. In prod these become BQ table
 | `ASSOCIATED_TEXT` | str (nullable) | Clinical note text (XML/plain) |
 | `SEX` | str | 'M' required (filtered in sanity check) |
 | `AGE_AT_INDEX` | float | Age at INDEX_DATE |
-| `ETHNICITY_GROUP` | str | Patient-level ethnicity (see allowed values below) — required for ethnicity features |
-
-**`ETHNICITY_GROUP` allowed values** (case-sensitive, must match `config.ETHNICITY_CATEGORIES`):
-
-`White`, `Asian`, `Black`, `Chinese`, `Mixed`, `Other`, `Not specified`
-
-Any other value is mapped to `Not specified` by `3_pipeline.py`. `ETHNICITY_GROUP` must be **constant per `PATIENT_GUID`** (enforced by upstream demographics join — pipeline takes the first value per patient if rows disagree).
 
 ### Medications (per window)
 
@@ -129,10 +122,6 @@ One matrix per window. See `combine_outputs.py` for the reference join of the 4 
 | `TEXT_` | Text keyword flags | `TEXT_CLIN_psa_rising` |
 | `EMB_text_dim_N` | TF-IDF SVD | `EMB_text_dim_0` |
 | `BERT_dim_N` | BERT PCA | `BERT_dim_0` |
-| `ETH_<GROUP>` | Ethnicity one-hot | `ETH_BLACK`, `ETH_WHITE`, `ETH_NOT_SPECIFIED` |
-| `PROST_RF_black_ethnicity` | Named prostate-specific risk factor | 1 if patient is Black, else 0 |
-| `PROST_RF_ethnicity_not_specified` | Missing ethnicity flag | 1 if ethnicity is 'Not specified' |
-| `PROST_RF_black_and_elderly` | Interaction: Black × age ≥ 65 | 1 if both conditions met |
 
 Plus `AGE_AT_INDEX`, `AGE_BAND`, `LABEL`, `PATIENT_GUID` (index).
 

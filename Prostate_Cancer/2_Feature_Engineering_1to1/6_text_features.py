@@ -268,8 +268,9 @@ def build_bert_embeddings(clin_df, existing_fm, window_name, cfg):
         device = 'cpu'
     batch_size = 256 if device == 'cuda' else 64
 
-    # Try primary model, then each fallback — lets the pipeline degrade
-    # gracefully if a specific checkpoint can't be loaded on this host.
+    # Try primary model, then each fallback. Prefer safetensors to avoid
+    # the torch.load CVE safety check that blocks pickled checkpoints under
+    # torch >= 2.6.
     from sentence_transformers import SentenceTransformer
 
     candidates = [cfg.BERT_MODEL_NAME] + list(getattr(cfg, 'BERT_FALLBACK_MODELS', []))

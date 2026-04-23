@@ -114,14 +114,6 @@ def cleanup_features(fm, window_name, cfg):
     if nzv_cols:
         nzv_cols.sort(key=lambda x: -x[1])
         logger.info(f"  Removing {len(nzv_cols)} near-zero-variance features")
-        # Name any clinically-meaningful flags we're dropping so the user can
-        # spot them and decide whether to widen the threshold if needed.
-        flagged = [(c, p) for c, p in nzv_cols
-                   if c.startswith(('ETH_', 'PROST_RF_', 'PROST_HAS_'))]
-        if flagged:
-            logger.info(f"    (Incl. {len(flagged)} high-signal flag(s) dropped:)")
-            for c, p in flagged[:15]:
-                logger.info(f"      {c}  ({p:.2f}% one value)")
         fm = fm.drop(columns=[c for c, _ in nzv_cols])
     removed_log['near_zero_var'] = len(nzv_cols)
 

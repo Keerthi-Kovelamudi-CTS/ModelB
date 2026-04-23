@@ -45,28 +45,11 @@ def build_clinical_features(clin_df, cfg):
     df = clin_df.copy()
     df['EVENT_DATE'] = pd.to_datetime(df['EVENT_DATE'], errors='coerce')
     df['INDEX_DATE'] = pd.to_datetime(df['INDEX_DATE'], errors='coerce')
-
-    eth_col = getattr(cfg, 'ETHNICITY_COLUMN', 'ETHNICITY_GROUP')
-    patient_cols = ['PATIENT_GUID', 'LABEL', 'SEX', 'AGE_AT_INDEX', 'INDEX_DATE']
-    if eth_col in df.columns:
-        patient_cols.append(eth_col)
-    patients = df[patient_cols].drop_duplicates(subset=['PATIENT_GUID'])
+    patients = df[['PATIENT_GUID', 'LABEL', 'SEX', 'AGE_AT_INDEX', 'INDEX_DATE']].drop_duplicates(subset=['PATIENT_GUID'])
 
     # 4a. DEMOGRAPHICS
     demo = patients[['PATIENT_GUID', 'LABEL', 'AGE_AT_INDEX']].copy()
     demo['AGE_BAND'] = (demo['AGE_AT_INDEX'] // 5) * 5
-
-    # Ethnicity one-hot encoding. Emits a stable set of ETH_* columns
-    # regardless of which categories are present in this window so the
-    # feature matrix schema is identical across 3mo/6mo/12mo training runs
-    # and across training/holdout/inference. Unknown values → ETH_NOT_SPECIFIED.
-    if eth_col in patients.columns:
-        eth_series = patients.set_index('PATIENT_GUID')[eth_col].astype(str).str.strip()
-        known = set(getattr(cfg, 'ETHNICITY_CATEGORIES', []))
-        eth_series = eth_series.where(eth_series.isin(known), 'Not specified')
-        for cat in getattr(cfg, 'ETHNICITY_CATEGORIES', []):
-            col_name = f"ETH_{cat.replace(' ', '_').upper()}"
-            demo[col_name] = demo['PATIENT_GUID'].map(eth_series.eq(cat)).fillna(False).astype(int)
 
     # 4b. OBSERVATION FEATURES — per category (windowed)
     obs_df = df.copy()

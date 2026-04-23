@@ -139,9 +139,10 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         pf[f'{PREFIX}LAB_psa_rising'] = (m(psa_delta) > 0).astype(int)
         pf[f'{PREFIX}LAB_psa_rapid_rise'] = (m(psa_delta) > 2.0).astype(int)
 
-        # PSA velocity — both per-month and per-year (clinical standard).
-        # Threshold flags use the per-year value since that's how velocity
-        # is reported in urology literature.
+        # PSA velocity (ng/mL/month, retained for backward compat) and the
+        # clinically-standard per-year version. The previous _velocity_high flag
+        # compared a per-month value against a per-year threshold (0.75 ng/mL/yr),
+        # so it only fired at ~9 ng/mL/yr — 12x too strict. Fixed below.
         def psa_velocity_per_month(group):
             if len(group) < 2:
                 return np.nan
@@ -436,29 +437,6 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         (pf.get(f'{PREFIX}LAB_psa_elevated_4', pd.Series(0, index=pf.index)) == 1) &
         (pf[f'{PREFIX}has_any_bone_symptom'] == 1)
     ).astype(int)
-
-    # Ethnicity-based named risk factor. Takes the ethnicity value
-    # directly from the obs dataframe — stable across windows. Uses the
-    # same known-category fallback as 3_pipeline.py so genuine NaN/unknowns
-    # consistently map to 'Not specified' across both feature sources.
-    eth_col = getattr(cfg, 'ETHNICITY_COLUMN', 'ETHNICITY_GROUP')
-    if eth_col in clin.columns:
-        known = set(getattr(cfg, 'ETHNICITY_CATEGORIES', []))
-        eth_per_patient = (clin.drop_duplicates('PATIENT_GUID')
-                              .set_index('PATIENT_GUID')[eth_col]
-                              .astype(str).str.strip())
-        eth_per_patient = eth_per_patient.where(eth_per_patient.isin(known), 'Not specified')
-        high_risk = set(getattr(cfg, 'ETHNICITY_HIGH_RISK', ['Black']))
-        pf[f'{PREFIX}RF_black_ethnicity'] = pf.index.map(
-            eth_per_patient.isin(high_risk)
-        ).fillna(False).astype(int)
-        pf[f'{PREFIX}RF_ethnicity_not_specified'] = pf.index.map(
-            eth_per_patient.eq('Not specified')
-        ).fillna(False).astype(int)
-        # Interaction: Black + elderly (highest incidence/aggressiveness)
-        pf[f'{PREFIX}RF_black_and_elderly'] = (
-            (pf[f'{PREFIX}RF_black_ethnicity'] == 1) & (age >= 65)
-        ).astype(int)
 
     # ── Clean up ──────────────────────────────────────────────
     pf = pf.fillna(0)

@@ -196,16 +196,11 @@ def patient_fixes(clin_df, med_df, window_name, cfg):
         logger.info(f"  Clinical: Pos={final.get(1,0):,} | Neg={final.get(0,0):,} | "
                      f"Ratio={final.get(0,0)/max(final.get(1,0),1):.1f}:1")
 
-        # Master patient list (preserve ETHNICITY_GROUP when present)
-        eth_col = getattr(cfg, 'ETHNICITY_COLUMN', 'ETHNICITY_GROUP')
-        master_cols = ['PATIENT_GUID', 'LABEL', 'SEX', 'AGE_AT_INDEX', 'INDEX_DATE']
-        if eth_col in clin_df.columns:
-            master_cols.append(eth_col)
+        # Master patient list
         master_patients = (clin_df.sort_values('AGE_AT_INDEX', ascending=False)
                           .drop_duplicates(subset=['PATIENT_GUID'], keep='first')
-                          [master_cols])
-        logger.info(f"  Master patient list: {len(master_patients):,} patients"
-                     f"{' (w/ ethnicity)' if eth_col in clin_df.columns else ''}")
+                          [['PATIENT_GUID', 'LABEL', 'SEX', 'AGE_AT_INDEX', 'INDEX_DATE']])
+        logger.info(f"  Master patient list: {len(master_patients):,} patients")
 
     return clin_df, med_df, master_patients
 
@@ -221,13 +216,35 @@ def run_sanity_check(cfg=None):
 
     cfg.SANITY_RESULTS.mkdir(parents=True, exist_ok=True)
 
-    # Load raw data
-    # NOTE: Update these filename patterns to match your raw CSV naming convention
+    # Load raw data.
+    # Input layout (BQ export, preferred): one unified CSV per window named
+    # `{DATA_PREFIX}_{window}.csv` with an `event_type` column distinguishing
+    # OBSERVATION vs MEDICATION. Split is done in memory here so downstream
+    # code keeps working on separate obs_df / med_df.
+    # Legacy layout: separate `_obs.csv` + `_med.csv` files — still supported.
     data = {}
     for window in cfg.WINDOWS:
-        data[window] = {}
+        data[window] = {'obs': None, 'med': None}
         data_dir = cfg.BASE_PATH / window
-        # Try common naming patterns
+
+        unified_path = data_dir / f'{cfg.DATA_PREFIX}_{window}.csv'
+        if unified_path.exists():
+            df = pd.read_csv(unified_path, low_memory=False)
+            df.columns = df.columns.str.upper()
+            if 'EVENT_TYPE' not in df.columns:
+                raise RuntimeError(f"{unified_path.name}: missing EVENT_TYPE column — cannot split unified file")
+            et = df['EVENT_TYPE'].astype(str).str.upper().str.strip()
+            obs_df = df[et == 'OBSERVATION'].copy()
+            med_df = df[et == 'MEDICATION'].copy()
+            data[window]['obs'] = obs_df if len(obs_df) else None
+            data[window]['med'] = med_df if len(med_df) else None
+            logger.info(
+                f"Loaded {window} unified: {len(df):,} rows "
+                f"→ obs {len(obs_df):,}, med {len(med_df):,}  [{unified_path.name}]"
+            )
+            continue
+
+        # Legacy: separate obs + med CSVs
         for obs_pattern in [
             f'{cfg.DATA_PREFIX}_{window}_obs.csv',
             f'FE_{cfg.DATA_PREFIX}_clinical_windowed_{window.replace("mo","m")}.csv',
@@ -240,7 +257,6 @@ def run_sanity_check(cfg=None):
                 break
         else:
             logger.warning(f"  {window} obs: NOT FOUND in {data_dir}")
-            data[window]['obs'] = None
 
         for med_pattern in [
             f'{cfg.DATA_PREFIX}_{window}_med.csv',
@@ -254,7 +270,6 @@ def run_sanity_check(cfg=None):
                 break
         else:
             logger.warning(f"  {window} med: NOT FOUND in {data_dir}")
-            data[window]['med'] = None
 
     # Run checks + fixes per window
     for window in cfg.WINDOWS:

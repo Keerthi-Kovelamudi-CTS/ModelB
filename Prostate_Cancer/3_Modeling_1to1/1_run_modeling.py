@@ -53,9 +53,7 @@ warnings.filterwarnings('ignore')
 logger = logging.getLogger(__name__)
 
 # ─── Import FE config for paths and params ───────────────────
-# Tier 2 variant — pulls from _Ethnicity FE folder (includes ETHNICITY_GROUP
-# inputs and ETH_* / PROST_RF_*_ethnicity features).
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering_Ethnicity'))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering_1to1'))
 import config as fe_config
 
 # ─── Modeling params (from FE config) ────────────────────────

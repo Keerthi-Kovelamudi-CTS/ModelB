@@ -13,17 +13,11 @@ PREFIX = 'PROST_'                 # Feature prefix for cancer-specific columns
 LABEL_COL = 'LABEL'
 WINDOWS = ['3mo', '6mo', '12mo']
 
-# ─── Ethnicity ───────────────────────────────────────────────
-# Column name in raw obs/med CSV that carries patient ethnicity.
-ETHNICITY_COLUMN = 'ETHNICITY_GROUP'
-# Allowed categories — emitted as stable one-hot columns even if a
-# category has zero rows in a given window.
-ETHNICITY_CATEGORIES = [
-    'White', 'Asian', 'Black', 'Chinese', 'Mixed', 'Other', 'Not specified',
-]
-# Categories that represent elevated prostate cancer risk — emitted as
-# named PROST_RF_{label} features in 4_cancer_features.
-ETHNICITY_HIGH_RISK = ['Black']
+# Downsample ratio for training — if set, sanity check keeps
+#   N_neg_kept = round(DOWNSAMPLE_NEG_TO_POS_RATIO × N_pos) negative patients
+# Set to None (or remove) for natural prevalence.
+DOWNSAMPLE_NEG_TO_POS_RATIO = 1.0
+DOWNSAMPLE_SEED = 42
 
 # ─── Paths (auto-resolved from this file's location) ────────
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -349,12 +343,16 @@ TEXT_SEVERITY_CATEGORIES = [
     'ERECTILE_DYSFUNCTION', 'PROSTATIC_CONDITIONS',
 ]
 
-# BERT model — PubMedBERT checkpoint specialised for sentence embeddings.
-# sentence-transformers loads it via safetensors.
+# BERT model
+# NeuML/pubmedbert-base-embeddings is a PubMedBERT checkpoint purpose-built
+# for sentence embeddings, shipped as safetensors (no torch.load CVE block)
+# and drop-in compatible with sentence-transformers. Previous choice
+# (pritamdeka/S-PubMedBert-MS-MARCO) failed to load under torch >= 2.6 and
+# silently fell back to MiniLM during training.
 BERT_MODEL_NAME = 'NeuML/pubmedbert-base-embeddings'
 BERT_FALLBACK_MODELS = [
-    'pritamdeka/S-PubMedBert-MS-MARCO',
-    'all-MiniLM-L6-v2',
+    'pritamdeka/S-PubMedBert-MS-MARCO',   # old choice, try as backup
+    'all-MiniLM-L6-v2',                   # last-resort general-purpose
 ]
 N_EMBEDDING_COMPONENTS = 15
 
