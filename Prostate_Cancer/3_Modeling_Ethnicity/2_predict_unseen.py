@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-sys.path.insert(0, str(SCRIPT_DIR.parent / '2_Feature_Engineering'))
+sys.path.insert(0, str(SCRIPT_DIR.parent / '2_Feature_Engineering_Ethnicity'))
 import config as fe_config
 
 

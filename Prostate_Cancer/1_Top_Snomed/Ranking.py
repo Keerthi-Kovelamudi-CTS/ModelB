@@ -6,8 +6,6 @@
 ║  Input Files (from Data_Input/):                               ║
 ║    - Pro_positive_obs.csv, Pro_negative_obs.csv                  ║
 ║    - Pro_positive_med.csv, Pro_negative_med.csv                  ║
-║    - Pro_patient_obs_matrix.csv  (optional)                    ║
-║    - Pro_patient_meds_matrix.csv (optional)                    ║
 ║                                                                ║
 ║  Output Files: output/Scores_prostate/                         ║
 ║      - prostate_obs_top150.csv                                 ║
@@ -37,6 +35,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.metrics import roc_auc_score
+from sklearn.feature_selection import mutual_info_classif
 import logging
 import sys
 import os
@@ -61,15 +60,18 @@ CONFIG = {
     'cv_folds': 3,
     'neg_pos_ratio': 5,
 
+    # Combined weights now include mutual_info as an independent ranking view.
     'combined_weights': {
-        'stat_score': 0.30,
-        'chi2_score': 0.20,
-        'ml_importance': 0.50
+        'stat_score':     0.25,
+        'chi2_score':     0.15,
+        'mi_score':       0.15,
+        'ml_importance':  0.45,
     },
     'ml_weights': {
-        'lr': 0.25,
-        'rf': 0.35,
-        'gb': 0.40
+        'lr': 0.20,
+        'rf': 0.25,
+        'gb': 0.35,
+        'mi': 0.20,
     },
 
     'data_dir': _DATA_DIR,
@@ -78,8 +80,6 @@ CONFIG = {
         'neg_obs':         'Pro_negative_obs.csv',
         'pos_meds':        'Pro_positive_med.csv',
         'neg_meds':        'Pro_negative_med.csv',
-        'obs_matrix':      'Pro_patient_obs_matrix.csv',
-        'meds_matrix':     'Pro_patient_meds_matrix.csv',
     },
 
     'code_columns': {
@@ -93,8 +93,16 @@ CONFIG = {
 
     'min_positive_cohort_size': 50,
 
-    # Keep only features more common in cases than controls (odds ratio > 1)
-    'case_enriched_only': True,
+    # ── Significance & effect-size filter (replaces the loose OR>1 gate) ──
+    # A feature must satisfy ALL of these to enter the ranking:
+    'case_enriched_only':  True,
+    'min_odds_ratio':      1.2,   # clinical effect size floor
+    'max_p_bonferroni':    0.05,  # family-wise multiplicity control
+    'min_case_count':      10,    # absolute count of positives with the feature
+
+    # ── Stability selection (bootstrap) ──
+    'stability_n_bootstrap':     20,
+    'stability_top_k':           150,  # fraction of bootstraps in which the feature lands in top-K
 }
 
 
@@ -279,16 +287,29 @@ def compute_statistical_ranking(pos_df, neg_df, feature_type='observation'):
     merged = merged[merged['n_patient_count_pos'] >= CONFIG['min_patients_per_feature']].copy()
     logger.info(f"  After min cases (>={CONFIG['min_patients_per_feature']}): {len(merged):,} terms")
 
-    if CONFIG.get('case_enriched_only', True):
-        before_ce = len(merged)
-        merged = merged[np.isfinite(merged['odds_ratio']) & (merged['odds_ratio'] > 1.0)].copy()
-        logger.info(
-            f"  Case-enriched only (OR > 1): {len(merged):,} terms "
-            f"(dropped {before_ce - len(merged):,} control-enriched or invalid OR)"
-        )
-
+    # Compute Bonferroni correction BEFORE filtering so the filter can use it.
     n_tests = max(len(merged), 1)
     merged['p_value_bonferroni'] = np.minimum(merged['p_value'] * n_tests, 1.0)
+
+    if CONFIG.get('case_enriched_only', True):
+        before = len(merged)
+        min_or  = CONFIG.get('min_odds_ratio', 1.0)
+        max_p   = CONFIG.get('max_p_bonferroni', 1.0)
+        min_n   = CONFIG.get('min_case_count', 1)
+
+        mask = (
+            np.isfinite(merged['odds_ratio'])
+            & (merged['odds_ratio'] > min_or)
+            & (merged['p_value_bonferroni'] < max_p)
+            & (merged['n_patient_count_pos'] >= min_n)
+        )
+        merged = merged[mask].copy()
+        logger.info(
+            f"  Significance + effect filter  "
+            f"(OR>{min_or}, p_bonf<{max_p}, n_pos>={min_n}): "
+            f"{len(merged):,} terms kept (dropped {before - len(merged):,})"
+        )
+
     merged = merged.sort_values('odds_ratio', ascending=False).reset_index(drop=True)
     merged['stat_rank'] = range(1, len(merged) + 1)
 
@@ -301,61 +322,14 @@ def compute_statistical_ranking(pos_df, neg_df, feature_type='observation'):
     return merged, total_pos, total_neg
 
 
-def compute_ml_ranking_from_patient_matrix(patient_matrix_df, feature_list, feature_type='observation'):
+def compute_ml_ranking(stat_df, total_pos, total_neg, feature_type='observation'):
+    """ML ranking from aggregate prevalence inputs (no patient-level matrix needed).
+
+    Simulates a binary patient-feature matrix using per-term prevalence in positives vs
+    controls, trains LR/RF/GB/MI, and returns per-feature importance scores."""
     logger.info(f"\n{'='*60}")
-    logger.info(f"ML RANKING (Real Patient Data): {feature_type}s")
+    logger.info(f"ML RANKING: {feature_type}s")
     logger.info(f"{'='*60}")
-
-    t_start = time.time()
-    np.random.seed(CONFIG['random_seed'])
-
-    pm = patient_matrix_df.copy()
-    pm = pm[pm['feature_name'].isin(feature_list)]
-
-    if len(pm) == 0:
-        logger.warning(f"  ⚠️ No matching features for {feature_type}!")
-        return _empty_ml_scores(feature_list)
-
-    pos_patients = pm[pm['label'] == 1]['patient_guid'].unique()
-    neg_patients = pm[pm['label'] == 0]['patient_guid'].unique()
-    n_pos = len(pos_patients)
-    n_neg_target = min(len(neg_patients), n_pos * CONFIG['neg_pos_ratio'])
-
-    if n_pos < 20:
-        logger.warning(f"  ⚠️ Only {n_pos} positive patients — ML rankings may be unreliable")
-
-    sampled_neg = np.random.choice(neg_patients, size=n_neg_target, replace=False)
-    keep_patients = set(pos_patients) | set(sampled_neg)
-    pm = pm[pm['patient_guid'].isin(keep_patients)]
-
-    logger.info(f"  Cohort: {n_pos:,} pos + {n_neg_target:,} neg ({CONFIG['neg_pos_ratio']}:1)")
-
-    logger.info("  Pivoting to wide format...")
-    patient_info = pm.groupby('patient_guid').agg(label=('label', 'first')).reset_index()
-
-    feature_pivot = pm.pivot_table(
-        index='patient_guid', columns='feature_name',
-        values='event_count', aggfunc='sum', fill_value=0
-    )
-    feature_binary = (feature_pivot > 0).astype(int)
-    feature_binary = feature_binary.reindex(columns=feature_list, fill_value=0)
-
-    data = patient_info.set_index('patient_guid').join(feature_binary).dropna(subset=['label'])
-    X = data[feature_list].values
-    y = data['label'].astype(int).values
-
-    logger.info(f"  Matrix: {X.shape[0]:,} × {X.shape[1]:,}")
-    logger.info(f"  Balance: {y.sum():,} pos ({y.sum()/len(y)*100:.1f}%), "
-                f"{(1-y).sum():,} neg ({(1-y).sum()/len(y)*100:.1f}%)")
-
-    return _train_ml_models(X, y, feature_list, feature_type, t_start)
-
-
-def compute_ml_ranking_from_prevalence(stat_df, total_pos, total_neg, feature_type='observation'):
-    logger.info(f"\n{'='*60}")
-    logger.info(f"ML RANKING (FALLBACK — Simulated): {feature_type}s")
-    logger.info(f"{'='*60}")
-    logger.warning("  ⚠️ No patient matrix — using prevalence simulation (approximate)")
 
     t_start = time.time()
     np.random.seed(CONFIG['random_seed'])
@@ -449,20 +423,30 @@ def _train_ml_models(X, y, feature_list, feature_type, t_start):
     gb_imp = gb.feature_importances_
     logger.info(f"    AUROC: {gb_cv.mean():.4f} ± {gb_cv.std():.4f} | {time.time()-t0:.1f}s")
 
+    # Mutual Information — captures non-linear associations that OR/linear models miss.
+    t0 = time.time()
+    logger.info("  Computing Mutual Information...")
+    mi_imp = mutual_info_classif(
+        X, y, discrete_features=True, random_state=CONFIG['random_seed']
+    )
+    logger.info(f"    MI computed for {len(mi_imp)} features | {time.time()-t0:.1f}s")
+
     w = CONFIG['ml_weights']
     ml_scores = pd.DataFrame({
         'term': feature_list,
         'lr_importance': normalise(lr_imp),
         'rf_importance': normalise(rf_imp),
         'gb_importance': normalise(gb_imp),
+        'mi_importance': normalise(mi_imp),
         'lr_cv_auroc': lr_cv.mean(),
         'rf_cv_auroc': rf_cv.mean(),
         'gb_cv_auroc': gb_cv.mean(),
     })
     ml_scores['ml_importance'] = (
-        w['lr'] * ml_scores['lr_importance'] +
-        w['rf'] * ml_scores['rf_importance'] +
-        w['gb'] * ml_scores['gb_importance']
+        w.get('lr', 0) * ml_scores['lr_importance'] +
+        w.get('rf', 0) * ml_scores['rf_importance'] +
+        w.get('gb', 0) * ml_scores['gb_importance'] +
+        w.get('mi', 0) * ml_scores['mi_importance']
     )
     ml_scores = ml_scores.sort_values('ml_importance', ascending=False).reset_index(drop=True)
     ml_scores['ml_rank'] = range(1, len(ml_scores) + 1)
@@ -471,41 +455,87 @@ def _train_ml_models(X, y, feature_list, feature_type, t_start):
     return ml_scores
 
 
-def _empty_ml_scores(feature_list):
-    return pd.DataFrame({
-        'term': feature_list, 'lr_importance': 0, 'rf_importance': 0,
-        'gb_importance': 0, 'ml_importance': 0, 'ml_rank': 999,
-        'lr_cv_auroc': 0, 'rf_cv_auroc': 0, 'gb_cv_auroc': 0
-    })
+def compute_stability_scores(stat_df, total_pos, total_neg, feature_type,
+                             n_bootstrap=None, top_k=None):
+    """Bootstrap stability: fraction of bootstrap iterations in which each feature lands in top-K.
+
+    For each bootstrap, the prevalence-simulated ML ranking is re-run with a different seed.
+    A stable feature lands in the top-K every time; unstable features float in and out and
+    should be treated with caution (likely capturing sample-specific noise).
+
+    Returns: pd.Series indexed by feature term, value in [0, 1].
+    """
+    n_bootstrap = n_bootstrap or CONFIG['stability_n_bootstrap']
+    top_k       = top_k       or CONFIG['stability_top_k']
+
+    logger.info(f"\n{'='*60}")
+    logger.info(f"STABILITY SELECTION: {feature_type}s ({n_bootstrap} bootstraps)")
+    logger.info(f"{'='*60}")
+
+    feature_list = stat_df['term'].tolist()[:CONFIG['max_ml_features']]
+    # Dedupe to avoid duplicate-index issues in the returned Series.
+    unique_features = list(dict.fromkeys(feature_list))
+    appearances = {f: 0 for f in unique_features}
+
+    saved_seed = CONFIG['random_seed']
+    saved_cv = CONFIG['cv_folds']
+    CONFIG['cv_folds'] = 2
+    try:
+        for b in range(n_bootstrap):
+            logger.info(f"  Bootstrap {b+1}/{n_bootstrap}...")
+            CONFIG['random_seed'] = saved_seed + b  # vary seed for simulation
+            try:
+                ml_b = compute_ml_ranking(stat_df, total_pos, total_neg, feature_type)
+            except Exception as e:
+                logger.warning(f"    Bootstrap {b+1} failed: {e}")
+                continue
+            top_terms = set(ml_b.head(top_k)['term'])
+            for t in top_terms:
+                if t in appearances:
+                    appearances[t] += 1
+    finally:
+        CONFIG['random_seed'] = saved_seed
+        CONFIG['cv_folds'] = saved_cv
+
+    stability = pd.Series(appearances) / n_bootstrap
+    n_stable = int((stability >= 0.8).sum())
+    logger.info(f"  ✅ Stable features (≥80% of bootstraps): {n_stable} / {len(stability)}")
+    return stability
 
 
-def build_full_ranking(stat_df, ml_df, feature_type):
+def build_full_ranking(stat_df, ml_df, feature_type, stability_scores=None):
     logger.info(f"  Building combined ranking for {feature_type}s...")
 
     ml_terms_in_stat = set(stat_df['term']) & set(ml_df['term'])
     if len(ml_terms_in_stat) < len(ml_df):
         logger.warning(f"  ⚠️ {len(ml_df) - len(ml_terms_in_stat)} ML terms not found in stat ranking")
 
-    combined = stat_df.merge(
-        ml_df[['term', 'lr_importance', 'rf_importance', 'gb_importance',
-               'ml_importance', 'ml_rank', 'lr_cv_auroc', 'rf_cv_auroc', 'gb_cv_auroc']],
-        on='term', how='left'
-    )
+    ml_cols_to_pull = ['term', 'lr_importance', 'rf_importance', 'gb_importance',
+                       'mi_importance', 'ml_importance', 'ml_rank',
+                       'lr_cv_auroc', 'rf_cv_auroc', 'gb_cv_auroc']
+    ml_cols_present = [c for c in ml_cols_to_pull if c in ml_df.columns]
+    combined = stat_df.merge(ml_df[ml_cols_present], on='term', how='left')
 
-    ml_cols = ['lr_importance', 'rf_importance', 'gb_importance', 'ml_importance',
-               'ml_rank', 'lr_cv_auroc', 'rf_cv_auroc', 'gb_cv_auroc']
-    for col in ml_cols:
-        if col in combined.columns:
-            combined[col] = combined[col].fillna(0)
+    ml_fill_cols = [c for c in ml_cols_present if c != 'term']
+    for col in ml_fill_cols:
+        combined[col] = combined[col].fillna(0)
 
     combined['stat_score'] = normalise(combined['log_odds_ratio'].values)
     combined['chi2_score'] = normalise(combined['chi_squared'].values)
+    # `mi_score` is the mutual-information contribution (already normalised at ml step).
+    combined['mi_score'] = combined['mi_importance'] if 'mi_importance' in combined.columns else 0.0
+
+    if stability_scores is not None:
+        combined['stability_score'] = combined['term'].map(stability_scores).fillna(0.0)
+    else:
+        combined['stability_score'] = np.nan
 
     w = CONFIG['combined_weights']
     combined['combined_score'] = (
-        w['stat_score']    * combined['stat_score'] +
-        w['chi2_score']    * combined['chi2_score'] +
-        w['ml_importance'] * combined['ml_importance']
+        w.get('stat_score',    0) * combined['stat_score'] +
+        w.get('chi2_score',    0) * combined['chi2_score'] +
+        w.get('mi_score',      0) * combined['mi_score'] +
+        w.get('ml_importance', 0) * combined['ml_importance']
     )
 
     combined = combined.sort_values('combined_score', ascending=False).reset_index(drop=True)
@@ -522,7 +552,9 @@ def build_full_ranking(stat_df, ml_df, feature_type):
     combined['ml_top150'] = combined['ml_rank'].apply(lambda x: 0 < x <= top_n)
     combined['both_agree'] = combined['stat_top150'] & combined['ml_top150']
 
-    logger.info(f"  Total: {len(combined):,} | Both agree (top {top_n}): {combined['both_agree'].sum()}")
+    n_stable = int((combined['stability_score'] >= 0.8).sum()) if combined['stability_score'].notna().any() else 0
+    logger.info(f"  Total: {len(combined):,} | Both agree (top {top_n}): {combined['both_agree'].sum()} | "
+                f"High-stability (≥80%): {n_stable}")
 
     return combined
 
@@ -586,44 +618,15 @@ def main():
     validate_csv(pos_meds, ['term', med_code, 'n_patient_count', 'n_patient_count_total'], 'pos_meds')
     validate_csv(neg_meds, ['term', med_code, 'n_patient_count', 'n_patient_count_total'], 'neg_meds')
 
-    has_obs_matrix = os.path.exists(_data_path('obs_matrix'))
-    has_meds_matrix = os.path.exists(_data_path('meds_matrix'))
-
-    obs_matrix = None
-    meds_matrix = None
-
-    if has_obs_matrix:
-        logger.info(f"  ✅ Observation matrix found")
-        obs_matrix = pd.read_csv(_data_path('obs_matrix'))
-        obs_matrix.columns = obs_matrix.columns.str.strip().str.lower()
-        logger.info(f"     {obs_matrix['patient_guid'].nunique():,} patients, "
-                    f"{obs_matrix['feature_name'].nunique():,} features")
-    else:
-        logger.warning(f"  ⚠️ Observation matrix not found — will use fallback")
-
-    if has_meds_matrix:
-        logger.info(f"  ✅ Medication matrix found")
-        meds_matrix = pd.read_csv(_data_path('meds_matrix'))
-        meds_matrix.columns = meds_matrix.columns.str.strip().str.lower()
-        logger.info(f"     {meds_matrix['patient_guid'].nunique():,} patients, "
-                    f"{meds_matrix['feature_name'].nunique():,} features")
-    else:
-        logger.warning(f"  ⚠️ Medication matrix not found — will use fallback")
-
     # PART 1: OBSERVATIONS
     logger.info("\n" + "=" * 80)
     logger.info("PART 1: OBSERVATIONS")
     logger.info("=" * 80)
 
     obs_stat, obs_total_pos, obs_total_neg = compute_statistical_ranking(pos_obs, neg_obs, 'observation')
-    obs_features = obs_stat['term'].tolist()[:CONFIG['max_ml_features']]
-
-    if has_obs_matrix:
-        obs_ml = compute_ml_ranking_from_patient_matrix(obs_matrix, obs_features, 'observation')
-    else:
-        obs_ml = compute_ml_ranking_from_prevalence(obs_stat, obs_total_pos, obs_total_neg, 'observation')
-
-    obs_full = build_full_ranking(obs_stat, obs_ml, 'observation')
+    obs_ml = compute_ml_ranking(obs_stat, obs_total_pos, obs_total_neg, 'observation')
+    obs_stability = compute_stability_scores(obs_stat, obs_total_pos, obs_total_neg, 'observation')
+    obs_full = build_full_ranking(obs_stat, obs_ml, 'observation', stability_scores=obs_stability)
 
     logger.info(f"\n📋 Top 20 Observations:")
     print_top_n(obs_full, 20)
@@ -637,14 +640,9 @@ def main():
     logger.info("=" * 80)
 
     meds_stat, meds_total_pos, meds_total_neg = compute_statistical_ranking(pos_meds, neg_meds, 'medication')
-    meds_features = meds_stat['term'].tolist()[:CONFIG['max_ml_features']]
-
-    if has_meds_matrix:
-        meds_ml = compute_ml_ranking_from_patient_matrix(meds_matrix, meds_features, 'medication')
-    else:
-        meds_ml = compute_ml_ranking_from_prevalence(meds_stat, meds_total_pos, meds_total_neg, 'medication')
-
-    meds_full = build_full_ranking(meds_stat, meds_ml, 'medication')
+    meds_ml = compute_ml_ranking(meds_stat, meds_total_pos, meds_total_neg, 'medication')
+    meds_stability = compute_stability_scores(meds_stat, meds_total_pos, meds_total_neg, 'medication')
+    meds_full = build_full_ranking(meds_stat, meds_ml, 'medication', stability_scores=meds_stability)
 
     logger.info(f"\n📋 Top 20 Medications:")
     print_top_n(meds_full, 20)
@@ -661,13 +659,15 @@ def main():
 
     all_features['stat_score'] = normalise(all_features['log_odds_ratio'].values)
     all_features['chi2_score'] = normalise(all_features['chi_squared'].values)
+    all_features['mi_score'] = normalise(all_features.get('mi_importance', pd.Series(0, index=all_features.index)).values)
     all_features['ml_importance_combined'] = normalise(all_features['ml_importance'].values)
 
     w = CONFIG['combined_weights']
     all_features['combined_score'] = (
-        w['stat_score']    * all_features['stat_score'] +
-        w['chi2_score']    * all_features['chi2_score'] +
-        w['ml_importance'] * all_features['ml_importance_combined']
+        w.get('stat_score',    0) * all_features['stat_score'] +
+        w.get('chi2_score',    0) * all_features['chi2_score'] +
+        w.get('mi_score',      0) * all_features['mi_score'] +
+        w.get('ml_importance', 0) * all_features['ml_importance_combined']
     )
 
     all_features = all_features.sort_values('combined_score', ascending=False).reset_index(drop=True)
@@ -708,10 +708,6 @@ def main():
   │   {CONFIG['cancer_type']}_meds_all.csv         → {len(meds_full):>6} medications        │
   │   {CONFIG['cancer_type']}_combined_all.csv     → {len(all_features):>6} total              │
   └──────────────────────────────────────────────────────────────┘
-
-📊 ML Data Source:
-  Observations: {'REAL patient matrix ✅' if has_obs_matrix else 'SIMULATED (fallback) ⚠️'}
-  Medications:  {'REAL patient matrix ✅' if has_meds_matrix else 'SIMULATED (fallback) ⚠️'}
 
 📊 Observations:  {len(obs_full):,} scored | OR>2: {(obs_full['odds_ratio']>2).sum()} | Sig: {(obs_full['p_value']<0.05).sum()}
 📊 Medications:   {len(meds_full):,} scored | OR>2: {(meds_full['odds_ratio']>2).sum()} | Sig: {(meds_full['p_value']<0.05).sum()}

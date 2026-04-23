@@ -119,6 +119,13 @@ def parse_json_input(json_path, window):
     age = patient.get('age_at_index', 65)
     index_date = pd.Timestamp(patient.get('index_date', pd.Timestamp.now().strftime('%Y-%m-%d')))
 
+    # Patient-level ethnicity — defaults to 'Not specified' if missing from
+    # the input (pipeline fallback maps unknown values to that category).
+    ethnicity = str(patient.get('ethnicity_group', 'Not specified')).strip()
+    known_eth = {'White', 'Asian', 'Black', 'Chinese', 'Mixed', 'Other', 'Not specified'}
+    if ethnicity not in known_eth:
+        ethnicity = 'Not specified'
+
     events = patient.get('events', [])
     if not events:
         raise ValueError("No events found in patient JSON")
@@ -138,6 +145,7 @@ def parse_json_input(json_path, window):
             'LABEL': 0,
             'SEX': sex,
             'AGE_AT_INDEX': age,
+            'ETHNICITY_GROUP': ethnicity,
             'EVENT_TYPE': evt.get('event_type', 'observation'),
         })
 
@@ -158,12 +166,13 @@ def parse_json_input(json_path, window):
     if len(med_df) == 0:
         med_df = pd.DataFrame({
             'PATIENT_GUID': [patient_guid], 'LABEL': [0], 'SEX': [sex],
-            'AGE_AT_INDEX': [age], 'TIME_WINDOW': ['B'], 'CATEGORY': ['NONE'],
+            'AGE_AT_INDEX': [age], 'ETHNICITY_GROUP': [ethnicity],
+            'TIME_WINDOW': ['B'], 'CATEGORY': ['NONE'],
             'EVENT_DATE': [index_date], 'INDEX_DATE': [index_date],
             'CODE_ID': ['0'], 'MONTHS_BEFORE_INDEX': [0],
         })
 
-    logger.info(f"  Patient:  {patient_guid} | Age: {age} | Sex: {sex}")
+    logger.info(f"  Patient:  {patient_guid} | Age: {age} | Sex: {sex} | Ethnicity: {ethnicity}")
     logger.info(f"  Events:   {len(obs_df)} observations, {len(med_df)} medications")
 
     return obs_df, med_df, patient_guid
@@ -174,11 +183,21 @@ def parse_csv_input(csv_path):
     df = pd.read_csv(csv_path, low_memory=False)
     df.columns = df.columns.str.upper()
 
+    # Ensure ETHNICITY_GROUP is present — default to 'Not specified' if the
+    # CSV predates the ethnicity join. Normalise unknown values the same way.
+    if 'ETHNICITY_GROUP' not in df.columns:
+        df['ETHNICITY_GROUP'] = 'Not specified'
+    else:
+        known_eth = {'White', 'Asian', 'Black', 'Chinese', 'Mixed', 'Other', 'Not specified'}
+        df['ETHNICITY_GROUP'] = df['ETHNICITY_GROUP'].astype(str).str.strip().where(
+            df['ETHNICITY_GROUP'].astype(str).str.strip().isin(known_eth), 'Not specified'
+        )
+
     patient_guid = df['PATIENT_GUID'].iloc[0]
     obs_df = df[df['EVENT_TYPE'].str.lower() == 'observation'].copy()
     med_df = df[df['EVENT_TYPE'].str.lower() == 'medication'].copy()
 
-    logger.info(f"  Patient:  {patient_guid}")
+    logger.info(f"  Patient:  {patient_guid} | Ethnicity: {df['ETHNICITY_GROUP'].iloc[0]}")
     logger.info(f"  Events:   {len(obs_df)} observations, {len(med_df)} medications")
 
     return obs_df, med_df, patient_guid

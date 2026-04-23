@@ -1,0 +1,174 @@
+=== SHAP 3mo ===
+
+============================================================
+  EXPLAINABILITY ANALYSIS - 3MO
+============================================================
+  Model: xgboost | Features: 265 | Patients: 207983
+  Feature classes: 133 direct, 102 indirect, 30 opaque
+  Computing SHAP values for xgboost...
+  SHAP failed (ValueError: could not convert string to float: '[5E-1]'); falling back to feature_importances_ as an approximation
+  Saved global importance: /home/keerthikovelamudi_cthesigns_com/pipeline/Prostate_Cancer/6_Explainability_Ethnicity/results/3mo/global_feature_importance_3mo.csv
+
+  TOP 20 FEATURES BY MEAN |SHAP|:
+  ──────────────────────────────────────────────────────────────────────
+  [D]  1. PROST_LAB_psa_doubling_time                   SHAP=409662238018.951172
+  [D]  2. LABTERM_MCHC_Mean_corpuscular_haemoglobin_conc_mean SHAP=1.464507
+  [D]  3. LABTERM_Haemoglobin_estimation_mean           SHAP=1.177593
+  [I]  4. RECUR_PSA_days_since_last                     SHAP=0.550996
+  [D]  5. LABTERM_Serum_bilirubin_level_last            SHAP=0.465809
+  [I]  6. RECUR_RENAL_FUNCTION_days_since_last          SHAP=0.463034
+  [I]  7. RECUR_ELECTROLYTES_days_since_last            SHAP=0.457978
+  [I]  8. RECUR_PROTEIN_ALBUMIN_days_since_last         SHAP=0.424595
+  [I]  9. RECUR_LIVER_FUNCTION_days_since_last          SHAP=0.403537
+  [I] 10. RECUR_FBC_HAEMATOLOGY_days_since_last         SHAP=0.399487
+  [I] 11. LAB_LIVER_FUNCTION_max                        SHAP=0.361854
+  [D] 12. LABTERM_Serum_total_bilirubin_level_mean      SHAP=0.291235
+  [D] 13. LABTERM_Serum_sodium_level_last               SHAP=0.225278
+  [I] 14. RECUR_URINE_MARKERS_days_since_last           SHAP=0.212539
+  [D] 15. PROST_LAB_hb_latest                           SHAP=0.189520
+  [I] 16. LAB_RENAL_FUNCTION_mean_A                     SHAP=0.189084
+  [I] 17. RECUR_INFLAMMATORY_days_since_last            SHAP=0.165290
+  [I] 18. LAB_URINE_MARKERS_max                         SHAP=0.163184
+  [I] 19. LAB_LIVER_FUNCTION_mean_B                     SHAP=0.160263
+  [D] 20. LABTERM_Serum_creatinine_level_last           SHAP=0.157433
+  D=direct, I=indirect, X=opaque
+
+  Generating explanations for 19070 patients...
+  Saved 19070 patient explanations
+  Saved clinician reports: clinician_reports_3mo.txt
+
+  SAMPLE REPORT:
+  ────────────────────────────────────────────────────────────
+  Patient: {00001846-A80D-4C1D-AAF8-8C48BD25E0C6}
+Risk Score: 82.67%  |  Threshold: 7.12%  |  Prediction: HIGH RISK
+
+WHY THIS PATIENT IS FLAGGED:
+--------------------------------------------------
+  1. RECUR_PSA_days_since_last = 706.0
+  2. LABTERM_MCHC_Mean_corpuscular_haemoglobin_conc_mean = 340.0
+  3. RECUR_UROLOGY_PATHWAY_days_since_last = 743.0
+  4. LABTERM_Haemoglobin_estimation_mean = 142.0
+  5. RECUR_RENAL_FUNCTION_days_since_last = 425.0
+  6. RECUR_ELECTROLYTES_days_since_last = 425.0
+  7. RECUR_PROTEIN_ALBUMIN_days_since_last = 425.0
+  8. RECUR_FBC_HAEMATOLOGY_days_since_last = 425.0
+  9. RECUR_LIVER_FUNCTION_days_since_last = 425.0
+  10. PROST_LAB_hb_latest = 340.0
+=== SHAP 6mo ===
+
+============================================================
+  EXPLAINABILITY ANALYSIS - 6MO
+============================================================
+  Model: catboost | Features: 265 | Patients: 198144
+  Feature classes: 135 direct, 100 indirect, 30 opaque
+  Computing SHAP values for catboost...
+  Saved global importance: /home/keerthikovelamudi_cthesigns_com/pipeline/Prostate_Cancer/6_Explainability_Ethnicity/results/6mo/global_feature_importance_6mo.csv
+
+  TOP 20 FEATURES BY MEAN |SHAP|:
+  ──────────────────────────────────────────────────────────────────────
+  [D]  1. PROST_LAB_psa_age_band_percentile             SHAP=0.452724
+  [D]  2. LABTERM_Haemoglobin_estimation_mean           SHAP=0.285046
+  [X]  3. EMB_text_dim_9                                SHAP=0.268485
+  [D]  4. LABTERM_Serum_PSA_prostate_specific_antigen_le_last SHAP=0.255604
+  [D]  5. LABTERM_MCHC_Mean_corpuscular_haemoglobin_conc_mean SHAP=0.175045
+  [D]  6. PROST_LAB_psa_percentile                      SHAP=0.157811
+  [I]  7. LAB_FBC_HAEMATOLOGY_min                       SHAP=0.152998
+  [D]  8. OBS_ELECTROLYTES_count_B                      SHAP=0.142178
+  [I]  9. DECAY_symptom_weighted_score                  SHAP=0.130463
+  [D] 10. AGE_AT_INDEX                                  SHAP=0.106431
+  [I] 11. LAB_HAEMATOLOGY_first                         SHAP=0.100473
+  [D] 12. LABTERM_MCV_Mean_corpuscular_volume_mean      SHAP=0.092927
+  [D] 13. OBS_LIVER_FUNCTION_count_total                SHAP=0.092480
+  [D] 14. LABTERM_Serum_sodium_level_last               SHAP=0.091315
+  [X] 15. EMB_text_dim_6                                SHAP=0.085493
+  [D] 16. OBS_LIVER_FUNCTION_count_B                    SHAP=0.082210
+  [I] 17. LAB_HAEMATOLOGY_min                           SHAP=0.080890
+  [D] 18. LABTERM_Haematocrit_last                      SHAP=0.067809
+  [I] 19. LAB_FBC_HAEMATOLOGY_mean_A                    SHAP=0.065213
+  [D] 20. OBS_HAEMATOLOGY_has_ever                      SHAP=0.062783
+  D=direct, I=indirect, X=opaque
+
+  WARNING: 1 OPAQUE features in top 10:
+    EMB_text_dim_9 (SHAP=0.268485)
+  → Run 3_enhancement_loop.py to remove and retrain
+
+  Generating explanations for 18064 patients...
+  Saved 18064 patient explanations
+  Saved clinician reports: clinician_reports_6mo.txt
+
+  SAMPLE REPORT:
+  ────────────────────────────────────────────────────────────
+  Patient: {00001846-A80D-4C1D-AAF8-8C48BD25E0C6}
+Risk Score: 70.41%  |  Threshold: 9.78%  |  Prediction: HIGH RISK
+
+WHY THIS PATIENT IS FLAGGED:
+--------------------------------------------------
+  2. Patient age: 72.0 years
+  3. LAB_RENAL_FUNCTION_min = 74.0
+  5. LAB_ELECTROLYTES_mean_A = 72.6
+  6. LAB_RENAL_FUNCTION_mean_B = 83.5
+  8. OBS_LIVER_FUNCTION_count_total = 3.0
+  9. PROST_LAB_psa_percentile = 0.5
+
+PROTECTIVE FACTORS:
+--------------------------------------------------
+  1. PSA percentile within the patient's 10-year age band (0-1)
+  2. LABTERM_Haemoglobin_estimation_mean = 142.0
+  4. LABTERM_MCV_Mean_corpuscular_volume_mean = 93.3
+=== SHAP 12mo ===
+
+============================================================
+  EXPLAINABILITY ANALYSIS - 12MO
+============================================================
+  Model: xgboost | Features: 265 | Patients: 191699
+  Feature classes: 130 direct, 105 indirect, 30 opaque
+  Computing SHAP values for xgboost...
+  SHAP failed (ValueError: could not convert string to float: '[5E-1]'); falling back to feature_importances_ as an approximation
+  Saved global importance: /home/keerthikovelamudi_cthesigns_com/pipeline/Prostate_Cancer/6_Explainability_Ethnicity/results/12mo/global_feature_importance_12mo.csv
+
+  TOP 20 FEATURES BY MEAN |SHAP|:
+  ──────────────────────────────────────────────────────────────────────
+  [D]  1. PROST_LAB_psa_doubling_time                   SHAP=291547180066.788147
+  [D]  2. LABTERM_Haemoglobin_estimation_mean           SHAP=2.155113
+  [D]  3. LABTERM_MCHC_Mean_corpuscular_haemoglobin_conc_mean SHAP=2.100632
+  [I]  4. RECUR_LIVER_FUNCTION_days_since_last          SHAP=1.170727
+  [I]  5. RECUR_RENAL_FUNCTION_days_since_last          SHAP=1.167049
+  [I]  6. RECUR_ELECTROLYTES_days_since_last            SHAP=1.154333
+  [I]  7. RECUR_PROTEIN_ALBUMIN_days_since_last         SHAP=1.083235
+  [I]  8. RECUR_FBC_HAEMATOLOGY_days_since_last         SHAP=1.033109
+  [I]  9. LAB_FBC_HAEMATOLOGY_max                       SHAP=0.635037
+  [I] 10. RECUR_PSA_days_since_last                     SHAP=0.544778
+  [D] 11. LABTERM_Serum_sodium_level_mean               SHAP=0.454904
+  [I] 12. RECUR_INFLAMMATORY_days_since_last            SHAP=0.398068
+  [I] 13. LAB_RENAL_FUNCTION_mean                       SHAP=0.369226
+  [I] 14. LAB_FBC_HAEMATOLOGY_mean                      SHAP=0.289528
+  [D] 15. PROST_LAB_hb_latest                           SHAP=0.267240
+  [D] 16. LABTERM_MCV_Mean_corpuscular_volume_mean      SHAP=0.234840
+  [D] 17. LABTERM_Serum_creatinine_level_mean           SHAP=0.229049
+  [D] 18. LABTERM_Serum_creatinine_level_last           SHAP=0.221402
+  [I] 19. LAB_URINE_MARKERS_max                         SHAP=0.219745
+  [I] 20. LAB_RENAL_FUNCTION_min                        SHAP=0.204108
+  D=direct, I=indirect, X=opaque
+
+  Generating explanations for 17478 patients...
+  Saved 17478 patient explanations
+  Saved clinician reports: clinician_reports_12mo.txt
+
+  SAMPLE REPORT:
+  ────────────────────────────────────────────────────────────
+  Patient: {00001846-A80D-4C1D-AAF8-8C48BD25E0C6}
+Risk Score: 96.20%  |  Threshold: 6.36%  |  Prediction: HIGH RISK
+
+WHY THIS PATIENT IS FLAGGED:
+--------------------------------------------------
+  1. LABTERM_MCHC_Mean_corpuscular_haemoglobin_conc_mean = 340.0
+  2. LABTERM_Haemoglobin_estimation_mean = 142.0
+  3. RECUR_LUTS_days_since_last = 1052.0
+  4. RECUR_UROLOGY_PATHWAY_days_since_last = 743.0
+  5. RECUR_PSA_days_since_last = 706.0
+  6. RECUR_LIVER_FUNCTION_days_since_last = 425.0
+  7. RECUR_RENAL_FUNCTION_days_since_last = 425.0
+  8. RECUR_ELECTROLYTES_days_since_last = 425.0
+  9. RECUR_PROTEIN_ALBUMIN_days_since_last = 425.0
+  10. RECUR_FBC_HAEMATOLOGY_days_since_last = 425.0
+=== ALL DONE ===

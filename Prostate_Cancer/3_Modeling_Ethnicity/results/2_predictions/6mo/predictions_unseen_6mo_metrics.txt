@@ -1,0 +1,15 @@
+Window: 6mo
+AUC: nan
+Sensitivity: 0.0000
+Specificity: 0.2624
+Threshold: 0.0978
+TP=0 FP=71828 FN=0 TN=25555
+
+              precision    recall  f1-score   support
+
+  Non-cancer       1.00      0.26      0.42     97383
+      Cancer       0.00      0.00      0.00         0
+
+    accuracy                           0.26     97383
+   macro avg       0.50      0.13      0.21     97383
+weighted avg       1.00      0.26      0.42     97383

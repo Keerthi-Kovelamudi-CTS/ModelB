@@ -1,0 +1,115 @@
+Loaded 3mo: 207983 x 407
+  Clinical filter: 406 -> 284 features
+  + 28 text features
+  + 15 tfidf features
+  + 15 bert features
+  Final: 207983 x 343
+Loaded 6mo: 198144 x 396
+  Clinical filter: 395 -> 277 features
+  + 28 text features
+  + 15 tfidf features
+  + 15 bert features
+  Final: 198144 x 336
+Loaded 12mo: 191699 x 407
+  Clinical filter: 406 -> 290 features
+  + 29 text features
+  + 15 tfidf features
+  + 15 bert features
+  Final: 191699 x 350
+
+######################################################################
+  MODELING - 3MO | 207983 patients x 342 features
+  Pos: 19020 | Neg: 188963
+######################################################################
+
+  --- Seed 42 ---
+  Train: 155986 | Val: 20799 | Test: 31198
+  Selected 58 text + 207 clinical = 265 total
+
+  Tuning XGBoost...
+    XGBoost val AUC: 0.9240
+  Tuning LightGBM...
+    LightGBM val AUC: 0.9075
+  Tuning CatBoost...
+    CatBoost val AUC: 0.9219
+
+  Ensemble: xgboost(0.50) + catboost(0.30) + lightgbm(0.20)
+    Ensemble val AUC: 0.9248
+    Ensemble test AUC: 0.9325
+    Calibrated val-th AUC: 0.9248
+
+  TEST RESULTS (tier0 (Sens>=80% Spec>=70%)):
+    Threshold: 0.0712
+    Sensitivity: 0.8559
+    Specificity: 0.8508
+    AUC: 0.9319
+    Confusion: TP=2442 FP=4228 FN=411 TN=24117
+  TIER90 (alt operating point, Sens>=90%):
+    Threshold: 0.0500  Sens: 0.9064  Spec: 0.7568
+
+######################################################################
+  MODELING - 6MO | 198144 patients x 335 features
+  Pos: 18014 | Neg: 180130
+######################################################################
+
+  --- Seed 42 ---
+  Train: 148607 | Val: 19815 | Test: 29722
+  Selected 58 text + 207 clinical = 265 total
+
+  Tuning XGBoost...
+    XGBoost val AUC: 0.9044
+  Tuning LightGBM...
+    LightGBM val AUC: 0.8899
+  Tuning CatBoost...
+    CatBoost val AUC: 0.9027
+
+  Ensemble: xgboost(0.20) + catboost(0.80) + lightgbm(0.00)
+    Ensemble val AUC: 0.9046
+    Ensemble test AUC: 0.9055
+    Calibrated val-th AUC: 0.9126
+
+  TEST RESULTS (tier0 (Sens>=80% Spec>=70%)):
+    Threshold: 0.0978
+    Sensitivity: 0.7683
+    Specificity: 0.8637
+    AUC: 0.9048
+    Confusion: TP=2076 FP=3682 FN=626 TN=23338
+  TIER90 (alt operating point, Sens>=90%):
+    Threshold: 0.0417  Sens: 0.9152  Spec: 0.6523
+
+######################################################################
+  MODELING - 12MO | 191699 patients x 349 features
+  Pos: 17428 | Neg: 174271
+######################################################################
+
+  --- Seed 42 ---
+  Train: 143774 | Val: 19170 | Test: 28755
+  Selected 59 text + 206 clinical = 265 total
+
+  Tuning XGBoost...
+    XGBoost val AUC: 0.8993
+  Tuning LightGBM...
+    LightGBM val AUC: 0.8826
+  Tuning CatBoost...
+    CatBoost val AUC: 0.9002
+
+  Ensemble: catboost(0.10) + xgboost(0.90) + lightgbm(0.00)
+    Ensemble val AUC: 0.9002
+    Ensemble test AUC: 0.8989
+    Calibrated val-th AUC: 0.8896
+
+  TEST RESULTS (tier0 (Sens>=80% Spec>=70%)):
+    Threshold: 0.0636
+    Sensitivity: 0.8198
+    Specificity: 0.7915
+    AUC: 0.8982
+    Confusion: TP=2143 FP=5451 FN=471 TN=20690
+  TIER90 (alt operating point, Sens>=90%):
+    Threshold: 0.0451  Sens: 0.9090  Spec: 0.6036
+
+======================================================================
+  FINAL RESULTS
+======================================================================
+  3mo seed=42: Sens=0.856 Spec=0.851 AUC=0.932 [tier0 (Sens>=80% Spec>=70%)]
+  6mo seed=42: Sens=0.768 Spec=0.864 AUC=0.905 [tier0 (Sens>=80% Spec>=70%)]
+  12mo seed=42: Sens=0.820 Spec=0.791 AUC=0.898 [tier0 (Sens>=80% Spec>=70%)]

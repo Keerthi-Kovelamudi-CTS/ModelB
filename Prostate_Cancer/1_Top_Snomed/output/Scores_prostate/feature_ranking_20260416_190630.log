@@ -1,0 +1,866 @@
+2026-04-16 19:06:30 | INFO     | ================================================================================
+2026-04-16 19:06:30 | INFO     | PRODUCTION — PROSTATE — Phase 1.3: Feature Ranking FINAL v1.1
+2026-04-16 19:06:30 | INFO     | Timestamp: 2026-04-16 19:06:30
+2026-04-16 19:06:30 | INFO     | Config: seed=42, cv=3, max_features=500, neg:pos=5:1
+2026-04-16 19:06:30 | INFO     | ================================================================================
+2026-04-16 19:06:30 | INFO     | 
+📂 Loading input files...
+2026-04-16 19:06:30 | INFO     |   ✅ pos_obs: 7,306 rows validated
+2026-04-16 19:06:30 | INFO     |   ✅ neg_obs: 18,584 rows validated
+2026-04-16 19:06:30 | INFO     |   ✅ pos_meds: 1,532 rows validated
+2026-04-16 19:06:30 | INFO     |   ✅ neg_meds: 4,984 rows validated
+2026-04-16 19:06:30 | WARNING  |   ⚠️ Observation matrix not found — will use fallback
+2026-04-16 19:06:30 | WARNING  |   ⚠️ Medication matrix not found — will use fallback
+2026-04-16 19:06:30 | INFO     | 
+================================================================================
+2026-04-16 19:06:30 | INFO     | PART 1: OBSERVATIONS
+2026-04-16 19:06:30 | INFO     | ================================================================================
+2026-04-16 19:06:30 | INFO     | 
+============================================================
+2026-04-16 19:06:30 | INFO     | STATISTICAL RANKING: observations
+2026-04-16 19:06:30 | INFO     | ============================================================
+2026-04-16 19:06:30 | INFO     |   Positive: 23,251 patients, 7,306 terms
+2026-04-16 19:06:30 | INFO     |   Negative: 316,675 patients, 18,584 terms
+2026-04-16 19:06:31 | INFO     |   After min cases (>=3): 7,306 terms
+2026-04-16 19:06:31 | INFO     |   Significance + effect filter  (OR>1.2, p_bonf<0.05, n_pos>=10): 1,524 terms kept (dropped 5,782)
+2026-04-16 19:06:31 | INFO     |   After all filters: 1,524 terms
+2026-04-16 19:06:31 | INFO     |   OR > 2.0: 1290
+2026-04-16 19:06:31 | INFO     |   OR > 5.0: 727
+2026-04-16 19:06:31 | INFO     |   Significant (p<0.05): 1524
+2026-04-16 19:06:31 | INFO     |   Bonferroni sig (p<0.05): 1524
+2026-04-16 19:06:31 | INFO     | 
+============================================================
+2026-04-16 19:06:31 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:06:31 | INFO     | ============================================================
+2026-04-16 19:06:31 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:06:31 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:06:32 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:06:45 | INFO     |     AUROC: 0.9788 ± 0.0012 | Non-zero: 489 | 13.6s
+2026-04-16 19:06:45 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:06:47 | INFO     |     AUROC: 0.9577 ± 0.0022 | 2.0s
+2026-04-16 19:06:47 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:07:22 | INFO     |     AUROC: 0.9621 ± 0.0018 | 34.8s
+2026-04-16 19:07:22 | INFO     |   Computing Mutual Information...
+2026-04-16 19:07:23 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:07:23 | INFO     |   ✅ Complete: 51.3s total
+2026-04-16 19:07:23 | INFO     | 
+============================================================
+2026-04-16 19:07:23 | INFO     | STABILITY SELECTION (simulated): observations (20 bootstraps)
+2026-04-16 19:07:23 | INFO     | ============================================================
+2026-04-16 19:07:23 | WARNING  |   ⚠️ No patient matrix — bootstrapping simulated data (weaker stability signal)
+2026-04-16 19:07:23 | INFO     |   Bootstrap 1/20...
+2026-04-16 19:07:23 | INFO     | 
+============================================================
+2026-04-16 19:07:23 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:07:23 | INFO     | ============================================================
+2026-04-16 19:07:23 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:07:23 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:07:23 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:07:35 | INFO     |     AUROC: 0.9783 ± 0.0000 | Non-zero: 489 | 11.9s
+2026-04-16 19:07:35 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:07:37 | INFO     |     AUROC: 0.9547 ± 0.0000 | 1.6s
+2026-04-16 19:07:37 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:08:00 | INFO     |     AUROC: 0.9588 ± 0.0006 | 23.6s
+2026-04-16 19:08:00 | INFO     |   Computing Mutual Information...
+2026-04-16 19:08:01 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:08:01 | INFO     |   ✅ Complete: 38.0s total
+2026-04-16 19:08:01 | INFO     |   Bootstrap 2/20...
+2026-04-16 19:08:01 | INFO     | 
+============================================================
+2026-04-16 19:08:01 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:08:01 | INFO     | ============================================================
+2026-04-16 19:08:01 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:08:01 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:08:01 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:08:12 | INFO     |     AUROC: 0.9776 ± 0.0008 | Non-zero: 492 | 11.3s
+2026-04-16 19:08:12 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:08:14 | INFO     |     AUROC: 0.9539 ± 0.0011 | 1.7s
+2026-04-16 19:08:14 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:08:37 | INFO     |     AUROC: 0.9589 ± 0.0000 | 23.1s
+2026-04-16 19:08:37 | INFO     |   Computing Mutual Information...
+2026-04-16 19:08:38 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:08:38 | INFO     |   ✅ Complete: 36.9s total
+2026-04-16 19:08:38 | INFO     |   Bootstrap 3/20...
+2026-04-16 19:08:38 | INFO     | 
+============================================================
+2026-04-16 19:08:38 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:08:38 | INFO     | ============================================================
+2026-04-16 19:08:38 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:08:38 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:08:38 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:08:51 | INFO     |     AUROC: 0.9782 ± 0.0006 | Non-zero: 490 | 12.8s
+2026-04-16 19:08:51 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:08:51 | INFO     |     AUROC: 0.9545 ± 0.0007 | 0.9s
+2026-04-16 19:08:51 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:09:15 | INFO     |     AUROC: 0.9578 ± 0.0022 | 23.3s
+2026-04-16 19:09:15 | INFO     |   Computing Mutual Information...
+2026-04-16 19:09:15 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:09:15 | INFO     |   ✅ Complete: 37.8s total
+2026-04-16 19:09:15 | INFO     |   Bootstrap 4/20...
+2026-04-16 19:09:15 | INFO     | 
+============================================================
+2026-04-16 19:09:15 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:09:15 | INFO     | ============================================================
+2026-04-16 19:09:15 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:09:15 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:09:16 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:09:28 | INFO     |     AUROC: 0.9769 ± 0.0004 | Non-zero: 488 | 12.5s
+2026-04-16 19:09:28 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:09:29 | INFO     |     AUROC: 0.9512 ± 0.0037 | 0.9s
+2026-04-16 19:09:29 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:09:53 | INFO     |     AUROC: 0.9576 ± 0.0028 | 23.8s
+2026-04-16 19:09:53 | INFO     |   Computing Mutual Information...
+2026-04-16 19:09:54 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:09:54 | INFO     |   ✅ Complete: 38.1s total
+2026-04-16 19:09:54 | INFO     |   Bootstrap 5/20...
+2026-04-16 19:09:54 | INFO     | 
+============================================================
+2026-04-16 19:09:54 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:09:54 | INFO     | ============================================================
+2026-04-16 19:09:54 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:09:54 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:09:54 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:10:06 | INFO     |     AUROC: 0.9797 ± 0.0014 | Non-zero: 490 | 12.4s
+2026-04-16 19:10:06 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:10:07 | INFO     |     AUROC: 0.9539 ± 0.0015 | 0.9s
+2026-04-16 19:10:07 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:10:32 | INFO     |     AUROC: 0.9613 ± 0.0019 | 24.9s
+2026-04-16 19:10:32 | INFO     |   Computing Mutual Information...
+2026-04-16 19:10:33 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:10:33 | INFO     |   ✅ Complete: 39.0s total
+2026-04-16 19:10:33 | INFO     |   Bootstrap 6/20...
+2026-04-16 19:10:33 | INFO     | 
+============================================================
+2026-04-16 19:10:33 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:10:33 | INFO     | ============================================================
+2026-04-16 19:10:33 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:10:33 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:10:33 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:10:47 | INFO     |     AUROC: 0.9803 ± 0.0007 | Non-zero: 489 | 14.0s
+2026-04-16 19:10:47 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:10:47 | INFO     |     AUROC: 0.9558 ± 0.0002 | 0.7s
+2026-04-16 19:10:47 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:11:12 | INFO     |     AUROC: 0.9599 ± 0.0001 | 24.4s
+2026-04-16 19:11:12 | INFO     |   Computing Mutual Information...
+2026-04-16 19:11:13 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:11:13 | INFO     |   ✅ Complete: 40.0s total
+2026-04-16 19:11:13 | INFO     |   Bootstrap 7/20...
+2026-04-16 19:11:13 | INFO     | 
+============================================================
+2026-04-16 19:11:13 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:11:13 | INFO     | ============================================================
+2026-04-16 19:11:13 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:11:13 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:11:13 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:11:26 | INFO     |     AUROC: 0.9788 ± 0.0025 | Non-zero: 490 | 13.0s
+2026-04-16 19:11:26 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:11:27 | INFO     |     AUROC: 0.9532 ± 0.0012 | 1.6s
+2026-04-16 19:11:27 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:11:50 | INFO     |     AUROC: 0.9610 ± 0.0020 | 22.8s
+2026-04-16 19:11:50 | INFO     |   Computing Mutual Information...
+2026-04-16 19:11:51 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:11:51 | INFO     |   ✅ Complete: 38.3s total
+2026-04-16 19:11:51 | INFO     |   Bootstrap 8/20...
+2026-04-16 19:11:51 | INFO     | 
+============================================================
+2026-04-16 19:11:51 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:11:51 | INFO     | ============================================================
+2026-04-16 19:11:51 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:11:51 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:11:51 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:12:04 | INFO     |     AUROC: 0.9789 ± 0.0017 | Non-zero: 490 | 13.4s
+2026-04-16 19:12:04 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:12:05 | INFO     |     AUROC: 0.9562 ± 0.0028 | 0.8s
+2026-04-16 19:12:05 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:12:32 | INFO     |     AUROC: 0.9614 ± 0.0027 | 26.4s
+2026-04-16 19:12:32 | INFO     |   Computing Mutual Information...
+2026-04-16 19:12:32 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:12:32 | INFO     |   ✅ Complete: 41.4s total
+2026-04-16 19:12:32 | INFO     |   Bootstrap 9/20...
+2026-04-16 19:12:32 | INFO     | 
+============================================================
+2026-04-16 19:12:32 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:12:32 | INFO     | ============================================================
+2026-04-16 19:12:32 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:12:32 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:12:33 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:12:46 | INFO     |     AUROC: 0.9778 ± 0.0008 | Non-zero: 485 | 13.8s
+2026-04-16 19:12:46 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:12:47 | INFO     |     AUROC: 0.9511 ± 0.0020 | 0.8s
+2026-04-16 19:12:47 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:13:11 | INFO     |     AUROC: 0.9574 ± 0.0009 | 24.3s
+2026-04-16 19:13:11 | INFO     |   Computing Mutual Information...
+2026-04-16 19:13:12 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:13:12 | INFO     |   ✅ Complete: 39.8s total
+2026-04-16 19:13:12 | INFO     |   Bootstrap 10/20...
+2026-04-16 19:13:12 | INFO     | 
+============================================================
+2026-04-16 19:13:12 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:13:12 | INFO     | ============================================================
+2026-04-16 19:13:12 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:13:12 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:13:12 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:13:25 | INFO     |     AUROC: 0.9796 ± 0.0010 | Non-zero: 484 | 12.4s
+2026-04-16 19:13:25 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:13:26 | INFO     |     AUROC: 0.9560 ± 0.0020 | 0.8s
+2026-04-16 19:13:26 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:13:49 | INFO     |     AUROC: 0.9610 ± 0.0015 | 23.3s
+2026-04-16 19:13:49 | INFO     |   Computing Mutual Information...
+2026-04-16 19:13:50 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:13:50 | INFO     |   ✅ Complete: 37.4s total
+2026-04-16 19:13:50 | INFO     |   Bootstrap 11/20...
+2026-04-16 19:13:50 | INFO     | 
+============================================================
+2026-04-16 19:13:50 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:13:50 | INFO     | ============================================================
+2026-04-16 19:13:50 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:13:50 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:13:50 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:14:01 | INFO     |     AUROC: 0.9788 ± 0.0005 | Non-zero: 488 | 11.1s
+2026-04-16 19:14:01 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:14:02 | INFO     |     AUROC: 0.9541 ± 0.0005 | 1.7s
+2026-04-16 19:14:02 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:14:25 | INFO     |     AUROC: 0.9583 ± 0.0007 | 22.9s
+2026-04-16 19:14:25 | INFO     |   Computing Mutual Information...
+2026-04-16 19:14:26 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:14:26 | INFO     |   ✅ Complete: 36.5s total
+2026-04-16 19:14:26 | INFO     |   Bootstrap 12/20...
+2026-04-16 19:14:26 | INFO     | 
+============================================================
+2026-04-16 19:14:26 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:14:26 | INFO     | ============================================================
+2026-04-16 19:14:26 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:14:26 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:14:26 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:14:38 | INFO     |     AUROC: 0.9767 ± 0.0015 | Non-zero: 493 | 12.2s
+2026-04-16 19:14:38 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:14:39 | INFO     |     AUROC: 0.9546 ± 0.0002 | 0.8s
+2026-04-16 19:14:39 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:15:03 | INFO     |     AUROC: 0.9597 ± 0.0011 | 23.4s
+2026-04-16 19:15:03 | INFO     |   Computing Mutual Information...
+2026-04-16 19:15:03 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:15:03 | INFO     |   ✅ Complete: 37.3s total
+2026-04-16 19:15:03 | INFO     |   Bootstrap 13/20...
+2026-04-16 19:15:03 | INFO     | 
+============================================================
+2026-04-16 19:15:03 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:15:03 | INFO     | ============================================================
+2026-04-16 19:15:03 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:15:03 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:15:03 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:15:17 | INFO     |     AUROC: 0.9791 ± 0.0002 | Non-zero: 483 | 13.2s
+2026-04-16 19:15:17 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:15:18 | INFO     |     AUROC: 0.9549 ± 0.0027 | 0.9s
+2026-04-16 19:15:18 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:15:42 | INFO     |     AUROC: 0.9608 ± 0.0015 | 24.0s
+2026-04-16 19:15:42 | INFO     |   Computing Mutual Information...
+2026-04-16 19:15:42 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:15:42 | INFO     |   ✅ Complete: 39.0s total
+2026-04-16 19:15:42 | INFO     |   Bootstrap 14/20...
+2026-04-16 19:15:42 | INFO     | 
+============================================================
+2026-04-16 19:15:42 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:15:42 | INFO     | ============================================================
+2026-04-16 19:15:42 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:15:42 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:15:42 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:15:55 | INFO     |     AUROC: 0.9799 ± 0.0008 | Non-zero: 488 | 12.3s
+2026-04-16 19:15:55 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:15:56 | INFO     |     AUROC: 0.9579 ± 0.0020 | 0.8s
+2026-04-16 19:15:56 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:16:18 | INFO     |     AUROC: 0.9618 ± 0.0018 | 22.8s
+2026-04-16 19:16:18 | INFO     |   Computing Mutual Information...
+2026-04-16 19:16:19 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:16:19 | INFO     |   ✅ Complete: 36.8s total
+2026-04-16 19:16:19 | INFO     |   Bootstrap 15/20...
+2026-04-16 19:16:19 | INFO     | 
+============================================================
+2026-04-16 19:16:19 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:16:19 | INFO     | ============================================================
+2026-04-16 19:16:19 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:16:19 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:16:19 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:16:32 | INFO     |     AUROC: 0.9779 ± 0.0007 | Non-zero: 490 | 13.3s
+2026-04-16 19:16:32 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:16:33 | INFO     |     AUROC: 0.9542 ± 0.0026 | 0.8s
+2026-04-16 19:16:33 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:16:56 | INFO     |     AUROC: 0.9607 ± 0.0029 | 22.6s
+2026-04-16 19:16:56 | INFO     |   Computing Mutual Information...
+2026-04-16 19:16:56 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:16:56 | INFO     |   ✅ Complete: 37.4s total
+2026-04-16 19:16:56 | INFO     |   Bootstrap 16/20...
+2026-04-16 19:16:56 | INFO     | 
+============================================================
+2026-04-16 19:16:56 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:16:56 | INFO     | ============================================================
+2026-04-16 19:16:56 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:16:56 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:16:57 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:17:09 | INFO     |     AUROC: 0.9805 ± 0.0004 | Non-zero: 486 | 12.9s
+2026-04-16 19:17:09 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:17:10 | INFO     |     AUROC: 0.9568 ± 0.0005 | 0.8s
+2026-04-16 19:17:10 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:17:33 | INFO     |     AUROC: 0.9618 ± 0.0005 | 22.5s
+2026-04-16 19:17:33 | INFO     |   Computing Mutual Information...
+2026-04-16 19:17:33 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:17:33 | INFO     |   ✅ Complete: 37.0s total
+2026-04-16 19:17:33 | INFO     |   Bootstrap 17/20...
+2026-04-16 19:17:33 | INFO     | 
+============================================================
+2026-04-16 19:17:33 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:17:33 | INFO     | ============================================================
+2026-04-16 19:17:33 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:17:33 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:17:34 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:17:47 | INFO     |     AUROC: 0.9792 ± 0.0004 | Non-zero: 494 | 13.7s
+2026-04-16 19:17:47 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:17:48 | INFO     |     AUROC: 0.9550 ± 0.0017 | 0.8s
+2026-04-16 19:17:48 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:18:11 | INFO     |     AUROC: 0.9609 ± 0.0006 | 22.8s
+2026-04-16 19:18:11 | INFO     |   Computing Mutual Information...
+2026-04-16 19:18:11 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:18:11 | INFO     |   ✅ Complete: 38.0s total
+2026-04-16 19:18:11 | INFO     |   Bootstrap 18/20...
+2026-04-16 19:18:11 | INFO     | 
+============================================================
+2026-04-16 19:18:11 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:18:11 | INFO     | ============================================================
+2026-04-16 19:18:11 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:18:11 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:18:12 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:18:24 | INFO     |     AUROC: 0.9793 ± 0.0012 | Non-zero: 487 | 12.4s
+2026-04-16 19:18:24 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:18:25 | INFO     |     AUROC: 0.9551 ± 0.0012 | 0.8s
+2026-04-16 19:18:25 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:18:48 | INFO     |     AUROC: 0.9593 ± 0.0009 | 23.3s
+2026-04-16 19:18:48 | INFO     |   Computing Mutual Information...
+2026-04-16 19:18:49 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:18:49 | INFO     |   ✅ Complete: 37.3s total
+2026-04-16 19:18:49 | INFO     |   Bootstrap 19/20...
+2026-04-16 19:18:49 | INFO     | 
+============================================================
+2026-04-16 19:18:49 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:18:49 | INFO     | ============================================================
+2026-04-16 19:18:49 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:18:49 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:18:49 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:19:01 | INFO     |     AUROC: 0.9799 ± 0.0016 | Non-zero: 487 | 11.8s
+2026-04-16 19:19:01 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:19:02 | INFO     |     AUROC: 0.9548 ± 0.0010 | 1.6s
+2026-04-16 19:19:02 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:19:25 | INFO     |     AUROC: 0.9597 ± 0.0010 | 22.8s
+2026-04-16 19:19:25 | INFO     |   Computing Mutual Information...
+2026-04-16 19:19:26 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:19:26 | INFO     |   ✅ Complete: 37.1s total
+2026-04-16 19:19:26 | INFO     |   Bootstrap 20/20...
+2026-04-16 19:19:26 | INFO     | 
+============================================================
+2026-04-16 19:19:26 | INFO     | ML RANKING (FALLBACK — Simulated): observations
+2026-04-16 19:19:26 | INFO     | ============================================================
+2026-04-16 19:19:26 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:19:26 | INFO     |   Simulating 5,000 pos + 25,000 neg, 500 features
+2026-04-16 19:19:26 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:19:39 | INFO     |     AUROC: 0.9785 ± 0.0016 | Non-zero: 488 | 12.7s
+2026-04-16 19:19:39 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:19:40 | INFO     |     AUROC: 0.9533 ± 0.0022 | 0.7s
+2026-04-16 19:19:40 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:20:03 | INFO     |     AUROC: 0.9612 ± 0.0004 | 23.6s
+2026-04-16 19:20:03 | INFO     |   Computing Mutual Information...
+2026-04-16 19:20:04 | INFO     |     MI computed for 500 features | 0.7s
+2026-04-16 19:20:04 | INFO     |   ✅ Complete: 37.9s total
+2026-04-16 19:20:04 | INFO     |   ✅ Stable features (≥80% of bootstraps): 99 / 498
+2026-04-16 19:20:04 | INFO     |   Building combined ranking for observations...
+2026-04-16 19:20:04 | WARNING  |   ⚠️ 2 ML terms not found in stat ranking
+2026-04-16 19:20:04 | INFO     |   Total: 1,528 | Both agree (top 150): 48 | High-stability (≥80%): 102
+2026-04-16 19:20:04 | INFO     | 
+📋 Top 20 Observations:
+2026-04-16 19:20:04 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-16 19:20:04 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-16 19:20:04 | INFO     |   1      observation  Fast track referral for suspected urologi     37.66   36.21   39.18   0.00e+00    178      1   0.854 Very High       
+2026-04-16 19:20:04 | INFO     |   2      observation  Prostate specific antigen level               47.22   45.01   49.53   0.00e+00    153      2   0.712 High            
+2026-04-16 19:20:04 | INFO     |   3      observation  Raised prostate specific antigen              54.42   51.73   57.24   0.00e+00    144      3   0.702 High       ✅    
+2026-04-16 19:20:04 | INFO     |   4      observation  Seen in urology clinic                        13.26   12.83   13.71   0.00e+00    379      4   0.505 High            
+2026-04-16 19:20:04 | INFO     |   5      observation  2 week rule referral - urology                29.53   28.08   31.06   0.00e+00    211      5   0.466 Medium          
+2026-04-16 19:20:04 | INFO     |   6      observation  Large unstained cells                         18.83   17.85   19.87   0.00e+00    298      6   0.307 Medium          
+2026-04-16 19:20:04 | INFO     |   7      observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     39   0.278 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   8      observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     60   0.275 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   9      observation  Serum appearance                            3795.15  236.18 60984.06   0.00e+00      2     47   0.267 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   10     observation  Referred to urologist                         22.63   21.19   24.16   0.00e+00    259      7   0.267 Medium          
+2026-04-16 19:20:04 | INFO     |   11     observation  Health education offered                    2859.28  177.65 46020.35  6.61e-307      3     54   0.257 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   12     observation  Suspected prostate cancer                     35.37   32.14   38.92   0.00e+00    186      9   0.238 Medium          
+2026-04-16 19:20:04 | INFO     |   13     observation  Urine microscopy: epithelial casts          1652.23  102.16 26720.95  1.34e-176      4     76   0.234 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   14     observation  Ultrasensitive prostate specific antigen    1624.85  100.45 26283.19  1.23e-173      5    151   0.228 Medium          
+2026-04-16 19:20:04 | INFO     |   15     observation  Screening for malignant neoplasm of large   1323.83   81.63 21470.33  4.73e-141      6    158   0.221 Medium          
+2026-04-16 19:20:04 | INFO     |   16     observation  Flexible check cystoscopy                   1105.09   67.95 17973.02  2.39e-117      7    126   0.218 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   17     observation  Blood chemistry NOS                          913.81   55.99 14914.96   1.33e-96     11     72   0.216 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   18     observation  Referral letter sent by fax                  995.77   61.11 16225.32  1.71e-105     10    122   0.214 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   19     observation  Radiology/physics in medicine                995.77   61.11 16225.32  1.71e-105      9    148   0.212 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   20     observation  Transrectal needle biopsy of prostate        558.88   33.80 9241.23   4.71e-58     27     39   0.209 Medium     ✅    
+2026-04-16 19:20:04 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_obs_all.csv (1,528 rows)
+2026-04-16 19:20:04 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_obs_top150.csv (150 rows)
+2026-04-16 19:20:04 | INFO     | 
+================================================================================
+2026-04-16 19:20:04 | INFO     | PART 2: MEDICATIONS
+2026-04-16 19:20:04 | INFO     | ================================================================================
+2026-04-16 19:20:04 | INFO     | 
+============================================================
+2026-04-16 19:20:04 | INFO     | STATISTICAL RANKING: medications
+2026-04-16 19:20:04 | INFO     | ============================================================
+2026-04-16 19:20:04 | INFO     |   Positive: 23,251 patients, 1,532 terms
+2026-04-16 19:20:04 | INFO     |   Negative: 316,675 patients, 4,984 terms
+2026-04-16 19:20:04 | INFO     |   After min cases (>=3): 1,532 terms
+2026-04-16 19:20:04 | INFO     |   Significance + effect filter  (OR>1.2, p_bonf<0.05, n_pos>=10): 305 terms kept (dropped 1,227)
+2026-04-16 19:20:04 | INFO     |   After all filters: 305 terms
+2026-04-16 19:20:04 | INFO     |   OR > 2.0: 264
+2026-04-16 19:20:04 | INFO     |   OR > 5.0: 158
+2026-04-16 19:20:04 | INFO     |   Significant (p<0.05): 305
+2026-04-16 19:20:04 | INFO     |   Bonferroni sig (p<0.05): 305
+2026-04-16 19:20:04 | INFO     | 
+============================================================
+2026-04-16 19:20:04 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:20:04 | INFO     | ============================================================
+2026-04-16 19:20:04 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:20:04 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:20:04 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:20:14 | INFO     |     AUROC: 0.7987 ± 0.0034 | Non-zero: 304 | 9.5s
+2026-04-16 19:20:14 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:20:15 | INFO     |     AUROC: 0.7445 ± 0.0023 | 1.0s
+2026-04-16 19:20:15 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:20:33 | INFO     |     AUROC: 0.7507 ± 0.0035 | 18.2s
+2026-04-16 19:20:33 | INFO     |   Computing Mutual Information...
+2026-04-16 19:20:33 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:20:33 | INFO     |   ✅ Complete: 29.2s total
+2026-04-16 19:20:33 | INFO     | 
+============================================================
+2026-04-16 19:20:33 | INFO     | STABILITY SELECTION (simulated): medications (20 bootstraps)
+2026-04-16 19:20:33 | INFO     | ============================================================
+2026-04-16 19:20:33 | WARNING  |   ⚠️ No patient matrix — bootstrapping simulated data (weaker stability signal)
+2026-04-16 19:20:33 | INFO     |   Bootstrap 1/20...
+2026-04-16 19:20:33 | INFO     | 
+============================================================
+2026-04-16 19:20:33 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:20:33 | INFO     | ============================================================
+2026-04-16 19:20:33 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:20:33 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:20:34 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:20:42 | INFO     |     AUROC: 0.7912 ± 0.0017 | Non-zero: 304 | 8.5s
+2026-04-16 19:20:42 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:20:43 | INFO     |     AUROC: 0.7379 ± 0.0045 | 0.8s
+2026-04-16 19:20:43 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:20:55 | INFO     |     AUROC: 0.7445 ± 0.0024 | 12.1s
+2026-04-16 19:20:55 | INFO     |   Computing Mutual Information...
+2026-04-16 19:20:55 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:20:55 | INFO     |   ✅ Complete: 21.9s total
+2026-04-16 19:20:55 | INFO     |   Bootstrap 2/20...
+2026-04-16 19:20:55 | INFO     | 
+============================================================
+2026-04-16 19:20:55 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:20:55 | INFO     | ============================================================
+2026-04-16 19:20:55 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:20:55 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:20:55 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:21:04 | INFO     |     AUROC: 0.7836 ± 0.0045 | Non-zero: 302 | 8.2s
+2026-04-16 19:21:04 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:21:04 | INFO     |     AUROC: 0.7359 ± 0.0012 | 0.7s
+2026-04-16 19:21:04 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:21:16 | INFO     |     AUROC: 0.7385 ± 0.0002 | 12.1s
+2026-04-16 19:21:16 | INFO     |   Computing Mutual Information...
+2026-04-16 19:21:17 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:21:17 | INFO     |   ✅ Complete: 21.5s total
+2026-04-16 19:21:17 | INFO     |   Bootstrap 3/20...
+2026-04-16 19:21:17 | INFO     | 
+============================================================
+2026-04-16 19:21:17 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:21:17 | INFO     | ============================================================
+2026-04-16 19:21:17 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:21:17 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:21:17 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:21:24 | INFO     |     AUROC: 0.7840 ± 0.0062 | Non-zero: 304 | 7.2s
+2026-04-16 19:21:24 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:21:25 | INFO     |     AUROC: 0.7252 ± 0.0063 | 0.8s
+2026-04-16 19:21:25 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:21:37 | INFO     |     AUROC: 0.7294 ± 0.0079 | 12.0s
+2026-04-16 19:21:37 | INFO     |   Computing Mutual Information...
+2026-04-16 19:21:37 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:21:37 | INFO     |   ✅ Complete: 20.5s total
+2026-04-16 19:21:37 | INFO     |   Bootstrap 4/20...
+2026-04-16 19:21:37 | INFO     | 
+============================================================
+2026-04-16 19:21:37 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:21:37 | INFO     | ============================================================
+2026-04-16 19:21:37 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:21:37 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:21:38 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:21:47 | INFO     |     AUROC: 0.7841 ± 0.0046 | Non-zero: 298 | 9.8s
+2026-04-16 19:21:47 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:21:48 | INFO     |     AUROC: 0.7309 ± 0.0037 | 0.7s
+2026-04-16 19:21:48 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:22:00 | INFO     |     AUROC: 0.7332 ± 0.0064 | 12.0s
+2026-04-16 19:22:00 | INFO     |   Computing Mutual Information...
+2026-04-16 19:22:00 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:22:00 | INFO     |   ✅ Complete: 23.0s total
+2026-04-16 19:22:00 | INFO     |   Bootstrap 5/20...
+2026-04-16 19:22:00 | INFO     | 
+============================================================
+2026-04-16 19:22:00 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:22:00 | INFO     | ============================================================
+2026-04-16 19:22:00 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:22:00 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:22:01 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:22:09 | INFO     |     AUROC: 0.7898 ± 0.0013 | Non-zero: 303 | 8.3s
+2026-04-16 19:22:09 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:22:10 | INFO     |     AUROC: 0.7346 ± 0.0012 | 0.8s
+2026-04-16 19:22:10 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:22:22 | INFO     |     AUROC: 0.7429 ± 0.0057 | 12.5s
+2026-04-16 19:22:22 | INFO     |   Computing Mutual Information...
+2026-04-16 19:22:23 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:22:23 | INFO     |   ✅ Complete: 22.1s total
+2026-04-16 19:22:23 | INFO     |   Bootstrap 6/20...
+2026-04-16 19:22:23 | INFO     | 
+============================================================
+2026-04-16 19:22:23 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:22:23 | INFO     | ============================================================
+2026-04-16 19:22:23 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:22:23 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:22:23 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:22:32 | INFO     |     AUROC: 0.7800 ± 0.0047 | Non-zero: 302 | 9.1s
+2026-04-16 19:22:32 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:22:32 | INFO     |     AUROC: 0.7274 ± 0.0020 | 0.8s
+2026-04-16 19:22:32 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:22:45 | INFO     |     AUROC: 0.7350 ± 0.0047 | 12.1s
+2026-04-16 19:22:45 | INFO     |   Computing Mutual Information...
+2026-04-16 19:22:45 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:22:45 | INFO     |   ✅ Complete: 22.4s total
+2026-04-16 19:22:45 | INFO     |   Bootstrap 7/20...
+2026-04-16 19:22:45 | INFO     | 
+============================================================
+2026-04-16 19:22:45 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:22:45 | INFO     | ============================================================
+2026-04-16 19:22:45 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:22:45 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:22:45 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:22:53 | INFO     |     AUROC: 0.7797 ± 0.0022 | Non-zero: 303 | 8.4s
+2026-04-16 19:22:53 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:22:54 | INFO     |     AUROC: 0.7295 ± 0.0022 | 0.7s
+2026-04-16 19:22:54 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:23:06 | INFO     |     AUROC: 0.7332 ± 0.0031 | 12.0s
+2026-04-16 19:23:06 | INFO     |   Computing Mutual Information...
+2026-04-16 19:23:07 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:23:07 | INFO     |   ✅ Complete: 21.6s total
+2026-04-16 19:23:07 | INFO     |   Bootstrap 8/20...
+2026-04-16 19:23:07 | INFO     | 
+============================================================
+2026-04-16 19:23:07 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:23:07 | INFO     | ============================================================
+2026-04-16 19:23:07 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:23:07 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:23:07 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:23:15 | INFO     |     AUROC: 0.7934 ± 0.0086 | Non-zero: 305 | 8.5s
+2026-04-16 19:23:15 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:23:16 | INFO     |     AUROC: 0.7310 ± 0.0047 | 0.7s
+2026-04-16 19:23:16 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:23:28 | INFO     |     AUROC: 0.7354 ± 0.0032 | 11.9s
+2026-04-16 19:23:28 | INFO     |   Computing Mutual Information...
+2026-04-16 19:23:28 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:23:28 | INFO     |   ✅ Complete: 21.7s total
+2026-04-16 19:23:28 | INFO     |   Bootstrap 9/20...
+2026-04-16 19:23:28 | INFO     | 
+============================================================
+2026-04-16 19:23:28 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:23:28 | INFO     | ============================================================
+2026-04-16 19:23:28 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:23:28 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:23:28 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:23:37 | INFO     |     AUROC: 0.7921 ± 0.0016 | Non-zero: 300 | 8.5s
+2026-04-16 19:23:37 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:23:38 | INFO     |     AUROC: 0.7410 ± 0.0004 | 0.8s
+2026-04-16 19:23:38 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:23:50 | INFO     |     AUROC: 0.7453 ± 0.0020 | 12.1s
+2026-04-16 19:23:50 | INFO     |   Computing Mutual Information...
+2026-04-16 19:23:50 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:23:50 | INFO     |   ✅ Complete: 21.8s total
+2026-04-16 19:23:50 | INFO     |   Bootstrap 10/20...
+2026-04-16 19:23:50 | INFO     | 
+============================================================
+2026-04-16 19:23:50 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:23:50 | INFO     | ============================================================
+2026-04-16 19:23:50 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:23:50 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:23:50 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:23:57 | INFO     |     AUROC: 0.7864 ± 0.0029 | Non-zero: 301 | 6.8s
+2026-04-16 19:23:57 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:23:58 | INFO     |     AUROC: 0.7340 ± 0.0050 | 0.7s
+2026-04-16 19:23:58 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:24:10 | INFO     |     AUROC: 0.7414 ± 0.0073 | 12.2s
+2026-04-16 19:24:10 | INFO     |   Computing Mutual Information...
+2026-04-16 19:24:10 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:24:10 | INFO     |   ✅ Complete: 20.2s total
+2026-04-16 19:24:10 | INFO     |   Bootstrap 11/20...
+2026-04-16 19:24:10 | INFO     | 
+============================================================
+2026-04-16 19:24:10 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:24:10 | INFO     | ============================================================
+2026-04-16 19:24:10 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:24:10 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:24:10 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:24:19 | INFO     |     AUROC: 0.7828 ± 0.0059 | Non-zero: 301 | 8.3s
+2026-04-16 19:24:19 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:24:19 | INFO     |     AUROC: 0.7277 ± 0.0080 | 0.8s
+2026-04-16 19:24:19 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:24:32 | INFO     |     AUROC: 0.7356 ± 0.0055 | 12.6s
+2026-04-16 19:24:32 | INFO     |   Computing Mutual Information...
+2026-04-16 19:24:32 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:24:32 | INFO     |   ✅ Complete: 22.1s total
+2026-04-16 19:24:32 | INFO     |   Bootstrap 12/20...
+2026-04-16 19:24:32 | INFO     | 
+============================================================
+2026-04-16 19:24:32 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:24:32 | INFO     | ============================================================
+2026-04-16 19:24:32 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:24:32 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:24:32 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:24:40 | INFO     |     AUROC: 0.7888 ± 0.0020 | Non-zero: 301 | 7.8s
+2026-04-16 19:24:40 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:24:41 | INFO     |     AUROC: 0.7376 ± 0.0026 | 0.8s
+2026-04-16 19:24:41 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:24:53 | INFO     |     AUROC: 0.7439 ± 0.0003 | 12.0s
+2026-04-16 19:24:53 | INFO     |   Computing Mutual Information...
+2026-04-16 19:24:53 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:24:53 | INFO     |   ✅ Complete: 21.1s total
+2026-04-16 19:24:53 | INFO     |   Bootstrap 13/20...
+2026-04-16 19:24:53 | INFO     | 
+============================================================
+2026-04-16 19:24:53 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:24:53 | INFO     | ============================================================
+2026-04-16 19:24:53 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:24:53 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:24:54 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:25:03 | INFO     |     AUROC: 0.7954 ± 0.0036 | Non-zero: 299 | 9.4s
+2026-04-16 19:25:03 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:25:04 | INFO     |     AUROC: 0.7402 ± 0.0009 | 0.8s
+2026-04-16 19:25:04 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:25:16 | INFO     |     AUROC: 0.7491 ± 0.0014 | 12.0s
+2026-04-16 19:25:16 | INFO     |   Computing Mutual Information...
+2026-04-16 19:25:16 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:25:16 | INFO     |   ✅ Complete: 22.6s total
+2026-04-16 19:25:16 | INFO     |   Bootstrap 14/20...
+2026-04-16 19:25:16 | INFO     | 
+============================================================
+2026-04-16 19:25:16 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:25:16 | INFO     | ============================================================
+2026-04-16 19:25:16 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:25:16 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:25:16 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:25:24 | INFO     |     AUROC: 0.7825 ± 0.0014 | Non-zero: 299 | 8.1s
+2026-04-16 19:25:24 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:25:25 | INFO     |     AUROC: 0.7265 ± 0.0062 | 0.8s
+2026-04-16 19:25:25 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:25:37 | INFO     |     AUROC: 0.7278 ± 0.0054 | 12.0s
+2026-04-16 19:25:37 | INFO     |   Computing Mutual Information...
+2026-04-16 19:25:37 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:25:37 | INFO     |   ✅ Complete: 21.3s total
+2026-04-16 19:25:37 | INFO     |   Bootstrap 15/20...
+2026-04-16 19:25:37 | INFO     | 
+============================================================
+2026-04-16 19:25:37 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:25:37 | INFO     | ============================================================
+2026-04-16 19:25:37 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:25:37 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:25:37 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:25:47 | INFO     |     AUROC: 0.7821 ± 0.0057 | Non-zero: 304 | 9.3s
+2026-04-16 19:25:47 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:25:48 | INFO     |     AUROC: 0.7279 ± 0.0078 | 0.8s
+2026-04-16 19:25:48 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:26:00 | INFO     |     AUROC: 0.7355 ± 0.0110 | 12.4s
+2026-04-16 19:26:00 | INFO     |   Computing Mutual Information...
+2026-04-16 19:26:00 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:26:00 | INFO     |   ✅ Complete: 22.9s total
+2026-04-16 19:26:00 | INFO     |   Bootstrap 16/20...
+2026-04-16 19:26:00 | INFO     | 
+============================================================
+2026-04-16 19:26:00 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:26:00 | INFO     | ============================================================
+2026-04-16 19:26:00 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:26:00 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:26:00 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:26:09 | INFO     |     AUROC: 0.7881 ± 0.0043 | Non-zero: 303 | 8.8s
+2026-04-16 19:26:09 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:26:10 | INFO     |     AUROC: 0.7311 ± 0.0044 | 0.8s
+2026-04-16 19:26:10 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:26:22 | INFO     |     AUROC: 0.7365 ± 0.0059 | 11.9s
+2026-04-16 19:26:22 | INFO     |   Computing Mutual Information...
+2026-04-16 19:26:22 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:26:22 | INFO     |   ✅ Complete: 22.0s total
+2026-04-16 19:26:22 | INFO     |   Bootstrap 17/20...
+2026-04-16 19:26:22 | INFO     | 
+============================================================
+2026-04-16 19:26:22 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:26:22 | INFO     | ============================================================
+2026-04-16 19:26:22 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:26:22 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:26:22 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:26:31 | INFO     |     AUROC: 0.7916 ± 0.0029 | Non-zero: 303 | 8.9s
+2026-04-16 19:26:31 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:26:32 | INFO     |     AUROC: 0.7316 ± 0.0043 | 0.8s
+2026-04-16 19:26:32 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:26:44 | INFO     |     AUROC: 0.7358 ± 0.0048 | 12.0s
+2026-04-16 19:26:44 | INFO     |   Computing Mutual Information...
+2026-04-16 19:26:44 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:26:44 | INFO     |   ✅ Complete: 22.2s total
+2026-04-16 19:26:44 | INFO     |   Bootstrap 18/20...
+2026-04-16 19:26:44 | INFO     | 
+============================================================
+2026-04-16 19:26:44 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:26:44 | INFO     | ============================================================
+2026-04-16 19:26:44 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:26:44 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:26:45 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:26:53 | INFO     |     AUROC: 0.7953 ± 0.0009 | Non-zero: 300 | 8.5s
+2026-04-16 19:26:53 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:26:54 | INFO     |     AUROC: 0.7429 ± 0.0024 | 0.7s
+2026-04-16 19:26:54 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:27:06 | INFO     |     AUROC: 0.7477 ± 0.0030 | 11.9s
+2026-04-16 19:27:06 | INFO     |   Computing Mutual Information...
+2026-04-16 19:27:06 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:27:06 | INFO     |   ✅ Complete: 21.6s total
+2026-04-16 19:27:06 | INFO     |   Bootstrap 19/20...
+2026-04-16 19:27:06 | INFO     | 
+============================================================
+2026-04-16 19:27:06 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:27:06 | INFO     | ============================================================
+2026-04-16 19:27:06 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:27:06 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:27:06 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:27:13 | INFO     |     AUROC: 0.7868 ± 0.0039 | Non-zero: 301 | 7.2s
+2026-04-16 19:27:13 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:27:14 | INFO     |     AUROC: 0.7386 ± 0.0007 | 0.7s
+2026-04-16 19:27:14 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:27:26 | INFO     |     AUROC: 0.7409 ± 0.0001 | 11.9s
+2026-04-16 19:27:26 | INFO     |   Computing Mutual Information...
+2026-04-16 19:27:26 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:27:26 | INFO     |   ✅ Complete: 20.3s total
+2026-04-16 19:27:26 | INFO     |   Bootstrap 20/20...
+2026-04-16 19:27:26 | INFO     | 
+============================================================
+2026-04-16 19:27:26 | INFO     | ML RANKING (FALLBACK — Simulated): medications
+2026-04-16 19:27:26 | INFO     | ============================================================
+2026-04-16 19:27:26 | WARNING  |   ⚠️ No patient matrix — using prevalence simulation (approximate)
+2026-04-16 19:27:26 | INFO     |   Simulating 5,000 pos + 25,000 neg, 305 features
+2026-04-16 19:27:27 | INFO     |   Training L1 Logistic Regression...
+2026-04-16 19:27:35 | INFO     |     AUROC: 0.7843 ± 0.0000 | Non-zero: 301 | 9.0s
+2026-04-16 19:27:35 | INFO     |   Training Random Forest (200 trees)...
+2026-04-16 19:27:36 | INFO     |     AUROC: 0.7376 ± 0.0011 | 0.7s
+2026-04-16 19:27:36 | INFO     |   Training Gradient Boosting (150 trees, class-balanced)...
+2026-04-16 19:27:48 | INFO     |     AUROC: 0.7399 ± 0.0008 | 11.9s
+2026-04-16 19:27:48 | INFO     |   Computing Mutual Information...
+2026-04-16 19:27:49 | INFO     |     MI computed for 305 features | 0.4s
+2026-04-16 19:27:49 | INFO     |   ✅ Complete: 22.2s total
+2026-04-16 19:27:49 | INFO     |   ✅ Stable features (≥80% of bootstraps): 84 / 305
+2026-04-16 19:27:49 | INFO     |   Building combined ranking for medications...
+2026-04-16 19:27:49 | INFO     |   Total: 305 | Both agree (top 150): 86 | High-stability (≥80%): 84
+2026-04-16 19:27:49 | INFO     | 
+📋 Top 20 Medications:
+2026-04-16 19:27:49 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-16 19:27:49 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-16 19:27:49 | INFO     |   1      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    163.74  140.27  191.13   0.00e+00     47      1   0.898 Very High  ✅    
+2026-04-16 19:27:49 | INFO     |   2      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    218.84  171.02  280.04   0.00e+00     46      2   0.599 High       ✅    
+2026-04-16 19:27:49 | INFO     |   3      medication   Spikevax COVID-19 mRNA (nucleoside modifi    149.52  117.28  190.62   0.00e+00     48      4   0.436 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   4      medication   Influenza vaccine (split virion, inactiva    386.41  265.84  561.67   0.00e+00     26      5   0.434 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   5      medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     54.57   47.29   62.96   0.00e+00     58      3   0.418 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   6      medication   Fluad vaccine suspension for injection 0.    545.27  303.64  979.19   0.00e+00     19      7   0.392 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   7      medication   Enzira vaccine suspension for injection 0   4485.04  279.33 72014.94   0.00e+00      1     22   0.310 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   8      medication   Comirnaty Original/Omicron BA.1 COVID-19      26.84   23.71   30.38   0.00e+00     71      6   0.309 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   9      medication   Fluad Tetra vaccine suspension for inject    274.37  161.87  465.05   0.00e+00     45     10   0.301 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   10     medication   Imuvac vaccine suspension for injection 0   3436.99  213.78 55257.44   0.00e+00      2     25   0.289 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   11     medication   Pneumovax II vaccine solution for injecti   3079.24  191.41 49537.26   0.00e+00      3     24   0.287 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   12     medication   Influenza vaccine (surface antigen, inact    422.75  204.26  874.93   0.00e+00     22     15   0.269 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   13     medication   Mepradec 20mg gastro-resistant capsules (   2310.05  143.30 37238.75  1.12e-247      4     33   0.265 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   14     medication   Influvac Sub-unit vaccine suspension for    1980.97  122.72 31977.10  3.86e-212      5     29   0.261 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   15     medication   Flucelvax Tetra vaccine suspension for in   1843.96  114.15 29786.37  2.48e-197      6     41   0.255 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   16     medication   Influenza vaccine (split virion, inactiva    968.45   59.40 15788.49  1.57e-102      7     40   0.233 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   17     medication   Tabphyn MR 400microgram capsules (Genus P    831.87   50.86 13604.98   1.04e-87     11     42   0.226 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   18     medication   Lacri-lube eye ointment (Allergan Ltd)       886.49   54.28 14478.26   1.22e-93      9     48   0.225 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   19     medication   Ranitidine 300mg tablets                     941.13   57.70 15351.71   1.44e-99      8     71   0.221 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   20     medication   Simvador 40mg tablets (Dexcel-Pharma Ltd)    831.87   50.86 13604.98   1.04e-87     10     60   0.219 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_meds_all.csv (305 rows)
+2026-04-16 19:27:49 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_meds_top150.csv (150 rows)
+2026-04-16 19:27:49 | INFO     | 
+================================================================================
+2026-04-16 19:27:49 | INFO     | PART 3: COMBINED (Observations + Medications)
+2026-04-16 19:27:49 | INFO     | ================================================================================
+2026-04-16 19:27:49 | INFO     | 
+📋 Top 20 Combined Features:
+2026-04-16 19:27:49 | INFO     |   Rank   Type         Term                                             OR   CI_Lo   CI_Hi      p-val  StatR    MLR   Score Tier       Agree
+2026-04-16 19:27:49 | INFO     |   ----------------------------------------------------------------------------------------------------------------------------------
+2026-04-16 19:27:49 | INFO     |   1      observation  Fast track referral for suspected urologi     37.66   36.21   39.18   0.00e+00    178      1   0.854 Very High       
+2026-04-16 19:27:49 | INFO     |   2      medication   Comirnaty COVID-19 mRNA Vaccine 30microgr    163.74  140.27  191.13   0.00e+00     47      1   0.800 High       ✅    
+2026-04-16 19:27:49 | INFO     |   3      observation  Prostate specific antigen level               47.22   45.01   49.53   0.00e+00    153      2   0.712 High            
+2026-04-16 19:27:49 | INFO     |   4      observation  Raised prostate specific antigen              54.42   51.73   57.24   0.00e+00    144      3   0.702 High       ✅    
+2026-04-16 19:27:49 | INFO     |   5      medication   COVID-19 Vaccine Vaxzevria (ChAdOx1 S [re    218.84  171.02  280.04   0.00e+00     46      2   0.545 High       ✅    
+2026-04-16 19:27:49 | INFO     |   6      observation  Seen in urology clinic                        13.26   12.83   13.71   0.00e+00    379      4   0.505 High            
+2026-04-16 19:27:49 | INFO     |   7      observation  2 week rule referral - urology                29.53   28.08   31.06   0.00e+00    211      5   0.466 Medium          
+2026-04-16 19:27:49 | INFO     |   8      medication   Spikevax COVID-19 mRNA (nucleoside modifi    149.52  117.28  190.62   0.00e+00     48      4   0.398 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   9      medication   Influenza vaccine (split virion, inactiva    386.41  265.84  561.67   0.00e+00     26      5   0.392 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   10     medication   COVID-19 Vaccine Spikevax 0 (Zero)/O (Omi     54.57   47.29   62.96   0.00e+00     58      3   0.379 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   11     medication   Fluad vaccine suspension for injection 0.    545.27  303.64  979.19   0.00e+00     19      7   0.366 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   12     observation  Large unstained cells                         18.83   17.85   19.87   0.00e+00    298      6   0.307 Medium          
+2026-04-16 19:27:49 | INFO     |   13     medication   Enzira vaccine suspension for injection 0   4485.04  279.33 72014.94   0.00e+00      1     22   0.299 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   14     medication   Fluad Tetra vaccine suspension for inject    274.37  161.87  465.05   0.00e+00     45     10   0.285 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   15     medication   Comirnaty Original/Omicron BA.1 COVID-19      26.84   23.71   30.38   0.00e+00     71      6   0.285 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   16     medication   Imuvac vaccine suspension for injection 0   3436.99  213.78 55257.44   0.00e+00      2     25   0.280 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   17     medication   Pneumovax II vaccine solution for injecti   3079.24  191.41 49537.26   0.00e+00      3     24   0.279 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   18     observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     39   0.278 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   19     observation  Transrectal needle biopsy of prostate       4789.07  298.34 76876.11   0.00e+00      1     60   0.275 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   20     observation  Serum appearance                            3795.15  236.18 60984.06   0.00e+00      2     47   0.267 Medium     ✅    
+2026-04-16 19:27:49 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_combined_all.csv (1,833 rows)
+2026-04-16 19:27:49 | INFO     |   💾 Saved: /Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/prostate_combined_top150.csv (150 rows)
+2026-04-16 19:27:49 | INFO     | 
+================================================================================
+2026-04-16 19:27:49 | INFO     | FINAL SUMMARY
+2026-04-16 19:27:49 | INFO     | ================================================================================
+2026-04-16 19:27:49 | INFO     | 
+📂 Output Files (/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Prostate_Cancer/1_Top_Snomed/output/Scores_prostate/):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ SEPARATE:                                                    │
+  │   prostate_obs_top150.csv       →  150 observations          │
+  │   prostate_meds_top150.csv      →  150 medications           │
+  │                                                              │
+  │ COMBINED:                                                    │
+  │   prostate_combined_top150.csv  →  101 obs +   49 meds          │
+  │                                                              │
+  │ FULL REFERENCE:                                              │
+  │   prostate_obs_all.csv          →   1528 observations       │
+  │   prostate_meds_all.csv         →    305 medications        │
+  │   prostate_combined_all.csv     →   1833 total              │
+  └──────────────────────────────────────────────────────────────┘
+
+📊 ML Data Source:
+  Observations: SIMULATED (fallback) ⚠️
+  Medications:  SIMULATED (fallback) ⚠️
+
+📊 Observations:  1,528 scored | OR>2: 1294 | Sig: 1528
+📊 Medications:   305 scored | OR>2: 264 | Sig: 305
+
+📊 Combined Top 150: 101 obs (67%) + 49 meds (33%)
+
+📊 Confidence: VeryHigh=1 | High=5 | Medium=46 | Low=98
+2026-04-16 19:27:49 | INFO     | 
+🏆 Top 5 Observations (combined ranking):
+2026-04-16 19:27:49 | INFO     |   #1 Fast track referral for suspected urological cancer (OR=37.66 [36.21-39.18], p=0.00e+00, score=0.854)
+2026-04-16 19:27:49 | INFO     |   #3 Prostate specific antigen level (OR=47.22 [45.01-49.53], p=0.00e+00, score=0.712)
+2026-04-16 19:27:49 | INFO     |   #4 Raised prostate specific antigen (OR=54.42 [51.73-57.24], p=0.00e+00, score=0.702)
+2026-04-16 19:27:49 | INFO     |   #6 Seen in urology clinic (OR=13.26 [12.83-13.71], p=0.00e+00, score=0.505)
+2026-04-16 19:27:49 | INFO     |   #7 2 week rule referral - urology (OR=29.53 [28.08-31.06], p=0.00e+00, score=0.466)
+2026-04-16 19:27:49 | INFO     | 
+🏆 Top 5 Medications (combined ranking):
+2026-04-16 19:27:49 | INFO     |   #2 Comirnaty COVID-19 mRNA Vaccine 30micrograms/0.3ml dose concentrate for dispersion for injection multidose vials (Pfizer Ltd) (OR=163.74 [140.27-191.13], p=0.00e+00, score=0.800)
+2026-04-16 19:27:49 | INFO     |   #5 COVID-19 Vaccine Vaxzevria (ChAdOx1 S [recombinant]) not less than 2.5x100,000,000 infectious units/0.5ml dose suspension for injection multidose vials (AstraZeneca UK Ltd) (OR=218.84 [171.02-280.04], p=0.00e+00, score=0.545)
+2026-04-16 19:27:49 | INFO     |   #8 Spikevax COVID-19 mRNA (nucleoside modified) Vaccine 0.1mg/0.5ml dose dispersion for injection multidose vials (Moderna, Inc) (OR=149.52 [117.28-190.62], p=0.00e+00, score=0.398)
+2026-04-16 19:27:49 | INFO     |   #9 Influenza vaccine (split virion, inactivated) suspension for injection 0.5ml pre-filled syringes (OR=386.41 [265.84-561.67], p=0.00e+00, score=0.392)
+2026-04-16 19:27:49 | INFO     |   #10 COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc) (OR=54.57 [47.29-62.96], p=0.00e+00, score=0.379)
+2026-04-16 19:27:49 | INFO     | 
+⏱️  Total execution time: 1278.8s (21.3 min)
+2026-04-16 19:27:49 | INFO     | 
+================================================================================
+2026-04-16 19:27:49 | INFO     | ✅ PHASE 1.3 COMPLETE — Ready for Clinical Review (Phase 1.4)
+2026-04-16 19:27:49 | INFO     | ================================================================================

@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
-MODELING_DIR = PROJECT_DIR / '3_Modeling'
-FE_DIR = PROJECT_DIR / '2_Feature_Engineering'
+MODELING_DIR = PROJECT_DIR / '3_Modeling_Ethnicity'
+FE_DIR = PROJECT_DIR / '2_Feature_Engineering_Ethnicity'
 RESULTS_DIR = SCRIPT_DIR / 'results'
 
 sys.path.insert(0, str(FE_DIR))
