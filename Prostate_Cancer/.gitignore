@@ -28,6 +28,9 @@ env/
 !**/selected_features*.csv
 !**/run_summary*.csv
 
+# Symlink to local 2_Feature_Engineering/data (gitignore **/data/ does not always match symlinks)
+2_Feature_Engineering_1to1/data
+
 # ── Model artifacts — large, regenerable ─────────────────
 *.pkl
 *.joblib
