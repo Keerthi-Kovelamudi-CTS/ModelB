@@ -11,7 +11,7 @@ CANCER_NAME = 'prostate'
 DATA_PREFIX = 'prostate'          # CSV filename prefix: prostate_3mo_obs.csv
 PREFIX = 'PROST_'                 # Feature prefix for cancer-specific columns
 LABEL_COL = 'LABEL'
-WINDOWS = ['3mo', '6mo', '12mo']
+WINDOWS = ['1mo', '2mo', '3mo', '6mo', '9mo', '12mo']
 
 # Downsample ratio for training — if set, sanity check keeps
 #   N_neg_kept = round(DOWNSAMPLE_NEG_TO_POS_RATIO × N_pos) negative patients

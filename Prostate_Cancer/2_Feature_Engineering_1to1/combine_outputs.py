@@ -36,7 +36,7 @@ def combine_window(window, features_whitelist=None):
     """Load cleanup + text + tfidf + bert for one window, join, optionally filter.
 
     Args:
-        window: '3mo' | '6mo' | '12mo'
+        window: any value in config.WINDOWS (e.g. '1mo' | '2mo' | '3mo' | '6mo' | '9mo' | '12mo')
         features_whitelist: list[str] of column names to keep (LABEL always retained).
                             None = keep everything.
 

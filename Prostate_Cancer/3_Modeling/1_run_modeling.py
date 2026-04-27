@@ -4,7 +4,7 @@
 # Multi-seed evaluation with tiered sensitivity/specificity
 #
 # Reads from: 2_Feature_Engineering/results/5_cleanup/ + 6_text_features/
-# Writes to:  3_Modeling/results/{3mo,6mo,12mo}/
+# Writes to:  3_Modeling/results/1_training/{window}/  (all 6 windows)
 # ═══════════════════════════════════════════════════════════════
 
 import logging
@@ -504,6 +504,14 @@ def run_modeling():
         train_dir = RESULTS_PATH / '1_training' / window
         train_dir.mkdir(parents=True, exist_ok=True)
         (train_dir / 'saved_models').mkdir(exist_ok=True)
+
+        # Skip if all 3 models already saved (resume after partial run)
+        saved = train_dir / 'saved_models'
+        if (saved / 'xgboost_model.pkl').exists() and \
+           (saved / 'lightgbm_model.pkl').exists() and \
+           (saved / 'catboost_model.pkl').exists():
+            logger.info(f"\n[{window}] SKIP — all 3 models already saved")
+            continue
 
         fm = matrices[window]
         X = fm.drop(columns=['LABEL'])

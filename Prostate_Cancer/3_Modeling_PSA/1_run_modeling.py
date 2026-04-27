@@ -3,8 +3,8 @@
 # Clinical + Text + TF-IDF + BERT embeddings
 # Multi-seed evaluation with tiered sensitivity/specificity
 #
-# Reads from: 2_Feature_Engineering_1to1/results/5_cleanup/ + 6_text_features/
-# Writes to:  3_Modeling_1to1/results/1_training/{window}/  (all 6 windows)
+# Reads from: 2_Feature_Engineering_PSA/results/5_cleanup/ + 6_text_features/
+# Writes to:  3_Modeling_PSA/results/{window}/
 # ═══════════════════════════════════════════════════════════════
 
 import logging
@@ -53,7 +53,7 @@ warnings.filterwarnings('ignore')
 logger = logging.getLogger(__name__)
 
 # ─── Import FE config for paths and params ───────────────────
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering_1to1'))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering_PSA'))
 import config as fe_config
 
 # ─── Modeling params (from FE config) ────────────────────────

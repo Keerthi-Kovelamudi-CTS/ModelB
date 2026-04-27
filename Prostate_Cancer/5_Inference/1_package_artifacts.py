@@ -121,7 +121,7 @@ def package_window(window):
 
 def main():
     parser = argparse.ArgumentParser(description='Package inference artifacts')
-    parser.add_argument('--window', default='12mo', choices=['3mo', '6mo', '12mo'])
+    parser.add_argument('--window', default='12mo', choices=['1mo', '2mo', '3mo', '6mo', '9mo', '12mo'])
     parser.add_argument('--all-windows', action='store_true')
     args = parser.parse_args()
 
@@ -136,7 +136,7 @@ def main():
     package_pipeline_code()
 
     # Package artifacts per window
-    windows = ['3mo', '6mo', '12mo'] if args.all_windows else [args.window]
+    windows = ['1mo', '2mo', '3mo', '6mo', '9mo', '12mo'] if args.all_windows else [args.window]
     for w in windows:
         package_window(w)
 

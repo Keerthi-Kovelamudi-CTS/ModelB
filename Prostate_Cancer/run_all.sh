@@ -101,7 +101,7 @@ log "═════════════════════════
 log "  PHASE 6: EXPLAINABILITY"
 log "═══════════════════════════════════════════════════════════"
 
-for window in 12mo 6mo 3mo; do
+for window in 1mo 2mo 3mo 6mo 9mo 12mo; do
     log ""
     log "  ${window}: SHAP analysis..."
     python3 1_explain_predictions.py --window $window 2>&1 | tee -a "$MAIN_LOG"
@@ -135,7 +135,7 @@ if [ -f "$MODEL_DIR/results/final_results.csv" ]; then
     cat "$MODEL_DIR/results/final_results.csv" | tee -a "$MAIN_LOG"
 fi
 
-for window in 12mo 6mo 3mo; do
+for window in 1mo 2mo 3mo 6mo 9mo 12mo; do
     summary="$EXPLAIN_DIR/results/$window/enhancement_summary_${window}.json"
     if [ -f "$summary" ]; then
         log "  Explainability ($window):"

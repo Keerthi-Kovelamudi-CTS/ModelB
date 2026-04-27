@@ -146,7 +146,7 @@ def predict_unseen(window, data_path=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--window', required=True, choices=['3mo', '6mo', '12mo'])
+    parser.add_argument('--window', required=True, choices=['1mo', '2mo', '3mo', '6mo', '9mo', '12mo'])
     parser.add_argument('--data', default=None, help='Path to holdout feature CSV')
     args = parser.parse_args()
 

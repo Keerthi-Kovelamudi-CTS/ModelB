@@ -13,9 +13,9 @@ At two operating points:
   - Plus a fresh ROC-derived threshold on the combined set
 
 Inputs:
-  ../3_Modeling/results/1_training/{w}/predictions_{w}.csv    (internal test)
-  ./results/predictions_unseen_{w}.csv                         (holdout, from 2_predict_unseen.py)
-  ../3_Modeling/results/1_training/{w}/saved_models/config.json (thresholds)
+  ../3_Modeling_PSA/results/1_training/{w}/predictions_{w}.csv    (internal test)
+  ./results/predictions_unseen_{w}.csv                            (holdout, from 2_predict_unseen.py)
+  ../3_Modeling_PSA/results/1_training/{w}/saved_models/config.json (thresholds)
 
 Outputs (per window, in ./results/):
   combined_eval_{w}.csv          — tabular metrics, one row per tier per run
@@ -38,7 +38,7 @@ from sklearn.metrics import roc_auc_score, roc_curve, confusion_matrix
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 BASE = SCRIPT_DIR.parent
-TRAIN_RESULTS = BASE / "3_Modeling" / "results" / "1_training"
+TRAIN_RESULTS = BASE / "3_Modeling_PSA" / "results" / "1_training"
 HOLDOUT_RESULTS = SCRIPT_DIR / "results"
 
 

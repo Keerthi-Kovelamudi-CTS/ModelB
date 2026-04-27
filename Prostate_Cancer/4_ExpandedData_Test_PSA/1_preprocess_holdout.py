@@ -35,7 +35,7 @@ BASE = Path(__file__).resolve().parent.parent
 SCRIPT_DIR = Path(__file__).resolve().parent
 RAW_FILE = SCRIPT_DIR / "300K_NonCancer_Patients.csv"
 MAPPING_FILE = SCRIPT_DIR / "code_category_mapping.json"
-EXCLUDE_FILE = BASE / "2_Feature_Engineering" / "unique_patient_guids_all_data.csv"
+EXCLUDE_FILE = BASE / "2_Feature_Engineering_PSA" / "unique_patient_guids_all_data.csv"
 OUTPUT_DIR = SCRIPT_DIR / "data" / "fe_input"
 
 # Must match training SQL windowing — derived empirically from the

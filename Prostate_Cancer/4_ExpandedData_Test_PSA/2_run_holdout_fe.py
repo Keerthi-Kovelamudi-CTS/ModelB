@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# PROSTATE CANCER — RUN FE ON HOLDOUT DATA
-# Imports the SAME pipeline functions as training — no copy-paste.
+# PROSTATE CANCER — RUN FE ON HOLDOUT DATA (PSA TRACK)
+# Imports the SAME pipeline functions as PSA training — no copy-paste.
 # Reads from: data/fe_input/{window}/  (all 6 windows)
 # Writes to:  results/{window}/holdout_features_{window}.csv
 # ═══════════════════════════════════════════════════════════════
@@ -13,8 +13,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-# Import FE modules from 2_Feature_Engineering (same code as training)
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering'))
+# Import FE modules from 2_Feature_Engineering_PSA (same code as PSA training)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / '2_Feature_Engineering_PSA'))
 import config as fe_config
 from importlib import import_module
 
@@ -107,7 +107,7 @@ def run_holdout_fe():
         logger.info(f"  SAVED: {out_path.name} ({fm.shape[0]} patients x {fm.shape[1]} features)")
 
     logger.info(f"\n  HOLDOUT FE COMPLETE")
-    logger.info(f"  Next: Run 3_Modeling/2_predict_unseen.py")
+    logger.info(f"  Next: Run 3_Modeling_PSA/2_predict_unseen.py")
 
 
 if __name__ == '__main__':

@@ -188,8 +188,32 @@ def patient_fixes(clin_df, med_df, window_name, cfg):
         else:
             logger.info(f"  All 18+")
 
-    # ── 2e. Final counts ──
-    logger.info(f"\n-- 2e. FINAL PATIENT COUNTS --")
+    # ── 2e. Downsample negatives (optional) ──
+    ratio = getattr(cfg, 'DOWNSAMPLE_NEG_TO_POS_RATIO', None)
+    if ratio is not None and clin_df is not None:
+        logger.info(f"\n-- 2e. DOWNSAMPLE NEGATIVES (ratio {ratio}:1 neg:pos) --")
+        seed = int(getattr(cfg, 'DOWNSAMPLE_SEED', 42))
+        pos_patients = clin_df.loc[clin_df['LABEL'] == 1, 'PATIENT_GUID'].unique()
+        neg_patients = clin_df.loc[clin_df['LABEL'] == 0, 'PATIENT_GUID'].unique()
+        n_pos = len(pos_patients)
+        n_neg_target = int(round(n_pos * ratio))
+        if n_neg_target >= len(neg_patients):
+            logger.info(f"  Target ({n_neg_target:,}) >= available negatives ({len(neg_patients):,}) — no downsample")
+        else:
+            rng = np.random.default_rng(seed)
+            neg_keep = set(rng.choice(neg_patients, size=n_neg_target, replace=False))
+            keep = set(pos_patients) | neg_keep
+            before_c = len(clin_df)
+            clin_df = clin_df[clin_df['PATIENT_GUID'].isin(keep)].copy()
+            logger.info(f"  Clinical: {before_c:,} -> {len(clin_df):,} rows "
+                         f"(kept {n_pos:,} pos + {n_neg_target:,} neg, seed={seed})")
+            if med_df is not None:
+                before_m = len(med_df)
+                med_df = med_df[med_df['PATIENT_GUID'].isin(keep)].copy()
+                logger.info(f"  Medication: {before_m:,} -> {len(med_df):,} rows")
+
+    # ── 2f. Final counts ──
+    logger.info(f"\n-- 2f. FINAL PATIENT COUNTS --")
     master_patients = None
     if clin_df is not None:
         final = clin_df.groupby('LABEL')['PATIENT_GUID'].nunique()

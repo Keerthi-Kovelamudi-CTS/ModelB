@@ -147,7 +147,7 @@ def parse_json_input(json_path, window):
     df['MONTHS_BEFORE_INDEX'] = ((df['INDEX_DATE'] - df['EVENT_DATE']).dt.days / 30.44).round(1)
 
     # Assign time windows
-    window_months = {'3mo': 3, '6mo': 6, '12mo': 12}
+    window_months = {'1mo': 1, '2mo': 2, '3mo': 3, '6mo': 6, '9mo': 9, '12mo': 12}
     w = window_months.get(window, 12)
     df['TIME_WINDOW'] = 'A'
     df.loc[df['MONTHS_BEFORE_INDEX'] <= w, 'TIME_WINDOW'] = 'B'
@@ -371,7 +371,7 @@ def explain_prediction(fm, artifacts, top_n=10):
 def main():
     parser = argparse.ArgumentParser(description='Single patient cancer risk prediction')
     parser.add_argument('--input', required=True, help='Path to patient JSON or CSV')
-    parser.add_argument('--window', default='12mo', choices=['3mo', '6mo', '12mo'])
+    parser.add_argument('--window', default='12mo', choices=['1mo', '2mo', '3mo', '6mo', '9mo', '12mo'])
     parser.add_argument('--top-factors', type=int, default=10)
     parser.add_argument('--output', default=None, help='Output JSON path (default: auto)')
     parser.add_argument('--quiet', action='store_true', help='Suppress FE log output')

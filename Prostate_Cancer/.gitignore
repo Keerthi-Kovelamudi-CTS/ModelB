@@ -1,0 +1,62 @@
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+
+# ── Virtual envs ─────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── OS / editor ──────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ── Data — never commit ──────────────────────────────────
+**/data/
+**/*.csv
+!**/code_category_mapping.json
+!**/*_features_index.csv
+!**/feature_dictionary*.csv
+!**/selected_features*.csv
+!**/run_summary*.csv
+
+# ── Model artifacts — large, regenerable ─────────────────
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.bin
+*.parquet
+
+# ── Pipeline outputs — regenerable, often huge ───────────
+**/results/
+**/results_*/
+**/saved_models/
+**/fitted_transformers/
+**/bert_embeddings/
+**/tfidf_embeddings/
+**/keywords/
+
+# ── Logs ─────────────────────────────────────────────────
+**/logs/
+*.log
+nohup.out
+pipeline.log
+
+# ── BQ / cloud download artifacts ────────────────────────
+**/Unified*-[0-9]*
+**/300K_NonCancer_Patients.csv
+
+# ── Misc ─────────────────────────────────────────────────
+*.tmp
+*.bak
+.coverage
+htmlcov/

@@ -1,0 +1,32 @@
+# Prostate Cancer Prediction Pipeline — runtime dependencies.
+# Pinned with compatible-release (~=) so patch updates are accepted but
+# major/minor stays stable for reproducible runs.
+# Tested on Python 3.10 / 3.11.
+
+# ── Core data ───────────────────────────────────────────────
+pandas~=2.2
+numpy~=1.26
+scipy~=1.13           # used in 1_Top_Snomed/Ranking.py
+
+# ── Tree-based models ───────────────────────────────────────
+xgboost~=2.1
+lightgbm~=4.5
+catboost~=1.2
+scikit-learn~=1.5
+
+# ── Hyperparameter tuning ───────────────────────────────────
+optuna~=4.0
+
+# ── Persistence ─────────────────────────────────────────────
+joblib~=1.4
+
+# ── Text features (BERT embeddings) ─────────────────────────
+# sentence-transformers transitively pulls transformers + tokenizers
+sentence-transformers~=3.0
+torch~=2.5
+
+# ── Explainability ──────────────────────────────────────────
+shap~=0.46
+
+# ── Plotting (used in 3_Modeling and 6_Explainability) ──────
+matplotlib~=3.9

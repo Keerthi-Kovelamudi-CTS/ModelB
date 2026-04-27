@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-sys.path.insert(0, str(SCRIPT_DIR.parent / '2_Feature_Engineering_1to1'))
+sys.path.insert(0, str(SCRIPT_DIR.parent / '2_Feature_Engineering_PSA'))
 import config as fe_config
 
 
@@ -52,8 +52,8 @@ def predict_unseen(window, data_path=None):
 
     # Load data
     if data_path is None:
-        # Default: look in 4_ExpandedData_Test
-        data_path = SCRIPT_DIR.parent / '4_ExpandedData_Test' / 'results' / f'holdout_features_{window}.csv'
+        # Default: look in 4_ExpandedData_Test_PSA (PSA-track holdout)
+        data_path = SCRIPT_DIR.parent / '4_ExpandedData_Test_PSA' / 'results' / f'holdout_features_{window}.csv'
 
     df = pd.read_csv(data_path, index_col=0)
     logger.info(f"  Loaded holdout data: {df.shape[0]} patients x {df.shape[1]} features")

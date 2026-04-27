@@ -85,13 +85,8 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
     # ══════════════════════════════════════════════════════════
     logger.info(f"  BLOCK 1: PSA dynamics...")
 
-    pf[f'{PREFIX}has_psa_monitoring'] = has_cat(obs_AB, 'PSA')
-    psa_count_A = count_cat(obs_A, 'PSA')
-    psa_count_B = count_cat(obs_B, 'PSA')
-    pf[f'{PREFIX}psa_count_A'] = psa_count_A
-    pf[f'{PREFIX}psa_count_B'] = psa_count_B
-    pf[f'{PREFIX}psa_count_total'] = count_cat(obs_AB, 'PSA')
-    pf[f'{PREFIX}psa_acceleration'] = (psa_count_B > psa_count_A).astype(int)
+    # PSA: use VALUE features only. Count/has-PSA features are leaky —
+    # they reflect GP testing behavior, not patient biology.
 
     # PSA lab values
     lab_AB = obs_AB[obs_AB['VALUE'].notna()].copy()
@@ -120,12 +115,10 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         psa_latest = psa_all.groupby('PATIENT_GUID')['VALUE'].last()
         psa_first = psa_all.groupby('PATIENT_GUID')['VALUE'].first()
         psa_max = psa_all.groupby('PATIENT_GUID')['VALUE'].max()
-        psa_count = psa_all.groupby('PATIENT_GUID')['VALUE'].count()
 
         pf[f'{PREFIX}LAB_psa_latest'] = m(psa_latest, default=np.nan)
         pf[f'{PREFIX}LAB_psa_first'] = m(psa_first, default=np.nan)
         pf[f'{PREFIX}LAB_psa_max'] = m(psa_max, default=np.nan)
-        pf[f'{PREFIX}LAB_psa_test_count'] = m(psa_count, default=0)
 
         # Threshold flags
         pf[f'{PREFIX}LAB_psa_elevated_4'] = (m(psa_latest) > 4.0).astype(int)
@@ -152,7 +145,10 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
             if months < 1:
                 return np.nan
             return (group['VALUE'].iloc[-1] - group['VALUE'].iloc[0]) / months
-        psa_vel = psa_all.groupby('PATIENT_GUID').apply(psa_velocity_per_month)
+        psa_vel = pd.to_numeric(
+            psa_all.groupby('PATIENT_GUID').apply(psa_velocity_per_month),
+            errors='coerce',
+        )
         psa_vel_yr = psa_vel * 12.0
         pf[f'{PREFIX}LAB_psa_velocity'] = m(psa_vel, default=0)              # ng/mL per month
         pf[f'{PREFIX}LAB_psa_velocity_per_year'] = m(psa_vel_yr, default=0)  # ng/mL per year — clinical standard
@@ -168,7 +164,10 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
             if first <= 0.1:
                 return np.nan
             return (last - first) / first * 100.0
-        psa_pct = psa_all.groupby('PATIENT_GUID').apply(psa_pct_change)
+        psa_pct = pd.to_numeric(
+            psa_all.groupby('PATIENT_GUID').apply(psa_pct_change),
+            errors='coerce',
+        )
         pf[f'{PREFIX}LAB_psa_pct_change'] = m(psa_pct, default=0)
         pf[f'{PREFIX}LAB_psa_pct_up_50'] = (m(psa_pct) > 50).astype(int)
         pf[f'{PREFIX}LAB_psa_pct_up_100'] = (m(psa_pct) > 100).astype(int)
@@ -193,7 +192,10 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
                 return np.log(2) / slope  # months to double
             except Exception:
                 return np.nan
-        psa_dt = psa_all.groupby('PATIENT_GUID').apply(psa_doubling_time)
+        psa_dt = pd.to_numeric(
+            psa_all.groupby('PATIENT_GUID').apply(psa_doubling_time),
+            errors='coerce',
+        )
         pf[f'{PREFIX}LAB_psa_doubling_time'] = m(psa_dt, default=np.nan)
         pf[f'{PREFIX}LAB_psa_fast_doubling'] = (m(psa_dt) < 24).astype(int)  # <24mo is concerning
         pf[f'{PREFIX}LAB_psa_very_fast_doubling'] = (m(psa_dt) < 12).astype(int)  # <12mo is high risk
@@ -242,7 +244,7 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         for col in ['LAB_psa_elevated_4', 'LAB_psa_elevated_10', 'LAB_psa_elevated_20',
                      'LAB_psa_very_high', 'LAB_psa_delta', 'LAB_psa_rising', 'LAB_psa_rapid_rise',
                      'LAB_psa_velocity', 'LAB_psa_velocity_high', 'LAB_psa_fast_doubling',
-                     'LAB_psa_very_fast_doubling', 'LAB_psa_test_count']:
+                     'LAB_psa_very_fast_doubling']:
             pf[f'{PREFIX}{col}'] = 0
 
     # ══════════════════════════════════════════════════════════
@@ -427,8 +429,9 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
 
     pf[f'{PREFIX}RF_peak_age'] = ((age >= 50) & (age <= 80)).astype(int)
     pf[f'{PREFIX}RF_elderly'] = (age >= 70).astype(int)
-    pf[f'{PREFIX}RF_over65_with_psa'] = (
-        (age >= 65) & (pf[f'{PREFIX}has_psa_monitoring'] == 1)
+    pf[f'{PREFIX}RF_over65_with_psa_elevated'] = (
+        (age >= 65) &
+        (pf.get(f'{PREFIX}LAB_psa_elevated_4', pd.Series(0, index=pf.index)) == 1)
     ).astype(int)
     pf[f'{PREFIX}RF_over65_with_luts'] = (
         (age >= 65) & (pf[f'{PREFIX}has_luts'] == 1)
@@ -437,6 +440,77 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
         (pf.get(f'{PREFIX}LAB_psa_elevated_4', pd.Series(0, index=pf.index)) == 1) &
         (pf[f'{PREFIX}has_any_bone_symptom'] == 1)
     ).astype(int)
+
+    # ══════════════════════════════════════════════════════════
+    # BLOCK 9: COMPOSITE / VALUE-BASED CLINICAL FEATURES
+    # Non-leaky additions: IPSS severity from VALUE, calcium,
+    # bone-metastasis biomarker trio, multi-system symptom co-occurrence,
+    # family-history composite. All built from value/category data
+    # already present pre-index.
+    # ══════════════════════════════════════════════════════════
+    logger.info(f"  BLOCK 9: Composite / value-based features...")
+
+    # ── 9a: IPSS severity tiers (clinical symptom score) ─────
+    try:
+        ipss_rows = clin[clin['CATEGORY'] == 'IPSS'].sort_values('EVENT_DATE')
+        ipss_latest = ipss_rows.groupby('PATIENT_GUID')['VALUE'].last()
+        ipss_max = ipss_rows.groupby('PATIENT_GUID')['VALUE'].max()
+        pf[f'{PREFIX}LAB_ipss_latest'] = m(ipss_latest, default=np.nan)
+        pf[f'{PREFIX}LAB_ipss_max'] = m(ipss_max, default=np.nan)
+        pf[f'{PREFIX}LAB_ipss_severe'] = (m(ipss_latest) >= 20).astype(int)        # severe LUTS
+        pf[f'{PREFIX}LAB_ipss_moderate'] = (
+            (m(ipss_latest) >= 8) & (m(ipss_latest) < 20)
+        ).astype(int)
+        pf[f'{PREFIX}LAB_ipss_mild'] = (
+            (m(ipss_latest) >= 1) & (m(ipss_latest) < 8)
+        ).astype(int)
+    except Exception as e:
+        logger.warning(f"  IPSS tier features failed: {e}, defaulting")
+        for col in ['LAB_ipss_latest', 'LAB_ipss_max']:
+            pf[f'{PREFIX}{col}'] = np.nan
+        for col in ['LAB_ipss_severe', 'LAB_ipss_moderate', 'LAB_ipss_mild']:
+            pf[f'{PREFIX}{col}'] = 0
+
+    # ── 9b: Serum calcium (bone metastasis correlate) ─────────
+    try:
+        ca = get_lab_latest('CALCIUM', 'calcium')
+        pf[f'{PREFIX}LAB_ca_latest'] = m(ca, default=np.nan)
+        pf[f'{PREFIX}LAB_ca_high'] = (m(ca) > 2.6).astype(int)        # mmol/L upper normal
+        pf[f'{PREFIX}LAB_ca_very_high'] = (m(ca) > 2.85).astype(int)  # hypercalcaemia
+    except Exception as e:
+        logger.warning(f"  Calcium features failed: {e}, defaulting")
+        pf[f'{PREFIX}LAB_ca_latest'] = np.nan
+        pf[f'{PREFIX}LAB_ca_high'] = 0
+        pf[f'{PREFIX}LAB_ca_very_high'] = 0
+
+    # ── 9c: Bone-metastasis biomarker trio (ALP↑ + Ca↑ + Hb↓) ─
+    alp_hi = pf.get(f'{PREFIX}LAB_alp_elevated', pd.Series(0, index=pf.index)).astype(int)
+    ca_hi = pf.get(f'{PREFIX}LAB_ca_high', pd.Series(0, index=pf.index)).astype(int)
+    hb_lo = pf.get(f'{PREFIX}LAB_hb_low', pd.Series(0, index=pf.index)).astype(int)
+    bone_signals = alp_hi + ca_hi + hb_lo
+    pf[f'{PREFIX}BONE_MET_TRIO'] = (bone_signals >= 3).astype(int)
+    pf[f'{PREFIX}BONE_MET_PAIR'] = (bone_signals >= 2).astype(int)
+    pf[f'{PREFIX}BONE_MET_SCORE'] = bone_signals
+
+    # ── 9d: Multi-system trifecta (constitutional + urinary + bone, window B) ─
+    constitutional_B = (count_cat(obs_B, 'CONSTITUTIONAL') > 0).astype(int)
+    urinary_B_any = (
+        count_cat(obs_B, 'LUTS') + count_cat(obs_B, 'HAEMATURIA') +
+        count_cat(obs_B, 'URINARY_RETENTION') > 0
+    ).astype(int)
+    bone_B_any = (
+        count_cat(obs_B, 'PAIN_PELVIC_BONE') + count_cat(obs_B, 'BONE_MUSCLE') > 0
+    ).astype(int)
+    multisystem_count = constitutional_B + urinary_B_any + bone_B_any
+    pf[f'{PREFIX}TRIFECTA_constit_urinary_bone_B'] = (multisystem_count >= 3).astype(int)
+    pf[f'{PREFIX}MULTISYSTEM_PAIR_B'] = (multisystem_count >= 2).astype(int)
+
+    # ── 9e: Family-history composite (prostate-relevant cancers) ─
+    fh_prostate = pf.get(f'{PREFIX}HAS_FAMHX_PROSTATE_CA', pd.Series(0, index=pf.index)).astype(int)
+    fh_male_genital = pf.get(f'{PREFIX}HAS_FAMHX_MALE_GENITAL_CA', pd.Series(0, index=pf.index)).astype(int)
+    fh_any_cancer = pf.get(f'{PREFIX}HAS_FAMHX_ANY_CANCER', pd.Series(0, index=pf.index)).astype(int)
+    pf[f'{PREFIX}FH_prostate_relevant'] = ((fh_prostate + fh_male_genital) > 0).astype(int)
+    pf[f'{PREFIX}FH_score'] = fh_prostate * 2 + fh_male_genital + fh_any_cancer  # weighted
 
     # ── Clean up ──────────────────────────────────────────────
     pf = pf.fillna(0)
