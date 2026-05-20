@@ -1,5 +1,5 @@
 """
-Single-patient prediction for v3+ models (multi-seed ensemble + per-band calibration).
+Single-patient prediction (multi-seed ensemble + per-band calibration).
 
 Loads saved artifacts from 3_Modeling/results/1_training/{window}/saved_models/:
   - config.json: selected_features, seeds, ensemble_models, calibrators_per_band,
@@ -8,15 +8,23 @@ Loads saved artifacts from 3_Modeling/results/1_training/{window}/saved_models/:
   - seed_<N>/xgboost_model.pkl, lightgbm_model.pkl, catboost_model.pkl
   - seed_<N>/meta_learner.pkl
 
-Produces calibrated cancer risk + tier decision for one patient feature vector.
-
-NOTE: this script ASSUMES the feature vector is already computed (e.g., via the
-FE pipeline run on the patient's history). Building features from raw events
-JSON is the larger piece — see TODO in `predict_from_events()`.
+Accepts two input modes:
+  1. Pre-computed flat feature vector (CSV row OR JSON dict) — fast path
+  2. JSON-packed parquet/CSV from our prod FE (single-row) — auto-expanded via
+     `_load_features.load_alex_features()` so the JSON `transformed_features`
+     column is unpacked and dtypes are applied from the schema sidecar.
 
 Usage:
-    python predict_single_patient.py --window 12mo --features-csv path/to/one_patient.csv
+    # Pre-flat (CSV with one row of feature columns)
+    python predict_single_patient.py --window 12mo --features-csv one_patient.csv
+
+    # Pre-flat (JSON dict of feature values)
     python predict_single_patient.py --window 12mo --features-json '{"AGE_AT_INDEX": 67, ...}'
+
+    # JSON-packed FE output (with sidecar)
+    python predict_single_patient.py --window 12mo \
+        --features-file prostate_features_12mo.parquet \
+        --schema-path  prostate_features_12mo_schema.json
 """
 
 import argparse
@@ -35,9 +43,11 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 TRAIN_RESULTS = PROJECT_ROOT / "3_Modeling" / "results" / "1_training"
 
-# Required so joblib can unpickle CalibratorWrapper from saved configs
+# Required so joblib can unpickle CalibratorWrapper from saved configs.
+# Also gives us `load_alex_features` for JSON-packed inputs.
 sys.path.insert(0, str(PROJECT_ROOT / "3_Modeling"))
 from _calibrator import CalibratorWrapper  # noqa: F401
+from _load_features import load_alex_features  # noqa: E402
 
 
 def load_artifacts(window):
@@ -119,9 +129,11 @@ def predict(feature_vector, window):
     decision = int(risk_proba >= thr)
     tier90_decision = int(risk_proba >= t90) if t90 is not None and not np.isnan(t90) else None
 
-    # Force zero risk if patient has no clinical features (matches training assumption)
+    # Force zero risk if patient has no clinical features (matches training assumption).
+    # This is also the "not enough data" signal — we cannot make a confident call.
     clinical_cols = [c for c in selected if c not in ("AGE_AT_INDEX", "AGE_BAND")]
-    if clinical_cols and (X[clinical_cols].abs().sum(axis=1).iloc[0] == 0):
+    insufficient_data = bool(clinical_cols and (X[clinical_cols].abs().sum(axis=1).iloc[0] == 0))
+    if insufficient_data:
         risk_proba = 0.0
         decision = 0
         if tier90_decision is not None:
@@ -137,50 +149,51 @@ def predict(feature_vector, window):
         "decision": decision,
         "tier90_threshold": float(t90) if t90 is not None and not np.isnan(t90) else None,
         "tier90_decision": tier90_decision,
+        "insufficient_data": insufficient_data,
         "n_seeds": len(seed_artifacts),
     }
 
 
-def predict_from_events(patient_json, window):
-    """Build features from raw events JSON, then predict.
+def predict_from_file(features_file, window, schema_path=None):
+    """Predict from a JSON-packed FE output file (parquet/CSV).
 
-    TODO (next session — biggest piece): replicate the FE pipeline (preprocess →
-    sanity → clean → FE → cleanup) on a single patient's events list. The
-    challenge is that 2_Feature_Engineering/3_pipeline.py is built for batch
-    DataFrame ops. Options:
-      A. Reuse the batch FE code with a 1-row DataFrame (slow but correct).
-      B. Write a lean per-patient FE that mirrors the same feature definitions.
-      C. Defer feature computation to the API layer; this script only predicts.
-
-    For now this is a stub. Use predict() with a pre-computed feature vector.
+    Loads via `load_alex_features` which auto-detects the JSON column
+    (`transformed_features`/`snomed_features`/`json_features`) and applies
+    the schema sidecar for clean dtypes. Expects exactly one row.
     """
-    raise NotImplementedError(
-        "Building features from raw events is the larger TODO. "
-        "Use predict(feature_vector, window) with already-computed features. "
-        "See 2_Feature_Engineering/0_run_pipeline.py for the batch FE."
-    )
+    df = load_alex_features(features_file, schema_path=schema_path)
+    if len(df) != 1:
+        raise ValueError(
+            f"{features_file}: expected 1 patient row, got {len(df)}. "
+            "Pre-filter to the target patient before calling predict_from_file()."
+        )
+    return predict(df.iloc[0], window)
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--window", required=True, choices=["1mo", "3mo", "6mo", "12mo"])
     g = p.add_mutually_exclusive_group(required=True)
-    g.add_argument("--features-csv", help="One-row CSV with feature columns (and AGE_AT_INDEX)")
-    g.add_argument("--features-json", help="JSON string of {feature_name: value}")
+    g.add_argument("--features-csv",  help="One-row CSV with FLAT feature columns")
+    g.add_argument("--features-json", help="JSON string of FLAT {feature_name: value}")
+    g.add_argument("--features-file", help="Parquet/CSV with JSON-packed `transformed_features` column (one patient row)")
+    p.add_argument("--schema-path", help="Schema sidecar JSON (for --features-file with JSON column)")
     args = p.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    if args.features_csv:
+    if args.features_file:
+        result = predict_from_file(args.features_file, args.window, schema_path=args.schema_path)
+    elif args.features_csv:
         df = pd.read_csv(args.features_csv)
         if len(df) != 1:
             raise ValueError(f"Expected 1 row, got {len(df)}")
-        fv = df.iloc[0]
+        result = predict(df.iloc[0], args.window)
     else:
         fv = json.loads(args.features_json)
+        result = predict(fv, args.window)
 
-    result = predict(fv, args.window)
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, default=str))
 
 
 if __name__ == "__main__":

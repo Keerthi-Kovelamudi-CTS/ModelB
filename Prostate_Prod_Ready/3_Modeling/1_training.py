@@ -84,6 +84,27 @@ RESULTS_PATH = SCRIPT_DIR / 'results'
 
 
 # ═══════════════════════════════════════════════════════════════
+# CATEGORICAL FEATURE SUPPORT
+# Inputs may carry pandas `category` dtype columns (when the FE output
+# is loaded via _load_features.load_alex_features with a schema sidecar
+# that declares string/categorical features). Each base learner needs
+# slightly different config to consume them natively:
+#   - XGBoost  : enable_categorical=True, tree_method='hist'
+#   - LightGBM : auto-detects category dtype, no config needed
+#   - CatBoost : pass cat_features=[col indices] to fit()
+# ═══════════════════════════════════════════════════════════════
+
+def _cat_feature_cols(df):
+    """Return list of column names with pandas `category` dtype."""
+    return [c for c in df.columns if str(df[c].dtype) == "category"]
+
+
+def _cat_feature_indices(df):
+    """Return positional indices of category-dtype columns (CatBoost-friendly)."""
+    return [i for i, c in enumerate(df.columns) if str(df[c].dtype) == "category"]
+
+
+# ═══════════════════════════════════════════════════════════════
 # CLINICAL FEATURE FILTER
 # ═══════════════════════════════════════════════════════════════
 
@@ -226,6 +247,7 @@ def select_features(X_train, y_train, n_top=None):
         subsample=0.8, colsample_bytree=0.7,
         scale_pos_weight=n_neg / n_pos,
         random_state=42, eval_metric='auc', verbosity=0,
+        enable_categorical=True, tree_method='hist',
     )
     xgb_m.fit(X_train, y_train)
     xgb_imp = pd.Series(xgb_m.feature_importances_, index=X_train.columns)
@@ -425,6 +447,7 @@ def tune_xgboost(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS, seed=42
             'gamma': trial.suggest_float('gamma', 1e-8, 5.0, log=True),
             'scale_pos_weight': n_neg / n_pos,
             'random_state': seed, 'eval_metric': 'auc', 'verbosity': 0,
+            'enable_categorical': True, 'tree_method': 'hist',
         }
         model = xgb.XGBClassifier(**params)
         model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
@@ -483,8 +506,11 @@ def tune_catboost(X_train, y_train, X_val, y_val, n_trials=OPTUNA_TRIALS, seed=4
             'random_seed': seed, 'verbose': 0,
         }
         try:
+            cat_idx = _cat_feature_indices(X_train)
             model = CatBoostClassifier(**params)
-            model.fit(X_train, y_train, eval_set=(X_val, y_val), early_stopping_rounds=50, verbose=0)
+            model.fit(X_train, y_train, eval_set=(X_val, y_val),
+                      cat_features=cat_idx if cat_idx else None,
+                      early_stopping_rounds=50, verbose=0)
             pred = model.predict_proba(X_val)[:, 1]
             return tiered_metric(y_val, pred)
         except Exception as e:
@@ -548,7 +574,8 @@ def run_modeling():
             logger.info(f"  Tuning XGBoost (seed={seed})...")
             xgb_params = tune_xgboost(X_train_s, y_train, X_val_s, y_val, seed=seed) if HAS_OPTUNA else {}
             xgb_params.update({'scale_pos_weight': (y_train == 0).sum() / (y_train == 1).sum(),
-                               'random_state': seed, 'eval_metric': 'auc', 'verbosity': 0})
+                               'random_state': seed, 'eval_metric': 'auc', 'verbosity': 0,
+                               'enable_categorical': True, 'tree_method': 'hist'})
             xgb_model = xgb.XGBClassifier(**xgb_params)
             xgb_model.fit(X_train_s, y_train, eval_set=[(X_val_s, y_val)], verbose=False)
             preds_val['xgboost'] = xgb_model.predict_proba(X_val_s)[:, 1]
@@ -573,7 +600,9 @@ def run_modeling():
                 cb_params = tune_catboost(X_train_s, y_train, X_val_s, y_val, seed=seed) if HAS_OPTUNA else {}
                 cb_params.update({'auto_class_weights': 'Balanced', 'random_seed': seed, 'verbose': 0})
                 cb_model = CatBoostClassifier(**cb_params)
+                cb_cat_idx = _cat_feature_indices(X_train_s)
                 cb_model.fit(X_train_s, y_train, eval_set=(X_val_s, y_val),
+                             cat_features=cb_cat_idx if cb_cat_idx else None,
                              early_stopping_rounds=50, verbose=0)
                 preds_val['catboost'] = cb_model.predict_proba(X_val_s)[:, 1]
                 preds_test['catboost'] = cb_model.predict_proba(X_test_s)[:, 1]

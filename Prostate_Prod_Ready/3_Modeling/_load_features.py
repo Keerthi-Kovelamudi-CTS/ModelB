@@ -255,7 +255,11 @@ def _expand_json_column(df: pd.DataFrame, col: str, schema: Optional[dict]) -> p
         for col_name, meta in feature_meta.items():
             if col_name not in flat.columns:
                 continue
-            dtype = meta.get("dtype", "")
+            # Sidecar entries may be either a plain dtype string or a {"dtype": "..."} dict.
+            if isinstance(meta, str):
+                dtype = meta
+            else:
+                dtype = meta.get("dtype", "")
             try:
                 if dtype.startswith("int"):
                     flat[col_name] = pd.to_numeric(flat[col_name], errors="coerce").astype("Int64")
@@ -267,7 +271,14 @@ def _expand_json_column(df: pd.DataFrame, col: str, schema: Optional[dict]) -> p
                     )
                 elif dtype == "date":
                     flat[col_name] = pd.to_datetime(flat[col_name], errors="coerce")
-                # else: leave as string
+                elif dtype in ("categorical", "category", "string"):
+                    # Cast to pandas category — XGBoost/LightGBM/CatBoost accept this
+                    # natively (XGBoost needs enable_categorical=True). Without this
+                    # branch, string-categorical features like TREND_DIRECTION stay
+                    # as object dtype and the model rejects them at fit time.
+                    flat[col_name] = flat[col_name].astype("category")
+                else:
+                    logger.warning(f"  unknown dtype {dtype!r} for {col_name} — leaving as-is")
             except Exception as e:
                 logger.warning(f"  dtype-cast failed for {col_name} ({dtype}): {e}")
     else:
