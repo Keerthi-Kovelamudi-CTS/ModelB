@@ -1,0 +1,243 @@
+EVENT_TYPE	CATEGORY	TERM	CODE
+OBS	ALP_BONE_MARKER	Plasma alkaline phosphatase level	1013041000000106
+OBS	ALP_BONE_MARKER	Serum alkaline phosphatase liver isoenzyme level	1000841000000105
+OBS	BONE_MUSCLE	Creatine kinase level	1028101000000105
+OBS	CALCIUM	Blood calcium level	1027931000000101
+OBS	CALCIUM	Plasma calcium level	1017391000000108
+OBS	CATHETER	Blocked catheter	275413005
+OBS	CATHETER	Catheter urine sent for culture	168339008
+OBS	CATHETER	Insertion of suprapubic catheter	129252005
+OBS	CATHETER	Urinary catheter care	225087008
+OBS	COAGULATION	Coagulation tests	1028641000000101
+OBS	CONSTITUTIONAL	C/O - 'tired all the time'	272062008
+OBS	CONSTITUTIONAL	Weight symptom NOS	161829004
+OBS	CONSTITUTIONAL	[D]Tiredness	267031002
+OBS	DRE	O/E - PR - Diffusely enlarged prostate	279031000006106
+OBS	DRE	O/E - PR - prostatic swelling	271302001
+OBS	DRE	O/E -rectal examination	274296009
+OBS	DRE	On rectal examination of prostate abnormality detected	801000119105
+OBS	DRE	Prostate enlarged on PR	275302008
+OBS	DRE	Prostate mass	309089006
+OBS	DRE	Rectal examination	410007005
+OBS	ELECTROLYTES	Corrected serum calcium level	935051000000108
+OBS	ELECTROLYTES	Plasma potassium level	1017401000000106
+OBS	ELECTROLYTES	Plasma sodium level	1017381000000106
+OBS	ELECTROLYTES	Serum calcium level	1000691000000101
+OBS	ELECTROLYTES	Serum potassium level	1000651000000109
+OBS	ELECTROLYTES	Serum sodium level	1000661000000107
+OBS	ELECTROLYTES	Urea and electrolytes level	1000971000000107
+OBS	ERECTILE_DYSFUNCTION	Advice about impotence	135885005
+OBS	ERECTILE_DYSFUNCTION	Erectile dysfunction	860914002
+OBS	ERECTILE_DYSFUNCTION	Psychosexual dysfunction	268637002
+OBS	ERECTILE_DYSFUNCTION	[X]Male erectile disorder	397803000
+OBS	EXAMINATION	C/O: a swelling	162410003
+OBS	FBC_HAEMATOLOGY	Basophil count	1022571000000108
+OBS	FBC_HAEMATOLOGY	Eosinophil count	1022561000000101
+OBS	FBC_HAEMATOLOGY	Erythrocyte sedimentation rate	1022511000000103
+OBS	FBC_HAEMATOLOGY	FBC - full blood count	1022441000000101
+OBS	FBC_HAEMATOLOGY	Haematocrit	1022291000000105
+OBS	FBC_HAEMATOLOGY	Haemoglobin estimation	1022431000000105
+OBS	FBC_HAEMATOLOGY	Lymphocyte count	1022581000000105
+OBS	FBC_HAEMATOLOGY	MCH - Mean corpuscular haemoglobin	1022471000000107
+OBS	FBC_HAEMATOLOGY	MCHC - Mean corpuscular haemoglobin concentration	1022481000000109
+OBS	FBC_HAEMATOLOGY	MCV - Mean corpuscular volume	1022491000000106
+OBS	FBC_HAEMATOLOGY	Monocyte count	1022591000000107
+OBS	FBC_HAEMATOLOGY	Neutrophil count	1022551000000104
+OBS	FBC_HAEMATOLOGY	Platelet count	1022651000000100
+OBS	FBC_HAEMATOLOGY	Red blood cell count	1022451000000103
+OBS	FBC_HAEMATOLOGY	Red blood cell distribution width	993501000000105
+OBS	FBC_HAEMATOLOGY	Total white cell count	1022541000000102
+OBS	HAEMATOLOGY	Large unstained cells	993551000000106
+OBS	HAEMATURIA	Frank haematuria	197941005
+OBS	HAEMATURIA	Haematuria	34436003
+OBS	HAEMATURIA	History of haematuria	161550001
+OBS	HAEMATURIA	Leucocytes in urine	275741008
+OBS	HAEMATURIA	Painless haematuria	197938001
+OBS	HAEMATURIA	RBCs seen on microscopy	168130002
+OBS	HAEMATURIA	Sample microscopy: red cells	999131000000106
+OBS	HAEMATURIA	Urine blood test = +	167300001
+OBS	HAEMATURIA	Urine blood test = ++	167301002
+OBS	HAEMATURIA	Urine blood test = +++	167302009
+OBS	HAEMATURIA	Urine microscopy: pus cells	1041881000000101
+OBS	HAEMATURIA	Urine microscopy: red cells	1038641000000104
+OBS	HAEMATURIA	Urine microscopy:RBC's present	271349002
+OBS	HORMONAL	Gonadotrophin levels	997121000000100
+OBS	HORMONAL	Prolactin level	1027171000000101
+OBS	INFLAMMATORY	Plasma C reactive protein	999651000000107
+OBS	INFLAMMATORY	Serum CRP (C reactive protein) level	1001371000000100
+OBS	IPSS	IPSS - frequency	759391000006100
+OBS	IPSS	IPSS - incomplete emptying	759401000006103
+OBS	IPSS	IPSS - intermittency	759411000006100
+OBS	IPSS	IPSS - nocturia	759421000006108
+OBS	IPSS	IPSS - urgency	759441000006101
+OBS	IPSS	IPSS - weak stream	759451000006104
+OBS	IPSS	Total international prostate symptom score	428556002
+OBS	LAB_FLAGS	Abnormal finding on evaluation procedure	442618008
+OBS	LAB_FLAGS	Laboratory test result abnormal	165346000
+OBS	LIVER_FUNCTION	ALT/SGPT serum level	1018251000000107
+OBS	LIVER_FUNCTION	Alanine aminotransferase (ALT) (serum glutamic-pyruvic transaminase) (SGPT) level abnormal	166646003
+OBS	LIVER_FUNCTION	Aspartate aminotransferase level	1031101000000102
+OBS	LIVER_FUNCTION	Direct (conjugated) bilirubin	1028081000000104
+OBS	LIVER_FUNCTION	GGT (gamma-glutamyl transferase) level	1028091000000102
+OBS	LIVER_FUNCTION	Liver function test	26958001
+OBS	LIVER_FUNCTION	Liver function test	997531000000108
+OBS	LIVER_FUNCTION	Liver function tests - general	1031081000000108
+OBS	LIVER_FUNCTION	Plasma GGT (gamma-glutamyl transferase) level	1000851000000108
+OBS	LIVER_FUNCTION	Plasma alanine aminotransferase level	1013211000000103
+OBS	LIVER_FUNCTION	Plasma total bilirubin level	997561000000103
+OBS	LIVER_FUNCTION	Serum bilirubin level	999691000000104
+OBS	LIVER_FUNCTION	Serum total bilirubin level	997591000000109
+OBS	LIVER_FUNCTION	Total bilirubin level	1026761000000106
+OBS	LUTS	Acute retention of urine	236648008
+OBS	LUTS	Dribbling of urine	58972000
+OBS	LUTS	Dysuria	49650001
+OBS	LUTS	Genitourinary disease NOS	42030000
+OBS	LUTS	Genitourinary symptoms NOS	267062003
+OBS	LUTS	H/O: prostatism	161555006
+OBS	LUTS	Hesitancy of micturition	5972002
+OBS	LUTS	LUTS - Lower urinary tract symptoms	1726491000006101
+OBS	LUTS	Lower urinary tract symptoms	307541003
+OBS	LUTS	Micturition frequency and polyuria	274734008
+OBS	LUTS	Mild lower urinary tract symptoms	763121000000102
+OBS	LUTS	Moderate lower urinary tract symptoms	763111000000108
+OBS	LUTS	Nocturia	981411000006101
+OBS	LUTS	Observation of frequency of urination	300471006
+OBS	LUTS	Prostatism	11441004
+OBS	LUTS	Retention of urine	267064002
+OBS	LUTS	Severe lower urinary tract symptoms	763101000000106
+OBS	LUTS	Urgent desire to urinate	75088002
+OBS	LUTS	Urinary flow rate	251984009
+OBS	LUTS	Urinary frequency	162116003
+OBS	LUTS	Urinary symptoms	249274008
+OBS	LUTS	Urological disorder	128606002
+OBS	LUTS	[D]Nocturia	139394000
+OBS	PAIN_PELVIC_BONE	Abdominal pain type	247358007
+OBS	PAIN_PELVIC_BONE	C/O perineal pain	162148004
+OBS	PAIN_PELVIC_BONE	Complaining of loin pain	272047006
+OBS	PAIN_PELVIC_BONE	Complaining of low back pain	161894002
+OBS	PAIN_PELVIC_BONE	Left loin pain	853721000006104
+OBS	PAIN_PELVIC_BONE	Lumbar ache - renal	267067009
+OBS	PAIN_PELVIC_BONE	Suprapubic tenderness	1807411000006100
+OBS	PAIN_PELVIC_BONE	[D] Pelvic pain	162147009
+OBS	PROSTATIC_CONDITIONS	BPH - benign prostatic hypertrophy	266569009
+OBS	PROSTATIC_CONDITIONS	Benign adenoma of prostate	21173002
+OBS	PROSTATIC_CONDITIONS	Prostatic disorder	30281009
+OBS	PROSTATIC_CONDITIONS	Prostatitis and other inflammatory diseases of prostate	9713002
+OBS	PROSTATIC_CONDITIONS	[RFC] Reason for care : Enlarged prostate	909491000006106
+OBS	ALBUMIN_PROTEIN	Plasma albumin level	1013361000000105
+OBS	ALBUMIN_PROTEIN	Plasma globulin level	993111000000101
+OBS	ALBUMIN_PROTEIN	Plasma total protein	1005651000000101
+OBS	ALBUMIN_PROTEIN	Serum albumin level	1000821000000103
+OBS	ALBUMIN_PROTEIN	Serum globulin level	1001231000000108
+OBS	ALBUMIN_PROTEIN	Serum total protein	1000811000000109
+OBS	RENAL_FUNCTION	At risk of acute kidney injury	938911000000100
+OBS	RENAL_FUNCTION	Blood urea	1028281000000106
+OBS	RENAL_FUNCTION	GFR (glomerular filtration rate) calculated by abbreviated Modification of Diet in Renal Disease Study Group calculation	1020291000000106
+OBS	RENAL_FUNCTION	Glomerular filtration rate	80274001
+OBS	RENAL_FUNCTION	Measurement of renal function	441915005
+OBS	RENAL_FUNCTION	O/E: renal calculus	168041003
+OBS	RENAL_FUNCTION	Plasma creatinine level	1001011000000107
+OBS	RENAL_FUNCTION	Plasma urea level	1000961000000100
+OBS	RENAL_FUNCTION	Serum creatinine level	1000731000000107
+OBS	RENAL_FUNCTION	Ultrasound of bilateral kidneys	13301000087109
+OBS	RENAL_FUNCTION	Urea and electrolytes	1028131000000104
+OBS	RENAL_FUNCTION	eGFR (estimated glomerular filtration rate) using creatinine Chronic Kidney Disease Epidemiology Collaboration equation per 1.73 square metres	1011481000000105
+OBS	SEXUAL_REPRODUCTIVE	Acute epididymitis	43491000
+OBS	SEXUAL_REPRODUCTIVE	Haemospermia	34615008
+OBS	SEXUAL_REPRODUCTIVE	Hydrocele of tunica vaginalis	70660007
+OBS	SEXUAL_REPRODUCTIVE	Sperm: haemospermia O/E	167800009
+OBS	SEXUAL_REPRODUCTIVE	[D]Semen abnormal	167767004
+OBS	SMOKING	Current non-smoker	160618006
+OBS	SMOKING	Minutes from waking to first tobacco consumption	413173009
+OBS	SMOKING	Passive smoking risk	161080002
+OBS	SMOKING	Smoking Age Started	137771000006103
+OBS	SMOKING	Smoking cessation milestones	390900001
+OBS	URINARY_RETENTION	Bladder outflow obstruction	236645006
+OBS	URINARY_RETENTION	Bladder retention of urine	130951007
+OBS	URINARY_RETENTION	Chronic retention of urine	236650000
+OBS	URINARY_RETENTION	Overactive bladder	236633002
+OBS	URINARY_RETENTION	Unstable bladder	61033006
+OBS	URINARY_RETENTION	Urinary tract obstruction	7163005
+OBS	URINE_MARKERS	Epithelial cell count	992871000000105
+OBS	URINE_MARKERS	Finding related to casts on urine microscopy	365689007
+OBS	URINE_MARKERS	MSU sent for C/S	168336001
+OBS	URINE_MARKERS	MSU sent for bacteriology	168337005
+OBS	URINE_MARKERS	Organism count	992821000000106
+OBS	URINE_MARKERS	Sample microscopy: leucocytes	999291000000102
+OBS	URINE_MARKERS	Urine culture	1023711000000100
+OBS	URINE_MARKERS	Urine dipstick test	1007881000000101
+OBS	URINE_MARKERS	Urine examination	167217005
+OBS	URINE_MARKERS	Urine leucocyte test	1014851000000100
+OBS	URINE_MARKERS	Urine microalbumin/creatinine ratio	1027791000000103
+OBS	URINE_MARKERS	Urine microscopy	1014831000000107
+OBS	URINE_MARKERS	Urine nitrite level	1023721000000106
+OBS	URINE_MARKERS	Urine protein/creatinine ratio	1028731000000100
+OBS	UTI	Acute cystitis	68226007
+OBS	VITAMIN_D	25-Hydroxyvitamin D3 level	997741000000108
+OBS	VITAMIN_D	Total 25-hydroxyvitamin D level	1029801000000105
+OBS	WEIGHT	O/E - weight 10-20% over ideal	268915006
+OBS	FAMILY_HISTORY	Family history of neoplasm of male genital tract	160290005
+OBS	FAMILY_HISTORY	Family history of prostate cancer	414205003
+OBS	PSA	Serum PSA (prostate specific antigen) level	1000381000000105
+OBS	PSA	Prostate specific antigen level	1030791000000100
+OBS	PSA	Total PSA (prostate specific antigen) level	1006591000000104
+MED	ALPHA_BLOCKERS	Alfuzosin 10mg modified-release tablets	38897311000001105
+MED	ALPHA_BLOCKERS	Alfuzosin 2.5mg tablets	42030911000001107
+MED	ALPHA_BLOCKERS	Doxazosin 4mg modified-release tablets	39020411000001106
+MED	ALPHA_BLOCKERS	Doxazosin 8mg modified-release tablets	39021111000001107
+MED	ALPHA_BLOCKERS	Flomaxtra XL 400microgram tablets (Astellas Pharma Ltd)	9483111000001109
+MED	ALPHA_BLOCKERS	Indoramin 20mg tablets	39696511000001106
+MED	ALPHA_BLOCKERS	Pamsvax XL 400microgram capsules (Accord-UK Ltd)	10188911000001101
+MED	ALPHA_BLOCKERS	Tabphyn MR 400microgram capsules (Genus Pharmaceuticals Ltd)	10186811000001105
+MED	ALPHA_BLOCKERS	Tamsulosin 400microgram modified-release capsules	38754011000001109
+MED	ALPHA_BLOCKERS	Tamsulosin 400microgram modified-release tablets	9484411000001101
+MED	ALPHA_BLOCKERS	Terazosin 2mg tablets	42043111000001101
+MED	ALPHA_BLOCKERS	Terazosin 5mg tablets	42043211000001107
+MED	ALPHA_BLOCKERS	Xatral XL 10mg tablets (Sanofi)	3188711000001103
+MED	ANTICHOLINERGICS	Fesoterodine 4mg modified-release tablets	38894011000001104
+MED	ANTICHOLINERGICS	Fesoterodine 8mg modified-release tablets	38893911000001102
+MED	ANTICHOLINERGICS	Oxybutynin 2.5mg tablets	42038911000001109
+MED	ANTICHOLINERGICS	Oxybutynin 5mg modified-release tablets	39112111000001104
+MED	ANTICHOLINERGICS	Solifenacin 6mg / Tamsulosin 400microgram modified-release tablets	23676211000001102
+MED	ANTICHOLINERGICS	Tolterodine 1mg tablets	42043711000001100
+MED	ANTICHOLINERGICS	Tolterodine 4mg modified-release capsules	14608411000001108
+MED	ANTICHOLINERGICS	Trospium chloride 60mg modified-release capsules	42044211000001105
+MED	ED_MEDICATIONS	Caverject Dual Chamber 20microgram powder and solvent for solution for injection (Pfizer Ltd)	3857111000001101
+MED	ED_MEDICATIONS	Cialis 10mg tablets (Eli Lilly and Company Ltd)	4105911000001106
+MED	ED_MEDICATIONS	Cialis 20mg tablets (Eli Lilly and Company Ltd)	4106311000001100
+MED	ED_MEDICATIONS	Muse 1000microgram urethral sticks (Viatris UK Healthcare Ltd)	638411000001105
+MED	ED_MEDICATIONS	SomaErect Response II vacuum pump 15019 (iMEDicare Ltd)	9009911000001104
+MED	ED_MEDICATIONS	Vardenafil 10mg tablets	39706511000001100
+MED	ED_MEDICATIONS	Vardenafil 20mg tablets	39706711000001105
+MED	ED_MEDICATIONS	Viagra 100mg tablets (Viatris UK Healthcare Ltd)	525511000001107
+MED	ED_MEDICATIONS	Viagra 50mg tablets (Viatris UK Healthcare Ltd)	808811000001107
+MED	PAIN_ESCALATION	Co-codamol 8mg/500mg capsules	42010011000001101
+MED	PAIN_ESCALATION	Co-dydramol 10mg/500mg tablets	42010611000001108
+MED	PAIN_ESCALATION	Dihydrocodeine 60mg modified-release tablets	39112411000001109
+MED	PAIN_ESCALATION	Tramadol 100mg modified-release capsules	35920211000001106
+MED	UTI_ANTIBIOTICS	Cefalexin 250mg capsules	39735311000001105
+MED	UTI_ANTIBIOTICS	Cefalexin 500mg capsules	39694811000001102
+MED	UTI_ANTIBIOTICS	Ciprofloxacin 250mg tablets	39687511000001109
+MED	UTI_ANTIBIOTICS	Ciprofloxacin 500mg tablets	39687811000001107
+MED	UTI_ANTIBIOTICS	Ciprofloxacin 750mg tablets	39687011000001101
+MED	UTI_ANTIBIOTICS	Ciproxin 500mg tablets (Bayer Plc)	417611000001101
+MED	UTI_ANTIBIOTICS	Levofloxacin 250mg tablets	39697411000001109
+MED	UTI_ANTIBIOTICS	Nitrofurantoin 100mg capsules	41952811000001109
+MED	UTI_ANTIBIOTICS	Nitrofurantoin 100mg tablets	41952911000001104
+MED	UTI_ANTIBIOTICS	Nitrofurantoin 50mg capsules	41953111000001108
+MED	UTI_ANTIBIOTICS	Nitrofurantoin 50mg tablets	41953211000001102
+MED	UTI_ANTIBIOTICS	Ofloxacin 400mg tablets	41953511000001104
+MED	UTI_ANTIBIOTICS	Trimethoprim 200mg tablets	41956211000001109
+MED	UTI_TREATMENT	Potassium citrate mixture	14610411000001107
+MED	5ARI	Dutasteride 500microgram capsules	4367811000001102
+OBS	BMI	Body mass index	60621009
+OBS	BODY_WEIGHT	Body weight	27113001
+OBS	IDEAL_BODY_WEIGHT	Ideal body weight	170804003
+OBS	SYSTOLIC_BP	Systolic arterial pressure	72313002
+OBS	DIASTOLIC_BP	Diastolic arterial pressure	1091811000000102
+OBS	HEART_RATE	Heart rate	364075005
+OBS	HEART_RATE	Pulse rate	78564009
+OBS	HYPERTENSION	Raised blood pressure	24184005
+
+observation	UROLOGY_PATHWAY	Referral to urology service	306204006
+observation	UROLOGY_PATHWAY	Referral to urologist	415270003

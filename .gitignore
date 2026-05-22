@@ -5,3 +5,18 @@ Lymphoma_Cancer/**/*.csv
 Ovarian_Cancer/**/*.csv
 Prostate_Cancer/**/*.csv
 Melanoma_Cancer/**/*.csv
+
+# Prostate B+C variants — local FE inputs/outputs (raw extracts, intermediate parquets, packed CSVs)
+Prostate_B+C*/2_Feature_Engineering/data/
+Prostate_B+C*/2_Feature_Engineering/results/
+Prostate_B+C*/2_Feature_Engineering/prostate_features_*.csv
+Prostate_B+C*/2_Feature_Engineering/prostate_features_*.json
+Prostate_B+C*/3_Modeling/saved_models/
+Prostate_B+C*/3_Modeling/results/
+
+# Auto-generated training logs / caches
+catboost_info/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
