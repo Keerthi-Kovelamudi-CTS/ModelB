@@ -461,6 +461,17 @@ def extract_prostate_features_json(
     # --- Cleanup ---------------------------------------------------------
     cleaned = _prostate_cleanup.cleanup_features(fm, window.upper(), config)
 
+    # --- Persist cleaned matrix to the path 1_training.py / _shared_split.py expect ---
+    # The in-process FE + cleanup runs once. Training reads from CLEANUP_RESULTS, so
+    # write `cleaned` there before we mutate it into the JSON-packed deployment shape.
+    # This must include LABEL (cleanup preserves it as numeric) and be indexed by PATIENT_GUID.
+    _clean_dir = config.CLEANUP_RESULTS / window
+    _clean_dir.mkdir(parents=True, exist_ok=True)
+    _clean_path = _clean_dir / f'feature_matrix_clean_{window}.parquet'
+    # cleaned is already indexed by PATIENT_GUID (cleanup keeps the original index)
+    cleaned.to_parquet(_clean_path, engine='pyarrow', index=True)
+    print(f"Wrote cleaned matrix: {_clean_path}  ({cleaned.shape[0]} patients x {cleaned.shape[1]} features incl. LABEL)")
+
     # --- Re-attach demographics + anchor + label that cleanup dropped (non-numeric) ---
     # cleanup.py step 5a strips non-numeric columns (sex / ethnicity / dates).
     # For the JSON-packed output we need them back as front + trailing columns.
