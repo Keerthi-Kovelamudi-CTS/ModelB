@@ -1,22 +1,84 @@
-# Tabular exports — keep local only (large / sensitive)
-Bladder_Cancer/**/*.csv
-Leukaemia_Cancer/**/*.csv
-Lymphoma_Cancer/**/*.csv
-Ovarian_Cancer/**/*.csv
-Prostate_Cancer/**/*.csv
-Melanoma_Cancer/**/*.csv
+# ════════════════════════════════════════════════════════════════════
+# .gitignore — Model B (cancer pipelines)
+#
+# Rule of thumb: source code, configs, codelists, README → committed.
+# Patient data, model artifacts, training outputs, large binaries → LOCAL ONLY.
+#
+# This file is intentionally aggressive. Add `!path/to/something` at the
+# bottom to re-include anything that gets caught accidentally.
+# ════════════════════════════════════════════════════════════════════
 
-# Prostate B+C variants — local FE inputs/outputs (raw extracts, intermediate parquets, packed CSVs)
-Prostate_B+C*/2_Feature_Engineering/data/
-Prostate_B+C*/2_Feature_Engineering/results/
-Prostate_B+C*/2_Feature_Engineering/prostate_features_*.csv
-Prostate_B+C*/2_Feature_Engineering/prostate_features_*.json
-Prostate_B+C*/3_Modeling/saved_models/
-Prostate_B+C*/3_Modeling/results/
-
-# Auto-generated training logs / caches
-catboost_info/
+# ─── OS / editor noise ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
-.DS_Store
+*.pyo
+*.swp
+*.swo
+.vscode/
+.idea/
+.claude/
+
+# ─── Logs / caches ──────────────────────────────────────────────────
+*.log
+catboost_info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── Tabular / dataframe data — PHI risk, NEVER commit ─────────────
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.orc
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# ─── Model artifacts / binaries ────────────────────────────────────
+*.pkl
+*.pickle
+*.joblib
+*.keras
+*.bin
+*.onnx
+*.pt
+*.pth
+*.safetensors
+
+# ─── Archives (often ship model/data bundles) ──────────────────────
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+*.7z
+
+# ─── Common output / results / data directories ────────────────────
+# (match anywhere in the tree, regardless of cancer subfolder)
+**/results/
+**/output/
+**/outputs/
+**/data/
+**/Data_Input/
+**/FE_Results/
+**/cleanupfeatures/
+**/full_outputs/
+**/saved_models/
+**/json_pilot/
+**/scratch/
+**/tmp/
+**/raw/
+_all_cancer_results_*/
+
+# ─── Re-include codelists (source-of-truth, must be committed) ─────
+# These ARE the curated medical code mappings; the rest of the repo
+# depends on them. Override the *.csv / *.tsv blanket above.
+!**/codelists/
+!**/codelists/**
