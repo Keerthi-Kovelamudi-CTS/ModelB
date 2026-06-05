@@ -1,0 +1,613 @@
+═══════════════════════════════════════════════════
+  Cell 48: BUILD MODEL
+═══════════════════════════════════════════════════
+# Build Model — one branch per enabled event type (SNOMED observations, medications)
+# plus a static-feature branch. The fusion layer takes only the enabled contexts.
+from keras.layers import Input, Embedding, LSTM, Dense, concatenate, Dropout, SpatialDropout1D, Softmax, Multiply, Layer
+from keras.models import Model
+from keras.optimizers import AdamW
+from keras.losses import BinaryFocalCrossentropy, BinaryCrossentropy
+from keras.regularizers import l2
+import keras
+
+
+@keras.saving.register_keras_serializable()
+class SumOverTime(Layer):
+    """Sum over the time axis (axis=1). Serializable replacement for Lambda."""
+    def call(self, x):
+        return keras.ops.sum(x, axis=1)
+
+
+def _attention_pool(lstm_out, name_prefix):
+    attention_scores = Dense(1, activation='tanh', name=f'{name_prefix}_attention_dense')(lstm_out)
+    attention_weights = Softmax(axis=1, name=f'{name_prefix}_attention_softmax')(attention_scores)
+    weighted = Multiply(name=f'{name_prefix}_attention_multiply')([lstm_out, attention_weights])
+    context = SumOverTime(name=f'{name_prefix}_attention_context')(weighted)
+    return context
+
+
+def build_model(config, vocabulary_size, med_vocabulary_size=None,
+                max_snomed_seq_length=None, max_med_seq_length=None,
+                number_of_other_features=None,
+                X_snomed_ids_padded=None, X_med_ids_padded=None, X_other_features_padded=None):
+
+    use_snomed = bool(config.get('use_snomed_branch', True))
+    use_med = bool(config.get('use_med_branch', True))
+    if not (use_snomed or use_med):
+        raise ValueError("At least one of use_snomed_branch / use_med_branch must be True.")
+
+    if use_snomed and max_snomed_seq_length is None:
+        max_snomed_seq_length = X_snomed_ids_padded.shape[1]
+    if use_med and max_med_seq_length is None:
+        max_med_seq_length = X_med_ids_padded.shape[1] if X_med_ids_padded is not None else config['MAX_MED_SEQ_LENGTH']
+    if number_of_other_features is None:
+        number_of_other_features = X_other_features_padded.shape[1]
+    if med_vocabulary_size is None:
+        med_vocabulary_size = 2
+
+    embedding_dim = config['embedding_dim']
+    med_embedding_dim = config.get('med_embedding_dim', embedding_dim)
+    med_lstm_units = config.get('med_lstm_units', max(8, config['snomed_lstm_units'] // 2))
+    embedding_dropout = config.get('embedding_dropout', 0.3)
+    dense_dropout = config.get('dense_dropout', 0.4)
+    l2_reg = config.get('l2_reg', 1e-3)
+    weight_decay = config.get('weight_decay', 1e-3)
+    label_smoothing = config.get('label_smoothing', 0.1)
+    use_focal_loss = config.get('use_focal_loss', False)
+    mask_rate = config.get('mask_rate', 0.0)
+
+    print(f"Branches enabled — SNOMED: {use_snomed}  MED: {use_med}")
+    if use_snomed:
+        print(f"Max SNOMED seq length: {max_snomed_seq_length}  |  SNOMED vocab size: {vocabulary_size}"
+              f"  |  SNOMED embedding dim: {embedding_dim}  |  SNOMED LSTM units: {config['snomed_lstm_units']}")
+    if use_med:
+        print(f"Max MED seq length:    {max_med_seq_length}  |  MED vocab size:    {med_vocabulary_size}"
+              f"  |  MED embedding dim:    {med_embedding_dim}  |  MED LSTM units:    {med_lstm_units}")
+    print(f"Number of other features: {number_of_other_features}")
+    print(f"Embedding dropout: {embedding_dropout}, Dense dropout: {dense_dropout}")
+    print(f"L2: {l2_reg}, Weight decay: {weight_decay}, Label smoothing: {label_smoothing}")
+    print(f"Focal loss: {use_focal_loss} (gamma=2.0, stacked with label_smoothing when on), Mask rate: {mask_rate}")
+
+    contexts = []
+    inputs = []
+
+    if use_snomed:
+        snomed_id_input = Input(shape=(max_snomed_seq_length,), name='snomed_id_input')
+        inputs.append(snomed_id_input)
+        snomed_emb = Embedding(input_dim=vocabulary_size, output_dim=embedding_dim, name='snomed_embedding')(snomed_id_input)
+        snomed_emb = SpatialDropout1D(embedding_dropout, name='snomed_embedding_dropout')(snomed_emb)
+        snomed_lstm = LSTM(units=config['snomed_lstm_units'], return_sequences=True, name='snomed_lstm')(snomed_emb)
+        contexts.append(_attention_pool(snomed_lstm, 'snomed'))
+
+    if use_med:
+        med_id_input = Input(shape=(max_med_seq_length,), name='med_id_input')
+        inputs.append(med_id_input)
+        med_emb = Embedding(input_dim=med_vocabulary_size, output_dim=med_embedding_dim, name='med_embedding')(med_id_input)
+        med_emb = SpatialDropout1D(embedding_dropout, name='med_embedding_dropout')(med_emb)
+        med_lstm = LSTM(units=med_lstm_units, return_sequences=True, name='med_lstm')(med_emb)
+        contexts.append(_attention_pool(med_lstm, 'med'))
+
+    # Static features — always present.
+    other_features_input = Input(shape=(number_of_other_features,), name='other_features_input')
+    inputs.append(other_features_input)
+    other_features_dense = Dense(units=config['other_dense_units'], activation='relu',
+                                 kernel_regularizer=l2(l2_reg), name='other_features_dense')(other_features_input)
+    contexts.append(other_features_dense)
+
+    if len(contexts) > 1:
+        fused = concatenate(contexts, name='concatenation_layer')
+    else:
+        fused = contexts[0]
+
+    x = Dropout(dense_dropout, name='dense_dropout')(fused)
+    x = Dense(units=config['dense_1_units'], activation='relu',
+              kernel_regularizer=l2(l2_reg), name='dense_1')(x)
+    output_layer = Dense(units=1, activation='sigmoid', name='output_layer')(x)
+
+    model = Model(inputs=inputs, outputs=output_layer)
+
+    # v139: focal loss now carries label_smoothing too — the focusing factor
+    # (down-weight easy examples) and soft targets (don't over-confidence)
+    # address different problems and stack cleanly on Keras's
+    # BinaryFocalCrossentropy. Set label_smoothing=0 to disable smoothing.
+    if use_focal_loss:
+        loss = BinaryFocalCrossentropy(gamma=2.0, label_smoothing=label_smoothing)
+    else:
+        loss = BinaryCrossentropy(label_smoothing=label_smoothing)
+
+    optimizer = AdamW(learning_rate=config['learning_rate'], weight_decay=weight_decay)
+    model.compile(optimizer=optimizer, loss=loss, metrics=[config['optimizer_metric']])
+
+    print("Model compiled successfully.")
+    model.summary()
+    return model
+
+
+═══════════════════════════════════════════════════
+  Cell 51: TRAIN MODEL
+═══════════════════════════════════════════════════
+# Train Model — with sequence masking augmentation on enabled branches.
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from sklearn.utils.class_weight import compute_class_weight
+
+
+def mask_sequences(X, mask_rate, mask_value=1):
+    """Randomly replace codes with <RARE> token during training. Vocab id 1 = <RARE>."""
+    if mask_rate <= 0:
+        return X
+    X_masked = X.copy()
+    mask = np.random.random(X_masked.shape) < mask_rate
+    mask &= (X_masked != 0)
+    X_masked[mask] = mask_value
+    return X_masked
+
+
+def train_model(model,
+                X_snomed_ids_train, X_med_ids_train, X_other_features_train, y_train,
+                X_snomed_ids_val, X_med_ids_val, X_other_features_val, y_val,
+                config):
+    epochs = config['epochs']
+    batch_size = config['batch_size']
+    mask_rate = config.get('mask_rate', 0.15)
+    med_mask_rate = config.get('med_mask_rate', mask_rate)
+    use_snomed = bool(config.get('use_snomed_branch', True))
+    use_med = bool(config.get('use_med_branch', True))
+
+    callbacks = [
+        EarlyStopping(
+            monitor=config['monitor_metric'], mode='max',
+            patience=config.get('early_stopping_patience', 7),
+            restore_best_weights=True, verbose=1),
+        ReduceLROnPlateau(
+            monitor=config['monitor_metric'], mode='max', factor=0.5,
+            patience=config.get('lr_reduction_patience', 2),
+            min_lr=1e-6, verbose=1),
+    ]
+
+    class_weights = compute_class_weight('balanced', classes=np.unique(y_train), y=y_train)
+    class_weight_dict = dict(enumerate(class_weights))
+    if 'cancer_class_weight' in config:
+        class_weight_dict[1] = config['cancer_class_weight']
+    print(f"Class weights: {class_weight_dict}")
+    if use_snomed:
+        print(f"SNOMED mask rate: {mask_rate}")
+    if use_med:
+        print(f"MED    mask rate: {med_mask_rate}")
+
+    X_snomed_masked = mask_sequences(X_snomed_ids_train, mask_rate) if use_snomed else X_snomed_ids_train
+    X_med_masked = mask_sequences(X_med_ids_train, med_mask_rate) if use_med else X_med_ids_train
+
+    train_inputs = model_inputs(config, X_snomed=X_snomed_masked, X_med=X_med_masked,
+                                X_other=X_other_features_train)
+    val_inputs = model_inputs(config, X_snomed=X_snomed_ids_val, X_med=X_med_ids_val,
+                              X_other=X_other_features_val)
+
+    history = model.fit(
+        train_inputs, y_train,
+        epochs=epochs, batch_size=batch_size,
+        validation_data=(val_inputs, y_val),
+        callbacks=callbacks,
+        class_weight=class_weight_dict,
+        verbose=1
+    )
+    print("Model training completed. Best weights restored from early stopping.")
+    return model, history
+
+
+═══════════════════════════════════════════════════
+  Cell 72: HP TUNER
+═══════════════════════════════════════════════════
+# Hyperparameter tuning using Keras Tuner — dual-branch (SNOMED + MED).
+# v111 ranges: shifted around v110's winner (LR 1.72e-4, LSTM 64, emb_drop 0.30,
+# dense_drop 0.45 on v38_v2 → AUC 81.2, sens 96.1, spec 66.3).
+# Strategy: favour configurations near v110's and v100's winners; narrower ranges
+# = faster convergence on the 25-trial budget. Lower LR + larger batch = room to
+# push best epoch past the 5 we saw on v110. See build_v111.py for per-range deltas.
+import keras_tuner as kt
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+import keras
+import itertools
+
+
+class SensSpecTuner(kt.BayesianOptimization):
+    """Custom tuner that optimizes the weighted average of sensitivity and specificity
+    (or maximizes specificity subject to a sensitivity floor)."""
+
+    def __init__(self, *args, validation_data=None,
+                 sensitivity_weight=5.0, specificity_weight=1.0,
+                 use_sensitivity_floor=False, sensitivity_floor=0.95, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.val_data = validation_data
+        self.sw = sensitivity_weight
+        self.spw = specificity_weight
+        self.use_sensitivity_floor = use_sensitivity_floor
+        self.sensitivity_floor = sensitivity_floor
+        self.best_score = -1
+        self.best_sens = 0
+        self.best_spec = 0
+        self.best_threshold = 0
+        self.best_trial_params = {}
+        self.all_trial_results = []
+
+    def run_trial(self, trial, *args, **kwargs):
+        hp = trial.hyperparameters
+        cancer_class_weight = hp.Float('cancer_class_weight', 1.0, 2.0, step=0.25)
+        batch_size = hp.Choice('batch_size', [32, 64])  # v134: dropped 128 — smaller batches generalise better
+        kwargs['batch_size'] = batch_size
+        kwargs['class_weight'] = {0: 1.0, 1: cancer_class_weight}
+        return super().run_trial(trial, *args, **kwargs)
+
+    def _pick_threshold(self, tpr, fpr, thresholds):
+        sens = tpr
+        spec = 1 - fpr
+        if self.use_sensitivity_floor:
+            eligible = sens >= self.sensitivity_floor
+            if np.any(eligible):
+                idxs = np.where(eligible)[0]
+                best = idxs[np.argmax(spec[idxs])]
+                return thresholds[best], sens[best], spec[best]
+            # fallback: highest sens
+            best = int(np.argmax(sens))
+            return thresholds[best], sens[best], spec[best]
+        scores = (self.sw * sens + self.spw * spec) / (self.sw + self.spw)
+        best = int(np.argmax(scores))
+        return thresholds[best], sens[best], spec[best]
+
+    def on_trial_end(self, trial):
+        super().on_trial_end(trial)
+        from sklearn.metrics import confusion_matrix as sk_confusion_matrix
+        from sklearn.metrics import roc_curve
+
+        try:
+            model = self.load_model(trial)
+        except Exception:
+            return
+        if self.val_data is None:
+            return
+
+        val_x, val_y = self.val_data
+        y_proba = model.predict(val_x, verbose=0)
+        y_true = val_y.ravel()
+
+        fpr, tpr, thresholds = roc_curve(y_true, y_proba)
+        threshold, sens, spec = self._pick_threshold(tpr, fpr, thresholds)
+
+        y_pred = (y_proba.ravel() >= threshold).astype(int)
+        cm = sk_confusion_matrix(y_true, y_pred, labels=[0, 1])
+        TN, FP, FN, TP = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
+        sens = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+        spec = TN / (TN + FP) if (TN + FP) > 0 else 0.0
+
+        if self.use_sensitivity_floor:
+            score = spec if sens >= self.sensitivity_floor else sens - 1.0
+        else:
+            score = (self.sw * sens + self.spw * spec) / (self.sw + self.spw)
+
+        hp = trial.hyperparameters
+        self.all_trial_results.append({
+            'trial_id': trial.trial_id,
+            'threshold': float(threshold),
+            'sensitivity': float(sens),
+            'specificity': float(spec),
+            'score': float(score),
+            'model_params': {key: hp.get(key) for key in [
+                'embedding_dim', 'snomed_lstm_units', 'med_lstm_units', 'med_embedding_dim',
+                'other_dense_units', 'dense_1_units', 'learning_rate',
+                'embedding_dropout', 'dense_dropout', 'l2_reg',
+                'weight_decay', 'label_smoothing', 'mask_rate',
+                'cancer_class_weight', 'batch_size']}
+        })
+
+        print(f"\n>>> Trial {trial.trial_id} ended  |  Threshold: {threshold:.4f}  |  Sensitivity: {sens:.2%}  |  Specificity: {spec:.2%}  |  Score: {score:.4f}")
+
+        if score > self.best_score:
+            self.best_score = score
+            self.best_sens = sens
+            self.best_spec = spec
+            self.best_threshold = threshold
+            self.best_trial_params = self.all_trial_results[-1]['model_params']
+
+        print(f">>> Best so far  |  Threshold: {self.best_threshold:.4f}  |  Sensitivity: {self.best_sens:.2%}  |  Specificity: {self.best_spec:.2%}  |  Score: {self.best_score:.4f}")
+        for k, v in self.best_trial_params.items():
+            print(f">>>   {k}: {v}")
+        print()
+
+
+def run_tuning(config):
+    """Run hyperparameter tuning with both data-level and model-level params for dual-branch model."""
+    enable_better_reproducibility(config)
+    check_gpus(config)
+
+    data_param_grid = {
+        'min_code_frequency': [30],
+        'MAX_SNOMED_SEQ_LENGTH': [config['MAX_SNOMED_SEQ_LENGTH']],
+        'MAX_MED_SEQ_LENGTH': [config['MAX_MED_SEQ_LENGTH']],
+        'sensitivity_weight': [1.0],
+    }
+    data_param_names = list(data_param_grid.keys())
+    data_combos = list(itertools.product(*data_param_grid.values()))
+
+    print(f"Data-level param combinations: {len(data_combos)}")
+    print(f"Model-level trials per combo: {config.get('tuner_max_trials', 30)}")
+    print(f"Total trials: {len(data_combos) * config.get('tuner_max_trials', 30)}")
+
+    print("\n>>> Loading and preprocessing data (once for all combos)...")
+    common_data = prepare_data_common(config)
+    print(">>> Common data ready.\n")
+
+    use_floor = bool(config.get('use_sensitivity_floor', False))
+    floor = float(config.get('sensitivity_floor', 0.95))
+    global_best_score = -1
+    global_best_result = {}
+    all_results = []
+    all_tuning_models = []    # per-combo top-K (model, trial_info, data, data_params)
+    data_cache = {}
+
+    from sklearn.metrics import confusion_matrix as sk_confusion_matrix
+    from sklearn.metrics import roc_curve
+
+    for combo_idx, combo in enumerate(data_combos):
+        data_params = dict(zip(data_param_names, combo))
+        print(f"\n{'='*80}")
+        print(f"Data combo {combo_idx+1}/{len(data_combos)}: {data_params}")
+        print(f"{'='*80}")
+
+        trial_config = config.copy()
+        for k, v in data_params.items():
+            trial_config[k] = v
+
+        sw = trial_config['sensitivity_weight']
+        spw = trial_config.get('specificity_weight', 1.0)
+        trial_config['optimizer_metric'] = WeightedSensSpec(
+            name='weighted_sens_spec', sensitivity_weight=sw, specificity_weight=spw)
+
+        cache_key = (data_params['min_code_frequency'],
+                     data_params['MAX_SNOMED_SEQ_LENGTH'],
+                     data_params['MAX_MED_SEQ_LENGTH'])
+        if cache_key in data_cache:
+            print(f">>> Reusing cached data for {cache_key}")
+            data = data_cache[cache_key]
+        else:
+            print(f">>> Processing data for {cache_key}...")
+            try:
+                data = prepare_data_variant(common_data, trial_config)
+                data_cache[cache_key] = data
+            except Exception as e:
+                print(f"  Data pipeline failed: {e}")
+                continue
+
+        max_snomed_seq = data['max_snomed_seq_length']
+        max_med_seq = data['max_med_seq_length']
+        n_other = data['number_of_other_features']
+        snomed_vocab = data['vocabulary_size']
+        med_vocab = data['med_vocabulary_size']
+        monitor_metric = trial_config.get('monitor_metric', 'val_weighted_sens_spec')
+
+        def model_builder(hp):
+            model_config = trial_config.copy()
+            # ── v136 tuning ranges ──
+            # Shifted from v134 in the directions the v134 Rank 3 winner saturated.
+            # Rank 3 hit upper bounds on mask_rate / embedding_dropout / dense_dropout,
+            # lower bound on label_smoothing, and upper third on l2_reg. Each axis
+            # below extends in the direction Rank 3 was pulled, with the new range
+            # still containing Rank 3's value so the BO can reproduce it if optimal.
+            model_config['embedding_dim'] = hp.Choice('embedding_dim', [16, 24, 32])
+            model_config['med_embedding_dim'] = hp.Choice('med_embedding_dim', [8, 16, 24])
+            model_config['snomed_lstm_units'] = hp.Choice('snomed_lstm_units', [32, 48, 64, 96])
+            model_config['med_lstm_units'] = hp.Choice('med_lstm_units', [16, 24, 32])
+            model_config['other_dense_units'] = hp.Choice('other_dense_units', [8, 16, 32])              # +32 (Rank 3 hit upper [8,16])
+            model_config['dense_1_units'] = hp.Choice('dense_1_units', [16, 32, 48, 64])
+            model_config['learning_rate'] = hp.Float('learning_rate', 5e-5, 5e-4, sampling='log')        # v136 revision: keep v134's range. v135 showed best_epoch=2 at LR=2.7e-4 — higher LR risks noisier explainability.
+            model_config['embedding_dropout'] = hp.Float('embedding_dropout', 0.30, 0.55, step=0.05)     # 0.20–0.45 → 0.30–0.55
+            model_config['dense_dropout'] = hp.Float('dense_dropout', 0.40, 0.65, step=0.05)             # 0.30–0.55 → 0.40–0.65
+            model_config['l2_reg'] = hp.Float('l2_reg', 1e-3, 1e-2, sampling='log')                      # 1e-4–5e-3 → 1e-3–1e-2 (Rank 3 was 3.5e-3)
+            model_config['weight_decay'] = hp.Float('weight_decay', 5e-4, 1e-2, sampling='log')          # unchanged (Rank 3 was 1.6e-3 mid)
+            model_config['label_smoothing'] = hp.Float('label_smoothing', 0.0, 0.15, step=0.05)          # 0.05–0.30 → 0.0–0.15 (Rank 3 hit lower bound)
+            model_config['mask_rate'] = hp.Float('mask_rate', 0.30, 0.55, step=0.05)                     # 0.10–0.40 → 0.30–0.55 (Rank 3 hit upper bound)
+            model_config['use_focal_loss'] = False
+            model_config['optimizer_metric'] = WeightedSensSpec(
+                name='weighted_sens_spec', sensitivity_weight=sw, specificity_weight=spw)
+            return build_model(
+                model_config, snomed_vocab, med_vocabulary_size=med_vocab,
+                max_snomed_seq_length=max_snomed_seq,
+                max_med_seq_length=max_med_seq,
+                number_of_other_features=n_other,
+            )
+
+        val_data = (
+            model_inputs(trial_config,
+                         X_snomed=data['X_snomed_ids_val'],
+                         X_med=data['X_med_ids_val'],
+                         X_other=data['X_other_features_val']),
+            data['y_val']
+        )
+
+        project_name = (f"{trial_config.get('tuner_project_name', 'tuning')}"
+                        f"_mcf{data_params['min_code_frequency']}"
+                        f"_snomedseq{data_params['MAX_SNOMED_SEQ_LENGTH']}"
+                        f"_medseq{data_params['MAX_MED_SEQ_LENGTH']}"
+                        f"_sw{data_params['sensitivity_weight']}")
+
+        tuner = SensSpecTuner(
+            model_builder,
+            objective=kt.Objective(monitor_metric, direction='max'),
+            max_trials=trial_config.get('tuner_max_trials', 30),
+            executions_per_trial=1,
+            directory='tuner_results',
+            project_name=project_name,
+            overwrite=True,
+            validation_data=val_data,
+            sensitivity_weight=sw,
+            specificity_weight=spw,
+            use_sensitivity_floor=use_floor,
+            sensitivity_floor=floor,
+        )
+
+        callbacks = [
+            EarlyStopping(monitor=monitor_metric, mode='max',
+                          patience=trial_config.get('early_stopping_patience', 7),
+                          restore_best_weights=True, verbose=1),
+            ReduceLROnPlateau(monitor=monitor_metric, mode='max', factor=0.5,
+                              patience=trial_config.get('lr_reduction_patience', 2),
+                              min_lr=1e-6, verbose=1)
+        ]
+
+        tuner.search(
+            model_inputs(trial_config,
+                         X_snomed=data['X_snomed_ids_train'],
+                         X_med=data['X_med_ids_train'],
+                         X_other=data['X_other_features_train']),
+            data['y_train'],
+            epochs=trial_config.get('tuner_epochs', 20),
+            validation_data=val_data,
+            callbacks=callbacks,
+            verbose=1
+        )
+
+        for tr in tuner.all_trial_results:
+            tr_with_data = tr.copy()
+            tr_with_data['data_params'] = data_params.copy()
+            all_results.append(tr_with_data)
+
+        # --- v111: collect top-K trained models from this combo for end-of-tuning rating ---
+        if bool(config.get('rate_top_tuning_trials', True)):
+            k = min(int(config.get('tuning_top_n_rate', 10)),
+                    len(tuner.all_trial_results))
+            combo_sorted = sorted(
+                tuner.all_trial_results, key=lambda x: x['score'], reverse=True)[:k]
+            for tr in combo_sorted:
+                try:
+                    trial_obj = tuner.oracle.get_trial(tr['trial_id'])
+                    model_obj = tuner.load_model(trial_obj)
+                    all_tuning_models.append({
+                        'model': model_obj,
+                        'trial_info': tr,
+                        'data_params': dict(data_params),
+                        'data': data,
+                    })
+                except Exception as _load_err:
+                    print(f'  [could not load model for trial '
+                          f'{tr.get("trial_id", "?")}: {_load_err!r}]')
+
+        best_model = tuner.get_best_models(num_models=1)[0]
+        best_hp = tuner.get_best_hyperparameters(num_trials=1)[0]
+
+        y_val_proba = best_model.predict(val_data[0], verbose=0)
+        fpr, tpr, thresholds = roc_curve(data['y_val'], y_val_proba)
+
+        # same threshold-picking logic as tuner
+        sens_arr = tpr; spec_arr = 1 - fpr
+        if use_floor:
+            eligible = sens_arr >= floor
+            if np.any(eligible):
+                idxs = np.where(eligible)[0]
+                optimal_idx = idxs[int(np.argmax(spec_arr[idxs]))]
+            else:
+                optimal_idx = int(np.argmax(sens_arr))
+        else:
+            scores_curve = (sw * sens_arr + spw * spec_arr) / (sw + spw)
+            optimal_idx = int(np.argmax(scores_curve))
+        threshold = thresholds[optimal_idx]
+
+        y_val_pred = (y_val_proba.ravel() >= threshold).astype(int)
+        cm = sk_confusion_matrix(data['y_val'], y_val_pred, labels=[0, 1])
+        TN, FP, FN, TP = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
+        sens = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+        spec = TN / (TN + FP) if (TN + FP) > 0 else 0.0
+        score = spec if use_floor and sens >= floor else (sw * sens + spw * spec) / (sw + spw)
+
+        model_params = {key: best_hp.get(key) for key in [
+            'embedding_dim', 'snomed_lstm_units', 'med_lstm_units', 'med_embedding_dim',
+            'other_dense_units', 'dense_1_units', 'learning_rate',
+            'embedding_dropout', 'dense_dropout', 'l2_reg',
+            'cancer_class_weight', 'batch_size']}
+
+        print(f"\n>>> Combo {combo_idx+1} best  |  Threshold: {threshold:.4f}  |  Sensitivity: {sens:.2%}  |  Specificity: {spec:.2%}  |  Score: {score:.4f}")
+        print(f">>>   Data params: {data_params}")
+        print(f">>>   Model params: {model_params}")
+
+        if score > global_best_score:
+            global_best_score = score
+            global_best_result = {
+                'data_params': data_params, 'model_params': model_params,
+                'threshold': threshold, 'sensitivity': sens, 'specificity': spec, 'score': score
+            }
+
+        print(f"\n>>> GLOBAL BEST  |  Score: {global_best_score:.4f}  |  Sensitivity: {global_best_result.get('sensitivity', 0):.2%}  |  Specificity: {global_best_result.get('specificity', 0):.2%}")
+        print(f">>>   Data: {global_best_result.get('data_params', {})}")
+        print(f">>>   Model: {global_best_result.get('model_params', {})}")
+
+    all_results_sorted = sorted(all_results, key=lambda r: r['score'], reverse=True)
+    top_n = min(10, len(all_results_sorted))
+
+    print('\n' + '='*80)
+    print(f'TUNING COMPLETE — TOP {top_n} RESULTS')
+    print('='*80)
+
+    for rank, result in enumerate(all_results_sorted[:top_n]):
+        print(f"\n--- Rank {rank+1}  |  Threshold: {result['threshold']:.4f}  |  Sensitivity: {result['sensitivity']:.2%}  |  Specificity: {result['specificity']:.2%}  |  Score: {result['score']:.4f} ---")
+        print(f"  Data params:")
+        for k, v in result['data_params'].items():
+            print(f"    {k}: {v}")
+        print(f"  Model params:")
+        for k, v in result['model_params'].items():
+            print(f"    {k}: {v}")
+
+    # --- v111: rate the global top-N tuning trials (uses evaluate_trial_explainability from the explainability cell) ---
+    if bool(config.get('rate_top_tuning_trials', True)) and all_tuning_models:
+        top_n_rate = min(int(config.get('tuning_top_n_rate', 10)), len(all_tuning_models))
+        ranked = sorted(all_tuning_models,
+                        key=lambda r: r['trial_info']['score'], reverse=True)[:top_n_rate]
+
+        print('\n' + '=' * 80)
+        print(f'EXPLAINABILITY RATING — TOP {top_n_rate} TUNING TRIALS')
+        print('=' * 80)
+
+        trial_ratings = []
+        for rank, rec in enumerate(ranked):
+            info = rec['trial_info']
+            trial_cfg = dict(config)
+            trial_cfg.update(rec['data_params'])
+            trial_cfg.update(info.get('model_params', {}))
+            trial_cfg['rate_explainability'] = True
+
+            print(f'\n--- Rank {rank+1}  trial_id={info.get("trial_id")}  '
+                  f'sens={info["sensitivity"]:.2%}  spec={info["specificity"]:.2%}  '
+                  f'score={info["score"]:.4f}  threshold={info["threshold"]:.4f} ---')
+            try:
+                res = evaluate_trial_explainability(rec['model'], rec['data'], trial_cfg)
+                if res is not None:
+                    trial_ratings.append({
+                        'rank': rank + 1,
+                        'trial_id': info.get('trial_id'),
+                        'sensitivity': info['sensitivity'],
+                        'specificity': info['specificity'],
+                        'score': info['score'],
+                        'threshold': info['threshold'],
+                        'rating': res['rating_0_100'],
+                        'faith': res['faithfulness']['score'],
+                        'relev': res['clinical_relevance']['score'],
+                        'cons': res['consistency']['score'],
+                        'matched': res['clinical_relevance'].get('matched_labels', [])[:3],
+                    })
+            except Exception as _rate_err:
+                print(f'  [rating skipped: {_rate_err!r}]')
+
+        if trial_ratings:
+            print('\n' + '=' * 80)
+            print('EXPLAINABILITY RATING SUMMARY — TOP TUNING TRIALS')
+            print('=' * 80)
+            print(f'{"Rank":<5}{"Trial":<14}{"Sens":<9}{"Spec":<9}{"Thr":<8}'
+                  f'{"Score":<9}{"Rating":<9}{"Faith":<8}{"Relev":<8}{"Cons":<8}  Top-3 matched')
+            print('-' * 110)
+            for r in trial_ratings:
+                matched_preview = ', '.join(r['matched'])[:40] if r['matched'] else '(none)'
+                print(f'{r["rank"]:<5}{str(r["trial_id"])[:12]:<14}'
+                      f'{r["sensitivity"]:<9.2%}{r["specificity"]:<9.2%}'
+                      f'{r["threshold"]:<8.4f}{r["score"]:<9.4f}'
+                      f'{r["rating"]:<9.1f}{r["faith"]:<8.3f}{r["relev"]:<8.3f}{r["cons"]:<8.3f}'
+                      f'  {matched_preview}')
+
+    return all_results_sorted
+
+

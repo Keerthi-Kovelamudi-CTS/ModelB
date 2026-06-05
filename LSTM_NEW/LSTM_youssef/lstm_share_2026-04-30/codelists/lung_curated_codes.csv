@@ -1,0 +1,156 @@
+id,name
+1000821000000103,Serum albumin level
+1017311000000104,Blood oxygen saturation (calculated)
+1022551000000104,Neutrophil count
+102589003,Atypical chest pain
+103228002,Haemoglobin saturation with oxygen
+106511000001103,Salamol 100micrograms inhaler
+1079461000000108,NAFLD (Non-Alcoholic Fatty Liver Disease) fibrosis score
+1087441000000106,Smoking cessation programme declined
+1091811000000102,Diastolic arterial pressure
+11833005,Dry cough
+127783003,Spirometry
+12906411000001100,Fostair 100/6 inhaler
+13645005,COPD - Chronic obstructive pulmonary disease
+160603005,Light cigarette smoker (1-9 cigs/day)
+160604004,Moderate cigarette smoker (10-19 cigs/day)
+160605003,Heavy cigarette smoker (20-39 cigs/day)
+160606002,Very heavy cigarette smoker (40+ cigs/day)
+160625004,Date ceased smoking
+161635002,History of asbestos exposure
+161924005,Productive cough -green sputum
+161929000,Chesty cough
+161947006,Nocturnal cough / wheeze
+162573006,Suspected lung cancer
+164457001,O/E - finger clubbing
+168734001,Standard chest X-ray abnormal
+170614009,Inhaler technique observed
+170635006,Asthma not disturbing sleep
+170638008,Asthma not limiting activities
+170661005,Using inhaled steroids - normal dose
+171255006,Spirometry screening
+1879891000006107,Non-alcoholic fatty liver disease (NAFLD) fibrosis score
+195647007,Acute respiratory infections
+195742007,Acute lower respiratory tract infection
+195967001,Asthma
+1970531000006107,COPD assessment test score - cough
+1970541000006102,COPD assessment test score - phlegm (mucus)
+1970561000006103,COPD assessment test score - breathless walking up hill/stairs
+199251000000107,Fast track cancer referral
+201031000000108,Asthma trigger - respiratory infection
+204991000000107,Suspected chronic obstructive pulmonary disease
+222311000001102,Ventolin 100micrograms Evohaler
+2237002,Pleuritic pain
+225323000,Smoking cessation advice
+225324006,Advice on effects of smoking on health
+230057008,Cigar consumption
+24184005,Raised blood pressure
+249366005,Has nosebleeds - epistaxis
+251944000,FEV1/FVC ratio
+263747008,Emphysematous
+266918002,Tobacco smoking consumption
+266920004,Trivial cigarette smoker (less than one cigarette/day)
+266921000,Ex-trivial cigarette smoker (<1/day)
+266922007,Ex-light cigarette smoker (1-9/day)
+266923002,Ex-moderate cigarette smoker (10-19/day)
+266924008,Ex-heavy cigarette smoker (20-39/day)
+266925009,Ex-very heavy cigarette smoker (40+/day)
+267024001,Abnormal weight loss
+267036007,Breathlessness Dyspnoea
+270442000,Asthma monitoring check done
+27113001,Body weight
+275908000,Asthma monitoring
+276491000000101,Fast track referral for suspected lung cancer
+281018007,Ex-cigarette smoker
+2831211000001109,Flixotide 250 Evohaler
+284523002,Persistent cough
+29857009,Chest pain
+302331000000106,Royal College of Physicians asthma assessment
+30760008,Finger clubbing
+310520004,Expected FEV1
+312342009,Chest infection - pnemonia due to unspecified organism
+313222007,FEV1/FVC percent
+313223002,Percent predicted FEV1
+313297008,Moderate chronic obstructive pulmonary disease
+313299006,Severe chronic obstructive pulmonary disease
+314473008,FEV1/FVC > 70% of predicted
+3184311000001107,Flixotide 100 Accuhaler
+3184911000001108,Flixotide 250 Accuhaler
+3215311000001107,Salamol Easi-Breathe inhaler
+32398004,Chest infection - unspecified bronchitis
+33594911000001100,Braltus 10microgram inhalation powder capsules
+340921000000103,Asthma trigger - tobacco smoke
+35908811000001103,Beclometasone 250micrograms inhaler
+364075005,Heart rate
+365981007,Tobacco smoking behaviour - finding
+366874008,Number of asthma exacerbations in past year
+370208006,Asthma never causes daytime symptoms
+370226009,Asthma treatment compliance satisfactory
+390891009,COPD self-management plan given
+391120009,MRC Breathlessness Scale: grade 1
+391123006,MRC Breathlessness Scale: grade 2
+391124000,MRC Breathlessness Scale: grade 3
+391125004,MRC Breathlessness Scale: grade 4
+39113611000001102,Salbutamol 100micrograms inhaler CFC free
+394700004,Asthma annual review
+394873005,Not interested in stopping smoking
+396285007,Chest infection - unspecified bronchopneumonia
+396484008,Supraclavicular lymph node biopsy
+398511000001105,Flixotide 125 Evohaler
+401012008,FEV1 before bronchodilation
+401013003,FEV1 after bronchodilation
+401135008,Health education - asthma
+4053411000001103,Serevent 25micrograms Evohaler
+406162001,Asthma management
+407576000,FVC/Expected FVC percent
+407602006,FEV1/FVC ratio before bronchodilator
+414916001,Obesity
+415261001,Referral for spirometry
+42292311000001106,Beclometasone 100micrograms inhaler
+42292811000001102,Carbocisteine 375mg capsules
+427359005,Solitary nodule of lung
+42984000,Night sweats
+431314004,SpO2 - oxygen saturation at periphery
+443117005,Asthma control test score
+446660005,Chronic obstructive pulmonary disease assessment test score
+492191000000103,Ex roll-up cigarette smoker
+49727002,Cough
+50417007,Lower respiratory tract infection
+505651000000103,Current smoker annual review
+505761000000105,Ex-smoker annual review
+50834005,Forced vital capacity
+51615001,Fibrosis of lung
+527151000000107,Smoking cessation advice declined
+527361000000107,CAT - COPD assessment test
+54150009,Upper respiratory infection
+54398005,Acute upper respiratory infection
+60621009,Body mass index
+65568007,Cigarette smoker
+6631009,Thrombocytosis
+66857006,Haemoptysis
+68328006,Centrilobular emphysema
+700250006,Idiopathic pulmonary fibrosis
+716281000000103,Chronic obstructive pulmonary disease monitoring verbal invite
+716901000000101,Chronic obstructive pulmonary disease monitoring telephone invitation
+718241000000107,Issue of chronic obstructive pulmonary disease rescue pack
+719873005,Fibrosis-4 index score
+72313002,Systolic arterial pressure
+723245007,Number of chronic obstructive pulmonary disease exacerbations in past year
+726611000001102,Flixotide 50 Evohaler
+736056000,Asthma clinical management plan
+754061000000100,Asthma review using Royal College of Physicians three questions
+767641000000109,Referral for smoking cessation service offered
+77176002,Current smoker
+78564009,Pulse rate
+810901000000102,Asthma self-management plan review
+831311000006106,2 week rule referral - lung
+8517006,Ex-smoker
+871641000000105,Referral to smoking cessation service declined
+87433001,Pulmonary emphysema
+894821000000107,Spirometry screening invitation
+909721000006104,[RFC] Emphysema
+909731000006101,[RFC] Reason for care : Pulmonary fibrosis
+919601000000107,Single inhaler maintenance and reliever therapy started
+9205211000001104,Easyhaler Salbutamol
+9516911000001109,AeroChamber Plus
+95325000,Subcutaneous nodule

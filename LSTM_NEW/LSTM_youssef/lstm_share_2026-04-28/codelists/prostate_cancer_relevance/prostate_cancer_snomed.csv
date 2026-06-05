@@ -1,0 +1,83 @@
+id,name,active,notes
+1098981000119101,Recurrent malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1208457007,Small cell neuroendocrine carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1237422007,Metastatic carcinoma to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1240353009,Metastatic squamous cell carcinoma to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1240359008,Metastatic small cell carcinoma to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1251485006,Metastatic adenocarcinoma to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259388006,Primary carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259666003,Primary acinar cell cystadenocarcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259669005,Primary infiltrating duct carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259672003,Primary adenocarcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259674002,Primary endometrioid carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1259710009,Primary small cell neuroendocrine carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1260182007,Phyllodes tumor of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+1264500002,Metastatic infiltrating duct carcinoma to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+126906006,Neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+16294321000119104,Atypical small acinar proliferation of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+176106009,Radical cystoprostatourethrectomy,y,opencodelists:reducehf/prostate-cancer-snomed
+176261008,Radical prostatectomy without pelvic node excision,y,opencodelists:reducehf/prostate-cancer-snomed
+176262001,Radical prostatectomy with pelvic node sampling,y,opencodelists:reducehf/prostate-cancer-snomed
+176263006,Radical prostatectomy with pelvic lymphadenectomy,y,opencodelists:reducehf/prostate-cancer-snomed
+18430005,Gleason grade score 4 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+21173002,Benign adenoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+236209003,Salvage cystoprostatourethrectomy,y,opencodelists:reducehf/prostate-cancer-snomed
+236211007,Salvage cystoprostatectomy,y,opencodelists:reducehf/prostate-cancer-snomed
+24514009,Gleason grade score 10 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+254900004,Carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+254901000,Prostatic intraepithelial neoplasia,y,opencodelists:reducehf/prostate-cancer-snomed
+255149000,Carcinoma in situ of prostatic ducts,y,opencodelists:reducehf/prostate-cancer-snomed
+278060005,Endometrioid carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+314969001,Local recurrence of malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+33013007,Gleason grade score 8 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+369485004,Malignant tumor involving prostate by direct extension from bladder,y,opencodelists:reducehf/prostate-cancer-snomed
+369486003,Malignant tumor involving prostate by separate metastasis from bladder,y,opencodelists:reducehf/prostate-cancer-snomed
+369770006,Gleason Pattern 1,y,opencodelists:reducehf/prostate-cancer-snomed
+369771005,Gleason Pattern 2,y,opencodelists:reducehf/prostate-cancer-snomed
+369772003,Gleason Pattern 3,y,opencodelists:reducehf/prostate-cancer-snomed
+369773008,Gleason Pattern 4,y,opencodelists:reducehf/prostate-cancer-snomed
+369774002,Gleason Pattern 5,y,opencodelists:reducehf/prostate-cancer-snomed
+369775001,Gleason Score 2-4: Well differentiated,y,opencodelists:reducehf/prostate-cancer-snomed
+369776000,Gleason Score 5-6: Moderately differentiated,y,opencodelists:reducehf/prostate-cancer-snomed
+369777009,Gleason Score 8-10: Poorly differentiated,y,opencodelists:reducehf/prostate-cancer-snomed
+385377005,Gleason grade finding for prostatic cancer,y,opencodelists:reducehf/prostate-cancer-snomed
+385412008,Gleason Score 7-10: Poorly differentiated,y,opencodelists:reducehf/prostate-cancer-snomed
+394932008,Gleason prostate grade 5-7 (medium),y,opencodelists:reducehf/prostate-cancer-snomed
+396198006,Small cell carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+399068003,Malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+399490008,Adenocarcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+399590005,Squamous cell carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+427492003,Hormone refractory prostate cancer,y,opencodelists:reducehf/prostate-cancer-snomed
+428262008,History of malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+446710005,Low grade prostatic intraepithelial neoplasia,y,opencodelists:reducehf/prostate-cancer-snomed
+446711009,High grade prostatic intraepithelial neoplasia,y,opencodelists:reducehf/prostate-cancer-snomed
+448213004,Diffuse non-Hodgkin's lymphoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+448217003,Follicular non-Hodgkin's lymphoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+449318001,Non-Hodgkin's lymphoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+46677009,Gleason grade score 3 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+47014000,Fibroma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+49878003,Gleason grade score 2 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+57403001,Gleason grade score 7 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+58925000,Gleason grade score 9 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+712849003,Primary malignant neoplasm of prostate metastatic to bone,y,opencodelists:reducehf/prostate-cancer-snomed
+715412008,Familial malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+722103009,Hormone sensitive prostate cancer,y,opencodelists:reducehf/prostate-cancer-snomed
+74013009,Gleason grade score 5 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+74411000119100,Prostatic intraepithelial neoplasia and adjacent atypia,y,opencodelists:reducehf/prostate-cancer-snomed
+81021006,Myoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+81232004,Radical cystoprostatectomy,y,opencodelists:reducehf/prostate-cancer-snomed
+81555000,Fibroadenoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+822970008,Acinar cell cystadenocarcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+823017009,Infiltrating duct carcinoma of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+84556003,Gleason grade score 6 out of 10,y,opencodelists:reducehf/prostate-cancer-snomed
+860741001,Gleason score X,y,opencodelists:reducehf/prostate-cancer-snomed
+860742008,Gleason grade group 1,y,opencodelists:reducehf/prostate-cancer-snomed
+860743003,Gleason grade group 2,y,opencodelists:reducehf/prostate-cancer-snomed
+860744009,Gleason grade group 3,y,opencodelists:reducehf/prostate-cancer-snomed
+860745005,Gleason grade group 4,y,opencodelists:reducehf/prostate-cancer-snomed
+860746006,Gleason grade group 5,y,opencodelists:reducehf/prostate-cancer-snomed
+92308005,Benign neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+92691004,Carcinoma in situ of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+93974005,Primary malignant neoplasm of prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+94503003,Metastatic malignant neoplasm to prostate,y,opencodelists:reducehf/prostate-cancer-snomed
+95014000,Neoplasm of uncertain behavior of prostate,y,opencodelists:reducehf/prostate-cancer-snomed

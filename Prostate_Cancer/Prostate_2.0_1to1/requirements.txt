@@ -1,0 +1,28 @@
+# Prostate Cancer 2.0_1to1 — v3 pre-12mo pipeline dependencies.
+# Pinned with compatible-release (~=) so patch updates accepted but major
+# stays stable for reproducible runs. Mirrors Prostate_Cancer/requirements.txt.
+# Tested on Python 3.10 / 3.11.
+
+# ── Core data ───────────────────────────────────────────────
+pandas~=2.2
+numpy~=1.26
+scipy~=1.13
+
+# ── Tree-based models ───────────────────────────────────────
+xgboost~=2.1
+lightgbm~=4.5
+catboost~=1.2
+scikit-learn~=1.5
+
+# ── Hyperparameter tuning ───────────────────────────────────
+optuna~=4.0
+
+# ── Persistence ─────────────────────────────────────────────
+joblib~=1.4
+pyarrow~=17.0           # required for parquet (FE feature matrix)
+
+# ── Explainability ──────────────────────────────────────────
+shap~=0.46
+
+# ── Plotting (used in 3_Modeling diagnostics) ───────────────
+matplotlib~=3.9

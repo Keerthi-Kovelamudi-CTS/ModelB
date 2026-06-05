@@ -1,0 +1,20 @@
+# OpenCodelists provenance for prostate_cancer_relevance
+# Source: https://www.opencodelists.org/
+# Format converted from code,term to id,name,active,notes
+
+file:    prostate_cancer_snomed.csv
+  source:  opencodelists.org
+  slug:    reducehf/prostate-cancer-snomed
+  status:  published
+  label:   prostate cancer (diagnosis)
+  url:     https://www.opencodelists.org/codelist/reducehf/prostate-cancer-snomed/
+
+file:    benign_prostatic_hyperplasia.csv
+  source:  opencodelists.org
+  slug:    ihme-snomed/benign-prostatic-hyperplasia-prepped-data-gbd-id-3035-test
+  status:  under_review
+  label:   BPH (related)
+  url:     https://www.opencodelists.org/codelist/ihme-snomed/benign-prostatic-hyperplasia-prepped-data-gbd-id-3035-test/
+
+# Gaps:
+# lower_urinary_tract_symptoms.csv: no public OpenCodelists SNOMED list found

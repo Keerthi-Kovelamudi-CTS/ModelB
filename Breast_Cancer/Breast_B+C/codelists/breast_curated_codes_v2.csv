@@ -1,0 +1,313 @@
+EVENT_TYPE	CATEGORY	TERM	CODE
+medication	DM_MONITORING	FreeStyle Lite testing strips (Abbott Laboratories Ltd)	11851311000001100
+medication	DM_MONITORING	Advantage Plus testing strips (Roche Diabetes Care Ltd)	16611000001105
+medication	DM_MONITORING	OneTouch Ultra testing strips (LifeScan)	211611000001106
+medication	DM_MONITORING	FreeStyle Optium testing strips (Abbott Laboratories Ltd)	2958011000001100
+medication	DM_MONITORING	Active testing strips (Roche Diabetes Care Ltd)	600411000001103
+medication	DM_MONITORING	Contour testing strips (Ascensia Diabetes Care UK Ltd)	7267911000001107
+medication	DM_MONITORING	Diastix testing strips (Ascensia Diabetes Care UK Ltd)	75211000001105
+medication	DM_MONITORING	OneTouch UltraSoft lancets 0.4mm/28gauge (LifeScan)	9459511000001109
+medication	DM_MONITORING	Softclix lancets 0.4mm/28gauge (Roche Diabetes Care Ltd)	9459811000001107
+medication	DM_MONITORING	Aviva testing strips (Roche Diabetes Care Ltd)	9488911000001102
+medication	DM_MONITORING	Volumatic (GlaxoSmithKline UK Ltd)	9516111000001106
+medication	HRT	Elleste Solo 1mg tablets (Exeltis UK Ltd)	2841811000001109
+medication	HRT	Climaval 1mg tablets (Novartis Pharmaceuticals UK Ltd)	2845811000001107
+medication	HRT	Estraderm TTS 25 patches (Novartis Pharmaceuticals UK Ltd)	2889311000001109
+medication	HRT	Estraderm MX 25 patches (Norgine Pharmaceuticals Ltd)	2889611000001104
+medication	HRT	Estraderm TTS 50 patches (Novartis Pharmaceuticals UK Ltd)	2942911000001101
+medication	HRT	Kliovance tablets (Novo Nordisk Ltd)	3038811000001109
+medication	HRT	Climesse tablets (Novartis Pharmaceuticals UK Ltd)	3040311000001103
+medication	HRT	Kliofem tablets (Novo Nordisk Ltd)	3043111000001107
+medication	HRT	Elleste Duet Conti tablets (Exeltis UK Ltd)	3049511000001101
+medication	HRT	Gynest 0.01% cream with applicator (Marlborough Pharmaceuticals Ltd)	3194611000001101
+medication	HRT	Nuvelle tablets (Bayer Plc)	3199011000001109
+medication	HRT	Estracombi TTS patches (Novartis Pharmaceuticals UK Ltd)	3215411000001100
+medication	HRT	Femoston 1/10mg tablets (Exeltis UK Ltd)	3347911000001102
+medication	HRT	Tridestra tablets (Orion Pharma (UK) Ltd)	3355511000001103
+medication	HRT	Climagest 1mg tablets (Novartis Pharmaceuticals UK Ltd)	3358411000001107
+medication	HRT	Elleste Duet 1mg tablets (Exeltis UK Ltd)	3367311000001108
+medication	HRT	Estradiol 25microgram pessaries	3405311000001106
+medication	HRT	Trisequens tablets (Novo Nordisk Ltd)	3449411000001106
+medication	HRT	Prempak-C 0.625mg/0.15mg tablets (Pfizer Ltd)	3470811000001103
+medication	HRT	Premarin 0.625mg tablets (Pfizer Ltd)	34911000001102
+medication	HRT	Conjugated oestrogens 625microgram tablets	41873411000001105
+medication	HRT	Estradiol 1mg / Norethisterone acetate 500microgram tablets	41874811000001105
+medication	HRT	Estradiol 2mg / Norethisterone acetate 1mg tablets	41875111000001104
+medication	HRT	Tibolone 2.5mg tablets	41882911000001100
+medication	HRT	Livial 2.5mg tablets (Organon Pharma (UK) Ltd)	521411000001105
+medication	HRT	Premarin 1.25mg tablets (Pfizer Ltd)	546511000001102
+medication	HRT	Prempak-C 1.25mg/0.15mg tablets (Pfizer Ltd)	557911000001109
+medication	HRT	Ovestin 1mg/g vaginal cream with applicator (Aspen Pharma Trading Ltd)	623311000001109
+medication	HRT	Premique 0.625mg/5mg tablets (Pfizer Ltd)	679511000001100
+medication	HRT	Vagifem 25microgram vaginal tablets (Novo Nordisk Ltd)	71211000001107
+medication	HRT	Premique Low Dose 0.3mg/1.5mg modified-release tablets (Pfizer Ltd)	7340311000001105
+medication	OC	Noriday 350microgram tablets (Pfizer Ltd)	167411000001104
+medication	OC	Micronor 350microgram tablets (Janssen-Cilag Ltd)	193611000001107
+medication	OC	Utovlan 5mg tablets (Pfizer Ltd)	263911000001100
+medication	OC	Femodene tablets (Bayer Plc)	3048811000001105
+medication	OC	Loestrin 20 tablets (Galen Ltd)	3058111000001101
+medication	OC	Loestrin 30 tablets (Galen Ltd)	3058411000001106
+medication	OC	Logynon tablets (Bayer Plc)	3213311000001106
+medication	OC	Cerazette 75microgram tablets (Organon Pharma (UK) Ltd)	3411311000001106
+medication	OC	Cilest 35microgram/250microgram tablets (Janssen-Cilag Ltd)	380211000001105
+medication	OC	Levonorgestrel 20micrograms/24hours intrauterine device	39718011000001105
+medication	OC	Norethisterone 350microgram tablets	41880611000001105
+medication	OC	Microgynon 30 tablets (Bayer Plc)	42111000001107
+medication	OC	Levonorgestrel 1.5mg tablets	42295511000001106
+medication	OC	Norethisterone 5mg tablets	42297111000001106
+medication	OC	Femulen 500microgram tablets (Pfizer Ltd)	462011000001107
+medication	OC	Ovranette 150microgram/30microgram tablets (Pfizer Ltd)	492611000001103
+medication	OC	Marvelon tablets (Organon Pharma (UK) Ltd)	524211000001108
+medication	OC	Dianette tablets (Bayer Plc)	587711000001100
+observation	COMORBID_CVD	Disorder of cardiovascular system	49601007
+observation	COMORBID_CVD_FH_IHD_LT60	FH: Ischaemic heart disease at less than 60 years	266895004
+observation	COMORBID_CVD_FH_IHD_GT60	FH: Ischaemic heart disease at greater than 60 years	266896003
+observation	COMORBID_CVD_STATIN_PROPHYL	Statin prophylaxis	315053001
+observation	COMORBID_CVD_VARICOSE	Varicose veins of the leg NOS	72866009
+observation	COMORBID_IHD	Ischaemic heart disease NOS	414545008
+observation	COMORBID_DM	At risk of diabetes mellitus	161641009
+observation	COMORBID_DM	Insulin dependent diabetes mellitus	73211009
+observation	COMORBID_DM_FOOT	O/E - left foot pulses present	390888009
+observation	COMORBID_DM_FOOT	O/E - vibration sense left foot reduced	395149007
+observation	COMORBID_DM_FOOT	O/E - right foot pulses present	390889001
+observation	COMORBID_DM_FOOT	O/E - vibration sense right foot reduced	395150007
+observation	COMORBID_DM_EYE	Fundoscopy - diabetic check	170757007
+observation	COMORBID_DM_FOOT	10g monofilament sensation present	390931008
+observation	COMORBID_DM_FOOT	Monofilament foot sensation test	134388005
+observation	COMORBID_DM_FOOT	Diabetic peripheral neuropathy screening	401081006
+observation	COMORBID_DM_EYE	Retinopathy follow up	313987006
+observation	COMORBID_DM_EYE	Diabetic retinopathy screening declined	839811000000106
+observation	COMORBID_HYPERCHOL	Pure hypercholesterolaemia NOS	267432004
+observation	COMORBID_HTN	Benign essential hypertension	1201005
+observation	COMORBID_HTN	Hypertensive disorder	38341003
+observation	COMORBID_DM	[D]Prediabetes	9414007
+observation	LAB_HBA1C	Hb. A1C - diabetic control	269823000
+observation	LAB_LIPIDS	Plasma lipids	1003431000000105
+observation	LAB_LIPIDS	Lipoprotein electrophoresis	1005701000000109
+observation	LAB_LIPIDS	Plasma HDL (high density lipoprotein) cholesterol level	1010581000000101
+observation	LAB_LIPIDS	Plasma LDL (low density lipoprotein) cholesterol level	1010591000000104
+observation	LAB_LIPIDS	Plasma triglyceride level	1010601000000105
+observation	LAB_LIPIDS	Serum high density lipoprotein:non-high density lipoprotein cholesterol ratio	1015271000000109
+observation	LAB_LIPIDS	Plasma total cholesterol level	1017161000000104
+observation	LAB_LIPIDS	Serum cholesterol studies	1026441000000100
+observation	LAB_LIPIDS	Serum fasting HDL (high density lipoprotein) cholesterol level	1026451000000102
+observation	LAB_LIPIDS	Serum fasting LDL (low density lipoprotein) cholesterol level	1026471000000106
+observation	LAB_LIPIDS	Serum fasting triglyceride level	1026491000000105
+observation	LAB_LIPIDS	Serum fasting lipoprotein level	1026721000000103
+observation	LAB_LIPIDS	Total cholesterol:HDL (high density lipoprotein) ratio	1028551000000102
+observation	LAB_LIPIDS	Fasting blood lipids	1029061000000102
+observation	LAB_LIPIDS	High density/low density lipoprotein ratio	1029071000000109
+observation	LAB_LIPIDS	Non high density lipoprotein cholesterol level	1030411000000101
+observation	LAB_LIPIDS	High density lipoprotein/total cholesterol ratio	1031421000000101
+observation	LAB_LIPIDS	Fasting serum cholesterol	667191000006107
+observation	LAB_LIPIDS	Fasting triglycerides	854481000006106
+observation	LAB_LIPIDS	Fasting lipids	854781000006103
+observation	LAB_LIPIDS	LDL cholesterol level	857141000006100
+observation	LAB_LIPIDS	Estimated serum non-high density lipoprotein cholesterol level	920471000000100
+observation	LIFE_BMI	Ideal body weight	170804003
+observation	LIFE_BMI	Increased body mass index	48499001
+observation	LIFE_BMI	Weight management service opportunity signposted	783041000000106
+observation	LIFE_ALCOHOL	Drinks wine	160591008
+observation	LIFE_ALCOHOL	Alcohol questionnaire completed	413475007
+observation	LIFE_ALCOHOL	Alcoholic beverage intake	897148007
+observation	LIFE_ALC_EDU	Education about alcohol consumption	281078001
+observation	LIFE_ALC_SCREEN	Alcohol screen - alcohol use disorder identification test completed	285381000000108
+observation	LIFE_ALC_SCREEN	Alcohol screen - fast alcohol screening test completed	285411000000105
+observation	LIFE_ALC_SCREEN	Alcohol screen - alcohol use disorder identification test consumption questions completed	285441000000106
+observation	LIFE_DIET	Dietary advice	11816003
+observation	LIFE_DIET	Patient-initiated diet	160660005
+observation	LIFE_DIET	Low fat diet	16208003
+observation	LIFE_DIET	Dietary sodium - low	162526000
+observation	LIFE_DIET	Dietary salt intake	309544001
+observation	LIFE_DIET	Weight reduction diet	359649009
+observation	LIFE_DIET	Low sodium diet	386619000
+observation	LIFE_DIET	Number of portions of fruit and vegetables daily	401070008
+observation	LIFE_DIET	Dietary advice given	854971000006104
+observation	LIFE_PHYSACT	Exercise grading NOS	160628002
+observation	LIFE_PHYSACT	Takes inadequate exercise	160652009
+observation	LIFE_PHYSACT	Less than 30 minutes a day of at least moderate intensity physical activity on five or more days of the week	366061000000101
+observation	LIFE_PHYSACT	General practice physical activity questionnaire	770231000000109
+observation	LIFE_PHYSACT	Grade B moderately active	855041000006107
+observation	LIFE_SMOKE_CO	Expired carbon monoxide concentration	251900003
+observation	LIFE_SMOKING	Trying to give up smoking	160616005
+observation	LIFE_SMOKING	Stopped smoking	160617001
+observation	LIFE_SMOKING	Current non-smoker	160618006
+observation	LIFE_SMOKING	Date ceased smoking	160625004
+observation	LIFE_SMOKING	Tobacco smoking consumption	266918002
+observation	LIFE_SMOKING	Thinking about stopping smoking	394871007
+observation	LIFE_SMOKING	Minutes from waking to first tobacco consumption	413173009
+observation	LIFE_SMOKING	Cigarette smoker	65568007
+observation	REPRO_PMS	Premenstrual tension syndrome	82639001
+observation	REPRO_TAH	Total abdominal hysterectomy	116143008
+observation	REPRO_TAH_BSO	Total abdominal hysterectomy with bilateral salpingo-oophorectomy	116144002
+observation	REPRO_ATROPHIC_VAG	Senile (atrophic) vaginitis	52441000
+observation	REPRO_MENOPAUSE	Menopause symptoms present	170951000
+observation	REPRO_MENOPAUSE	Menopausal hot flushes	198436008
+observation	REPRO_PARITY	Prenatal examination and care of mother	18114009
+observation	FAMHX_BREAST_OVARIAN	Family history of neoplasm of breast	313102001
+observation	FAMHX_BREAST_OVARIAN	Family history of malignant neoplasm of breast	429740004
+observation	LAB_LIPIDS	Plasma cholesterol/HDL (high density lipoprotein) ratio	1015691000000106
+observation	LAB_LIPIDS	Lipid level	1020831000000109
+medication	HRT	Progynova 2mg tablets (Bayer Plc)	2845411000001105
+medication	HRT	Zumenon 1mg tablets (Viatris UK Healthcare Ltd)	2842511000001103
+medication	HRT	Novofem tablets (Novo Nordisk Ltd)	4499111000001107
+observation	SYMPTOM_BREAST_LUMP	Lumpy breasts	89164003
+observation	SYMPTOM_BREAST_LUMP	Breast lump symptom NOS	162160003
+observation	SYMPTOM_BREAST_LUMP	Breast lump present	162162006
+observation	SYMPTOM_BREAST_LUMP	Breast lump detected by self-examination	198011000000108
+observation	SYMPTOM_BREAST_LUMP	Lump in axilla	853681000006106
+observation	SYMPTOM_BREAST_LUMP	[D]Local superficial swelling, mass or lump	496471000000109
+observation	SYMPTOM_BREAST_LUMP	[D]Lump, localised and superficial	496501000000102
+observation	SYMPTOM_BREAST_LUMP	[D]Lump in head or neck	274751001
+observation	SYMPTOM_BREAST_PAIN	Unilateral mastalgia	315251009
+observation	SYMPTOM_BREAST_PAIN	Cyclical mastalgia	237453001
+observation	SYMPTOM_BREAST_PAIN	Persistent mastalgia	315250005
+observation	SYMPTOM_BREAST_PAIN	Breast tenderness	55222007
+observation	SYMPTOM_NIPPLE	Inversion of nipple	82231009
+observation	SYMPTOM_NIPPLE	Retraction of nipple	31845005
+observation	SYMPTOM_NIPPLE	Nipple discharge symptom	162164007
+observation	SYMPTOM_NIPPLE	Nipple discharge	54302000
+observation	SYMPTOM_NIPPLE	Sore nipple	247350000
+observation	SYMPTOM_NIPPLE	Breast symptom of change in nipple	115941000119108
+observation	SYMPTOM_NIPPLE	Eczema of nipple	237463009
+observation	BREAST_BENIGN	Fibroadenosis of breast	23260002
+observation	BREAST_BENIGN	Fibrocystic disease of breast	27431007
+observation	BREAST_BENIGN	Fibroadenoma of breast	254845004
+observation	BREAST_BENIGN	Solitary cyst of breast	266578003
+observation	BREAST_BENIGN	Mammary duct ectasia	22049009
+observation	BREAST_BENIGN	Abscess of breast	28432003
+observation	SYMPTOM_BREAST_LUMP	Mass of axilla	300863000
+observation	SYMPTOM_BREAST_LUMP	O/E -axillary lymphadenopathy	164150006
+observation	SYMPTOM_BREAST_LUMP	Breast finding	116339002
+observation	SYMPTOM_BREAST_LUMP	Breast problem	290085007
+observation	SYMPTOM_BREAST_LUMP	[X]Other signs and symptoms in breast	198116001
+observation	SYMPTOM_BREAST_PAIN	Pain of breast	53430007
+observation	HEREDITARY_BRCA	BRCA1 gene mutation positive	412734009
+observation	OVARIAN_CONDITIONS	Menopause	161712005
+observation	FAMHX_OTHER_CANCERS	Family history of malignant neoplasm	275937001
+observation	FAMHX_BREAST_OVARIAN	FH: Ovarian carcinoma	275111003
+observation	FAMHX_BREAST_OVARIAN	FH: neoplasm of ovary	160297008
+observation	FAMHX_BREAST_OVARIAN	FH: Breast disease	160392000
+observation	HEREDITARY_BRCA	BRCA2 gene mutation positive	412738007
+observation	HISTORY_OOPHORECTOMY	Bilateral salpingo-oophorectomy	29827000
+observation	HISTORY_OOPHORECTOMY	Laparoscopic TAH and bilateral salpingo-oophorectomy	414575003
+observation	OVARIAN_CONDITIONS	Polycystic ovaries	69878008
+observation	OVARIAN_CONDITIONS	Ovarian cyst	79883001
+observation	OVARIAN_CONDITIONS	Premature menopause	373717006
+observation	OVARIAN_CONDITIONS	Ovarian cystectomy	387741004
+observation	FAMHX_OTHER_CANCERS	FH: Bowel cancer (Lynch)	275109007
+observation	FAMHX_OTHER_CANCERS	Family history of prostate cancer (BRCA2)	414205003
+observation	FAMHX_OTHER_CANCERS	Family history of malignant neoplasm of GI tract	429006005
+observation	FAMHX_OTHER_CANCERS	Family history of neoplasm	266883004
+observation	COMORBID_HYPOTHYROID	Other acquired hypothyroidism	111566002
+observation	LAB_FSH	Serum follicle stimulating hormone level	1027161000000108
+observation	LAB_FT3	Serum free triiodothyronine level	1016961000000104
+observation	LAB_FT4	Free thyroxine level	1030801000000101
+observation	LAB_FT4_SERUM	Serum free T4 level	1016971000000106
+observation	LAB_TSH	TSH (thyroid stimulating hormone) level	1027151000000105
+observation	LAB_TSH_PLASMA	Plasma TSH (thyroid stimulating hormone) level	1022801000000102
+observation	LAB_GONADOTROPHIN	Gonadotrophin levels	997121000000100
+observation	LAB_TFT	Thyroid hormone tests	1027131000000103
+observation	LAB_TFT	Thyroid hormone tests	269845004
+observation	LAB_TFT_TEST	Thyroid function test	1016851000000107
+observation	LAB_TPO_AB	Thyroid peroxidase antibody level	1030111000000108
+medication	RESPIRATORY_INHALERS	Salmeterol 25micrograms/dose inhaler CFC free	10075611000001101
+medication	RESPIRATORY_INHALERS	Ventolin 100micrograms/dose Evohaler (GlaxoSmithKline UK Ltd)	222311000001102
+medication	RESPIRATORY_INHALERS	Beconase Aqueous 50micrograms/dose nasal spray (GlaxoSmithKline UK Ltd)	2940411000001108
+medication	RESPIRATORY_INHALERS	Qvar 100 inhaler (Teva UK Ltd)	3175611000001106
+medication	RESPIRATORY_INHALERS	Qvar 50 inhaler (Teva UK Ltd)	3176811000001102
+medication	RESPIRATORY_INHALERS	Qvar 100 Autohaler (Teva UK Ltd)	3177711000001108
+medication	RESPIRATORY_INHALERS	Beclometasone 100micrograms/dose breath actuated inhaler	35907811000001102
+medication	RESPIRATORY_INHALERS	Beclometasone 200micrograms/dose inhaler	35908511000001101
+medication	RESPIRATORY_INHALERS	Salbutamol 100micrograms/dose inhaler	35936511000001108
+medication	RESPIRATORY_INHALERS	Budesonide 200micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler	38896811000001103
+medication	RESPIRATORY_INHALERS	Fluticasone 125micrograms/dose / Salmeterol 25micrograms/dose inhaler CFC free	39111111000001109
+medication	RESPIRATORY_INHALERS	Fluticasone 250micrograms/dose / Salmeterol 25micrograms/dose inhaler CFC free	39111311000001106
+medication	RESPIRATORY_INHALERS	Beclometasone 50micrograms/dose nasal spray	39111911000001107
+medication	RESPIRATORY_INHALERS	Salbutamol 100micrograms/dose breath actuated inhaler CFC free	39112711000001103
+medication	RESPIRATORY_INHALERS	Salbutamol 100micrograms/dose inhaler CFC free	39113611000001102
+medication	RESPIRATORY_INHALERS	Beclometasone 100micrograms/dose inhaler	42292311000001106
+medication	RESPIRATORY_INHALERS	Budesonide 400micrograms/dose / Formoterol 12micrograms/dose dry powder inhaler	4378111000001103
+medication	RESPIRATORY_INHALERS	Flixonase Nasule 400microgram/unit dose nasal drops (GlaxoSmithKline UK Ltd)	4380511000001101
+medication	RESPIRATORY_INHALERS	Budesonide 64micrograms/dose nasal spray	7425611000001100
+medication	RESPIRATORY_INHALERS	Seretide 125 Evohaler (GlaxoSmithKline UK Ltd)	810211000001105
+medication	RESPIRATORY_INHALERS	Tiotropium bromide 18microgram inhalation powder capsules	9478911000001107
+medication	RESPIRATORY_INHALERS	Tiotropium bromide 18microgram inhalation powder capsules with device	9479011000001103
+observation	COMORBID_ASTHMA	Exercise-induced asthma	31387002
+observation	COMORBID_ASTHMA_CONTROL	Royal College of Physicians asthma assessment	302331000000106
+observation	COMORBID_ASTHMA_CONTROL	Asthma review using Royal College of Physicians three questions	754061000000100
+observation	COMORBID_ASTHMA_CONTROL	Royal College of Physicians asthma assessment three questions score	448003001
+observation	COMORBID_ASTHMA_CONTROL	Asthma attack	708038006
+observation	COMORBID_ASTHMA_CONTROL	Emergency asthma patient visit since last encounter	708373002
+observation	COMORBID_ASTHMA	Increasing exercise wheeze	170612008
+observation	COMORBID_ASTHMA	Airways obstruction reversible	170627008
+observation	COMORBID_ASTHMA	Airways obstruction irreversible	170628003
+observation	COMORBID_ASTHMA	Bronchodilators used more than once daily	170629006
+observation	COMORBID_ASTHMA	Bronchodilators used a maximum of once daily	170630001
+observation	COMORBID_ASTHMA	Asthma disturbing sleep	170631002
+observation	COMORBID_ASTHMA	Asthma causing night waking	170632009
+observation	COMORBID_ASTHMA	Asthma not disturbing sleep	170635006
+observation	COMORBID_ASTHMA	Asthma never disturbs sleep	170636007
+observation	COMORBID_ASTHMA	Asthma limiting activities	170637003
+observation	COMORBID_ASTHMA	Asthma not limiting activities	170638008
+observation	COMORBID_ASTHMA	Asthma prophylactic medication used	170647000
+observation	COMORBID_ASTHMA	Asthma restricts exercise	170655007
+observation	COMORBID_ASTHMA	Asthma sometimes restricts exercise	170656008
+observation	COMORBID_ASTHMA	Asthma severely restricts exercise	170657004
+observation	COMORBID_ASTHMA	Asthma never restricts exercise	170658009
+observation	COMORBID_ASTHMA	Not using inhaled steroids	170660006
+observation	COMORBID_ASTHMA	Using inhaled steroids - high dose	170662003
+observation	COMORBID_ASTHMA	Asthma causes daytime symptoms 1 to 2 times per month	370202007
+observation	COMORBID_ASTHMA	Asthma causes daytime symptoms 1 to 2 times per week	370203002
+observation	COMORBID_ASTHMA	Asthma causes daytime symptoms most days	370204008
+observation	COMORBID_ASTHMA	Asthma causes night symptoms 1 to 2 times per month	370205009
+observation	COMORBID_ASTHMA	Asthma never causes daytime symptoms	370208006
+observation	COMORBID_ASTHMA	Asthma daytime symptoms	373899003
+observation	COMORBID_ASTHMA	Asthma never causes night symptoms	473391009
+observation	COMORBID_ASTHMA	Asthma causes night time symptoms 1 to 2 times per week	771901000000100
+observation	COMORBID_ASTHMA	Asthma limits activities 1 to 2 times per month	771981000000105
+observation	COMORBID_ASTHMA_CONTROL	Asthma control step 1	182727003
+observation	COMORBID_ASTHMA_CONTROL	Asthma control step 2	182728008
+observation	COMORBID_ASTHMA_CONTROL	Asthma control step 3	182729000
+observation	LAB_SPIRO_FLOW	Respiratory flow rate measured	165034005
+observation	LAB_SPIRO_FLOW	Percent predicted FEF 25-75	1709401000006107
+observation	LAB_SPIRO_VOLUMES	Forced expired volume in 1 second	59328004
+observation	LAB_SPIRO_VOLUMES	Forced expired volume in one second/forced vital capacity ratio	251944000
+observation	LAB_SPIRO_VOLUMES	FEV1/FVC percent	313222007
+observation	LAB_SPIRO_VOLUMES	Forced vital capacity	50834005
+observation	LAB_SPIRO_FLOW	Peak expiratory flow rate measured using EN 13826 device	165871000000103
+observation	LAB_SPIRO_FLOW	Predicted peak flow	271508001
+observation	LAB_SPIRO_FLOW	Recorded/predicted peak expiratory flow rate ratio	134432000
+observation	LAB_SPIRO_FLOW	Peak expiratory flow rate	18491006
+observation	LAB_SPIRO_FLOW	More than 80% of predicted peak flow rate	271307007
+observation	LAB_SPIRO_FLOW	Peak flow rate (respiratory)	313193002
+observation	LAB_SPIRO_FLOW	Positive reversibility test to salbutamol	391118006
+observation	LAB_SPIRO_FLOW	Serial peak expiratory flow rate	251940009
+observation	LAB_LH	Serum luteinising hormone level	1023161000000104
+observation	LAB_LH	Luteinising hormone level	1030811000000104
+observation	LAB_LH	Plasma LH (luteinising hormone) level	1023171000000106
+observation	LAB_LH	Luteinising hormone and follicle stimulating hormone checked	148176006
+observation	LAB_OESTRADIOL	Serum oestradiol level	1010521000000102
+observation	LAB_OESTRADIOL	Plasma oestradiol level	1023231000000101
+observation	LAB_OESTRADIOL	Test request : Serum oestradiol level	1822661000006105
+observation	LAB_OESTRADIOL	Basic oestrogen: 17-B-oestriol level	373622004
+observation	HRT	Insertion of oestradiol implant	177627006
+observation	LAB_PROLACTIN	Serum prolactin level	1023211000000109
+observation	LAB_PROLACTIN	Prolactin level	1027171000000101
+observation	LAB_PROLACTIN	Increased prolactin level	131008004
+observation	LAB_PROLACTIN	Test request : Prolactin	110051000006104
+observation	LAB_PROLACTIN	Plasma prolactin level	1023181000000108
+observation	LAB_PROLACTIN	Monomeric prolactin level	1012121000000109
+observation	LAB_PROLACTIN	Serum monomeric prolactin level	1013581000000107
+observation	LAB_SEX_HORMONES_OTHER	Serum testosterone level	997161000000108
+observation	LAB_SEX_HORMONES_OTHER	Test request : Testosterone	110151000006100
+observation	LAB_SEX_HORMONES_OTHER	Plasma testosterone level	995571000000101
+observation	LAB_SEX_HORMONES_OTHER	Serum progesterone level	997151000000105
+observation	LAB_SEX_HORMONES_OTHER	Test request : Progesterone	110041000006101
+observation	LAB_SEX_HORMONES_OTHER	Serum sex hormone binding globulin level	999661000000105
+observation	LAB_SEX_HORMONES_OTHER	Test request : Serum sex hormone binding globulin level	1757101000006104
+observation	LAB_SEX_HORMONES_OTHER	Serum dehydroepiandrosterone level	997171000000101
+observation	LAB_SEX_HORMONES_OTHER	Dehydroepiandrosterone sulphate level	1011671000000105
+observation	LAB_SEX_HORMONES_OTHER	Serum androstenedione level	1023251000000108
+observation	LAB_SEX_HORMONES_OTHER	Anti-Mullerian hormone level	1006391000000109
+observation	LAB_SEX_HORMONES_OTHER	Serum insulin-like growth factor 1 level	997351000000107

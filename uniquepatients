@@ -1,0 +1,17 @@
+python3 << 'PY'
+import pandas as pd
+from pathlib import Path
+
+DATA_ROOT = Path("/Users/keerthikovelamudi/Documents/Model B/Bladder_3/Leukaemia_Cancer/2_Feature_Engineering/data")
+
+seen = set()
+for csv_path in sorted(DATA_ROOT.rglob("*.csv")):
+    df = pd.read_csv(csv_path, usecols=["PATIENT_GUID"])
+    seen.update(df["PATIENT_GUID"].astype(str).dropna().unique())
+
+guids = pd.Series(sorted(seen), name="PATIENT_GUID")
+print(f"Unique PATIENT_GUID: {len(guids):,}")
+out = DATA_ROOT / "unique_patient_guids_all_data.csv"
+guids.to_frame().to_csv(out, index=False)
+print(f"Wrote: {out}")
+PY

@@ -1,0 +1,363 @@
+code_type	category	code_id	term
+snomed	Comorbidity - Cardiovascular	1045	Benign essential hypertension
+snomed	Comorbidity - Cardiovascular	10028	Benign hypertension
+snomed	Comorbidity - Cardiovascular	11094	Mitral valve disorder
+snomed	Comorbidity - Cardiovascular	45902	Mitral valve regurgitation
+snomed	Comorbidity - Cardiovascular	52576	Hyperlipidemia
+snomed	Comorbidity - Cardiovascular	56139	Essential hypertension
+snomed	Comorbidity - Cardiovascular	56724	Aortic valve regurgitation
+snomed	Comorbidity - Cardiovascular	100680	Tricuspid valve regurgitation
+snomed	Comorbidity - Cardiovascular	371565	Coronary atherosclerosis
+snomed	Comorbidity - Cardiovascular	451750	Chronic kidney disease stage 3 due to hypertension
+snomed	Comorbidity - GI / GU	44539	Reflux
+snomed	Comorbidity - GI / GU	231343	Esophageal reflux finding
+snomed	Comorbidity - GI / GU	248220	Genitourinary symptoms
+snomed	Comorbidity - GI / GU	269564	Vaginal problem
+snomed	Comorbidity - GI / GU	362753	Acute urinary tract infection
+snomed	Comorbidity - GI / GU	420241	Diverticulum of large intestine without hemorrhage
+snomed	Comorbidity - GI / GU	511367	Diverticular disease of colon
+loinc	Comorbidity - Mental Health	819135	Do you feel happy most of the time [GDS]
+loinc	Comorbidity - Mental Health	819148	Do you feel that your situation is hopeless [GDS]
+loinc	Comorbidity - Mental Health	839640	Trouble sleeping in past 4 weeks [Reported.PHQ]
+loinc	Comorbidity - Mental Health	858770	Patient Health Questionnaire-9: Modified for Teens total score [Reported.PHQ.Teen]
+loinc	Comorbidity - Mental Health	858775	Beck Depression Inventory II total score [BDI]
+loinc	Comorbidity - Mental Health	864878	Little interest or pleasure in doing things in last 2 weeks Caregiver [Reported.PHQ]
+snomed	Comorbidity - Mental Health	34777	Major depression, single episode
+snomed	Comorbidity - Mental Health	180910	Anxiety state
+snomed	Comorbidity - Mental Health	338201	Level of depression
+icd10cm	Comorbidity - Other	537973	Soft tissue disorder, unspecified
+snomed	Comorbidity - Other	68659	Brachial neuritis
+snomed	Comorbidity - Other	333677	Hemangioma
+loinc	Comorbidity - Respiratory / ENT	791189	FEV1 measured/predicted
+loinc	Comorbidity - Respiratory / ENT	791194	FEV1 --pre bronchodilation
+loinc	Comorbidity - Respiratory / ENT	798942	Airway clearance impairment [CCC]
+loinc	Comorbidity - Respiratory / ENT	824261	Respiratory status finding
+loinc	Comorbidity - Respiratory / ENT	850093	Breath sounds by Auscultation
+loinc	Comorbidity - Respiratory / ENT	850115	Respiratory effort
+loinc	Comorbidity - Respiratory / ENT	855440	Cough duration
+snomed	Comorbidity - Respiratory / ENT	6879	Disorder of nasal sinus
+snomed	Comorbidity - Respiratory / ENT	9820	Acute bronchitis
+snomed	Comorbidity - Respiratory / ENT	14815	Acute sinusitis
+snomed	Comorbidity - Respiratory / ENT	40549	Abnormal posture
+snomed	Comorbidity - Respiratory / ENT	49599	Respiratory sounds
+snomed	Comorbidity - Respiratory / ENT	255023	Lung field abnormal
+snomed	Comorbidity - Respiratory / ENT	259032	Respiratory pattern
+snomed	Comorbidity - Respiratory / ENT	280112	Pharynx problem
+snomed	Comorbidity - Respiratory / ENT	321534	Abnormal breathing
+snomed	Comorbidity - Respiratory / ENT	334451	FEV1 before bronchodilation
+snomed	Comorbidity - Respiratory / ENT	372652	Measurement of expired nitric oxide
+loinc	Comorbidity - Skin / Dermatology	809844	Turgor [Interpretation] of Skin
+snomed	Comorbidity - Skin / Dermatology	721	Actinic keratosis
+snomed	Comorbidity - Skin / Dermatology	37949	Contact dermatitis
+snomed	Comorbidity - Skin / Dermatology	207699	Skin assessment
+snomed	Comorbidity - Skin / Dermatology	328462	Seborrheic keratosis
+snomed	Comorbidity - Skin / Dermatology	335530	Onychomycosis due to dermatophyte
+snomed	Comorbidity - Skin / Dermatology	370440	Inflamed seborrheic keratosis
+snomed	Comorbidity - Skin / Dermatology	425818	Lentigo
+snomed	Comorbidity - Skin / Dermatology	500655	Actinic keratosis
+cpt	General Imaging	2644026	Radiologic examination, chest; single view, frontal
+cpt	General Imaging	2644035	Radiologic examination, chest, 2 views, frontal and lateral
+cpt	General Imaging	2644363	Radiologic examination, abdomen; single anteroposterior view
+loinc	General Imaging	789914	Colonoscopy study
+snomed	General Imaging	291258	Magnetic resonance imaging - action
+snomed	History - Infectious Disease	447796	Exposure to tuberculosis
+cpt	Lab - Cardiac Enzymes	2633826	Creatine kinase (CK), (CPK); MB fraction only
+loinc	Lab - Cardiac Enzymes	772589	Creatine kinase [Enzymatic activity/volume] in Serum or Plasma
+loinc	Lab - Cardiac Enzymes	782108	Troponin I.cardiac [Mass/volume] in Serum or Plasma
+loinc	Lab - Cardiac Enzymes	785228	Creatine kinase.MB [Mass/volume] in Serum or Plasma
+loinc	Lab - Coagulation	773718	aPTT in Blood by Coagulation assay
+loinc	Lab - Coagulation	776750	Prothrombin time (PT)
+loinc	Lab - Coagulation	777601	INR in Platelet poor plasma by Coagulation assay
+loinc	Lab - Coagulation	817046	INR in Capillary blood by Coagulation assay
+loinc	Lab - Lipid Panel	772509	Cholesterol in HDL [Mass/volume] in Serum or Plasma
+loinc	Lab - Lipid Panel	772513	Cholesterol in LDL [Mass/volume] in Serum or Plasma
+loinc	Lab - Lipid Panel	772518	Cholesterol [Mass/volume] in Serum or Plasma
+loinc	Lab - Lipid Panel	772520	Cholesterol in HDL/Cholesterol.total [Mass Ratio] in Serum or Plasma
+loinc	Lab - Lipid Panel	773574	Triglyceride [Mass/volume] in Blood
+loinc	Lab - Lipid Panel	781905	Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma
+loinc	Lab - Lipid Panel	814026	Cholesterol non HDL [Mass/volume] in Serum or Plasma
+loinc	Lifestyle - Alcohol Use	782600	History of Alcohol use
+loinc	Lifestyle - Alcohol Use	843960	Alcoholic drinks per day
+loinc	Lifestyle - Alcohol Use	845809	How often have you had four or more drinks in one day during the past year [Reported]
+truveta	Lifestyle - Alcohol Use	5450035	Alcohol intake per week [oz]
+truveta	Lifestyle - Alcohol Use	5450036	Binge drinking frequency
+snomed	Lifestyle - Diet/Nutrition	319555	Nutrition
+snomed	Lifestyle - SDOH	265073	Finding relating to sexual activity
+snomed	Lifestyle - Sleep	239670	Sleep
+loinc	Lifestyle - Social Determinants of Health	833950	About how long did you work at that job or business
+loinc	Lifestyle - Social Determinants of Health	852513	Years of education [#] - Reported
+loinc	Lifestyle - Social Determinants of Health	864151	Country of travel [Location]
+loinc	Lifestyle - Social Determinants of Health	864905	Whether patient is employed in a healthcare setting
+loinc	Lifestyle - Social Determinants of Health	864908	Whether patient resides in a congregate care setting
+loinc	Lifestyle - Social Determinants of Health	2505669	Problems getting child care make work or study difficult
+loinc	Lifestyle - Social Determinants of Health	4120678	Do you feel physically or emotionally unsafe where you currently live
+snomed	Lifestyle - Social Determinants of Health	206471	Financial circumstances
+snomed	Lifestyle - Social Determinants of Health	281973	Household, family and support network detail
+truveta	Lifestyle - Social Determinants of Health	5450007	Do you feel that you are treated well by your partner/spouse/family member?
+truveta	Lifestyle - Social Determinants of Health	5450009	Incarceration within the past 2 years - Tuberculosis screening
+truveta	Lifestyle - Social Determinants of Health	5450012	Homelessness or residence in shelter - Tuberculosis screening
+truveta	Lifestyle - Social Determinants of Health	5450014	Born outside of the United States - Tuberculosis screening
+truveta	Lifestyle - Social Determinants of Health	5450020	Have you experienced physical, sexual, or emotional abuse or threats from a current or former partner or family member?
+truveta	Lifestyle - Social Determinants of Health	5450021	Are you currently in a relationship where you feel hurt, threatened, or afraid?
+truveta	Lifestyle - Social Determinants of Health	5450022	Safe in relationship
+truveta	Lifestyle - Social Determinants of Health	5450024	Do you have concerns about your safety, your child's safety or any family member's safety?
+loinc	Lifestyle - Substance Use	813462	Substance abuse [CCC]
+snomed	Lifestyle - Substance Use	210672	Intravenous drug user
+snomed	Lifestyle - Substance Use	286574	Illicit medication use
+snomed	Lifestyle - Substance Use	465153	History of intravenous drug abuse
+truveta	Lifestyle - Substance Use	5450016	Injection drug use - Tuberculosis screening
+icd10cm	Lifestyle - Tobacco Use	613079	Personal history of nicotine dependence
+loinc	Lifestyle - Tobacco Use	779948	Cigarettes smoked current (pack per day) - Reported
+loinc	Lifestyle - Tobacco Use	782636	History of Tobacco use
+loinc	Lifestyle - Tobacco Use	838606	Have you used tobacco in the last 30 days [SAMHSA]
+loinc	Lifestyle - Tobacco Use	842116	Tobacco smoking status
+loinc	Lifestyle - Tobacco Use	843957	Date quit tobacco smoking
+loinc	Lifestyle - Tobacco Use	857582	Tobacco use duration
+loinc	Lifestyle - Tobacco Use	857584	Smokeless tobacco status
+snomed	Lifestyle - Tobacco Use	56481	Cigar smoker
+snomed	Lifestyle - Tobacco Use	61752	Cigarette smoker
+snomed	Lifestyle - Tobacco Use	76941	Chews tobacco
+snomed	Lifestyle - Tobacco Use	84546	Tobacco dependence syndrome
+snomed	Lifestyle - Tobacco Use	210778	Snuff user
+snomed	Lifestyle - Tobacco Use	408920	Electronic cigarette user
+truveta	Lifestyle - Tobacco Use	5450038	Pipe smoker
+rxnorm	Medication - Allergy / Respiratory	949099	fluticasone propionate 0.05 MG/ACTUAT Metered Dose Nasal Spray [Flonase]
+rxnorm	Medication - Allergy / Respiratory	1064866	pseudoephedrine hydrochloride 30 MG Oral Tablet
+rxnorm	Medication - Allergy / Respiratory	1097552	Advair Diskus 250/50
+rxnorm	Medication - Allergy / Respiratory	4058162	fluticasone propionate Nasal Product
+rxnorm	Medication - Antibiotics	951511	ciprofloxacin 250 MG Oral Tablet
+rxnorm	Medication - Antibiotics	956660	levofloxacin 500 MG Oral Tablet
+rxnorm	Medication - Antibiotics	966107	azithromycin 250 MG Oral Tablet [Zithromax]
+rxnorm	Medication - Antibiotics	984576	ciprofloxacin 500 MG Oral Tablet
+rxnorm	Medication - Antibiotics	984626	azithromycin 250 MG Oral Tablet
+rxnorm	Medication - Antibiotics	998031	nitrofurantoin Oral Capsule [Macrobid]
+snomed	Medication - Antibiotics	315481	Erythromycin
+snomed	Medication - Antibiotics	315574	Sulfonamide antibacterial
+snomed	Medication - Antibiotics	423631	Penicillin
+rxnorm	Medication - Antihypertensives	950960	atenolol 25 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	950961	atenolol 50 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	953032	lisinopril 40 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	954357	potassium chloride 20 MEQ Extended Release Oral Tablet
+rxnorm	Medication - Antihypertensives	986403	furosemide 40 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	986587	lisinopril 10 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	986753	lisinopril 20 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	988340	hydrochlorothiazide 25 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	1001279	hydrochlorothiazide / valsartan Oral Tablet
+rxnorm	Medication - Antihypertensives	1002912	hydrochlorothiazide / triamterene Oral Capsule
+rxnorm	Medication - Antihypertensives	1006362	hydrochlorothiazide / lisinopril Oral Tablet
+rxnorm	Medication - Antihypertensives	1006573	hydrochlorothiazide / losartan Oral Tablet
+rxnorm	Medication - Antihypertensives	1008593	hydrochlorothiazide / triamterene Oral Tablet
+rxnorm	Medication - Antihypertensives	1034372	potassium chloride 10 MEQ Extended Release Oral Tablet [Klor-Con]
+rxnorm	Medication - Antihypertensives	1034431	labetalol
+rxnorm	Medication - Antihypertensives	1051854	metoprolol succinate 50 MG Extended Release Oral Tablet
+rxnorm	Medication - Antihypertensives	1052099	metoprolol tartrate 100 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	1052102	metoprolol tartrate 50 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	1052323	metoprolol tartrate 25 MG Oral Tablet
+rxnorm	Medication - Antihypertensives	1061101	losartan potassium 100 MG Oral Tablet
+snomed	Medication - Antihypertensives	321592	Lisinopril
+rxnorm	Medication - Bone Health	1050814	6 ML hylan G-F 20 8 MG/ML Prefilled Syringe
+rxnorm	Medication - Bone Health	1058398	alendronic acid 35 MG Oral Tablet
+rxnorm	Medication - Cardiac	880495	warfarin
+rxnorm	Medication - Cardiac	951882	digoxin 0.25 MG Oral Tablet
+rxnorm	Medication - Cardiac	965297	aspirin 325 MG Oral Tablet
+rxnorm	Medication - Cardiac	976317	aspirin 81 MG Oral Tablet
+rxnorm	Medication - Cardiac	1009410	nitroglycerin Sublingual Tablet
+rxnorm	Medication - Cardiac	1050068	warfarin sodium 2 MG Oral Tablet
+rxnorm	Medication - Cardiac	1050078	warfarin sodium 2.5 MG Oral Tablet
+rxnorm	Medication - Cardiac	1050253	warfarin sodium 4 MG Oral Tablet
+rxnorm	Medication - Cardiac	1050261	warfarin sodium 5 MG Oral Tablet
+rxnorm	Medication - Diabetes	1053194	metformin hydrochloride 1000 MG Oral Tablet
+rxnorm	Medication - Diabetes	1053197	metformin hydrochloride 500 MG Oral Tablet
+rxnorm	Medication - GI / Acid Suppression	954197	omeprazole 20 MG Delayed Release Oral Capsule
+rxnorm	Medication - GI / Acid Suppression	954568	ranitidine 150 MG Oral Tablet
+rxnorm	Medication - GI / Acid Suppression	990285	lansoprazole 30 MG Delayed Release Oral Capsule
+rxnorm	Medication - GI / Acid Suppression	1010934	omeprazole 20 MG Delayed Release Oral Tablet
+rxnorm	Medication - GI / Acid Suppression	1030831	esomeprazole 40 MG Delayed Release Oral Capsule [Nexium]
+rxnorm	Medication - Hormone Therapy (HRT)	1001426	estrogens, conjugated (USP) Oral Tablet [Premarin]
+rxnorm	Medication - Hormone Therapy (HRT)	1008491	estrogens, conjugated (USP) Oral Tablet
+rxnorm	Medication - Mental Health / Sleep	957431	citalopram 20 MG Oral Tablet
+rxnorm	Medication - Mental Health / Sleep	1002342	alprazolam Oral Tablet
+rxnorm	Medication - Mental Health / Sleep	1045437	cyclobenzaprine hydrochloride 10 MG Oral Tablet
+rxnorm	Medication - Mental Health / Sleep	1048979	zolpidem tartrate 10 MG Oral Tablet
+rxnorm	Medication - Mental Health / Sleep	1048982	zolpidem tartrate 5 MG Oral Tablet
+rxnorm	Medication - Other Chronic	954457	allopurinol 100 MG Oral Tablet
+rxnorm	Medication - Other Chronic	954458	allopurinol 300 MG Oral Tablet
+rxnorm	Medication - Other Chronic	954545	prednisone 10 MG Oral Tablet
+rxnorm	Medication - Other Chronic	1007636	methylprednisolone Injectable Suspension
+rxnorm	Medication - Pain (Non-Opioid)	952793	indomethacin 50 MG Oral Capsule
+rxnorm	Medication - Pain (Non-Opioid)	1047165	naproxen sodium 220 MG Oral Tablet
+rxnorm	Medication - Respiratory (Chronic)	918368	albuterol 0.09 MG/ACTUAT Metered Dose Inhaler [Ventolin]
+rxnorm	Medication - Respiratory (Chronic)	919120	albuterol 0.09 MG/ACTUAT Metered Dose Inhaler [Proventil]
+rxnorm	Medication - Respiratory (Chronic)	1115472	Albuterol / Ipratropium Inhalant Solution
+rxnorm	Medication - Respiratory (Chronic)	1116488	Albuterol Inhalant Solution
+rxnorm	Medication - Respiratory (Chronic)	1152119	Albuterol Metered Dose Inhaler [ProAir HFA]
+rxnorm	Medication - Statins (Lipid Lowering)	953050	lovastatin 10 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	953051	lovastatin 20 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	953052	lovastatin 40 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	954885	simvastatin 40 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	983836	gemfibrozil 600 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	985313	simvastatin 20 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	986178	simvastatin 10 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	1032689	atorvastatin 10 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	1032847	atorvastatin 20 MG Oral Tablet [Lipitor]
+rxnorm	Medication - Statins (Lipid Lowering)	1058739	pravastatin sodium 20 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	1058862	pravastatin sodium 40 MG Oral Tablet
+rxnorm	Medication - Statins (Lipid Lowering)	1058868	pravastatin sodium 80 MG Oral Tablet
+snomed	Medication - Supplements (OTC)	42883	Ruta graveolens
+rxnorm	Medication - Supplements / Vitamins	881357	chondroitin sulfates / glucosamine Oral Product
+rxnorm	Medication - Supplements / Vitamins	899212	Ocuvite Oral Product
+rxnorm	Medication - Supplements / Vitamins	907591	Metamucil Oral Product
+rxnorm	Medication - Supplements / Vitamins	958587	vitamin E Oral Capsule
+rxnorm	Medication - Supplements / Vitamins	981610	ubidecarenone 100 MG Oral Capsule
+rxnorm	Medication - Supplements / Vitamins	1002374	cholecalciferol Oral Capsule
+rxnorm	Medication - Supplements / Vitamins	1003088	vitamin B12 Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1012365	ubidecarenone Oral Capsule
+rxnorm	Medication - Supplements / Vitamins	1035875	chondroitin sulfates / glucosamine Oral Capsule
+rxnorm	Medication - Supplements / Vitamins	1083226	Vitamin D 1000 UNT Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1091081	Multivitamin preparation
+rxnorm	Medication - Supplements / Vitamins	1096745	calcium carbonate / vitamin D Oral Product
+rxnorm	Medication - Supplements / Vitamins	1125025	Calcium / Vitamin D Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1125277	Calcium 500 MG Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1125391	calcium carbonate / vitamin D Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1135650	Multivitamin preparation Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1135684	Magnesium 250 MG Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1140839	Vitamin D Oral Tablet
+rxnorm	Medication - Supplements / Vitamins	1141570	Vitamin D Oral Capsule
+rxnorm	Medication - Thyroid	998587	levothyroxine Oral Tablet [Synthroid]
+rxnorm	Medication - Thyroid	1006349	levothyroxine Oral Tablet
+rxnorm	Medication - Thyroid	1059045	levothyroxine sodium 0.1 MG Oral Tablet [Synthroid]
+loinc	Post-Acute Markers	853098	Transferring
+loinc	Symptoms - General	836756	Cognitive impairment [Reported]
+snomed	Symptoms - General	31925	Food appetite
+snomed	Symptoms - General	229456	Long-term memory performance
+snomed	Symptoms - General	248190	Tired all the time
+snomed	Symptoms - General	248196	Edema
+snomed	Symptoms - General	252182	Malaise and fatigue
+snomed	Symptoms - General	310568	Malaise
+snomed	Symptoms - General	346249	Balancing when standing
+snomed	Symptoms - General	354690	Unexplained weight loss
+snomed	Symptoms - Genitourinary	181020	Female genital organ symptoms
+snomed	Symptoms - Mental Health	229622	Level of interest
+loinc	Symptoms - Pain	806841	Pain exacerbating factors - Reported
+loinc	Symptoms - Pain	842451	Pain severity - 0-10 verbal numeric rating [Score] - Reported
+loinc	Symptoms - Pain	860984	I have only walked short distances because of my back pain in the last 2 weeks [STarT Back]
+loinc	Symptoms - Pain	860990	Overall, how bothersome has your back pain been in the last 2 weeks [STarT Back]
+snomed	Symptoms - Pain	20922	Pain
+snomed	Symptoms - Pain	338313	Pain level
+snomed	Symptoms - Pain	4048595	Numeric Pain Rating Scale score
+snomed	Symptoms - Pain	4049529	Presence of pain
+loinc	Vital Signs / Anthropometrics	779577	Body surface area
+loinc	Vital Signs / Anthropometrics	779635	Body weight Estimated
+loinc	Vital Signs / Anthropometrics	779658	Blood pressure device Cuff size
+loinc	Vital Signs / Anthropometrics	780001	Vital signs
+loinc	Vital Signs / Anthropometrics	780134	Oxygen saturation device measurement site
+loinc	Vital Signs / Anthropometrics	780161	Heart rate rhythm
+loinc	Vital Signs / Anthropometrics	849123	Body weight --used for drug calculation
+loinc	Vital Signs / Anthropometrics	850120	Nursing physiologic assessment panel
+snomed	Vital Signs / Anthropometrics	232812	Sinus rhythm
+snomed	Vital Signs / Anthropometrics	264065	Pulse oximetry monitoring
+snomed	Vital Signs / Anthropometrics	355946	Current chronological age
+snomed	Vital Signs / Anthropometrics	2646149	Dosing body weight
+snomed	Comorbidity - Benign Breast	25813	Fibrocystic disease of breast
+loinc	Lab - Bone Density / DEXA	850833	DXA Radius and Ulna - left [T-score] Bone density
+snomed	History - Hereditary Risk	345410	BRCA1 gene mutation detected
+snomed	Comorbidity - Cardiovascular	23632	Phlebitis of deep veins of lower extremity
+snomed	Symptoms - Breast Lump	83974	Breast lump
+snomed	Symptoms - Breast Lump	105058	Breast finding
+snomed	Symptoms - Breast Lump	180739	Breast signs and symptoms
+snomed	Symptoms - Breast Lump	145840	H/O: breast problem
+snomed	Symptoms - Breast Lump	270038	Breast problem
+snomed	Symptoms - Breast Lump	255552	Breast changes
+icd10cm	Symptoms - Breast Lump	546458	Localized swelling, mass and lump, trunk
+snomed	Symptoms - Breast Lump	230662	Ptotic breast
+snomed	Comorbidity - Atypical Hyperplasia	359476	Atypical ductal hyperplasia of breast
+snomed	Comorbidity - Atypical Hyperplasia	459791	Atypical ductal hyperplasia of right breast
+snomed	Comorbidity - Atypical Hyperplasia	378176	Atypical lobular hyperplasia of breast
+snomed	Comorbidity - Atypical Hyperplasia	460170	Atypical lobular hyperplasia of right breast
+snomed	Comorbidity - Atypical Hyperplasia	460171	Atypical lobular hyperplasia of left breast
+snomed	Comorbidity - Atypical Hyperplasia	312598	Atypical hyperplasia of breast
+snomed	Comorbidity - Benign Breast	332806	Cyst of breast
+snomed	Comorbidity - Benign Breast	54622	Benign mammary dysplasia
+snomed	Comorbidity - Benign Breast	4045002	Fibrosclerosis of right breast
+snomed	Comorbidity - Benign Breast	4045003	Fibrosclerosis of left breast
+snomed	Comorbidity - Benign Breast	458640	Intraductal papilloma of left breast
+snomed	Comorbidity - Benign Breast	71418	Cellulitis of breast
+snomed	Screening - Mammography	23167	Screening mammography
+hcpcs	Screening - Mammography	1220784	Screening mammography, bilateral
+cpt	Screening - Mammography	2638188	Screening mammography results documented and reviewed
+cpt	Screening - Mammography	2644219	Screening mammography, bilateral v2
+cpt	Screening - Mammography	2644224	Computer-aided detection (screening mammography)
+cpt	Screening - Mammography	2644220	Mammography; bilateral
+cpt	Screening - Mammography	2643689	Computer-aided detection (no further review)
+cpt	Screening - Mammography	67481	Mammography
+snomed	Comorbidity - Menopause	145757	Menopause
+snomed	Comorbidity - Menopause	110920	Menopausal syndrome
+snomed	Comorbidity - Menopause	20494	Menopausal symptom
+icd10cm	Lifestyle - SDOH	521818	Other obesity due to excess calories
+icd10cm	Lifestyle - SDOH	521817	Morbid (severe) obesity due to excess calories
+loinc	Lifestyle - Alcohol Use	844150	Alcohol use [NTDS]
+snomed	History - Family Hx Breast Cancer	361314	Family history of breast cancer
+snomed	History - Family Hx Breast Cancer	361837	Family history of malignant neoplasm of breast in first degree relative
+snomed	History - Family Hx Breast Cancer	450333	Family history of breast cancer gene BRCA mutation
+snomed	History - Family Hx Breast Cancer	362775	Family history of breast cancer 2 gene mutation
+snomed	History - Family Hx Breast Cancer	292089	Family history of neoplasm of breast
+snomed	History - Family Hx Breast Cancer	452240	Family history of malignant neoplasm of breast diagnosed before 45 years of age
+snomed	History - Family Hx Breast Cancer	452114	Family history of malignant neoplasm of breast in first degree relative less than 50 years of age
+snomed	History - Family Hx Breast Cancer	452123	Family history of breast cancer gene mutation in first degree relative
+snomed	History - Family Hx Other Cancers	362217	Family history of malignant neoplasm of ovary (BRCA-linked)
+snomed	History - Family Hx Other Cancers	346775	Family history of malignant neoplasm of prostate (BRCA2-linked)
+snomed	History - Family Hx Other Cancers	360617	Family history of malignant neoplasm of pancreas (BRCA2-linked)
+snomed	History - Family Hx Other Cancers	256136	Family history of malignant neoplasm (general)
+snomed	History - Family Hx Other Cancers	447793	Family history of colorectal cancer (Lynch)
+snomed	History - Family Hx Other Cancers	291817	Family history of cancer of colon (Lynch)
+snomed	History - Family Hx Other Cancers	360623	Family history of malignant neoplasm of GI tract
+snomed	History - Family Hx Other Cancers	362320	Family history of malignant neoplasm of digestive organ
+snomed	History - Family Hx Other Cancers	255405	FH: Stomach cancer
+snomed	History - Oophorectomy	361336	History of total hysterectomy with bilateral salpingo-oophorectomy
+snomed	History - Oophorectomy	359536	History of bilateral salpingo-oophorectomy
+snomed	History - Oophorectomy	104759	Salpingo-oophorectomy
+snomed	History - Oophorectomy	81433	Total hysterectomy with removal of both tubes and ovaries
+cpt	History - Oophorectomy	2639127	Laparoscopic salpingo-oophorectomy
+snomed	Comorbidity - Ovarian Failure	219250	Menopause ovarian failure
+snomed	Comorbidity - Ovarian Failure	219879	Premature ovarian insufficiency
+snomed	Comorbidity - Ovarian Failure	100933	Ovarian failure
+snomed	Comorbidity - Ovarian Failure	62011	Primary ovarian failure
+snomed	Comorbidity - Ovarian Failure	522155	Asymptomatic postprocedural ovarian failure
+snomed	Comorbidity - Ovarian Conditions	444369	Polycystic bilateral ovaries
+snomed	Comorbidity - Ovarian Conditions	462417	Cyst of bilateral ovaries
+snomed	Comorbidity - Ovarian Conditions	447425	Complex ovarian cyst
+snomed	Comorbidity - Ovarian Conditions	541672	Unspecified ovarian cysts
+snomed	Comorbidity - Ovarian Conditions	219159	Tubo-ovarian mass
+snomed	History - Hereditary Risk	345414	BRCA2 gene mutation detected
+snomed	History - Radiation Exposure	200537	Exposure to radiation
+icd10cm	History - Radiation Exposure	613266	Personal history of irradiation
+snomed	History - Radiation Exposure	145679	History of radiation exposure
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	772685	Estradiol (E2) [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	2637074	Estradiol; total
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	772701	Estrone (E1) [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	772693	Estriol (E3).unconjugated [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	791502	Estriol (E3).unconjugated [Multiple of the median] in Serum or Plasma
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	773346	Progesterone [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Estrogens + Progesterone)	2634846	Progesterone
+snomed	Lab - Sex Hormones (Androgens + SHBG)	773509	Testosterone [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	773515	Testosterone Free [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	2630573	Testosterone; total
+snomed	Lab - Sex Hormones (Androgens + SHBG)	2630124	Testosterone; free
+snomed	Lab - Sex Hormones (Androgens + SHBG)	773514	Testosterone.free+weakly bound [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	786687	Testosterone Free/Testosterone.total in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	778192	Testosterone.free+weakly bound/Testosterone.total in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	117007	Testosterone level below reference range
+snomed	Lab - Sex Hormones (Androgens + SHBG)	117006	Testosterone level above reference range
+snomed	Lab - Sex Hormones (Androgens + SHBG)	785226	Sex hormone binding globulin [Moles/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	2630650	Sex hormone binding globulin (SHBG)
+snomed	Lab - Sex Hormones (Androgens + SHBG)	772627	Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	2630564	Dehydroepiandrosterone-sulfate (DHEA-S)
+snomed	Lab - Sex Hormones (Androgens + SHBG)	772629	Dehydroepiandrosterone (DHEA) [Mass/volume] in Serum or Plasma
+snomed	Lab - Sex Hormones (Androgens + SHBG)	2634993	Dehydroepiandrosterone (DHEA)
+snomed	Lab - Pituitary Hormones (Prolactin + LH)	773350	Prolactin [Mass/volume] in Serum or Plasma
+snomed	Lab - Pituitary Hormones (Prolactin + LH)	2634698	Prolactin
+snomed	Lab - Pituitary Hormones (Prolactin + LH)	116937	Prolactin level above reference range
+snomed	Lab - Pituitary Hormones (Prolactin + LH)	2630648	Gonadotropin; luteinizing hormone (LH)
+snomed	Lab - Insulin Pathway (IGF-1 + C-peptide)	772952	Insulin-like growth factor-I [Mass/volume] in Serum or Plasma
+snomed	Lab - Insulin Pathway (IGF-1 + C-peptide)	772398	C peptide [Mass/volume] in Serum or Plasma
+snomed	Lab - Insulin Pathway (IGF-1 + C-peptide)	2631813	C-peptide

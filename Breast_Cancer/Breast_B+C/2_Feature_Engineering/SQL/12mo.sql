@@ -1,0 +1,571 @@
+/*
+ * Breast cancer prediction — 12mo window — Approach B (v4)
+ *
+ * Pure data extraction. Codelist filtering and CATEGORY/TIME_WINDOW assignment
+ * happen in the Python preprocessor before FE.
+ *
+ * COHORT DESIGN (Approach B):
+ *   - Cancer:     all breast cancer patients diagnosed at any date (no anchor-window cutoff)
+ *   - Non-cancer: ALL female patients without any cancer diagnosis, year-stratified
+ *                 at 1:1 ratio (balanced cohort). NO curated-codes filter — sparse-record
+ *                 patients are included so the model learns the
+ *                 "no clinical signal = no cancer" boundary directly.
+ *
+ * ANCHOR:
+ *   - Cancer:     date_of_diagnosis (their actual diagnosis date)
+ *   - Non-cancer: random sampled event date (no anchor-window cutoff)
+ *                 (deterministic via FARM_FINGERPRINT — reproducible)
+ *
+ * LOOKBACK WINDOW (12mo prediction = 12-month gap before anchor):
+ *   - Events in [anchor - 60 months, anchor - 12 months]
+ *
+ * LEAKAGE PREVENTION (breast-specific):
+ *   - Generic cancer SNOMED codes excluded for both groups (Dim_Cancer_Codes)
+ *   - Breast-pathway SNOMEDs excluded (mastectomy, breast biopsy, screening abnormal,
+ *     radiotherapy, chemo regimen, in-situ carcinoma, QCancer breast risk score)
+ *   - Breast-pathway DMDs excluded (tamoxifen, anastrozole, letrozole — UK
+ *     practice is overwhelmingly adjuvant therapy, not chemoprevention)
+ *   - Term-level NOT LIKE '%cancer%' at medical_history layer (defence-in-depth)
+ *   - Palliative-care patients excluded from both groups
+ *   - Same filters/exclusions applied identically to both classes
+ *   - No matching on age/ethnicity (preserves real predictive signal)
+ *
+ * OUTPUT SCHEMA (no CATEGORY or TIME_WINDOW — added by Python preprocessor):
+ *   PATIENT_GUID, CANCER_CLASS, CANCER_ID, SEX, PATIENT_ETHNICITY_16, PATIENT_ETHNICITY_6, PATIENT_AGE,
+ *   ANCHOR_DATE, ANCHOR_YEAR, EVENT_DATE, EVENT_AGE,
+ *   DAYS_BEFORE_ANCHOR, MONTHS_BEFORE_ANCHOR, EVENT_TYPE,
+ *   SNOMED_C_T_CONCEPT_ID, TERM, ASSOCIATED_TEXT, VALUE,
+ *   MED_CODE_ID, DRUG_TERM, DURATION
+ */
+
+WITH params AS (
+  SELECT
+    DATE '1950-01-01' AS longterm_mh_start,
+    DATE '2026-06-01' AS longterm_mh_end,
+    5                 AS years_before,                -- 60mo lookback (5 years)
+    12                AS months_before,               -- 12mo gap before anchor (matches 12mo-prediction)
+    1                 AS min_obs_events_per_patient,  -- CANCER threshold: keep any cancer patient with ≥1 obs event (protect positives)
+    5                 AS min_obs_events_non_cancer,    -- NON-CANCER threshold: require ≥5 obs events in the (foreign-anchor) window
+    1                 AS min_med_events_per_patient,
+    5                 AS non_cancer_ratio,            -- oversample non-cancer 5x; build_shared_split downsamples to 1:1 across train/val/test (positives never discarded)
+    '%breast%'        AS target_cancer_pattern
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Breast-pathway leakage exclusions (mirrors 1_Top_Snomed leakage filters)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+breast_pathway_codes AS (
+  SELECT snomed_code FROM UNNEST([
+    -- RFC / admin / referral / QCancer breast risk score
+    907341000006100, 429087003, 874291000000100, 134405005,
+    276341000000100, 185270007, 394592004,
+    -- In-situ carcinoma (treated as cancer)
+    189336000, 109889007, 109888004,
+    -- Breast surgery
+    69031006, 394911000, 442343008, 64368001, 274957008,
+    429400009, 384723003, 172043006, 237371007, 392021009,
+    428571003, 392023007, 27865001,
+    -- Axillary surgery
+    79544006,
+    -- Breast biopsy (diagnostic-pathway)
+    116334007, 387736007, 432550005, 122548005,
+    -- Screening abnormality (immediate-pre-diagnosis)
+    171176006,
+    -- Radiotherapy
+    168531007, 108290001, 168534004, 168750009,
+    -- Diagnostic referrals / imaging / surgery / histology (added 2026-06-01 v2)
+    183859008, 2985005, 115218002, 185710003, 313186001, 698599008, 831361000006109, 185271006, 168748001, 306300002, 305885009, 33496007, 44771000, 274530001, 408469009, 387734005, 69990006, 62434009, 71651007, 47079000, 367651003, 185706001, 392090004,
+    -- Chemotherapy regimen
+    716872004
+  ]) AS snomed_code
+),
+
+breast_pathway_meds AS (
+  -- Tamoxifen / anastrozole / letrozole — UK practice is overwhelmingly adjuvant
+  -- (post-diagnosis) therapy, not chemoprevention. Treated as leakage.
+  SELECT dmd_code FROM UNNEST([
+    39704511000001106,  -- Tamoxifen 20mg tablets
+    41872011000001105,  -- Anastrozole 1mg tablets
+    41878511000001100   -- Letrozole 2.5mg tablets
+  ]) AS dmd_code
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Shared reference tables
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+diagnostic_codes AS (
+  SELECT
+    code_id,
+    source_practice_code,
+    PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(file_name, r'/([0-9]{8})/')) AS file_date,
+    term,
+    snomed_c_t_concept_id,
+    snomed_c_t_description_id
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.Coding_ClinicalCode`
+  WHERE snomed_c_t_concept_id IS NOT NULL
+    AND term IS NOT NULL
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY code_id, source_practice_code ORDER BY file_date DESC
+  ) = 1
+),
+
+patients AS (
+  SELECT
+    pa.patient_guid,
+    pa.sex,
+    pa.date_of_birth,
+    pa.deleted,
+    rc.LABEL_16 AS patient_ethnicity_16,
+    rc.LABEL_6  AS patient_ethnicity_6
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.Admin_Patient` pa
+  LEFT JOIN `prj-cts-ai-dev-sp.EMIS_BULK_DATA_temp.Patient_Ethnicity` rc
+    ON rc.patient_guid = pa.patient_guid
+  WHERE pa.deleted != true OR pa.deleted IS NULL
+),
+
+medical_history AS (
+  SELECT
+    co.source_practice_code                      AS practice_id,
+    co.code_id                                   AS code_id,
+    co.patient_guid                              AS patient_guid,
+    co.consultation_guid                         AS consultation_guid,
+    PARSE_DATE('%Y-%m-%d', co.effective_date)    AS effective_date,
+    PARSE_DATE('%Y-%m-%d', co.entered_date)      AS entered_date,
+    co.associated_text                           AS associated_text,
+    co.observation_type                          AS observation_type,
+    co.value                                     AS value,
+    dc.term,
+    SAFE_CAST(dc.snomed_c_t_concept_id AS INT64) AS snomed_c_t_concept_id,
+    dc.snomed_c_t_description_id
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.CareRecord_Observation` AS co
+  LEFT JOIN diagnostic_codes AS dc
+    ON SAFE_CAST(co.code_id AS INT64) = SAFE_CAST(dc.code_id AS INT64)
+   AND co.source_practice_code = dc.source_practice_code
+  CROSS JOIN params param
+  WHERE co.effective_date IS NOT NULL
+    AND PARSE_DATE('%Y-%m-%d', co.effective_date) >= param.longterm_mh_start
+    AND PARSE_DATE('%Y-%m-%d', co.effective_date) <  param.longterm_mh_end
+    AND (dc.term IS NULL OR (
+        LOWER(dc.term) NOT LIKE '%cancer%'
+        -- Family hx exception: allow "Family history of ... cancer" terms (real risk factor)
+        OR LOWER(dc.term) LIKE '%family history%'
+        OR LOWER(dc.term) LIKE 'fh:%'
+        OR LOWER(dc.term) LIKE 'f/h%'
+    ))   -- defence: hide cancer-term events EXCEPT family history
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY co.patient_guid, co.code_id, co.effective_date
+    ORDER BY co.entered_date DESC
+  ) = 1
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 1: Identify cancer patients
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+cancer_snomed_codes AS (
+  SELECT DISTINCT SAFE_CAST(SNOMED_CODE AS INT64) AS snomed_code
+  FROM `prj-cts-ai-dev-sp.EMIS_MED_CODES.Dim_Cancer_Codes`
+  WHERE LOWER(cancer_id) NOT LIKE '%disease%'
+),
+
+any_cancer_patient AS (
+  SELECT DISTINCT mh.patient_guid
+  FROM medical_history mh
+  JOIN cancer_snomed_codes csc
+    ON mh.snomed_c_t_concept_id = csc.snomed_code
+),
+
+target_cancer_patients AS (
+  SELECT patient_guid, date_of_diagnosis, cancer_id
+  FROM (
+    SELECT
+      mh.patient_guid,
+      mh.effective_date AS date_of_diagnosis,
+      dcc.cancer_id,
+      ROW_NUMBER() OVER (
+        PARTITION BY mh.patient_guid
+        ORDER BY mh.effective_date, dcc.cancer_id
+      ) AS rn
+    FROM medical_history mh
+    JOIN `prj-cts-ai-dev-sp.EMIS_MED_CODES.Dim_Cancer_Codes` dcc
+      ON CAST(mh.snomed_c_t_concept_id AS STRING) = dcc.SNOMED_CODE
+    JOIN patients pp ON pp.patient_guid = mh.patient_guid AND pp.sex = 'F'
+    CROSS JOIN params param
+    WHERE mh.effective_date IS NOT NULL
+      AND DATE_DIFF(mh.effective_date, PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR) >= 18
+      AND LOWER(dcc.cancer_id) NOT LIKE '%disease%'
+      AND LOWER(dcc.cancer_id) LIKE param.target_cancer_pattern
+  )
+  WHERE rn = 1
+),
+
+palliative_patients AS (
+  SELECT DISTINCT patient_guid
+  FROM medical_history
+  WHERE snomed_c_t_concept_id = 1403151000000103
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 2: Find non-cancer patients (Approach B — NO curated-codes filter)
+   All female patients without any cancer diagnosis, not in palliative care.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+non_cancer_patients AS (
+  SELECT DISTINCT mh.patient_guid
+  FROM medical_history mh
+  JOIN patients pp
+    ON pp.patient_guid = mh.patient_guid
+  WHERE pp.sex = 'F'                                  -- breast is female-only
+    AND NOT EXISTS (
+      SELECT 1 FROM any_cancer_patient acp
+      WHERE acp.patient_guid = mh.patient_guid
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM palliative_patients pal
+      WHERE pal.patient_guid = mh.patient_guid
+    )
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 3: Assign each non-cancer patient an anchor drawn from the CANCER
+   diagnosis-date distribution (gold-layer method, aligned to the Truveta breast
+   pipeline + cancer_training_truveta_v3_gold.sql). Drawing the anchor from the
+   cancer date pool — rather than the patient's own event date — guarantees by
+   construction that non-cancer and cancer share the same anchor-YEAR
+   distribution, removing the "recent anchor → non-cancer" confound exactly.
+   Deterministic via FARM_FINGERPRINT for reproducibility.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+cancer_anchor_pool AS (
+  SELECT
+    date_of_diagnosis,
+    ROW_NUMBER() OVER (ORDER BY FARM_FINGERPRINT(CAST(patient_guid AS STRING))) AS pool_rn
+  FROM target_cancer_patients
+),
+
+non_cancer_with_anchor AS (
+  SELECT
+    ncp.patient_guid,
+    cap.date_of_diagnosis AS anchor_date
+  FROM (
+    SELECT
+      patient_guid,
+      MOD(ABS(FARM_FINGERPRINT(CAST(patient_guid AS STRING))),
+          (SELECT COUNT(*) FROM cancer_anchor_pool)) + 1 AS assigned_rn
+    FROM non_cancer_patients
+  ) ncp
+  JOIN cancer_anchor_pool cap ON ncp.assigned_rn = cap.pool_rn
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 4: Count events in lookback window per patient. Apply minimums.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+cancer_event_counts AS (
+  SELECT
+    patient_guid, anchor_date, cancer_id,
+    COUNT(*) AS obs_event_count
+  FROM (
+    SELECT DISTINCT
+      tcp.patient_guid,
+      tcp.date_of_diagnosis AS anchor_date,
+      tcp.cancer_id,
+      mh.effective_date,
+      mh.snomed_c_t_concept_id,
+      CAST(mh.term AS STRING)             AS term,
+      CAST(mh.associated_text AS STRING)  AS associated_text,
+      CAST(mh.value AS STRING)            AS value
+    FROM target_cancer_patients tcp
+    JOIN medical_history mh
+      ON mh.patient_guid = tcp.patient_guid
+    CROSS JOIN params param
+    WHERE NOT EXISTS (
+        SELECT 1 FROM palliative_patients pal WHERE pal.patient_guid = tcp.patient_guid
+      )
+      AND mh.effective_date >= DATE_SUB(tcp.date_of_diagnosis, INTERVAL (param.years_before * 12 + param.months_before) MONTH)
+      AND mh.effective_date <  DATE_SUB(tcp.date_of_diagnosis, INTERVAL param.months_before MONTH)
+      AND mh.snomed_c_t_concept_id IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM cancer_snomed_codes csc
+        WHERE csc.snomed_code = mh.snomed_c_t_concept_id
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM breast_pathway_codes bpc
+        WHERE bpc.snomed_code = mh.snomed_c_t_concept_id
+      )
+      AND mh.observation_type NOT IN ('Immunisation')
+  )
+  GROUP BY 1, 2, 3
+  HAVING COUNT(*) >= (SELECT min_obs_events_per_patient FROM params)
+),
+
+non_cancer_event_counts AS (
+  SELECT
+    patient_guid, anchor_date,
+    COUNT(*) AS obs_event_count
+  FROM (
+    SELECT DISTINCT
+      nca.patient_guid,
+      nca.anchor_date,
+      mh.effective_date,
+      mh.snomed_c_t_concept_id,
+      CAST(mh.term AS STRING)             AS term,
+      CAST(mh.associated_text AS STRING)  AS associated_text,
+      CAST(mh.value AS STRING)            AS value
+    FROM non_cancer_with_anchor nca
+    JOIN medical_history mh
+      ON mh.patient_guid = nca.patient_guid
+    CROSS JOIN params param
+    WHERE mh.effective_date >= DATE_SUB(nca.anchor_date, INTERVAL (param.years_before * 12 + param.months_before) MONTH)
+      AND mh.effective_date <  DATE_SUB(nca.anchor_date, INTERVAL param.months_before MONTH)
+      AND mh.snomed_c_t_concept_id IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM cancer_snomed_codes csc
+        WHERE csc.snomed_code = mh.snomed_c_t_concept_id
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM breast_pathway_codes bpc
+        WHERE bpc.snomed_code = mh.snomed_c_t_concept_id
+      )
+      AND mh.observation_type NOT IN ('Immunisation')
+  )
+  GROUP BY 1, 2
+  HAVING COUNT(*) >= (SELECT min_obs_events_non_cancer FROM params)
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 5: year-stratified non-cancer sample (ratio = non_cancer_ratio = 5)
+   Within each anchor year, randomly pick (5 × cancer_count[year]) non-cancer.
+   The gold anchor (Step 3) already aligns anchor-years; this caps per-year
+   counts and provides a 5x buffer. build_shared_split downsamples to 1:1.
+   No matching on age/ethnicity — preserve them as predictive signals.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+cancer_year_counts AS (
+  SELECT
+    EXTRACT(YEAR FROM anchor_date) AS anchor_year,
+    COUNT(*)                        AS cancer_count
+  FROM cancer_event_counts
+  GROUP BY 1
+),
+
+non_cancer_ranked AS (
+  SELECT
+    patient_guid,
+    anchor_date,
+    EXTRACT(YEAR FROM anchor_date) AS anchor_year,
+    ROW_NUMBER() OVER (
+      PARTITION BY EXTRACT(YEAR FROM anchor_date)
+      ORDER BY FARM_FINGERPRINT(CAST(patient_guid AS STRING))
+    ) AS rank_in_year
+  FROM non_cancer_event_counts
+),
+
+non_cancer_sampled AS (
+  SELECT ncr.patient_guid, ncr.anchor_date
+  FROM non_cancer_ranked ncr
+  JOIN cancer_year_counts cyc USING (anchor_year)
+  CROSS JOIN params param
+  WHERE ncr.rank_in_year <= param.non_cancer_ratio * cyc.cancer_count
+),
+
+unified_patients AS (
+  SELECT patient_guid, anchor_date, cancer_id,
+         1 AS cancer_class,
+         EXTRACT(YEAR FROM anchor_date) AS anchor_year
+  FROM cancer_event_counts
+
+  UNION ALL
+
+  SELECT patient_guid, anchor_date, CAST(NULL AS STRING) AS cancer_id,
+         0 AS cancer_class,
+         EXTRACT(YEAR FROM anchor_date) AS anchor_year
+  FROM non_cancer_sampled
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 6: Medication source CTEs
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+prescribing_drugrecords_emis AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(file_name, r'/([0-9]{8})/')) AS file_date,
+    TRIM(drug_record_guid)   AS drug_record_guid,
+    TRIM(prescription_type)  AS prescription_type,
+    TRIM(patient_guid)       AS patient_guid,
+    source_practice_code,
+    deleted
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.Prescribing_DrugRecord`
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY drug_record_guid ORDER BY file_date DESC) = 1
+),
+
+prescribing_issuerecords_emis AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(file_name, r'/([0-9]{8})/')) AS file_date,
+    TRIM(issue_record_guid)                      AS issue_record_guid,
+    TRIM(drug_record_guid)                       AS drug_record_guid,
+    PARSE_DATE('%Y-%m-%d', TRIM(entered_date))   AS entered_date,
+    PARSE_DATE('%Y-%m-%d', TRIM(effective_date)) AS effective_date,
+    code_id,
+    course_duration_in_days,
+    deleted
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.Prescribing_IssueRecord`
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY drug_record_guid ORDER BY file_date DESC) = 1
+),
+
+codes_emis AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(file_name, r'/([0-9]{8})/')) AS file_date,
+    SAFE_CAST(code_id AS INT64)             AS code_id,
+    SAFE_CAST(dmd_product_code_id AS INT64) AS dmd_product_code_id,
+    term,
+    source_practice_code
+  FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.Coding_DrugCode`
+  WHERE dmd_product_code_id IS NOT NULL
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY code_id, source_practice_code ORDER BY file_date DESC
+  ) = 1
+),
+
+final_medication AS (
+  SELECT
+    dr.drug_record_guid,
+    ir.issue_record_guid,
+    ce.dmd_product_code_id  AS code_id,
+    dr.patient_guid,
+    ir.effective_date,
+    ir.entered_date,
+    dr.source_practice_code,
+    ir.course_duration_in_days AS duration,
+    ce.term                    AS drug_term,
+    dr.prescription_type
+  FROM prescribing_drugrecords_emis dr
+  LEFT JOIN prescribing_issuerecords_emis ir USING (drug_record_guid)
+  LEFT JOIN codes_emis ce
+    ON ce.code_id = ir.code_id
+   AND ce.source_practice_code = dr.source_practice_code
+  WHERE COALESCE(dr.deleted, false) = false
+    AND COALESCE(ir.deleted, false) = false
+),
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 7: Produce observation and medication events for selected patients
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+observation_events_raw AS (
+  SELECT DISTINCT
+    up.patient_guid                                            AS PATIENT_GUID,
+    up.cancer_class                                            AS CANCER_CLASS,
+    up.cancer_id                                               AS CANCER_ID,
+    pp.sex                                                     AS SEX,
+    DATE_DIFF(param.longterm_mh_end,
+              PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR)  AS PATIENT_AGE,
+    pp.patient_ethnicity_16                                    AS PATIENT_ETHNICITY_16,
+    pp.patient_ethnicity_6                                     AS PATIENT_ETHNICITY_6,
+    up.anchor_date                                             AS ANCHOR_DATE,
+    up.anchor_year                                             AS ANCHOR_YEAR,
+    mh.effective_date                                          AS EVENT_DATE,
+    DATE_DIFF(mh.effective_date,
+              PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR)  AS EVENT_AGE,
+    DATE_DIFF(up.anchor_date, mh.effective_date, DAY)          AS DAYS_BEFORE_ANCHOR,
+    DATE_DIFF(up.anchor_date, mh.effective_date, MONTH)        AS MONTHS_BEFORE_ANCHOR,
+    'observation'                                              AS EVENT_TYPE,
+    mh.snomed_c_t_concept_id                                   AS SNOMED_C_T_CONCEPT_ID,
+    CAST(mh.term AS STRING)                                    AS TERM,
+    CAST(mh.associated_text AS STRING)                         AS ASSOCIATED_TEXT,
+    CAST(mh.value AS STRING)                                   AS VALUE,
+    CAST(NULL AS INT64)                                        AS MED_CODE_ID,
+    CAST(NULL AS STRING)                                       AS DRUG_TERM,
+    CAST(NULL AS INT64)                                        AS DURATION
+  FROM unified_patients up
+  JOIN medical_history mh
+    ON mh.patient_guid = up.patient_guid
+  JOIN patients pp
+    ON pp.patient_guid = up.patient_guid
+  CROSS JOIN params param
+  WHERE
+    mh.effective_date >= DATE_SUB(up.anchor_date, INTERVAL (param.years_before * 12 + param.months_before) MONTH)
+    AND mh.effective_date <  DATE_SUB(up.anchor_date, INTERVAL param.months_before MONTH)
+    AND NOT EXISTS (
+      SELECT 1 FROM cancer_snomed_codes csc
+      WHERE csc.snomed_code = mh.snomed_c_t_concept_id
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM breast_pathway_codes bpc
+      WHERE bpc.snomed_code = mh.snomed_c_t_concept_id
+    )
+    AND mh.snomed_c_t_concept_id IS NOT NULL
+    AND mh.observation_type NOT IN ('Immunisation')
+),
+
+observation_events AS (
+  SELECT * EXCEPT(patient_obs_count)
+  FROM (
+    SELECT *, COUNT(*) OVER (PARTITION BY PATIENT_GUID) AS patient_obs_count
+    FROM observation_events_raw
+  )
+  WHERE patient_obs_count >= (SELECT min_obs_events_per_patient FROM params)
+),
+
+medication_events_raw AS (
+  SELECT DISTINCT
+    up.patient_guid                                            AS PATIENT_GUID,
+    up.cancer_class                                            AS CANCER_CLASS,
+    up.cancer_id                                               AS CANCER_ID,
+    pp.sex                                                     AS SEX,
+    DATE_DIFF(param.longterm_mh_end,
+              PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR)  AS PATIENT_AGE,
+    pp.patient_ethnicity_16                                    AS PATIENT_ETHNICITY_16,
+    pp.patient_ethnicity_6                                     AS PATIENT_ETHNICITY_6,
+    up.anchor_date                                             AS ANCHOR_DATE,
+    up.anchor_year                                             AS ANCHOR_YEAR,
+    fm.effective_date                                          AS EVENT_DATE,
+    DATE_DIFF(fm.effective_date,
+              PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR)  AS EVENT_AGE,
+    DATE_DIFF(up.anchor_date, fm.effective_date, DAY)          AS DAYS_BEFORE_ANCHOR,
+    DATE_DIFF(up.anchor_date, fm.effective_date, MONTH)        AS MONTHS_BEFORE_ANCHOR,
+    'medication'                                               AS EVENT_TYPE,
+    CAST(NULL AS INT64)                                        AS SNOMED_C_T_CONCEPT_ID,
+    CAST(NULL AS STRING)                                       AS TERM,
+    CAST(NULL AS STRING)                                       AS ASSOCIATED_TEXT,
+    CAST(NULL AS STRING)                                       AS VALUE,
+    fm.code_id                                                 AS MED_CODE_ID,
+    fm.drug_term                                               AS DRUG_TERM,
+    fm.duration                                                AS DURATION
+  FROM unified_patients up
+  JOIN final_medication fm
+    ON UPPER(REGEXP_REPLACE(TRIM(fm.patient_guid), r'[{}]', '')) =
+       UPPER(REGEXP_REPLACE(TRIM(CAST(up.patient_guid AS STRING)), r'[{}]', ''))
+  JOIN patients pp
+    ON pp.patient_guid = up.patient_guid
+  CROSS JOIN params param
+  WHERE
+    fm.effective_date IS NOT NULL
+    AND fm.code_id IS NOT NULL
+    AND fm.effective_date >= DATE_SUB(up.anchor_date, INTERVAL (param.years_before * 12 + param.months_before) MONTH)
+    AND fm.effective_date <  DATE_SUB(up.anchor_date, INTERVAL param.months_before MONTH)
+    AND NOT EXISTS (
+      SELECT 1 FROM breast_pathway_meds bpm
+      WHERE bpm.dmd_code = fm.code_id
+    )
+),
+
+medication_events AS (
+  SELECT * EXCEPT(patient_med_count)
+  FROM (
+    SELECT *, COUNT(*) OVER (PARTITION BY PATIENT_GUID) AS patient_med_count
+    FROM medication_events_raw
+  )
+  WHERE patient_med_count >= (SELECT min_med_events_per_patient FROM params)
+)
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Step 8: Final output — observations and medications combined
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+SELECT * FROM observation_events
+UNION ALL
+SELECT * FROM medication_events
+ORDER BY PATIENT_GUID, DAYS_BEFORE_ANCHOR;

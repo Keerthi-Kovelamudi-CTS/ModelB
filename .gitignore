@@ -77,6 +77,19 @@ catboost_info/
 **/raw/
 _all_cancer_results_*/
 
+# ─── Patient ID lists (PHI even though they're JSON) ───────────────
+**/shared_split.json
+*_split.json
+*_guids.json
+*_patient_ids.json
+
+# ─── Jupyter notebooks: only source (no outputs) goes to git ───────
+# Notebooks with embedded outputs frequently contain patient-level
+# tables, predictions, or plots derived from PHI. Block by default,
+# re-include explicitly clean source notebooks (no outputs).
+*.ipynb
+!**/source_notebooks/*.ipynb
+
 # ─── Re-include codelists (source-of-truth, must be committed) ─────
 # These ARE the curated medical code mappings; the rest of the repo
 # depends on them. Override the *.csv / *.tsv blanket above.

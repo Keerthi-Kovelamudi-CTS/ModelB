@@ -1,0 +1,363 @@
+code_id,code_type,category,term,combined_score,combined_rank,code_tier,category_model_tier
+145679,snomed,History - Radiation Exposure,History of radiation exposure,0.6359489206993301,4.0,STRONG,MEDIUM
+2644224,cpt,Screening - Mammography,Computer-aided detection (screening mammography),0.5999200811465702,5.0,STRONG,STRONG
+1220784,hcpcs,Screening - Mammography,"Screening mammography, bilateral",0.5305522798008053,9.0,STRONG,STRONG
+1083226,rxnorm,Medication - Supplements / Vitamins,Vitamin D 1000 UNT Oral Tablet,0.5242422387552903,11.0,STRONG,MEDIUM
+976317,rxnorm,Medication - Cardiac,aspirin 81 MG Oral Tablet,0.4061722963295078,18.0,STRONG,MEDIUM
+2644035,cpt,General Imaging,"Radiologic examination, chest, 2 views, frontal and lateral",0.3481618331319587,22.0,STRONG,MEDIUM
+988340,rxnorm,Medication - Antihypertensives,hydrochlorothiazide 25 MG Oral Tablet,0.3269935146726788,27.0,STRONG,MEDIUM
+954885,rxnorm,Medication - Statins (Lipid Lowering),simvastatin 40 MG Oral Tablet,0.3254582519354819,28.0,STRONG,MEDIUM
+319555,snomed,Lifestyle - Diet/Nutrition,Nutrition,0.2866592171195006,34.0,STRONG,LOW
+5450036,truveta,Lifestyle - Alcohol Use,Binge drinking frequency,0.2786729884321449,37.0,STRONG,MEDIUM
+2638188,cpt,Screening - Mammography,Screening mammography results documented and reviewed,0.2773900778642622,38.0,STRONG,STRONG
+954568,rxnorm,Medication - GI / Acid Suppression,ranitidine 150 MG Oral Tablet,0.2723388356725833,39.0,STRONG,MEDIUM
+2644219,cpt,Screening - Mammography,"Screening mammography, bilateral v2",0.2399683744540099,52.0,MEDIUM,STRONG
+838606,loinc,Lifestyle - Tobacco Use,Have you used tobacco in the last 30 days [SAMHSA],0.2358904574086591,57.0,MEDIUM,MEDIUM
+359476,snomed,Comorbidity - Atypical Hyperplasia,Atypical ductal hyperplasia of breast,0.2270914286327785,63.0,MEDIUM,ZERO
+842451,loinc,Symptoms - Pain,Pain severity - 0-10 verbal numeric rating [Score] - Reported,0.2231059781221575,66.0,MEDIUM,MEDIUM
+408920,snomed,Lifestyle - Tobacco Use,Electronic cigarette user,0.2178398059398015,72.0,MEDIUM,MEDIUM
+985313,rxnorm,Medication - Statins (Lipid Lowering),simvastatin 20 MG Oral Tablet,0.2160713073610798,75.0,MEDIUM,MEDIUM
+864908,loinc,Lifestyle - Social Determinants of Health,Whether patient resides in a congregate care setting,0.2155101020367081,76.0,MEDIUM,MEDIUM
+613266,icd10cm,History - Radiation Exposure,Personal history of irradiation,0.2133451104696667,78.0,MEDIUM,MEDIUM
+966107,rxnorm,Medication - Antibiotics,azithromycin 250 MG Oral Tablet [Zithromax],0.2133142886756839,79.0,MEDIUM,MEDIUM
+180739,snomed,Symptoms - Breast Lump,Breast signs and symptoms,0.2128946994007753,80.0,MEDIUM,MEDIUM
+1035875,rxnorm,Medication - Supplements / Vitamins,chondroitin sulfates / glucosamine Oral Capsule,0.2127437665647543,81.0,MEDIUM,MEDIUM
+798942,loinc,Comorbidity - Respiratory / ENT,Airway clearance impairment [CCC],0.2125685448454328,83.0,MEDIUM,MEDIUM
+2644363,cpt,General Imaging,"Radiologic examination, abdomen; single anteroposterior view",0.2115116782133761,84.0,MEDIUM,MEDIUM
+1152119,rxnorm,Medication - Respiratory (Chronic),Albuterol Metered Dose Inhaler [ProAir HFA],0.2106790836454779,86.0,MEDIUM,MEDIUM
+42883,snomed,Medication - Supplements (OTC),Ruta graveolens,0.2101442503696179,90.0,MEDIUM,LOW
+181020,snomed,Symptoms - Genitourinary,Female genital organ symptoms,0.2099973966231619,91.0,MEDIUM,ZERO
+1052323,rxnorm,Medication - Antihypertensives,metoprolol tartrate 25 MG Oral Tablet,0.2099951680752575,92.0,MEDIUM,MEDIUM
+1030831,rxnorm,Medication - GI / Acid Suppression,esomeprazole 40 MG Delayed Release Oral Capsule [Nexium],0.2084855610181811,94.0,MEDIUM,MEDIUM
+949099,rxnorm,Medication - Allergy / Respiratory,fluticasone propionate 0.05 MG/ACTUAT Metered Dose Nasal Spray [Flonase],0.2076547157508694,95.0,MEDIUM,MEDIUM
+145840,snomed,Symptoms - Breast Lump,H/O: breast problem,0.2068759893023932,98.0,MEDIUM,MEDIUM
+291258,snomed,General Imaging,Magnetic resonance imaging - action,0.20593859802729,99.0,MEDIUM,MEDIUM
+919120,rxnorm,Medication - Respiratory (Chronic),albuterol 0.09 MG/ACTUAT Metered Dose Inhaler [Proventil],0.2055863087835628,100.0,MEDIUM,MEDIUM
+1008593,rxnorm,Medication - Antihypertensives,hydrochlorothiazide / triamterene Oral Tablet,0.2055126110519952,101.0,MEDIUM,MEDIUM
+5450009,truveta,Lifestyle - Social Determinants of Health,Incarceration within the past 2 years - Tuberculosis screening,0.2053406176030713,103.0,MEDIUM,MEDIUM
+951882,rxnorm,Medication - Cardiac,digoxin 0.25 MG Oral Tablet,0.2048255696346136,104.0,MEDIUM,MEDIUM
+899212,rxnorm,Medication - Supplements / Vitamins,Ocuvite Oral Product,0.204560494884849,105.0,MEDIUM,MEDIUM
+864905,loinc,Lifestyle - Social Determinants of Health,Whether patient is employed in a healthcare setting,0.2044543181280692,106.0,MEDIUM,MEDIUM
+54622,snomed,Comorbidity - Benign Breast,Benign mammary dysplasia,0.2042736718572282,107.0,MEDIUM,ZERO
+950961,rxnorm,Medication - Antihypertensives,atenolol 50 MG Oral Tablet,0.2022764819791993,110.0,MEDIUM,MEDIUM
+239670,snomed,Lifestyle - Sleep,Sleep,0.2019144130780962,111.0,MEDIUM,ZERO
+1001426,rxnorm,Medication - Hormone Therapy (HRT),"estrogens, conjugated (USP) Oral Tablet [Premarin]",0.2015017209695014,113.0,MEDIUM,ZERO
+836756,loinc,Symptoms - General,Cognitive impairment [Reported],0.2009498785984468,115.0,MEDIUM,MEDIUM
+281973,snomed,Lifestyle - Social Determinants of Health,"Household, family and support network detail",0.2005146491695233,116.0,MEDIUM,MEDIUM
+1012365,rxnorm,Medication - Supplements / Vitamins,ubidecarenone Oral Capsule,0.1949815807447132,136.0,MEDIUM,MEDIUM
+420241,snomed,Comorbidity - GI / GU,Diverticulum of large intestine without hemorrhage,0.1938723690122072,139.0,MEDIUM,MEDIUM
+1050814,rxnorm,Medication - Bone Health,6 ML hylan G-F 20 8 MG/ML Prefilled Syringe,0.1935268147157984,141.0,MEDIUM,ZERO
+2633826,cpt,Lab - Cardiac Enzymes,"Creatine kinase (CK), (CPK); MB fraction only",0.1921066649524544,145.0,MEDIUM,MEDIUM
+1059045,rxnorm,Medication - Thyroid,levothyroxine sodium 0.1 MG Oral Tablet [Synthroid],0.1911217506724304,152.0,MEDIUM,MEDIUM
+1125277,rxnorm,Medication - Supplements / Vitamins,Calcium 500 MG Oral Tablet,0.1889968851497769,155.0,MEDIUM,MEDIUM
+229456,snomed,Symptoms - General,Long-term memory performance,0.186915377516368,165.0,MEDIUM,MEDIUM
+5450024,truveta,Lifestyle - Social Determinants of Health,"Do you have concerns about your safety, your child's safety or any family member's safety?",0.1854319660927253,169.0,MEDIUM,MEDIUM
+229622,snomed,Symptoms - Mental Health,Level of interest,0.1848922770474472,172.0,MEDIUM,ZERO
+1032847,rxnorm,Medication - Statins (Lipid Lowering),atorvastatin 20 MG Oral Tablet [Lipitor],0.1832213830399683,176.0,MEDIUM,MEDIUM
+5450016,truveta,Lifestyle - Substance Use,Injection drug use - Tuberculosis screening,0.1829692908909032,178.0,MEDIUM,MEDIUM
+200537,snomed,History - Radiation Exposure,Exposure to radiation,0.1814071627498859,182.0,MEDIUM,MEDIUM
+451750,snomed,Comorbidity - Cardiovascular,Chronic kidney disease stage 3 due to hypertension,0.1797749680101013,186.0,MEDIUM,STRONG
+953050,rxnorm,Medication - Statins (Lipid Lowering),lovastatin 10 MG Oral Tablet,0.1776222871266544,194.0,MEDIUM,MEDIUM
+1050261,rxnorm,Medication - Cardiac,warfarin sodium 5 MG Oral Tablet,0.1767096052800238,199.0,MEDIUM,MEDIUM
+813462,loinc,Lifestyle - Substance Use,Substance abuse [CCC],0.1757943523418826,201.0,MEDIUM,MEDIUM
+1058398,rxnorm,Medication - Bone Health,alendronic acid 35 MG Oral Tablet,0.1742780870741727,206.0,MEDIUM,ZERO
+23632,snomed,Comorbidity - Cardiovascular,Phlebitis of deep veins of lower extremity,0.1732771526200752,213.0,MEDIUM,STRONG
+1034372,rxnorm,Medication - Antihypertensives,potassium chloride 10 MEQ Extended Release Oral Tablet [Klor-Con],0.172441438556196,219.0,MEDIUM,MEDIUM
+465153,snomed,Lifestyle - Substance Use,History of intravenous drug abuse,0.1720296436400893,223.0,MEDIUM,MEDIUM
+780134,loinc,Vital Signs / Anthropometrics,Oxygen saturation device measurement site,0.1715633470718762,224.0,MEDIUM,MEDIUM
+346249,snomed,Symptoms - General,Balancing when standing,0.1704648637236034,235.0,MEDIUM,MEDIUM
+855440,loinc,Comorbidity - Respiratory / ENT,Cough duration,0.1704573318673553,236.0,MEDIUM,MEDIUM
+2505669,loinc,Lifestyle - Social Determinants of Health,Problems getting child care make work or study difficult,0.1696812470376785,241.0,MEDIUM,MEDIUM
+824261,loinc,Comorbidity - Respiratory / ENT,Respiratory status finding,0.1693381831557507,244.0,MEDIUM,MEDIUM
+5450014,truveta,Lifestyle - Social Determinants of Health,Born outside of the United States - Tuberculosis screening,0.1677508941986893,252.0,MEDIUM,MEDIUM
+459791,snomed,Comorbidity - Atypical Hyperplasia,Atypical ductal hyperplasia of right breast,0.1657326919894729,266.0,MEDIUM,ZERO
+5450012,truveta,Lifestyle - Social Determinants of Health,Homelessness or residence in shelter - Tuberculosis screening,0.1656775727646134,268.0,MEDIUM,MEDIUM
+248190,snomed,Symptoms - General,Tired all the time,0.165124824825909,270.0,MEDIUM,MEDIUM
+68659,snomed,Comorbidity - Other,Brachial neuritis,0.162981121818485,286.0,MEDIUM,ZERO
+953052,rxnorm,Medication - Statins (Lipid Lowering),lovastatin 40 MG Oral Tablet,0.1626682074634376,289.0,MEDIUM,MEDIUM
+965297,rxnorm,Medication - Cardiac,aspirin 325 MG Oral Tablet,0.1617879963082524,300.0,MEDIUM,MEDIUM
+844150,loinc,Lifestyle - Alcohol Use,Alcohol use [NTDS],0.1608000492992502,312.0,MEDIUM,MEDIUM
+984576,rxnorm,Medication - Antibiotics,ciprofloxacin 500 MG Oral Tablet,0.1601199650063008,317.0,MEDIUM,MEDIUM
+951511,rxnorm,Medication - Antibiotics,ciprofloxacin 250 MG Oral Tablet,0.1576697715414133,332.0,MEDIUM,MEDIUM
+145757,snomed,Comorbidity - Menopause,Menopause,0.1521197684441021,375.0,MEDIUM,LOW
+332806,snomed,Comorbidity - Benign Breast,Cyst of breast,0.1498839703958875,408.0,MEDIUM,ZERO
+378176,snomed,Comorbidity - Atypical Hyperplasia,Atypical lobular hyperplasia of breast,0.1464098875228419,446.0,MEDIUM,ZERO
+1125391,rxnorm,Medication - Supplements / Vitamins,calcium carbonate / vitamin D Oral Tablet,0.1420454190012098,493.0,MEDIUM,MEDIUM
+2643689,cpt,Screening - Mammography,Computer-aided detection (no further review),0.1417409796502173,500.0,MEDIUM,STRONG
+1125025,rxnorm,Medication - Supplements / Vitamins,Calcium / Vitamin D Oral Tablet,0.1413651317573348,504.0,MEDIUM,MEDIUM
+546458,icd10cm,Symptoms - Breast Lump,"Localized swelling, mass and lump, trunk",0.140131734124675,512.0,MEDIUM,MEDIUM
+2644220,cpt,Screening - Mammography,Mammography; bilateral,0.1396337514306711,519.0,MEDIUM,STRONG
+1140839,rxnorm,Medication - Supplements / Vitamins,Vitamin D Oral Tablet,0.1391985656165917,526.0,MEDIUM,MEDIUM
+1097552,rxnorm,Medication - Allergy / Respiratory,Advair Diskus 250/50,0.1370804215212401,543.0,MEDIUM,MEDIUM
+779948,loinc,Lifestyle - Tobacco Use,Cigarettes smoked current (pack per day) - Reported,0.1358665892292836,557.0,MEDIUM,MEDIUM
+255552,snomed,Symptoms - Breast Lump,Breast changes,0.1353102762316938,560.0,MEDIUM,MEDIUM
+1048982,rxnorm,Medication - Mental Health / Sleep,zolpidem tartrate 5 MG Oral Tablet,0.1343547124658287,570.0,MEDIUM,MEDIUM
+460171,snomed,Comorbidity - Atypical Hyperplasia,Atypical lobular hyperplasia of left breast,0.1338846425768154,573.0,MEDIUM,ZERO
+1141570,rxnorm,Medication - Supplements / Vitamins,Vitamin D Oral Capsule,0.1335716004318114,574.0,MEDIUM,MEDIUM
+460170,snomed,Comorbidity - Atypical Hyperplasia,Atypical lobular hyperplasia of right breast,0.1298935783645336,615.0,MEDIUM,ZERO
+772952,snomed,Lab - Insulin Pathway (IGF-1 + C-peptide),Insulin-like growth factor-I [Mass/volume] in Serum or Plasma,0.1284110515080712,631.0,MEDIUM,ZERO
+857582,loinc,Lifestyle - Tobacco Use,Tobacco use duration,0.1281718361509793,632.0,MEDIUM,MEDIUM
+521818,icd10cm,Lifestyle - SDOH,Other obesity due to excess calories,0.1270733861309728,638.0,MEDIUM,MEDIUM
+1058862,rxnorm,Medication - Statins (Lipid Lowering),pravastatin sodium 40 MG Oral Tablet,0.1257813608690461,646.0,MEDIUM,MEDIUM
+355946,snomed,Vital Signs / Anthropometrics,Current chronological age,0.1255196137438847,648.0,MEDIUM,MEDIUM
+772513,loinc,Lab - Lipid Panel,Cholesterol in LDL [Mass/volume] in Serum or Plasma,0.1224775703399419,666.0,MEDIUM,STRONG
+1096745,rxnorm,Medication - Supplements / Vitamins,calcium carbonate / vitamin D Oral Product,0.114022519909813,698.0,MEDIUM,MEDIUM
+1008491,rxnorm,Medication - Hormone Therapy (HRT),"estrogens, conjugated (USP) Oral Tablet",0.1140008673601146,699.0,MEDIUM,ZERO
+4045002,snomed,Comorbidity - Benign Breast,Fibrosclerosis of right breast,0.1110874388193593,730.0,MEDIUM,ZERO
+990285,rxnorm,Medication - GI / Acid Suppression,lansoprazole 30 MG Delayed Release Oral Capsule,0.1092416090303583,751.0,MEDIUM,MEDIUM
+958587,rxnorm,Medication - Supplements / Vitamins,vitamin E Oral Capsule,0.108794171974947,753.0,MEDIUM,MEDIUM
+105058,snomed,Symptoms - Breast Lump,Breast finding,0.1083781269262558,754.0,MEDIUM,MEDIUM
+71418,snomed,Comorbidity - Benign Breast,Cellulitis of breast,0.1078515127967663,810.0,MEDIUM,ZERO
+458640,snomed,Comorbidity - Benign Breast,Intraductal papilloma of left breast,0.1078515127967663,773.0,MEDIUM,ZERO
+4045003,snomed,Comorbidity - Benign Breast,Fibrosclerosis of left breast,0.1078515127967663,780.0,MEDIUM,ZERO
+312598,snomed,Comorbidity - Atypical Hyperplasia,Atypical hyperplasia of breast,0.1078515127967663,757.0,MEDIUM,ZERO
+265073,snomed,Lifestyle - SDOH,Finding relating to sexual activity,0.10539959156552,819.0,MEDIUM,MEDIUM
+230662,snomed,Symptoms - Breast Lump,Ptotic breast,0.1043267440393737,919.0,MEDIUM,MEDIUM
+907591,rxnorm,Medication - Supplements / Vitamins,Metamucil Oral Product,0.103688171185314,924.0,MEDIUM,MEDIUM
+986178,rxnorm,Medication - Statins (Lipid Lowering),simvastatin 10 MG Oral Tablet,0.1033235040277734,925.0,MEDIUM,MEDIUM
+338201,snomed,Comorbidity - Mental Health,Level of depression,0.103004229714659,927.0,MEDIUM,STRONG
+83974,snomed,Symptoms - Breast Lump,Breast lump,0.1010420390681343,931.0,MEDIUM,MEDIUM
+950960,rxnorm,Medication - Antihypertensives,atenolol 25 MG Oral Tablet,0.0992708440085094,936.0,LOW,MEDIUM
+5450021,truveta,Lifestyle - Social Determinants of Health,"Are you currently in a relationship where you feel hurt, threatened, or afraid?",0.0985280069463531,938.0,LOW,MEDIUM
+782600,loinc,Lifestyle - Alcohol Use,History of Alcohol use,0.0969651513155746,940.0,LOW,MEDIUM
+1001279,rxnorm,Medication - Antihypertensives,hydrochlorothiazide / valsartan Oral Tablet,0.095686516965421,944.0,LOW,MEDIUM
+286574,snomed,Lifestyle - Substance Use,Illicit medication use,0.0954628122628617,945.0,LOW,MEDIUM
+1058868,rxnorm,Medication - Statins (Lipid Lowering),pravastatin sodium 80 MG Oral Tablet,0.0945221825181895,948.0,LOW,MEDIUM
+1135684,rxnorm,Medication - Supplements / Vitamins,Magnesium 250 MG Oral Tablet,0.0943848933014784,949.0,LOW,MEDIUM
+952793,rxnorm,Medication - Pain (Non-Opioid),indomethacin 50 MG Oral Capsule,0.0942951209499345,951.0,LOW,ZERO
+1050078,rxnorm,Medication - Cardiac,warfarin sodium 2.5 MG Oral Tablet,0.092944249919249,954.0,LOW,MEDIUM
+1050253,rxnorm,Medication - Cardiac,warfarin sodium 4 MG Oral Tablet,0.0926707986395313,955.0,LOW,MEDIUM
+5450038,truveta,Lifestyle - Tobacco Use,Pipe smoker,0.0914692133271048,958.0,LOW,MEDIUM
+210778,snomed,Lifestyle - Tobacco Use,Snuff user,0.0914692133271048,962.0,LOW,MEDIUM
+76941,snomed,Lifestyle - Tobacco Use,Chews tobacco,0.0914692133271048,960.0,LOW,MEDIUM
+857584,loinc,Lifestyle - Tobacco Use,Smokeless tobacco status,0.0914692133271048,961.0,LOW,MEDIUM
+56481,snomed,Lifestyle - Tobacco Use,Cigar smoker,0.0914692133271048,959.0,LOW,MEDIUM
+782636,loinc,Lifestyle - Tobacco Use,History of Tobacco use,0.0912592462114795,963.0,LOW,MEDIUM
+918368,rxnorm,Medication - Respiratory (Chronic),albuterol 0.09 MG/ACTUAT Metered Dose Inhaler [Ventolin],0.0900591316337745,968.0,LOW,MEDIUM
+210672,snomed,Lifestyle - Substance Use,Intravenous drug user,0.0898046832247585,969.0,LOW,MEDIUM
+983836,rxnorm,Medication - Statins (Lipid Lowering),gemfibrozil 600 MG Oral Tablet,0.0889033773503609,972.0,LOW,MEDIUM
+61752,snomed,Lifestyle - Tobacco Use,Cigarette smoker,0.0877176392907435,974.0,LOW,MEDIUM
+1047165,rxnorm,Medication - Pain (Non-Opioid),naproxen sodium 220 MG Oral Tablet,0.0874899379952004,975.0,LOW,ZERO
+1053194,rxnorm,Medication - Diabetes,metformin hydrochloride 1000 MG Oral Tablet,0.0842754126783012,978.0,LOW,LOW
+1003088,rxnorm,Medication - Supplements / Vitamins,vitamin B12 Oral Tablet,0.0839762545112083,979.0,LOW,MEDIUM
+1058739,rxnorm,Medication - Statins (Lipid Lowering),pravastatin sodium 20 MG Oral Tablet,0.0833963212909707,982.0,LOW,MEDIUM
+833950,loinc,Lifestyle - Social Determinants of Health,About how long did you work at that job or business,0.0827060817724784,986.0,LOW,MEDIUM
+1061101,rxnorm,Medication - Antihypertensives,losartan potassium 100 MG Oral Tablet,0.0825675866471961,987.0,LOW,MEDIUM
+5450035,truveta,Lifestyle - Alcohol Use,Alcohol intake per week [oz],0.0824421911327059,988.0,LOW,MEDIUM
+1048979,rxnorm,Medication - Mental Health / Sleep,zolpidem tartrate 10 MG Oral Tablet,0.0820025027062838,989.0,LOW,MEDIUM
+842116,loinc,Lifestyle - Tobacco Use,Tobacco smoking status,0.0817974303535937,991.0,LOW,MEDIUM
+270038,snomed,Symptoms - Breast Lump,Breast problem,0.0815689652198567,992.0,LOW,MEDIUM
+981610,rxnorm,Medication - Supplements / Vitamins,ubidecarenone 100 MG Oral Capsule,0.0801235692236808,997.0,LOW,MEDIUM
+1010934,rxnorm,Medication - GI / Acid Suppression,omeprazole 20 MG Delayed Release Oral Tablet,0.0792278677840386,999.0,LOW,MEDIUM
+49599,snomed,Comorbidity - Respiratory / ENT,Respiratory sounds,0.079177805141968,1000.0,LOW,MEDIUM
+40549,snomed,Comorbidity - Respiratory / ENT,Abnormal posture,0.0791758625794816,1001.0,LOW,MEDIUM
+1135650,rxnorm,Medication - Supplements / Vitamins,Multivitamin preparation Oral Tablet,0.0788908215818812,1002.0,LOW,MEDIUM
+1002374,rxnorm,Medication - Supplements / Vitamins,cholecalciferol Oral Capsule,0.0762828677269155,1010.0,LOW,MEDIUM
+954197,rxnorm,Medication - GI / Acid Suppression,omeprazole 20 MG Delayed Release Oral Capsule,0.076203256920504,1011.0,LOW,MEDIUM
+1006573,rxnorm,Medication - Antihypertensives,hydrochlorothiazide / losartan Oral Tablet,0.0759109948641998,1013.0,LOW,MEDIUM
+953032,rxnorm,Medication - Antihypertensives,lisinopril 40 MG Oral Tablet,0.0756549905230538,1014.0,LOW,MEDIUM
+206471,snomed,Lifestyle - Social Determinants of Health,Financial circumstances,0.0744739225379734,1019.0,LOW,MEDIUM
+1050068,rxnorm,Medication - Cardiac,warfarin sodium 2 MG Oral Tablet,0.0734700131657693,1022.0,LOW,MEDIUM
+998031,rxnorm,Medication - Antibiotics,nitrofurantoin Oral Capsule [Macrobid],0.0734035312710376,1023.0,LOW,MEDIUM
+2644026,cpt,General Imaging,"Radiologic examination, chest; single view, frontal",0.0732246253206105,1024.0,LOW,MEDIUM
+852513,loinc,Lifestyle - Social Determinants of Health,Years of education [#] - Reported,0.0731777652959607,1025.0,LOW,MEDIUM
+1053197,rxnorm,Medication - Diabetes,metformin hydrochloride 500 MG Oral Tablet,0.0726768071473925,1027.0,LOW,LOW
+1045,snomed,Comorbidity - Cardiovascular,Benign essential hypertension,0.0713299702063174,1032.0,LOW,STRONG
+1115472,rxnorm,Medication - Respiratory (Chronic),Albuterol / Ipratropium Inhalant Solution,0.0710071760066849,1035.0,LOW,MEDIUM
+5450022,truveta,Lifestyle - Social Determinants of Health,Safe in relationship,0.0709827828858548,1036.0,LOW,MEDIUM
+1002912,rxnorm,Medication - Antihypertensives,hydrochlorothiazide / triamterene Oral Capsule,0.069757491020561,1043.0,LOW,MEDIUM
+1006362,rxnorm,Medication - Antihypertensives,hydrochlorothiazide / lisinopril Oral Tablet,0.0680356887150754,1047.0,LOW,MEDIUM
+954458,rxnorm,Medication - Other Chronic,allopurinol 300 MG Oral Tablet,0.0680088224256478,1048.0,LOW,LOW
+231343,snomed,Comorbidity - GI / GU,Esophageal reflux finding,0.0657253084822446,1052.0,LOW,MEDIUM
+1034431,rxnorm,Medication - Antihypertensives,labetalol,0.0655565638703392,1053.0,LOW,MEDIUM
+809844,loinc,Comorbidity - Skin / Dermatology,Turgor [Interpretation] of Skin,0.0649337291880199,1057.0,LOW,MEDIUM
+67481,cpt,Screening - Mammography,Mammography,0.0648313524634702,1059.0,LOW,STRONG
+252182,snomed,Symptoms - General,Malaise and fatigue,0.0647792492858803,1060.0,LOW,MEDIUM
+447796,snomed,History - Infectious Disease,Exposure to tuberculosis,0.0644735714004934,1063.0,LOW,ZERO
+880495,rxnorm,Medication - Cardiac,warfarin,0.0643838883016066,1064.0,LOW,MEDIUM
+881357,rxnorm,Medication - Supplements / Vitamins,chondroitin sulfates / glucosamine Oral Product,0.0637831742713861,1067.0,LOW,MEDIUM
+953051,rxnorm,Medication - Statins (Lipid Lowering),lovastatin 20 MG Oral Tablet,0.0634200490818093,1068.0,LOW,MEDIUM
+1032689,rxnorm,Medication - Statins (Lipid Lowering),atorvastatin 10 MG Oral Tablet,0.0625080775590426,1069.0,LOW,MEDIUM
+956660,rxnorm,Medication - Antibiotics,levofloxacin 500 MG Oral Tablet,0.0613786189989003,1074.0,LOW,MEDIUM
+819135,loinc,Comorbidity - Mental Health,Do you feel happy most of the time [GDS],0.0612876148942055,1076.0,LOW,STRONG
+1052099,rxnorm,Medication - Antihypertensives,metoprolol tartrate 100 MG Oral Tablet,0.0609809214089958,1080.0,LOW,MEDIUM
+4058162,rxnorm,Medication - Allergy / Respiratory,fluticasone propionate Nasal Product,0.0599096539582061,1088.0,LOW,MEDIUM
+5450007,truveta,Lifestyle - Social Determinants of Health,Do you feel that you are treated well by your partner/spouse/family member?,0.0597917117956708,1089.0,LOW,MEDIUM
+1052102,rxnorm,Medication - Antihypertensives,metoprolol tartrate 50 MG Oral Tablet,0.0597143021347498,1090.0,LOW,MEDIUM
+280112,snomed,Comorbidity - Respiratory / ENT,Pharynx problem,0.059200348403023,1093.0,LOW,MEDIUM
+843957,loinc,Lifestyle - Tobacco Use,Date quit tobacco smoking,0.0585804164790572,1097.0,LOW,MEDIUM
+354690,snomed,Symptoms - General,Unexplained weight loss,0.0582992436752937,1099.0,LOW,MEDIUM
+860990,loinc,Symptoms - Pain,"Overall, how bothersome has your back pain been in the last 2 weeks [STarT Back]",0.0581341192205487,1100.0,LOW,MEDIUM
+860984,loinc,Symptoms - Pain,I have only walked short distances because of my back pain in the last 2 weeks [STarT Back],0.0581341192205487,1101.0,LOW,MEDIUM
+1091081,rxnorm,Medication - Supplements / Vitamins,Multivitamin preparation,0.0579978553361253,1102.0,LOW,MEDIUM
+1051854,rxnorm,Medication - Antihypertensives,metoprolol succinate 50 MG Extended Release Oral Tablet,0.0571333767162759,1104.0,LOW,MEDIUM
+986403,rxnorm,Medication - Antihypertensives,furosemide 40 MG Oral Tablet,0.0568233133163322,1110.0,LOW,MEDIUM
+1116488,rxnorm,Medication - Respiratory (Chronic),Albuterol Inhalant Solution,0.0565575405168384,1111.0,LOW,MEDIUM
+806841,loinc,Symptoms - Pain,Pain exacerbating factors - Reported,0.0563913677526093,1114.0,LOW,MEDIUM
+954357,rxnorm,Medication - Antihypertensives,potassium chloride 20 MEQ Extended Release Oral Tablet,0.0558721139320905,1120.0,LOW,MEDIUM
+954457,rxnorm,Medication - Other Chronic,allopurinol 100 MG Oral Tablet,0.0557358851673676,1122.0,LOW,LOW
+537973,icd10cm,Comorbidity - Other,"Soft tissue disorder, unspecified",0.0555046318055872,1125.0,LOW,ZERO
+315574,snomed,Medication - Antibiotics,Sulfonamide antibacterial,0.0544555264040573,1129.0,LOW,MEDIUM
+511367,snomed,Comorbidity - GI / GU,Diverticular disease of colon,0.0544124590241677,1130.0,LOW,MEDIUM
+845809,loinc,Lifestyle - Alcohol Use,How often have you had four or more drinks in one day during the past year [Reported],0.0541754481996176,1135.0,LOW,MEDIUM
+338313,snomed,Symptoms - Pain,Pain level,0.0539428065125644,1139.0,LOW,MEDIUM
+773718,loinc,Lab - Coagulation,aPTT in Blood by Coagulation assay,0.0538392667648177,1140.0,LOW,MEDIUM
+984626,rxnorm,Medication - Antibiotics,azithromycin 250 MG Oral Tablet,0.0533790341045955,1147.0,LOW,MEDIUM
+998587,rxnorm,Medication - Thyroid,levothyroxine Oral Tablet [Synthroid],0.052812027660247,1153.0,LOW,MEDIUM
+345410,snomed,History - Hereditary Risk,BRCA1 gene mutation detected,0.0527933724116299,1154.0,LOW,ZERO
+1007636,rxnorm,Medication - Other Chronic,methylprednisolone Injectable Suspension,0.0518830002150897,1166.0,LOW,LOW
+819148,loinc,Comorbidity - Mental Health,Do you feel that your situation is hopeless [GDS],0.0514926490411438,1171.0,LOW,STRONG
+372652,snomed,Comorbidity - Respiratory / ENT,Measurement of expired nitric oxide,0.0514043094621533,1174.0,LOW,MEDIUM
+814026,loinc,Lab - Lipid Panel,Cholesterol non HDL [Mass/volume] in Serum or Plasma,0.0507631140450162,1179.0,LOW,STRONG
+772520,loinc,Lab - Lipid Panel,Cholesterol in HDL/Cholesterol.total [Mass Ratio] in Serum or Plasma,0.050292705764217,1181.0,LOW,STRONG
+1009410,rxnorm,Medication - Cardiac,nitroglycerin Sublingual Tablet,0.0502755988848029,1183.0,LOW,MEDIUM
+25813,snomed,Comorbidity - Benign Breast,Fibrocystic disease of breast,0.0500801856754441,1185.0,LOW,ZERO
+333677,snomed,Comorbidity - Other,Hemangioma,0.0500169849297317,1188.0,LOW,ZERO
+850833,loinc,Lab - Bone Density / DEXA,DXA Radius and Ulna - left [T-score] Bone density,0.0491953911571852,1196.0,LOW,ZERO
+817046,loinc,Lab - Coagulation,INR in Capillary blood by Coagulation assay,0.0473185327189832,1222.0,LOW,MEDIUM
+853098,loinc,Post-Acute Markers,Transferring,0.047137258684322,1224.0,LOW,MEDIUM
+315481,snomed,Medication - Antibiotics,Erythromycin,0.0469553945564412,1234.0,LOW,MEDIUM
+613079,icd10cm,Lifestyle - Tobacco Use,Personal history of nicotine dependence,0.0460958822010802,1241.0,LOW,MEDIUM
+269564,snomed,Comorbidity - GI / GU,Vaginal problem,0.0460243592781905,1242.0,LOW,MEDIUM
+1064866,rxnorm,Medication - Allergy / Respiratory,pseudoephedrine hydrochloride 30 MG Oral Tablet,0.0448206061484481,1256.0,LOW,MEDIUM
+207699,snomed,Comorbidity - Skin / Dermatology,Skin assessment,0.0442280924406057,1263.0,LOW,MEDIUM
+1006349,rxnorm,Medication - Thyroid,levothyroxine Oral Tablet,0.0439303029590742,1268.0,LOW,MEDIUM
+850115,loinc,Comorbidity - Respiratory / ENT,Respiratory effort,0.0436463497772313,1272.0,LOW,MEDIUM
+248220,snomed,Comorbidity - GI / GU,Genitourinary symptoms,0.0433536253380484,1274.0,LOW,MEDIUM
+9820,snomed,Comorbidity - Respiratory / ENT,Acute bronchitis,0.042396152439589,1280.0,LOW,MEDIUM
+180910,snomed,Comorbidity - Mental Health,Anxiety state,0.0423856833366513,1281.0,LOW,STRONG
+986587,rxnorm,Medication - Antihypertensives,lisinopril 10 MG Oral Tablet,0.0423405666925935,1282.0,LOW,MEDIUM
+789914,loinc,General Imaging,Colonoscopy study,0.0405735318112324,1302.0,LOW,MEDIUM
+321592,snomed,Medication - Antihypertensives,Lisinopril,0.0403390734056973,1304.0,LOW,MEDIUM
+785228,loinc,Lab - Cardiac Enzymes,Creatine kinase.MB [Mass/volume] in Serum or Plasma,0.0400297275537314,1309.0,LOW,MEDIUM
+986753,rxnorm,Medication - Antihypertensives,lisinopril 20 MG Oral Tablet,0.0398285489155271,1313.0,LOW,MEDIUM
+11094,snomed,Comorbidity - Cardiovascular,Mitral valve disorder,0.0397337458848198,1317.0,LOW,STRONG
+779635,loinc,Vital Signs / Anthropometrics,Body weight Estimated,0.0393274668964859,1330.0,LOW,MEDIUM
+370440,snomed,Comorbidity - Skin / Dermatology,Inflamed seborrheic keratosis,0.0392914959691858,1331.0,LOW,MEDIUM
+850093,loinc,Comorbidity - Respiratory / ENT,Breath sounds by Auscultation,0.0387178654694515,1342.0,LOW,MEDIUM
+37949,snomed,Comorbidity - Skin / Dermatology,Contact dermatitis,0.0375803450435921,1359.0,LOW,MEDIUM
+782108,loinc,Lab - Cardiac Enzymes,Troponin I.cardiac [Mass/volume] in Serum or Plasma,0.0366425629910402,1376.0,LOW,MEDIUM
+500655,snomed,Comorbidity - Skin / Dermatology,Actinic keratosis,0.0365933194031263,1377.0,LOW,MEDIUM
+864878,loinc,Comorbidity - Mental Health,Little interest or pleasure in doing things in last 2 weeks Caregiver [Reported.PHQ],0.036481957601918,1387.0,LOW,STRONG
+334451,snomed,Comorbidity - Respiratory / ENT,FEV1 before bronchodilation,0.0351531854702079,1407.0,LOW,MEDIUM
+864151,loinc,Lifestyle - Social Determinants of Health,Country of travel [Location],0.0347051222534158,1420.0,LOW,MEDIUM
+1002342,rxnorm,Medication - Mental Health / Sleep,alprazolam Oral Tablet,0.0334256330579631,1449.0,LOW,MEDIUM
+335530,snomed,Comorbidity - Skin / Dermatology,Onychomycosis due to dermatophyte,0.0332694590480394,1456.0,LOW,MEDIUM
+779658,loinc,Vital Signs / Anthropometrics,Blood pressure device Cuff size,0.0325949075083467,1472.0,LOW,MEDIUM
+100680,snomed,Comorbidity - Cardiovascular,Tricuspid valve regurgitation,0.0322834877499894,1479.0,LOW,STRONG
+773574,loinc,Lab - Lipid Panel,Triglyceride [Mass/volume] in Blood,0.032041971341826,1481.0,LOW,STRONG
+56724,snomed,Comorbidity - Cardiovascular,Aortic valve regurgitation,0.0318053914682989,1488.0,LOW,STRONG
+423631,snomed,Medication - Antibiotics,Penicillin,0.031752792077595,1490.0,LOW,MEDIUM
+5450020,truveta,Lifestyle - Social Determinants of Health,"Have you experienced physical, sexual, or emotional abuse or threats from a current or former partner or family member?",0.0310997999997886,1501.0,LOW,MEDIUM
+839640,loinc,Comorbidity - Mental Health,Trouble sleeping in past 4 weeks [Reported.PHQ],0.0309672753009213,1502.0,LOW,STRONG
+850120,loinc,Vital Signs / Anthropometrics,Nursing physiologic assessment panel,0.0307716617799559,1505.0,LOW,MEDIUM
+858770,loinc,Comorbidity - Mental Health,Patient Health Questionnaire-9: Modified for Teens total score [Reported.PHQ.Teen],0.0303132250916718,1512.0,LOW,STRONG
+321534,snomed,Comorbidity - Respiratory / ENT,Abnormal breathing,0.0302716266514607,1513.0,LOW,MEDIUM
+45902,snomed,Comorbidity - Cardiovascular,Mitral valve regurgitation,0.028397004305449,1545.0,LOW,STRONG
+310568,snomed,Symptoms - General,Malaise,0.0281944355967309,1553.0,LOW,MEDIUM
+14815,snomed,Comorbidity - Respiratory / ENT,Acute sinusitis,0.0278145218492816,1558.0,LOW,MEDIUM
+957431,rxnorm,Medication - Mental Health / Sleep,citalopram 20 MG Oral Tablet,0.0275205131970951,1564.0,LOW,MEDIUM
+780001,loinc,Vital Signs / Anthropometrics,Vital signs,0.0273052348162639,1569.0,LOW,MEDIUM
+780161,loinc,Vital Signs / Anthropometrics,Heart rate rhythm,0.0271348679029229,1573.0,LOW,MEDIUM
+10028,snomed,Comorbidity - Cardiovascular,Benign hypertension,0.0263666376641556,1588.0,LOW,STRONG
+1045437,rxnorm,Medication - Mental Health / Sleep,cyclobenzaprine hydrochloride 10 MG Oral Tablet,0.02599223996078,1595.0,LOW,MEDIUM
+264065,snomed,Vital Signs / Anthropometrics,Pulse oximetry monitoring,0.0258831757938525,1600.0,LOW,MEDIUM
+44539,snomed,Comorbidity - GI / GU,Reflux,0.0257580398305895,1603.0,LOW,MEDIUM
+34777,snomed,Comorbidity - Mental Health,"Major depression, single episode",0.02498449060498,1618.0,LOW,STRONG
+791194,loinc,Comorbidity - Respiratory / ENT,FEV1 --pre bronchodilation,0.0249178157957135,1620.0,LOW,MEDIUM
+362753,snomed,Comorbidity - GI / GU,Acute urinary tract infection,0.0247115352279785,1624.0,LOW,MEDIUM
+791189,loinc,Comorbidity - Respiratory / ENT,FEV1 measured/predicted,0.0241921864514391,1628.0,LOW,MEDIUM
+843960,loinc,Lifestyle - Alcohol Use,Alcoholic drinks per day,0.02403650947855,1636.0,LOW,MEDIUM
+371565,snomed,Comorbidity - Cardiovascular,Coronary atherosclerosis,0.0235813454393545,1637.0,LOW,STRONG
+425818,snomed,Comorbidity - Skin / Dermatology,Lentigo,0.0219133044715818,1665.0,LOW,MEDIUM
+84546,snomed,Lifestyle - Tobacco Use,Tobacco dependence syndrome,0.0216288663903531,1669.0,LOW,MEDIUM
+954545,rxnorm,Medication - Other Chronic,prednisone 10 MG Oral Tablet,0.0215272629376402,1671.0,LOW,LOW
+255023,snomed,Comorbidity - Respiratory / ENT,Lung field abnormal,0.0204791793797839,1689.0,LOW,MEDIUM
+328462,snomed,Comorbidity - Skin / Dermatology,Seborrheic keratosis,0.0198959195070136,1697.0,LOW,MEDIUM
+849123,loinc,Vital Signs / Anthropometrics,Body weight --used for drug calculation,0.0197439227163956,1698.0,LOW,MEDIUM
+2646149,snomed,Vital Signs / Anthropometrics,Dosing body weight,0.0193492817458139,1703.0,LOW,MEDIUM
+248196,snomed,Symptoms - General,Edema,0.0190548075706534,1706.0,LOW,MEDIUM
+721,snomed,Comorbidity - Skin / Dermatology,Actinic keratosis,0.0189757340204028,1707.0,LOW,MEDIUM
+259032,snomed,Comorbidity - Respiratory / ENT,Respiratory pattern,0.0179393430086981,1721.0,LOW,MEDIUM
+232812,snomed,Vital Signs / Anthropometrics,Sinus rhythm,0.0169624141171026,1739.0,LOW,MEDIUM
+4120678,loinc,Lifestyle - Social Determinants of Health,Do you feel physically or emotionally unsafe where you currently live,0.0160235028609554,1749.0,LOW,MEDIUM
+31925,snomed,Symptoms - General,Food appetite,0.0157605128337448,1755.0,LOW,MEDIUM
+4048595,snomed,Symptoms - Pain,Numeric Pain Rating Scale score,0.015483021571897,1758.0,LOW,MEDIUM
+20922,snomed,Symptoms - Pain,Pain,0.0150820595596058,1766.0,LOW,MEDIUM
+6879,snomed,Comorbidity - Respiratory / ENT,Disorder of nasal sinus,0.01467499271748,1771.0,LOW,MEDIUM
+777601,loinc,Lab - Coagulation,INR in Platelet poor plasma by Coagulation assay,0.0140374483799593,1785.0,LOW,MEDIUM
+781905,loinc,Lab - Lipid Panel,Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma,0.0139780602103207,1786.0,LOW,STRONG
+776750,loinc,Lab - Coagulation,Prothrombin time (PT),0.0123342005579982,1809.0,LOW,MEDIUM
+52576,snomed,Comorbidity - Cardiovascular,Hyperlipidemia,0.0117963139656547,1816.0,LOW,STRONG
+521817,icd10cm,Lifestyle - SDOH,Morbid (severe) obesity due to excess calories,0.0107758855156015,1824.0,LOW,MEDIUM
+772589,loinc,Lab - Cardiac Enzymes,Creatine kinase [Enzymatic activity/volume] in Serum or Plasma,0.0106707059403783,1825.0,LOW,MEDIUM
+858775,loinc,Comorbidity - Mental Health,Beck Depression Inventory II total score [BDI],0.0084838594730139,1858.0,LOW,STRONG
+779577,loinc,Vital Signs / Anthropometrics,Body surface area,0.0073732149828582,1871.0,LOW,MEDIUM
+23167,snomed,Screening - Mammography,Screening mammography,0.0068185929937633,1878.0,LOW,STRONG
+110920,snomed,Comorbidity - Menopause,Menopausal syndrome,0.0044833125258399,1894.0,LOW,LOW
+20494,snomed,Comorbidity - Menopause,Menopausal symptom,0.0044723164263917,1895.0,LOW,LOW
+4049529,snomed,Symptoms - Pain,Presence of pain,0.0041233176756265,1898.0,LOW,MEDIUM
+772518,loinc,Lab - Lipid Panel,Cholesterol [Mass/volume] in Serum or Plasma,0.0040327985898002,1900.0,LOW,STRONG
+772509,loinc,Lab - Lipid Panel,Cholesterol in HDL [Mass/volume] in Serum or Plasma,0.0038227868948018,1904.0,LOW,STRONG
+56139,snomed,Comorbidity - Cardiovascular,Essential hypertension,0.0024975096258204,1916.0,LOW,STRONG
+361314,snomed,History - Family Hx Breast Cancer,Family history of breast cancer,,,ZERO (unranked),LOW
+361837,snomed,History - Family Hx Breast Cancer,Family history of malignant neoplasm of breast in first degree relative,,,ZERO (unranked),LOW
+450333,snomed,History - Family Hx Breast Cancer,Family history of breast cancer gene BRCA mutation,,,ZERO (unranked),LOW
+362775,snomed,History - Family Hx Breast Cancer,Family history of breast cancer 2 gene mutation,,,ZERO (unranked),LOW
+292089,snomed,History - Family Hx Breast Cancer,Family history of neoplasm of breast,,,ZERO (unranked),LOW
+452240,snomed,History - Family Hx Breast Cancer,Family history of malignant neoplasm of breast diagnosed before 45 years of age,,,ZERO (unranked),LOW
+452114,snomed,History - Family Hx Breast Cancer,Family history of malignant neoplasm of breast in first degree relative less than 50 years of age,,,ZERO (unranked),LOW
+452123,snomed,History - Family Hx Breast Cancer,Family history of breast cancer gene mutation in first degree relative,,,ZERO (unranked),LOW
+362217,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm of ovary (BRCA-linked),,,ZERO (unranked),LOW
+346775,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm of prostate (BRCA2-linked),,,ZERO (unranked),LOW
+360617,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm of pancreas (BRCA2-linked),,,ZERO (unranked),LOW
+256136,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm (general),,,ZERO (unranked),LOW
+447793,snomed,History - Family Hx Other Cancers,Family history of colorectal cancer (Lynch),,,ZERO (unranked),LOW
+291817,snomed,History - Family Hx Other Cancers,Family history of cancer of colon (Lynch),,,ZERO (unranked),LOW
+360623,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm of GI tract,,,ZERO (unranked),LOW
+362320,snomed,History - Family Hx Other Cancers,Family history of malignant neoplasm of digestive organ,,,ZERO (unranked),LOW
+255405,snomed,History - Family Hx Other Cancers,FH: Stomach cancer,,,ZERO (unranked),LOW
+361336,snomed,History - Oophorectomy,History of total hysterectomy with bilateral salpingo-oophorectomy,,,ZERO (unranked),ZERO
+359536,snomed,History - Oophorectomy,History of bilateral salpingo-oophorectomy,,,ZERO (unranked),ZERO
+104759,snomed,History - Oophorectomy,Salpingo-oophorectomy,,,ZERO (unranked),ZERO
+81433,snomed,History - Oophorectomy,Total hysterectomy with removal of both tubes and ovaries,,,ZERO (unranked),ZERO
+2639127,cpt,History - Oophorectomy,Laparoscopic salpingo-oophorectomy,,,ZERO (unranked),ZERO
+219250,snomed,Comorbidity - Ovarian Failure,Menopause ovarian failure,,,ZERO (unranked),ZERO
+219879,snomed,Comorbidity - Ovarian Failure,Premature ovarian insufficiency,,,ZERO (unranked),ZERO
+100933,snomed,Comorbidity - Ovarian Failure,Ovarian failure,,,ZERO (unranked),ZERO
+62011,snomed,Comorbidity - Ovarian Failure,Primary ovarian failure,,,ZERO (unranked),ZERO
+522155,snomed,Comorbidity - Ovarian Failure,Asymptomatic postprocedural ovarian failure,,,ZERO (unranked),ZERO
+444369,snomed,Comorbidity - Ovarian Conditions,Polycystic bilateral ovaries,,,ZERO (unranked),ZERO
+462417,snomed,Comorbidity - Ovarian Conditions,Cyst of bilateral ovaries,,,ZERO (unranked),ZERO
+447425,snomed,Comorbidity - Ovarian Conditions,Complex ovarian cyst,,,ZERO (unranked),ZERO
+541672,snomed,Comorbidity - Ovarian Conditions,Unspecified ovarian cysts,,,ZERO (unranked),ZERO
+219159,snomed,Comorbidity - Ovarian Conditions,Tubo-ovarian mass,,,ZERO (unranked),ZERO
+345414,snomed,History - Hereditary Risk,BRCA2 gene mutation detected,,,ZERO (unranked),ZERO
+772685,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Estradiol (E2) [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2637074,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Estradiol; total,,,ZERO (unranked),LOW
+772701,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Estrone (E1) [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+772693,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Estriol (E3).unconjugated [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+791502,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Estriol (E3).unconjugated [Multiple of the median] in Serum or Plasma,,,ZERO (unranked),LOW
+773346,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Progesterone [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2634846,snomed,Lab - Sex Hormones (Estrogens + Progesterone),Progesterone,,,ZERO (unranked),LOW
+773509,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+773515,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone Free [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2630573,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone; total,,,ZERO (unranked),LOW
+2630124,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone; free,,,ZERO (unranked),LOW
+773514,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone.free+weakly bound [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+786687,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone Free/Testosterone.total in Serum or Plasma,,,ZERO (unranked),LOW
+778192,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone.free+weakly bound/Testosterone.total in Serum or Plasma,,,ZERO (unranked),LOW
+117007,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone level below reference range,,,ZERO (unranked),LOW
+117006,snomed,Lab - Sex Hormones (Androgens + SHBG),Testosterone level above reference range,,,ZERO (unranked),LOW
+785226,snomed,Lab - Sex Hormones (Androgens + SHBG),Sex hormone binding globulin [Moles/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2630650,snomed,Lab - Sex Hormones (Androgens + SHBG),Sex hormone binding globulin (SHBG),,,ZERO (unranked),LOW
+772627,snomed,Lab - Sex Hormones (Androgens + SHBG),Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2630564,snomed,Lab - Sex Hormones (Androgens + SHBG),Dehydroepiandrosterone-sulfate (DHEA-S),,,ZERO (unranked),LOW
+772629,snomed,Lab - Sex Hormones (Androgens + SHBG),Dehydroepiandrosterone (DHEA) [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2634993,snomed,Lab - Sex Hormones (Androgens + SHBG),Dehydroepiandrosterone (DHEA),,,ZERO (unranked),LOW
+773350,snomed,Lab - Pituitary Hormones (Prolactin + LH),Prolactin [Mass/volume] in Serum or Plasma,,,ZERO (unranked),LOW
+2634698,snomed,Lab - Pituitary Hormones (Prolactin + LH),Prolactin,,,ZERO (unranked),LOW
+116937,snomed,Lab - Pituitary Hormones (Prolactin + LH),Prolactin level above reference range,,,ZERO (unranked),LOW
+2630648,snomed,Lab - Pituitary Hormones (Prolactin + LH),Gonadotropin; luteinizing hormone (LH),,,ZERO (unranked),LOW
+772398,snomed,Lab - Insulin Pathway (IGF-1 + C-peptide),C peptide [Mass/volume] in Serum or Plasma,,,ZERO (unranked),ZERO
+2631813,snomed,Lab - Insulin Pathway (IGF-1 + C-peptide),C-peptide,,,ZERO (unranked),ZERO

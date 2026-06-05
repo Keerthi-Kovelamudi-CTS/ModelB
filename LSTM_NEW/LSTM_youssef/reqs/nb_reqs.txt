@@ -1,0 +1,23 @@
+
+#########################################
+################ Jupyter ################
+#########################################
+
+notebook==6.5.7
+jupyter-server==1.24.0
+ipywidgets
+
+jupyter-contrib-nbextensions==0.7.0
+# jupyter contrib nbextension install --user
+
+jupyter_nbextensions_configurator==0.6.4
+# jupyter nbextensions_configurator enable --user
+
+jupyterthemes==0.20.0
+# !jt -t onedork -fs 95 -tfs 11 -nfs 115 -cellw 88%
+
+# package dependency and reverse dependency
+# pipdeptree -p <package_name>
+# pipdeptree -r -p <package_name>
+pipdeptree==2.15.0
+

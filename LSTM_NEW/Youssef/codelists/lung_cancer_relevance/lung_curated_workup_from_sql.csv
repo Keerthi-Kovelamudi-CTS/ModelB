@@ -1,0 +1,156 @@
+id,name,active,notes
+1000821000000103,Serum albumin level,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1017311000000104,Blood oxygen saturation (calculated),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1022551000000104,Neutrophil count,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+102589003,Atypical chest pain,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+103228002,Haemoglobin saturation with oxygen,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+106511000001103,Salamol 100micrograms inhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1079461000000108,NAFLD (Non-Alcoholic Fatty Liver Disease) fibrosis score,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1087441000000106,Smoking cessation programme declined,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1091811000000102,Diastolic arterial pressure,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+11833005,Dry cough,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+127783003,Spirometry,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+12906411000001100,Fostair 100/6 inhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+13645005,COPD - Chronic obstructive pulmonary disease,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+160603005,Light cigarette smoker (1-9 cigs/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+160604004,Moderate cigarette smoker (10-19 cigs/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+160605003,Heavy cigarette smoker (20-39 cigs/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+160606002,Very heavy cigarette smoker (40+ cigs/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+160625004,Date ceased smoking,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+161635002,History of asbestos exposure,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+161924005,Productive cough -green sputum,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+161929000,Chesty cough,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+161947006,Nocturnal cough / wheeze,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+162573006,Suspected lung cancer,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+164457001,O/E - finger clubbing,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+168734001,Standard chest X-ray abnormal,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+170614009,Inhaler technique observed,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+170635006,Asthma not disturbing sleep,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+170638008,Asthma not limiting activities,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+170661005,Using inhaled steroids - normal dose,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+171255006,Spirometry screening,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1879891000006107,Non-alcoholic fatty liver disease (NAFLD) fibrosis score,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+195647007,Acute respiratory infections,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+195742007,Acute lower respiratory tract infection,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+195967001,Asthma,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1970531000006107,COPD assessment test score - cough,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1970541000006102,COPD assessment test score - phlegm (mucus),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+1970561000006103,COPD assessment test score - breathless walking up hill/stairs,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+199251000000107,Fast track cancer referral,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+201031000000108,Asthma trigger - respiratory infection,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+204991000000107,Suspected chronic obstructive pulmonary disease,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+222311000001102,Ventolin 100micrograms Evohaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+2237002,Pleuritic pain,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+225323000,Smoking cessation advice,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+225324006,Advice on effects of smoking on health,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+230057008,Cigar consumption,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+24184005,Raised blood pressure,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+249366005,Has nosebleeds - epistaxis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+251944000,FEV1/FVC ratio,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+263747008,Emphysematous,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266918002,Tobacco smoking consumption,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266920004,Trivial cigarette smoker (less than one cigarette/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266921000,Ex-trivial cigarette smoker (<1/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266922007,Ex-light cigarette smoker (1-9/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266923002,Ex-moderate cigarette smoker (10-19/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266924008,Ex-heavy cigarette smoker (20-39/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+266925009,Ex-very heavy cigarette smoker (40+/day),y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+267024001,Abnormal weight loss,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+267036007,Breathlessness Dyspnoea,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+270442000,Asthma monitoring check done,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+27113001,Body weight,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+275908000,Asthma monitoring,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+276491000000101,Fast track referral for suspected lung cancer,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+281018007,Ex-cigarette smoker,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+2831211000001109,Flixotide 250 Evohaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+284523002,Persistent cough,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+29857009,Chest pain,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+302331000000106,Royal College of Physicians asthma assessment,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+30760008,Finger clubbing,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+310520004,Expected FEV1,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+312342009,Chest infection - pnemonia due to unspecified organism,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+313222007,FEV1/FVC percent,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+313223002,Percent predicted FEV1,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+313297008,Moderate chronic obstructive pulmonary disease,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+313299006,Severe chronic obstructive pulmonary disease,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+314473008,FEV1/FVC > 70% of predicted,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+3184311000001107,Flixotide 100 Accuhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+3184911000001108,Flixotide 250 Accuhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+3215311000001107,Salamol Easi-Breathe inhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+32398004,Chest infection - unspecified bronchitis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+33594911000001100,Braltus 10microgram inhalation powder capsules,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+340921000000103,Asthma trigger - tobacco smoke,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+35908811000001103,Beclometasone 250micrograms inhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+364075005,Heart rate,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+365981007,Tobacco smoking behaviour - finding,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+366874008,Number of asthma exacerbations in past year,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+370208006,Asthma never causes daytime symptoms,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+370226009,Asthma treatment compliance satisfactory,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+390891009,COPD self-management plan given,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+391120009,MRC Breathlessness Scale: grade 1,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+391123006,MRC Breathlessness Scale: grade 2,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+391124000,MRC Breathlessness Scale: grade 3,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+391125004,MRC Breathlessness Scale: grade 4,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+39113611000001102,Salbutamol 100micrograms inhaler CFC free,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+394700004,Asthma annual review,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+394873005,Not interested in stopping smoking,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+396285007,Chest infection - unspecified bronchopneumonia,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+396484008,Supraclavicular lymph node biopsy,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+398511000001105,Flixotide 125 Evohaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+401012008,FEV1 before bronchodilation,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+401013003,FEV1 after bronchodilation,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+401135008,Health education - asthma,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+4053411000001103,Serevent 25micrograms Evohaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+406162001,Asthma management,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+407576000,FVC/Expected FVC percent,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+407602006,FEV1/FVC ratio before bronchodilator,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+414916001,Obesity,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+415261001,Referral for spirometry,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+42292311000001106,Beclometasone 100micrograms inhaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+42292811000001102,Carbocisteine 375mg capsules,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+427359005,Solitary nodule of lung,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+42984000,Night sweats,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+431314004,SpO2 - oxygen saturation at periphery,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+443117005,Asthma control test score,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+446660005,Chronic obstructive pulmonary disease assessment test score,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+492191000000103,Ex roll-up cigarette smoker,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+49727002,Cough,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+50417007,Lower respiratory tract infection,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+505651000000103,Current smoker annual review,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+505761000000105,Ex-smoker annual review,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+50834005,Forced vital capacity,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+51615001,Fibrosis of lung,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+527151000000107,Smoking cessation advice declined,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+527361000000107,CAT - COPD assessment test,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+54150009,Upper respiratory infection,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+54398005,Acute upper respiratory infection,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+60621009,Body mass index,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+65568007,Cigarette smoker,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+6631009,Thrombocytosis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+66857006,Haemoptysis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+68328006,Centrilobular emphysema,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+700250006,Idiopathic pulmonary fibrosis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+716281000000103,Chronic obstructive pulmonary disease monitoring verbal invite,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+716901000000101,Chronic obstructive pulmonary disease monitoring telephone invitation,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+718241000000107,Issue of chronic obstructive pulmonary disease rescue pack,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+719873005,Fibrosis-4 index score,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+72313002,Systolic arterial pressure,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+723245007,Number of chronic obstructive pulmonary disease exacerbations in past year,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+726611000001102,Flixotide 50 Evohaler,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+736056000,Asthma clinical management plan,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+754061000000100,Asthma review using Royal College of Physicians three questions,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+767641000000109,Referral for smoking cessation service offered,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+77176002,Current smoker,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+78564009,Pulse rate,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+810901000000102,Asthma self-management plan review,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+831311000006106,2 week rule referral - lung,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+8517006,Ex-smoker,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+871641000000105,Referral to smoking cessation service declined,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+87433001,Pulmonary emphysema,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+894821000000107,Spirometry screening invitation,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+909721000006104,[RFC] Emphysema,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+909731000006101,[RFC] Reason for care : Pulmonary fibrosis,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+919601000000107,Single inhaler maintenance and reliever therapy started,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+9205211000001104,Easyhaler Salbutamol,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+9516911000001109,AeroChamber Plus,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes
+95325000,Subcutaneous nodule,y,extracted_from:sql/lung_v45_balanced_min3.sql:curated_codes

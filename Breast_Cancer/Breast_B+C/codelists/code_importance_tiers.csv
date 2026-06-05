@@ -1,0 +1,315 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,combined_score,combined_rank,code_tier,category_model_tier
+89164003,observation,SYMPTOM_BREAST_LUMP,Lumpy breasts,0.5276568950541976,6.0,STRONG,STRONG
+162160003,observation,SYMPTOM_BREAST_LUMP,Breast lump symptom NOS,0.4224382947529228,9.0,STRONG,STRONG
+160660005,observation,LIFE_DIET,Patient-initiated diet,0.3271866267280897,14.0,STRONG,MEDIUM
+193611000001107,medication,OC,Micronor 350microgram tablets (Janssen-Cilag Ltd),0.2716738461099525,25.0,STRONG,MEDIUM
+315251009,observation,SYMPTOM_BREAST_PAIN,Unilateral mastalgia,0.263119760084625,28.0,STRONG,MEDIUM
+679511000001100,medication,HRT,Premique 0.625mg/5mg tablets (Pfizer Ltd),0.2519836241405891,35.0,STRONG,MEDIUM
+160628002,observation,LIFE_PHYSACT,Exercise grading NOS,0.248985989885247,36.0,MEDIUM,LOW
+71211000001107,medication,HRT,Vagifem 25microgram vaginal tablets (Novo Nordisk Ltd),0.2465912383819,37.0,MEDIUM,MEDIUM
+557911000001109,medication,HRT,Prempak-C 1.25mg/0.15mg tablets (Pfizer Ltd),0.2216806763825249,51.0,MEDIUM,MEDIUM
+3405311000001106,medication,HRT,Estradiol 25microgram pessaries,0.2042302486011734,84.0,MEDIUM,MEDIUM
+211611000001106,medication,DM_MONITORING,OneTouch Ultra testing strips (LifeScan),0.2023415512099251,90.0,MEDIUM,LOW
+380211000001105,medication,OC,Cilest 35microgram/250microgram tablets (Janssen-Cilag Ltd),0.2023328378476923,91.0,MEDIUM,MEDIUM
+3040311000001103,medication,HRT,Climesse tablets (Novartis Pharmaceuticals UK Ltd),0.201710876940626,93.0,MEDIUM,MEDIUM
+1029061000000102,observation,LAB_LIPIDS,Fasting blood lipids,0.2015982193133823,94.0,MEDIUM,STRONG
+854971000006104,observation,LIFE_DIET,Dietary advice given,0.198722591201465,99.0,MEDIUM,MEDIUM
+462011000001107,medication,OC,Femulen 500microgram tablets (Pfizer Ltd),0.1981148959451577,103.0,MEDIUM,MEDIUM
+271508001,observation,LAB_SPIRO_FLOW,Predicted peak flow,0.1968438127738064,105.0,MEDIUM,MEDIUM
+3215411000001100,medication,HRT,Estracombi TTS patches (Novartis Pharmaceuticals UK Ltd),0.1968106515657284,106.0,MEDIUM,MEDIUM
+35908511000001101,medication,RESPIRATORY_INHALERS,Beclometasone 200micrograms/dose inhaler,0.192310712264089,119.0,MEDIUM,LOW
+853681000006106,observation,SYMPTOM_BREAST_LUMP,Lump in axilla,0.191830402166598,122.0,MEDIUM,STRONG
+3358411000001107,medication,HRT,Climagest 1mg tablets (Novartis Pharmaceuticals UK Ltd),0.191315934193313,125.0,MEDIUM,MEDIUM
+269845004,observation,LAB_TFT,Thyroid hormone tests,0.1912362485799197,127.0,MEDIUM,LOW
+3470811000001103,medication,HRT,Prempak-C 0.625mg/0.15mg tablets (Pfizer Ltd),0.1900977475016775,134.0,MEDIUM,MEDIUM
+857141000006100,observation,LAB_LIPIDS,LDL cholesterol level,0.1897188585915271,136.0,MEDIUM,STRONG
+2942911000001101,medication,HRT,Estraderm TTS 50 patches (Novartis Pharmaceuticals UK Ltd),0.18947621598259,137.0,MEDIUM,MEDIUM
+9459511000001109,medication,DM_MONITORING,OneTouch UltraSoft lancets 0.4mm/28gauge (LifeScan),0.1866549714341661,152.0,MEDIUM,LOW
+1026721000000103,observation,LAB_LIPIDS,Serum fasting lipoprotein level,0.1865475649650921,153.0,MEDIUM,STRONG
+134388005,observation,COMORBID_DM_FOOT,Monofilament foot sensation test,0.1859121418866564,159.0,MEDIUM,LOW
+3058111000001101,medication,OC,Loestrin 20 tablets (Galen Ltd),0.1853415457093681,162.0,MEDIUM,MEDIUM
+2889311000001109,medication,HRT,Estraderm TTS 25 patches (Novartis Pharmaceuticals UK Ltd),0.1846698968208965,167.0,MEDIUM,MEDIUM
+309544001,observation,LIFE_DIET,Dietary salt intake,0.1839697514859651,169.0,MEDIUM,MEDIUM
+3199011000001109,medication,HRT,Nuvelle tablets (Bayer Plc),0.1832820567855843,173.0,MEDIUM,MEDIUM
+269845004,observation,LAB_TFT,Thyroid hormone tests,0.1826531131317477,178.0,MEDIUM,LOW
+3058411000001106,medication,OC,Loestrin 30 tablets (Galen Ltd),0.1771971541506397,210.0,MEDIUM,MEDIUM
+496471000000109,observation,SYMPTOM_BREAST_LUMP,"[D]Local superficial swelling, mass or lump",0.1767065506938308,211.0,MEDIUM,STRONG
+2845811000001107,medication,HRT,Climaval 1mg tablets (Novartis Pharmaceuticals UK Ltd),0.1755216295590685,214.0,MEDIUM,MEDIUM
+271307007,observation,LAB_SPIRO_FLOW,More than 80% of predicted peak flow rate,0.173036060179983,223.0,MEDIUM,MEDIUM
+3194611000001101,medication,HRT,Gynest 0.01% cream with applicator (Marlborough Pharmaceuticals Ltd),0.1727349072641039,225.0,MEDIUM,MEDIUM
+448003001,observation,COMORBID_ASTHMA_CONTROL,Royal College of Physicians asthma assessment three questions score,0.1673149317889278,240.0,MEDIUM,LOW
+1027151000000105,observation,LAB_TSH,TSH (thyroid stimulating hormone) level,0.1668852830913239,247.0,MEDIUM,MEDIUM
+1029071000000109,observation,LAB_LIPIDS,High density/low density lipoprotein ratio,0.1628198487270108,253.0,MEDIUM,STRONG
+401081006,observation,COMORBID_DM_FOOT,Diabetic peripheral neuropathy screening,0.1581108197919463,257.0,MEDIUM,LOW
+1030811000000104,observation,LAB_LH,Luteinising hormone level,0.1573208569030353,259.0,MEDIUM,MEDIUM
+854781000006103,observation,LAB_LIPIDS,Fasting lipids,0.1515652182007396,266.0,MEDIUM,STRONG
+42292311000001106,medication,RESPIRATORY_INHALERS,Beclometasone 100micrograms/dose inhaler,0.1437829296968955,279.0,MEDIUM,LOW
+170630001,observation,COMORBID_ASTHMA,Bronchodilators used a maximum of once daily,0.1437796499047389,280.0,MEDIUM,MEDIUM
+23260002,observation,BREAST_BENIGN,Fibroadenosis of breast,0.1375169021902097,293.0,MEDIUM,MEDIUM
+1026491000000105,observation,LAB_LIPIDS,Serum fasting triglyceride level,0.1365811323901795,296.0,MEDIUM,STRONG
+496501000000102,observation,SYMPTOM_BREAST_LUMP,"[D]Lump, localised and superficial",0.1312533332030336,305.0,MEDIUM,STRONG
+1022801000000102,observation,LAB_TSH_PLASMA,Plasma TSH (thyroid stimulating hormone) level,0.1294616488579424,309.0,MEDIUM,LOW
+1027161000000108,observation,LAB_FSH,Serum follicle stimulating hormone level,0.1291226056736185,311.0,MEDIUM,LOW
+1027131000000103,observation,LAB_TFT,Thyroid hormone tests,0.1274549999736241,315.0,MEDIUM,LOW
+1005701000000109,observation,LAB_LIPIDS,Lipoprotein electrophoresis,0.1241132385694645,322.0,MEDIUM,STRONG
+162526000,observation,LIFE_DIET,Dietary sodium - low,0.1207139208269649,335.0,MEDIUM,MEDIUM
+1027131000000103,observation,LAB_TFT,Thyroid hormone tests,0.1188718645254522,342.0,MEDIUM,LOW
+600411000001103,medication,DM_MONITORING,Active testing strips (Roche Diabetes Care Ltd),0.1162410157238579,352.0,MEDIUM,LOW
+1010601000000105,observation,LAB_LIPIDS,Plasma triglyceride level,0.1161796390091556,353.0,MEDIUM,STRONG
+667191000006107,observation,LAB_LIPIDS,Fasting serum cholesterol,0.1155227239491926,356.0,MEDIUM,STRONG
+920471000000100,observation,LAB_LIPIDS,Estimated serum non-high density lipoprotein cholesterol level,0.1140945086340298,359.0,MEDIUM,STRONG
+708038006,observation,COMORBID_ASTHMA_CONTROL,Asthma attack,0.1138440174487254,361.0,MEDIUM,LOW
+1010591000000104,observation,LAB_LIPIDS,Plasma LDL (low density lipoprotein) cholesterol level,0.1128963582016471,364.0,MEDIUM,STRONG
+854481000006106,observation,LAB_LIPIDS,Fasting triglycerides,0.1112265628379043,379.0,MEDIUM,STRONG
+266578003,observation,BREAST_BENIGN,Solitary cyst of breast,0.1082133165090623,398.0,MEDIUM,MEDIUM
+285411000000105,observation,LIFE_ALC_SCREEN,Alcohol screen - fast alcohol screening test completed,0.1075001941562992,402.0,MEDIUM,LOW
+366061000000101,observation,LIFE_PHYSACT,Less than 30 minutes a day of at least moderate intensity physical activity on five or more days of the week,0.1058129224649621,417.0,MEDIUM,LOW
+521411000001105,medication,HRT,Livial 2.5mg tablets (Organon Pharma (UK) Ltd),0.1054216731804792,419.0,MEDIUM,MEDIUM
+9459811000001107,medication,DM_MONITORING,Softclix lancets 0.4mm/28gauge (Roche Diabetes Care Ltd),0.1049450513830019,422.0,MEDIUM,LOW
+413475007,observation,LIFE_ALCOHOL,Alcohol questionnaire completed,0.1042535000216527,426.0,MEDIUM,STRONG
+3355511000001103,medication,HRT,Tridestra tablets (Orion Pharma (UK) Ltd),0.1026264713492762,436.0,MEDIUM,MEDIUM
+1010581000000101,observation,LAB_LIPIDS,Plasma HDL (high density lipoprotein) cholesterol level,0.1021663398255923,437.0,MEDIUM,STRONG
+274751001,observation,SYMPTOM_BREAST_LUMP,[D]Lump in head or neck,0.1001866980511334,458.0,MEDIUM,STRONG
+413173009,observation,LIFE_SMOKING,Minutes from waking to first tobacco consumption,0.0972501932333926,478.0,LOW,MEDIUM
+1026471000000106,observation,LAB_LIPIDS,Serum fasting LDL (low density lipoprotein) cholesterol level,0.0964071666142474,482.0,LOW,STRONG
+75211000001105,medication,DM_MONITORING,Diastix testing strips (Ascensia Diabetes Care UK Ltd),0.0948362383839024,495.0,LOW,LOW
+35936511000001108,medication,RESPIRATORY_INHALERS,Salbutamol 100micrograms/dose inhaler,0.0942968224278432,499.0,LOW,LOW
+3449411000001106,medication,HRT,Trisequens tablets (Novo Nordisk Ltd),0.0930174603391436,511.0,LOW,MEDIUM
+162162006,observation,SYMPTOM_BREAST_LUMP,Breast lump present,0.0913163303886928,524.0,LOW,STRONG
+1026451000000102,observation,LAB_LIPIDS,Serum fasting HDL (high density lipoprotein) cholesterol level,0.086247615771456,562.0,LOW,STRONG
+492611000001103,medication,OC,Ovranette 150microgram/30microgram tablets (Pfizer Ltd),0.0850399024835641,571.0,LOW,MEDIUM
+623311000001109,medication,HRT,Ovestin 1mg/g vaginal cream with applicator (Aspen Pharma Trading Ltd),0.0835421552895638,578.0,LOW,MEDIUM
+34911000001102,medication,HRT,Premarin 0.625mg tablets (Pfizer Ltd),0.0826644729459284,580.0,LOW,MEDIUM
+164150006,observation,SYMPTOM_BREAST_LUMP,O/E -axillary lymphadenopathy,0.0813893272130785,587.0,LOW,STRONG
+116339002,observation,SYMPTOM_BREAST_LUMP,Breast finding,0.0812755227885826,589.0,LOW,STRONG
+1026441000000100,observation,LAB_LIPIDS,Serum cholesterol studies,0.0808079937386029,593.0,LOW,STRONG
+4380511000001101,medication,RESPIRATORY_INHALERS,Flixonase Nasule 400microgram/unit dose nasal drops (GlaxoSmithKline UK Ltd),0.0790100145880414,607.0,LOW,LOW
+251900003,observation,LIFE_SMOKE_CO,Expired carbon monoxide concentration,0.0781695513013913,612.0,LOW,LOW
+251940009,observation,LAB_SPIRO_FLOW,Serial peak expiratory flow rate,0.0768731111966126,619.0,LOW,MEDIUM
+587711000001100,medication,OC,Dianette tablets (Bayer Plc),0.0763378749460579,623.0,LOW,MEDIUM
+170628003,observation,COMORBID_ASTHMA,Airways obstruction irreversible,0.0725830789701734,646.0,LOW,MEDIUM
+18114009,observation,REPRO_PARITY,Prenatal examination and care of mother,0.0725508897423369,647.0,LOW,LOW
+31387002,observation,COMORBID_ASTHMA,Exercise-induced asthma,0.0717215557136531,654.0,LOW,MEDIUM
+1003431000000105,observation,LAB_LIPIDS,Plasma lipids,0.0700984765893379,663.0,LOW,STRONG
+2889611000001104,medication,HRT,Estraderm MX 25 patches (Norgine Pharmaceuticals Ltd),0.0693787140484729,667.0,LOW,MEDIUM
+3038811000001109,medication,HRT,Kliovance tablets (Novo Nordisk Ltd),0.0682406124959133,673.0,LOW,MEDIUM
+770231000000109,observation,LIFE_PHYSACT,General practice physical activity questionnaire,0.0675690938334357,674.0,LOW,LOW
+9478911000001107,medication,RESPIRATORY_INHALERS,Tiotropium bromide 18microgram inhalation powder capsules,0.0664173833578502,681.0,LOW,LOW
+27431007,observation,BREAST_BENIGN,Fibrocystic disease of breast,0.0661531380386489,682.0,LOW,MEDIUM
+198011000000108,observation,SYMPTOM_BREAST_LUMP,Breast lump detected by self-examination,0.0657542341987646,684.0,LOW,STRONG
+3048811000001105,medication,OC,Femodene tablets (Bayer Plc),0.0626752080082198,692.0,LOW,MEDIUM
+1030411000000101,observation,LAB_LIPIDS,Non high density lipoprotein cholesterol level,0.0618632710718358,699.0,LOW,STRONG
+2940411000001108,medication,RESPIRATORY_INHALERS,Beconase Aqueous 50micrograms/dose nasal spray (GlaxoSmithKline UK Ltd),0.0617203639954966,700.0,LOW,LOW
+22049009,observation,BREAST_BENIGN,Mammary duct ectasia,0.0614454823051854,703.0,LOW,MEDIUM
+524211000001108,medication,OC,Marvelon tablets (Organon Pharma (UK) Ltd),0.0602334537567961,714.0,LOW,MEDIUM
+3411311000001106,medication,OC,Cerazette 75microgram tablets (Organon Pharma (UK) Ltd),0.05851753044262,731.0,LOW,MEDIUM
+170647000,observation,COMORBID_ASTHMA,Asthma prophylactic medication used,0.0584160598452689,734.0,LOW,MEDIUM
+170638008,observation,COMORBID_ASTHMA,Asthma not limiting activities,0.0570777047841285,754.0,LOW,MEDIUM
+7267911000001107,medication,DM_MONITORING,Contour testing strips (Ascensia Diabetes Care UK Ltd),0.0568701447798846,756.0,LOW,LOW
+9479011000001103,medication,RESPIRATORY_INHALERS,Tiotropium bromide 18microgram inhalation powder capsules with device,0.0566951425201554,760.0,LOW,LOW
+170635006,observation,COMORBID_ASTHMA,Asthma not disturbing sleep,0.056505226905917,761.0,LOW,MEDIUM
+82231009,observation,SYMPTOM_NIPPLE,Inversion of nipple,0.0562506971214949,764.0,LOW,LOW
+160618006,observation,LIFE_SMOKING,Current non-smoker,0.0561692282205104,767.0,LOW,MEDIUM
+412734009,observation,HEREDITARY_BRCA,BRCA1 gene mutation positive,0.0560940173309664,768.0,LOW,ZERO
+41875111000001104,medication,HRT,Estradiol 2mg / Norethisterone acetate 1mg tablets,0.0559300265839533,769.0,LOW,MEDIUM
+31845005,observation,SYMPTOM_NIPPLE,Retraction of nipple,0.0557507452961277,775.0,LOW,LOW
+42111000001107,medication,OC,Microgynon 30 tablets (Bayer Plc),0.0544905422654847,794.0,LOW,MEDIUM
+1030801000000101,observation,LAB_FT4,Free thyroxine level,0.054413929312276,796.0,LOW,LOW
+855041000006107,observation,LIFE_PHYSACT,Grade B moderately active,0.0540470376537183,803.0,LOW,LOW
+546511000001102,medication,HRT,Premarin 1.25mg tablets (Pfizer Ltd),0.0539287660345965,805.0,LOW,MEDIUM
+373899003,observation,COMORBID_ASTHMA,Asthma daytime symptoms,0.0524944647183776,821.0,LOW,MEDIUM
+1028551000000102,observation,LAB_LIPIDS,Total cholesterol:HDL (high density lipoprotein) ratio,0.0524564566298044,822.0,LOW,STRONG
+3043111000001107,medication,HRT,Kliofem tablets (Novo Nordisk Ltd),0.0524256725438209,823.0,LOW,MEDIUM
+49601007,observation,COMORBID_CVD,Disorder of cardiovascular system,0.051740890910197,832.0,LOW,ZERO
+302331000000106,observation,COMORBID_ASTHMA_CONTROL,Royal College of Physicians asthma assessment,0.0502278404345235,853.0,LOW,LOW
+370202007,observation,COMORBID_ASTHMA,Asthma causes daytime symptoms 1 to 2 times per month,0.0501532619329274,857.0,LOW,MEDIUM
+41882911000001100,medication,HRT,Tibolone 2.5mg tablets,0.0491283422786913,868.0,LOW,MEDIUM
+9488911000001102,medication,DM_MONITORING,Aviva testing strips (Roche Diabetes Care Ltd),0.049104112955667,869.0,LOW,LOW
+170631002,observation,COMORBID_ASTHMA,Asthma disturbing sleep,0.0483055077364745,878.0,LOW,MEDIUM
+7425611000001100,medication,RESPIRATORY_INHALERS,Budesonide 64micrograms/dose nasal spray,0.0482416912116916,880.0,LOW,LOW
+10075611000001101,medication,RESPIRATORY_INHALERS,Salmeterol 25micrograms/dose inhaler CFC free,0.0480710381673952,886.0,LOW,LOW
+1030111000000108,observation,LAB_TPO_AB,Thyroid peroxidase antibody level,0.048050736550504,887.0,LOW,LOW
+237453001,observation,SYMPTOM_BREAST_PAIN,Cyclical mastalgia,0.047441287226331,898.0,LOW,MEDIUM
+170612008,observation,COMORBID_ASTHMA,Increasing exercise wheeze,0.0472408288467226,901.0,LOW,MEDIUM
+41874811000001105,medication,HRT,Estradiol 1mg / Norethisterone acetate 500microgram tablets,0.046622585255641,906.0,LOW,MEDIUM
+170627008,observation,COMORBID_ASTHMA,Airways obstruction reversible,0.0464831527906313,914.0,LOW,MEDIUM
+39111111000001109,medication,RESPIRATORY_INHALERS,Fluticasone 125micrograms/dose / Salmeterol 25micrograms/dose inhaler CFC free,0.0460765867888802,919.0,LOW,LOW
+2841811000001109,medication,HRT,Elleste Solo 1mg tablets (Exeltis UK Ltd),0.0455625890720804,932.0,LOW,MEDIUM
+395149007,observation,COMORBID_DM_FOOT,O/E - vibration sense left foot reduced,0.0445820897150441,953.0,LOW,LOW
+3049511000001101,medication,HRT,Elleste Duet Conti tablets (Exeltis UK Ltd),0.044079114076295,961.0,LOW,MEDIUM
+1027171000000101,observation,LAB_PROLACTIN,Prolactin level,0.0437074673929222,966.0,LOW,LOW
+170637003,observation,COMORBID_ASTHMA,Asthma limiting activities,0.0433812439980981,973.0,LOW,MEDIUM
+162164007,observation,SYMPTOM_NIPPLE,Nipple discharge symptom,0.0432040920867861,975.0,LOW,LOW
+3176811000001102,medication,RESPIRATORY_INHALERS,Qvar 50 inhaler (Teva UK Ltd),0.0421269101877552,1007.0,LOW,LOW
+247350000,observation,SYMPTOM_NIPPLE,Sore nipple,0.0420588879546669,1008.0,LOW,LOW
+429006005,observation,FAMHX_OTHER_CANCERS,Family history of malignant neoplasm of GI tract,0.0419583486924163,1010.0,LOW,LOW
+390931008,observation,COMORBID_DM_FOOT,10g monofilament sensation present,0.0417729649203499,1014.0,LOW,LOW
+370208006,observation,COMORBID_ASTHMA,Asthma never causes daytime symptoms,0.0417140031565881,1016.0,LOW,MEDIUM
+170657004,observation,COMORBID_ASTHMA,Asthma severely restricts exercise,0.0414568730877367,1019.0,LOW,MEDIUM
+4499111000001107,medication,HRT,Novofem tablets (Novo Nordisk Ltd),0.0413220284328452,1025.0,LOW,MEDIUM
+3177711000001108,medication,RESPIRATORY_INHALERS,Qvar 100 Autohaler (Teva UK Ltd),0.040798673207198,1037.0,LOW,LOW
+370204008,observation,COMORBID_ASTHMA,Asthma causes daytime symptoms most days,0.0403333991978773,1049.0,LOW,MEDIUM
+395150007,observation,COMORBID_DM_FOOT,O/E - vibration sense right foot reduced,0.0402333691297085,1051.0,LOW,LOW
+9414007,observation,COMORBID_DM,[D]Prediabetes,0.0402171810199785,1053.0,LOW,LOW
+313193002,observation,LAB_SPIRO_FLOW,Peak flow rate (respiratory),0.0400234592505385,1057.0,LOW,MEDIUM
+48499001,observation,LIFE_BMI,Increased body mass index,0.0399362583949407,1058.0,LOW,STRONG
+54302000,observation,SYMPTOM_NIPPLE,Nipple discharge,0.0394428649030405,1066.0,LOW,LOW
+263911000001100,medication,OC,Utovlan 5mg tablets (Pfizer Ltd),0.0393891468722656,1067.0,LOW,MEDIUM
+9516111000001106,medication,DM_MONITORING,Volumatic (GlaxoSmithKline UK Ltd),0.0393177494476308,1072.0,LOW,LOW
+42295511000001106,medication,OC,Levonorgestrel 1.5mg tablets,0.0390089993181096,1082.0,LOW,MEDIUM
+370203002,observation,COMORBID_ASTHMA,Asthma causes daytime symptoms 1 to 2 times per week,0.038335095924934,1093.0,LOW,MEDIUM
+285441000000106,observation,LIFE_ALC_SCREEN,Alcohol screen - alcohol use disorder identification test consumption questions completed,0.0379516854420174,1100.0,LOW,LOW
+266918002,observation,LIFE_SMOKING,Tobacco smoking consumption,0.0379375070566231,1101.0,LOW,MEDIUM
+1709401000006107,observation,LAB_SPIRO_FLOW,Percent predicted FEF 25-75,0.0369429749202535,1124.0,LOW,MEDIUM
+170655007,observation,COMORBID_ASTHMA,Asthma restricts exercise,0.0369370247429709,1126.0,LOW,MEDIUM
+2958011000001100,medication,DM_MONITORING,FreeStyle Optium testing strips (Abbott Laboratories Ltd),0.0369162352009751,1127.0,LOW,LOW
+115941000119108,observation,SYMPTOM_NIPPLE,Breast symptom of change in nipple,0.036813502752741,1130.0,LOW,LOW
+2845411000001105,medication,HRT,Progynova 2mg tablets (Bayer Plc),0.036641596386013,1135.0,LOW,MEDIUM
+1031421000000101,observation,LAB_LIPIDS,High density lipoprotein/total cholesterol ratio,0.0362274897828246,1150.0,LOW,STRONG
+170951000,observation,REPRO_MENOPAUSE,Menopause symptoms present,0.0358226900246931,1167.0,LOW,MEDIUM
+7340311000001105,medication,HRT,Premique Low Dose 0.3mg/1.5mg modified-release tablets (Pfizer Ltd),0.0355983174600469,1176.0,LOW,MEDIUM
+783041000000106,observation,LIFE_BMI,Weight management service opportunity signposted,0.0353043255380721,1190.0,LOW,STRONG
+39111911000001107,medication,RESPIRATORY_INHALERS,Beclometasone 50micrograms/dose nasal spray,0.0346894778616985,1201.0,LOW,LOW
+160625004,observation,LIFE_SMOKING,Date ceased smoking,0.033760731016487,1231.0,LOW,MEDIUM
+897148007,observation,LIFE_ALCOHOL,Alcoholic beverage intake,0.0334282580103427,1237.0,LOW,STRONG
+39718011000001105,medication,OC,Levonorgestrel 20micrograms/24hours intrauterine device,0.0333447804616224,1238.0,LOW,MEDIUM
+1020831000000109,observation,LAB_LIPIDS,Lipid level,0.0332942267316859,1239.0,LOW,STRONG
+170632009,observation,COMORBID_ASTHMA,Asthma causing night waking,0.0323531773529481,1259.0,LOW,MEDIUM
+1015691000000106,observation,LAB_LIPIDS,Plasma cholesterol/HDL (high density lipoprotein) ratio,0.0322058278374041,1265.0,LOW,STRONG
+313102001,observation,FAMHX_BREAST_OVARIAN,Family history of neoplasm of breast,0.0321029750713691,1267.0,LOW,LOW
+182727003,observation,COMORBID_ASTHMA_CONTROL,Asthma control step 1,0.0320041896217556,1269.0,LOW,LOW
+1015271000000109,observation,LAB_LIPIDS,Serum high density lipoprotein:non-high density lipoprotein cholesterol ratio,0.0318375939914685,1273.0,LOW,STRONG
+38896811000001103,medication,RESPIRATORY_INHALERS,Budesonide 200micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler,0.031716665499932,1279.0,LOW,LOW
+315250005,observation,SYMPTOM_BREAST_PAIN,Persistent mastalgia,0.0316307693360377,1286.0,LOW,MEDIUM
+839811000000106,observation,COMORBID_DM_EYE,Diabetic retinopathy screening declined,0.0314544600660883,1289.0,LOW,LOW
+1017161000000104,observation,LAB_LIPIDS,Plasma total cholesterol level,0.0311940268192334,1298.0,LOW,STRONG
+237463009,observation,SYMPTOM_NIPPLE,Eczema of nipple,0.0311832022901265,1299.0,LOW,LOW
+39111311000001106,medication,RESPIRATORY_INHALERS,Fluticasone 250micrograms/dose / Salmeterol 25micrograms/dose inhaler CFC free,0.0311702715786058,1300.0,LOW,LOW
+198116001,observation,SYMPTOM_BREAST_LUMP,[X]Other signs and symptoms in breast,0.0310382428344238,1305.0,LOW,STRONG
+170757007,observation,COMORBID_DM_EYE,Fundoscopy - diabetic check,0.0307333451300779,1314.0,LOW,LOW
+810211000001105,medication,RESPIRATORY_INHALERS,Seretide 125 Evohaler (GlaxoSmithKline UK Ltd),0.0304815133086919,1321.0,LOW,LOW
+160616005,observation,LIFE_SMOKING,Trying to give up smoking,0.0304505725650821,1323.0,LOW,MEDIUM
+82639001,observation,REPRO_PMS,Premenstrual tension syndrome,0.0302271261645065,1333.0,LOW,LOW
+160617001,observation,LIFE_SMOKING,Stopped smoking,0.029608256776669,1353.0,LOW,MEDIUM
+771901000000100,observation,COMORBID_ASTHMA,Asthma causes night time symptoms 1 to 2 times per week,0.029493123174443,1358.0,LOW,MEDIUM
+55222007,observation,SYMPTOM_BREAST_PAIN,Breast tenderness,0.0294526957950398,1360.0,LOW,MEDIUM
+313987006,observation,COMORBID_DM_EYE,Retinopathy follow up,0.029447827015939,1362.0,LOW,LOW
+269823000,observation,LAB_HBA1C,Hb. A1C - diabetic control,0.0292591005652254,1367.0,LOW,LOW
+167411000001104,medication,OC,Noriday 350microgram tablets (Pfizer Ltd),0.0292286053552965,1369.0,LOW,MEDIUM
+390888009,observation,COMORBID_DM_FOOT,O/E - left foot pulses present,0.0289024251101272,1379.0,LOW,LOW
+41873411000001105,medication,HRT,Conjugated oestrogens 625microgram tablets,0.0286946918038789,1385.0,LOW,MEDIUM
+160591008,observation,LIFE_ALCOHOL,Drinks wine,0.0284980489270052,1391.0,LOW,STRONG
+116144002,observation,REPRO_TAH_BSO,Total abdominal hysterectomy with bilateral salpingo-oophorectomy,0.0280018548804226,1411.0,LOW,ZERO
+170636007,observation,COMORBID_ASTHMA,Asthma never disturbs sleep,0.0279920853650217,1414.0,LOW,MEDIUM
+390889001,observation,COMORBID_DM_FOOT,O/E - right foot pulses present,0.0277959830644997,1419.0,LOW,LOW
+285381000000108,observation,LIFE_ALC_SCREEN,Alcohol screen - alcohol use disorder identification test completed,0.0268333845197458,1437.0,LOW,LOW
+359649009,observation,LIFE_DIET,Weight reduction diet,0.0268091053107723,1443.0,LOW,MEDIUM
+771981000000105,observation,COMORBID_ASTHMA,Asthma limits activities 1 to 2 times per month,0.0254322600583145,1484.0,LOW,MEDIUM
+266883004,observation,FAMHX_OTHER_CANCERS,Family history of neoplasm,0.0254252062191306,1486.0,LOW,LOW
+39113611000001102,medication,RESPIRATORY_INHALERS,Salbutamol 100micrograms/dose inhaler CFC free,0.0253453555613081,1488.0,LOW,LOW
+41880611000001105,medication,OC,Norethisterone 350microgram tablets,0.0253425964702462,1489.0,LOW,MEDIUM
+165871000000103,observation,LAB_SPIRO_FLOW,Peak expiratory flow rate measured using EN 13826 device,0.0251993371031714,1497.0,LOW,MEDIUM
+53430007,observation,SYMPTOM_BREAST_PAIN,Pain of breast,0.0248399202730505,1508.0,LOW,MEDIUM
+290085007,observation,SYMPTOM_BREAST_LUMP,Breast problem,0.0247947306679489,1509.0,LOW,STRONG
+3175611000001106,medication,RESPIRATORY_INHALERS,Qvar 100 inhaler (Teva UK Ltd),0.0247641316178395,1511.0,LOW,LOW
+165034005,observation,LAB_SPIRO_FLOW,Respiratory flow rate measured,0.0245674283810114,1512.0,LOW,MEDIUM
+39112711000001103,medication,RESPIRATORY_INHALERS,Salbutamol 100micrograms/dose breath actuated inhaler CFC free,0.0241350446834692,1521.0,LOW,LOW
+251944000,observation,LAB_SPIRO_VOLUMES,Forced expired volume in one second/forced vital capacity ratio,0.0236362541310509,1543.0,LOW,LOW
+254845004,observation,BREAST_BENIGN,Fibroadenoma of breast,0.0235257525319837,1552.0,LOW,MEDIUM
+370205009,observation,COMORBID_ASTHMA,Asthma causes night symptoms 1 to 2 times per month,0.0233918212850881,1555.0,LOW,MEDIUM
+170656008,observation,COMORBID_ASTHMA,Asthma sometimes restricts exercise,0.0227181096329709,1573.0,LOW,MEDIUM
+170629006,observation,COMORBID_ASTHMA,Bronchodilators used more than once daily,0.0224348090691401,1581.0,LOW,MEDIUM
+997121000000100,observation,LAB_GONADOTROPHIN,Gonadotrophin levels,0.022424156135487,1582.0,LOW,LOW
+300863000,observation,SYMPTOM_BREAST_LUMP,Mass of axilla,0.0222286658762794,1584.0,LOW,STRONG
+116143008,observation,REPRO_TAH,Total abdominal hysterectomy,0.0216945388585275,1602.0,LOW,LOW
+28432003,observation,BREAST_BENIGN,Abscess of breast,0.0215090305420264,1608.0,LOW,MEDIUM
+266896003,observation,COMORBID_CVD_FH_IHD_GT60,FH: Ischaemic heart disease at greater than 60 years,0.0206228790173745,1632.0,LOW,LOW
+73211009,observation,COMORBID_DM,Insulin dependent diabetes mellitus,0.0198402454031226,1663.0,LOW,LOW
+222311000001102,medication,RESPIRATORY_INHALERS,Ventolin 100micrograms/dose Evohaler (GlaxoSmithKline UK Ltd),0.0197959549768142,1665.0,LOW,LOW
+754061000000100,observation,COMORBID_ASTHMA_CONTROL,Asthma review using Royal College of Physicians three questions,0.019572659139361,1671.0,LOW,LOW
+473391009,observation,COMORBID_ASTHMA,Asthma never causes night symptoms,0.0191864786976978,1680.0,LOW,MEDIUM
+394871007,observation,LIFE_SMOKING,Thinking about stopping smoking,0.0190204672806469,1685.0,LOW,MEDIUM
+313222007,observation,LAB_SPIRO_VOLUMES,FEV1/FVC percent,0.0186196129357393,1705.0,LOW,LOW
+429740004,observation,FAMHX_BREAST_OVARIAN,Family history of malignant neoplasm of breast,0.0184975185122233,1709.0,LOW,LOW
+3347911000001102,medication,HRT,Femoston 1/10mg tablets (Exeltis UK Ltd),0.0184964000149876,1711.0,LOW,MEDIUM
+160652009,observation,LIFE_PHYSACT,Takes inadequate exercise,0.0184797029692687,1713.0,LOW,LOW
+3367311000001108,medication,HRT,Elleste Duet 1mg tablets (Exeltis UK Ltd),0.0179254100015753,1734.0,LOW,MEDIUM
+391118006,observation,LAB_SPIRO_FLOW,Positive reversibility test to salbutamol,0.0179000111329223,1735.0,LOW,MEDIUM
+38341003,observation,COMORBID_HTN,Hypertensive disorder,0.0176024296381437,1743.0,LOW,LOW
+59328004,observation,LAB_SPIRO_VOLUMES,Forced expired volume in 1 second,0.0168561790791705,1785.0,LOW,LOW
+1201005,observation,COMORBID_HTN,Benign essential hypertension,0.0162003632469462,1809.0,LOW,LOW
+134432000,observation,LAB_SPIRO_FLOW,Recorded/predicted peak expiratory flow rate ratio,0.0160196816823749,1818.0,LOW,MEDIUM
+111566002,observation,COMORBID_HYPOTHYROID,Other acquired hypothyroidism,0.015573472255748,1838.0,LOW,LOW
+161641009,observation,COMORBID_DM,At risk of diabetes mellitus,0.0152238087864017,1848.0,LOW,LOW
+52441000,observation,REPRO_ATROPHIC_VAG,Senile (atrophic) vaginitis,0.0145303635157394,1866.0,LOW,LOW
+266895004,observation,COMORBID_CVD_FH_IHD_LT60,FH: Ischaemic heart disease at less than 60 years,0.0134449710666344,1912.0,LOW,LOW
+170658009,observation,COMORBID_ASTHMA,Asthma never restricts exercise,0.0131990897765805,1926.0,LOW,MEDIUM
+182728008,observation,COMORBID_ASTHMA_CONTROL,Asthma control step 2,0.0131088111474188,1932.0,LOW,LOW
+182729000,observation,COMORBID_ASTHMA_CONTROL,Asthma control step 3,0.0127560128055261,1943.0,LOW,LOW
+170662003,observation,COMORBID_ASTHMA,Using inhaled steroids - high dose,0.012664876085152,1945.0,LOW,MEDIUM
+50834005,observation,LAB_SPIRO_VOLUMES,Forced vital capacity,0.0125757858098569,1951.0,LOW,LOW
+170660006,observation,COMORBID_ASTHMA,Not using inhaled steroids,0.0125601195321445,1952.0,LOW,MEDIUM
+42297111000001106,medication,OC,Norethisterone 5mg tablets,0.01018903912793,2027.0,LOW,MEDIUM
+170804003,observation,LIFE_BMI,Ideal body weight,0.0097936824625572,2043.0,LOW,STRONG
+1016851000000107,observation,LAB_TFT_TEST,Thyroid function test,0.0096781295859917,2048.0,LOW,MEDIUM
+18491006,observation,LAB_SPIRO_FLOW,Peak expiratory flow rate,0.0096406445613303,2049.0,LOW,MEDIUM
+16208003,observation,LIFE_DIET,Low fat diet,0.008827688591665,2069.0,LOW,MEDIUM
+414545008,observation,COMORBID_IHD,Ischaemic heart disease NOS,0.0078644207452898,2091.0,LOW,LOW
+198436008,observation,REPRO_MENOPAUSE,Menopausal hot flushes,0.0076846578793011,2100.0,LOW,MEDIUM
+315053001,observation,COMORBID_CVD_STATIN_PROPHYL,Statin prophylaxis,0.0072939507917044,2111.0,LOW,LOW
+267432004,observation,COMORBID_HYPERCHOL,Pure hypercholesterolaemia NOS,0.0068765053676497,2121.0,LOW,LOW
+72866009,observation,COMORBID_CVD_VARICOSE,Varicose veins of the leg NOS,0.0065191455600752,2135.0,LOW,LOW
+708373002,observation,COMORBID_ASTHMA_CONTROL,Emergency asthma patient visit since last encounter,0.0064365352917669,2137.0,LOW,LOW
+65568007,observation,LIFE_SMOKING,Cigarette smoker,0.0064239323044349,2138.0,LOW,MEDIUM
+11816003,observation,LIFE_DIET,Dietary advice,0.0057807386103768,2155.0,LOW,MEDIUM
+386619000,observation,LIFE_DIET,Low sodium diet,0.0053882026606244,2164.0,LOW,MEDIUM
+1016961000000104,observation,LAB_FT3,Serum free triiodothyronine level,0.0039612054829694,2208.0,LOW,MEDIUM
+281078001,observation,LIFE_ALC_EDU,Education about alcohol consumption,0.0039524783060703,2209.0,LOW,MEDIUM
+401070008,observation,LIFE_DIET,Number of portions of fruit and vegetables daily,0.0016694059843083,2247.0,LOW,MEDIUM
+1016971000000106,observation,LAB_FT4_SERUM,Serum free T4 level,0.0008831797023954,2260.0,LOW,MEDIUM
+11851311000001100,medication,DM_MONITORING,FreeStyle Lite testing strips (Abbott Laboratories Ltd),,,ZERO (unranked),LOW
+16611000001105,medication,DM_MONITORING,Advantage Plus testing strips (Roche Diabetes Care Ltd),,,ZERO (unranked),LOW
+3213311000001106,medication,OC,Logynon tablets (Bayer Plc),,,ZERO (unranked),MEDIUM
+2842511000001103,medication,HRT,Zumenon 1mg tablets (Viatris UK Healthcare Ltd),,,ZERO (unranked),MEDIUM
+161712005,observation,OVARIAN_CONDITIONS,Menopause,,,ZERO (unranked),LOW
+275937001,observation,FAMHX_OTHER_CANCERS,Family history of malignant neoplasm,,,ZERO (unranked),LOW
+275111003,observation,FAMHX_BREAST_OVARIAN,FH: Ovarian carcinoma,,,ZERO (unranked),LOW
+160297008,observation,FAMHX_BREAST_OVARIAN,FH: neoplasm of ovary,,,ZERO (unranked),LOW
+160392000,observation,FAMHX_BREAST_OVARIAN,FH: Breast disease,,,ZERO (unranked),LOW
+412738007,observation,HEREDITARY_BRCA,BRCA2 gene mutation positive,,,ZERO (unranked),ZERO
+29827000,observation,HISTORY_OOPHORECTOMY,Bilateral salpingo-oophorectomy,,,ZERO (unranked),LOW
+414575003,observation,HISTORY_OOPHORECTOMY,Laparoscopic TAH and bilateral salpingo-oophorectomy,,,ZERO (unranked),LOW
+69878008,observation,OVARIAN_CONDITIONS,Polycystic ovaries,,,ZERO (unranked),LOW
+79883001,observation,OVARIAN_CONDITIONS,Ovarian cyst,,,ZERO (unranked),LOW
+373717006,observation,OVARIAN_CONDITIONS,Premature menopause,,,ZERO (unranked),LOW
+387741004,observation,OVARIAN_CONDITIONS,Ovarian cystectomy,,,ZERO (unranked),LOW
+275109007,observation,FAMHX_OTHER_CANCERS,FH: Bowel cancer (Lynch),,,ZERO (unranked),LOW
+414205003,observation,FAMHX_OTHER_CANCERS,Family history of prostate cancer (BRCA2),,,ZERO (unranked),LOW
+35907811000001102,medication,RESPIRATORY_INHALERS,Beclometasone 100micrograms/dose breath actuated inhaler,,,ZERO (unranked),LOW
+4378111000001103,medication,RESPIRATORY_INHALERS,Budesonide 400micrograms/dose / Formoterol 12micrograms/dose dry powder inhaler,,,ZERO (unranked),LOW
+1023161000000104,observation,LAB_LH,Serum luteinising hormone level,,,ZERO (unranked),MEDIUM
+1023171000000106,observation,LAB_LH,Plasma LH (luteinising hormone) level,,,ZERO (unranked),MEDIUM
+148176006,observation,LAB_LH,Luteinising hormone and follicle stimulating hormone checked,,,ZERO (unranked),MEDIUM
+1010521000000102,observation,LAB_OESTRADIOL,Serum oestradiol level,,,ZERO (unranked),LOW
+1023231000000101,observation,LAB_OESTRADIOL,Plasma oestradiol level,,,ZERO (unranked),LOW
+1822661000006105,observation,LAB_OESTRADIOL,Test request : Serum oestradiol level,,,ZERO (unranked),LOW
+373622004,observation,LAB_OESTRADIOL,Basic oestrogen: 17-B-oestriol level,,,ZERO (unranked),LOW
+177627006,observation,HRT,Insertion of oestradiol implant,,,ZERO (unranked),MEDIUM
+1023211000000109,observation,LAB_PROLACTIN,Serum prolactin level,,,ZERO (unranked),LOW
+131008004,observation,LAB_PROLACTIN,Increased prolactin level,,,ZERO (unranked),LOW
+110051000006104,observation,LAB_PROLACTIN,Test request : Prolactin,,,ZERO (unranked),LOW
+1023181000000108,observation,LAB_PROLACTIN,Plasma prolactin level,,,ZERO (unranked),LOW
+1012121000000109,observation,LAB_PROLACTIN,Monomeric prolactin level,,,ZERO (unranked),LOW
+1013581000000107,observation,LAB_PROLACTIN,Serum monomeric prolactin level,,,ZERO (unranked),LOW
+997161000000108,observation,LAB_SEX_HORMONES_OTHER,Serum testosterone level,,,ZERO (unranked),MEDIUM
+110151000006100,observation,LAB_SEX_HORMONES_OTHER,Test request : Testosterone,,,ZERO (unranked),MEDIUM
+995571000000101,observation,LAB_SEX_HORMONES_OTHER,Plasma testosterone level,,,ZERO (unranked),MEDIUM
+997151000000105,observation,LAB_SEX_HORMONES_OTHER,Serum progesterone level,,,ZERO (unranked),MEDIUM
+110041000006101,observation,LAB_SEX_HORMONES_OTHER,Test request : Progesterone,,,ZERO (unranked),MEDIUM
+999661000000105,observation,LAB_SEX_HORMONES_OTHER,Serum sex hormone binding globulin level,,,ZERO (unranked),MEDIUM
+1757101000006104,observation,LAB_SEX_HORMONES_OTHER,Test request : Serum sex hormone binding globulin level,,,ZERO (unranked),MEDIUM
+997171000000101,observation,LAB_SEX_HORMONES_OTHER,Serum dehydroepiandrosterone level,,,ZERO (unranked),MEDIUM
+1011671000000105,observation,LAB_SEX_HORMONES_OTHER,Dehydroepiandrosterone sulphate level,,,ZERO (unranked),MEDIUM
+1023251000000108,observation,LAB_SEX_HORMONES_OTHER,Serum androstenedione level,,,ZERO (unranked),MEDIUM
+1006391000000109,observation,LAB_SEX_HORMONES_OTHER,Anti-Mullerian hormone level,,,ZERO (unranked),MEDIUM
+997351000000107,observation,LAB_SEX_HORMONES_OTHER,Serum insulin-like growth factor 1 level,,,ZERO (unranked),MEDIUM

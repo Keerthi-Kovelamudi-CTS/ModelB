@@ -1,0 +1,238 @@
+id,name
+1000381000000105,Serum PSA (prostate specific antigen) level
+1000481000000100,Serum free PSA (prostate specific antigen) level
+1000491000000103,Serum free:total PSA (prostate specific antigen) ratio
+1000651000000109,Serum potassium level
+1000661000000107,Serum sodium level
+1000691000000101,Serum calcium level
+1000731000000107,Serum creatinine level
+1000811000000109,Serum total protein
+1000821000000103,Serum albumin level
+1000841000000105,Serum alkaline phosphatase liver isoenzyme level
+1000851000000108,Plasma GGT level
+1000961000000100,Plasma urea level
+1000971000000107,Urea and electrolytes level
+1001011000000107,Plasma creatinine level
+1001231000000108,Serum globulin level
+1001371000000100,Serum CRP (C reactive protein) level
+1005651000000101,Plasma total protein
+1006591000000104,Total PSA (prostate specific antigen) level
+1007881000000101,Urine dipstick test
+1011481000000105,eGFR using creatinine CKD-EPI
+1013041000000106,Plasma alkaline phosphatase level
+1013211000000103,Plasma alanine aminotransferase level
+1013361000000105,Plasma albumin level
+1014831000000107,Urine microscopy
+1014851000000100,Urine leucocyte test
+1017381000000106,Plasma sodium level
+1017391000000108,Plasma calcium level
+1017401000000106,Plasma potassium level
+1018251000000107,ALT/SGPT serum level
+10186811000001105,Tabphyn MR 400microgram capsules
+10188911000001101,Pamsvax XL 400microgram capsules
+1020291000000106,GFR calculated by abbreviated MDRD
+1022291000000105,Haematocrit
+1022431000000105,Haemoglobin estimation
+1022441000000101,FBC - full blood count
+1022451000000103,Red blood cell count
+1022471000000107,MCH - Mean corpuscular haemoglobin
+1022481000000109,MCHC - Mean corpuscular haemoglobin concentration
+1022491000000106,MCV - Mean corpuscular volume
+1022511000000103,Erythrocyte sedimentation rate
+1022541000000102,Total white cell count
+1022551000000104,Neutrophil count
+1022561000000101,Eosinophil count
+1022571000000108,Basophil count
+1022581000000105,Lymphocyte count
+1022591000000107,Monocyte count
+1022651000000100,Platelet count
+1023711000000100,Urine culture
+1023721000000106,Urine nitrite level
+1026761000000106,Total bilirubin level
+1027171000000101,Prolactin level
+1027791000000103,Urine microalbumin/creatinine ratio
+1027931000000101,Blood calcium level
+1028081000000104,Direct (conjugated) bilirubin
+1028091000000102,GGT level
+1028101000000105,Creatine kinase level
+1028131000000104,Urea and electrolytes
+1028281000000106,Blood urea
+1028641000000101,Coagulation tests
+1028731000000100,Urine protein/creatinine ratio
+1029801000000105,Total 25-hydroxyvitamin D level
+1030021000000101,Free PSA (prostate specific antigen) level
+1030031000000104,Free:total PSA (prostate specific antigen) ratio
+1030791000000100,Prostate specific antigen level
+1031081000000108,Liver function tests - general
+1031101000000102,Aspartate aminotransferase level
+1038641000000104,Urine microscopy: red cells
+1041881000000101,Urine microscopy: pus cells
+11441004,Prostatism
+128606002,Urological disorder
+129252005,Insertion of suprapubic catheter
+130951007,Bladder retention of urine
+13301000087109,Ultrasound of bilateral kidneys
+135885005,Advice about impotence
+137771000006103,Smoking Age Started
+139394000,Nocturia D
+14608411000001108,Tolterodine 4mg modified-release capsules
+14610411000001107,Potassium citrate mixture
+160290005,Family history of neoplasm of male genital tract
+160618006,Current non-smoker
+161080002,Passive smoking risk
+161550001,History of haematuria
+161555006,H/O: prostatism
+161829004,Weight symptom NOS
+161894002,Complaining of low back pain
+162116003,Urinary frequency
+162147009,Pelvic pain
+162148004,C/O perineal pain
+162410003,C/O: a swelling
+165346000,Laboratory test result abnormal
+166160000,Prostate specific antigen outside reference range
+166646003,ALT level abnormal
+167217005,Urine examination
+167300001,Urine blood test = +
+167301002,Urine blood test = ++
+167302009,Urine blood test = +++
+167767004,Semen abnormal
+167800009,Sperm: haemospermia O/E
+168041003,O/E: renal calculus
+168130002,RBCs seen on microscopy
+168336001,MSU sent for C/S
+168337005,MSU sent for bacteriology
+168339008,Catheter urine sent for culture
+1726491000006101,LUTS - Lower urinary tract symptoms
+1807411000006100,Suprapubic tenderness
+197938001,Painless haematuria
+197941005,Frank haematuria
+21173002,Benign adenoma of prostate
+225087008,Urinary catheter care
+236633002,Overactive bladder
+236645006,Bladder outflow obstruction
+236648008,Acute retention of urine
+236650000,Chronic retention of urine
+23676211000001102,Solifenacin 6mg / Tamsulosin 400microgram modified-release tablets
+247358007,Abdominal pain type
+249274008,Urinary symptoms
+251984009,Urinary flow rate
+266569009,BPH - benign prostatic hypertrophy
+267031002,Tiredness
+267062003,Genitourinary symptoms NOS
+267064002,Retention of urine
+267067009,Lumbar ache - renal
+268637002,Psychosexual dysfunction
+268915006,O/E - weight 10-20% over ideal
+26958001,Liver function test
+271302001,O/E - PR - prostatic swelling
+271349002,Urine microscopy:RBCs present
+272047006,Complaining of loin pain
+272062008,C/O - tired all the time
+274296009,O/E -rectal examination
+274734008,Micturition frequency and polyuria
+275302008,Prostate enlarged on PR
+275413005,Blocked catheter
+275741008,Leucocytes in urine
+279031000006106,O/E - PR - Diffusely enlarged prostate
+300471006,Observation of frequency of urination
+30281009,Prostatic disorder
+307541003,Lower urinary tract symptoms
+309089006,Prostate mass
+3188711000001103,Xatral XL 10mg tablets
+34436003,Haematuria
+34615008,Haemospermia
+35920211000001106,Tramadol 100mg modified-release capsules
+365689007,Finding related to casts on urine microscopy
+3857111000001101,Caverject Dual Chamber 20microgram
+38754011000001109,Tamsulosin 400microgram modified-release capsules
+38893911000001102,Fesoterodine 8mg modified-release tablets
+38894011000001104,Fesoterodine 4mg modified-release tablets
+38897311000001105,Alfuzosin 10mg modified-release tablets
+39020411000001106,Doxazosin 4mg modified-release tablets
+39021111000001107,Doxazosin 8mg modified-release tablets
+390900001,Smoking cessation milestones
+39112111000001104,Oxybutynin 5mg modified-release tablets
+39112411000001109,Dihydrocodeine 60mg modified-release tablets
+396152005,Raised prostate specific antigen
+39687011000001101,Ciprofloxacin 750mg tablets
+39687511000001109,Ciprofloxacin 250mg tablets
+39687811000001107,Ciprofloxacin 500mg tablets
+39694811000001102,Cefalexin 500mg capsules
+39696511000001106,Indoramin 20mg tablets
+39697411000001109,Levofloxacin 250mg tablets
+39706511000001100,Vardenafil 10mg tablets
+39706711000001105,Vardenafil 20mg tablets
+39735311000001105,Cefalexin 250mg capsules
+397803000,Male erectile disorder
+410007005,Rectal examination
+4105911000001106,Cialis 10mg tablets
+4106311000001100,Cialis 20mg tablets
+413173009,Minutes from waking to first tobacco consumption
+414205003,Family history of prostate cancer
+417611000001101,Ciproxin 500mg tablets
+41952811000001109,Nitrofurantoin 100mg capsules
+41952911000001104,Nitrofurantoin 100mg tablets
+41953111000001108,Nitrofurantoin 50mg capsules
+41953211000001102,Nitrofurantoin 50mg tablets
+41953511000001104,Ofloxacin 400mg tablets
+41956211000001109,Trimethoprim 200mg tablets
+42010011000001101,Co-codamol 8mg/500mg capsules
+42010611000001108,Co-dydramol 10mg/500mg tablets
+42030000,Genitourinary disease NOS
+42030911000001107,Alfuzosin 2.5mg tablets
+42038911000001109,Oxybutynin 2.5mg tablets
+42043111000001101,Terazosin 2mg tablets
+42043211000001107,Terazosin 5mg tablets
+42043711000001100,Tolterodine 1mg tablets
+42044211000001105,Trospium chloride 60mg modified-release capsules
+428556002,Total international prostate symptom score
+43491000,Acute epididymitis
+4367811000001102,Dutasteride 500microgram capsules
+441915005,Measurement of renal function
+442618008,Abnormal finding on evaluation procedure
+49650001,Dysuria
+525511000001107,Viagra 100mg tablets
+58972000,Dribbling of urine
+5972002,Hesitancy of micturition
+61033006,Unstable bladder
+638411000001105,Muse 1000microgram urethral sticks
+68226007,Acute cystitis
+70660007,Hydrocele of tunica vaginalis
+7163005,Urinary tract obstruction
+75088002,Urgent desire to urinate
+759391000006100,IPSS - frequency
+759401000006103,IPSS - incomplete emptying
+759411000006100,IPSS - intermittency
+759421000006108,IPSS - nocturia
+759441000006101,IPSS - urgency
+759451000006104,IPSS - weak stream
+763101000000106,Severe lower urinary tract symptoms
+763111000000108,Moderate lower urinary tract symptoms
+763121000000102,Mild lower urinary tract symptoms
+801000119105,On rectal examination of prostate abnormality detected
+80274001,Glomerular filtration rate
+808811000001107,Viagra 50mg tablets
+853721000006104,Left loin pain
+860914002,Erectile dysfunction
+9009911000001104,SomaErect Response II vacuum pump
+909491000006106,Reason for care Enlarged prostate
+935051000000108,Corrected serum calcium level
+938911000000100,At risk of acute kidney injury
+9483111000001109,Flomaxtra XL 400microgram tablets
+9484411000001101,Tamsulosin 400microgram modified-release tablets
+9713002,Prostatitis and other inflammatory diseases of prostate
+981411000006101,Nocturia
+992821000000106,Organism count
+992871000000105,Epithelial cell count
+993111000000101,Plasma globulin level
+993501000000105,Red blood cell distribution width
+993551000000106,Large unstained cells
+997121000000100,Gonadotrophin levels
+997531000000108,Liver function test alt
+997561000000103,Plasma total bilirubin level
+997591000000109,Serum total bilirubin level
+997741000000108,25-Hydroxyvitamin D3 level
+999131000000106,Sample microscopy: red cells
+999291000000102,Sample microscopy: leucocytes
+999651000000107,Plasma C reactive protein
+999691000000104,Serum bilirubin level
