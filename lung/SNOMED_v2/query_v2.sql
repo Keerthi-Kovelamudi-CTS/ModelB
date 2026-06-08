@@ -39,10 +39,10 @@ WITH params AS (
   SELECT
     DATE '1950-01-01' AS longterm_mh_start,
     DATE '2026-01-01' AS longterm_mh_end,
-    5               AS years_before,
+    15               AS years_before,
     1               AS months_before,
-    50              AS min_obs_events_per_patient,  -- minimum observation events required per patient
-    10               AS min_med_events_per_patient,   -- minimum medication events required per patient
+    10              AS min_obs_events_per_patient,  -- minimum observation events required per patient
+    0               AS min_med_events_per_patient,   -- minimum medication events required per patient
     1                AS non_cancer_ratio, -- default ratio of non-cancer to cancer patients is 1:1. You can change it to 2 if you like 2 times more non-cancer patients (2:1)
     '%lung%'         AS target_cancer_pattern
     /* No LIMIT on events — unified_patients controls patient count, so row count is naturally bounded */
@@ -528,7 +528,15 @@ medication_events AS (
 /* ═══════════════════════════════════════════════════════════════════════════
    Step 8: Final output — combine observations and medications
    ═══════════════════════════════════════════════════════════════════════════ */
+--select cancer_class, count(distinct patient_guid)
+--FROM
+--(
 SELECT * FROM observation_events
-UNION ALL
-SELECT * FROM medication_events
+--UNION ALL
+--SELECT * FROM medication_events
+--WHERE upper(patient_guid) like '%EEAA410B420E%'  --missing '%003EC38C-6E37-42D9-AA14-EEAA410B420E%'
+--WHERE patient_guid like '%003F0495-664E-4805-BBA6-40305A14D210%'
 ORDER BY patient_guid;
+--)
+--group by cancer_class
+

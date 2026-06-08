@@ -32,13 +32,22 @@ warnings.filterwarnings('ignore')
 
 
 def clean_patient_guid(guid):
-    """Clean patient_guid by removing extra quotes and braces."""
+    """Clean patient_guid by removing extra quotes and braces (scalar API kept for compat)."""
     if pd.isna(guid):
         return None
     guid_str = str(guid).strip()
-    # Remove triple quotes and braces
     guid_str = guid_str.replace('"""', '').replace('{', '').replace('}', '')
     return guid_str.strip()
+
+
+def clean_patient_guid_series(series):
+    """Vectorized version of clean_patient_guid: ~50-200x faster than .apply()."""
+    cleaned = (series.astype(str)
+               .str.replace('"""', '', regex=False)
+               .str.replace('{', '', regex=False)
+               .str.replace('}', '', regex=False)
+               .str.strip())
+    return cleaned.where(series.notna(), None)
 
 
 def filter_patients_by_min_records(df, min_records=150):
@@ -47,20 +56,24 @@ def filter_patients_by_min_records(df, min_records=150):
     """
     if df.empty or 'patient_guid' not in df.columns:
         return df.copy()
-    
-    cleaned_guid = df['patient_guid'].apply(clean_patient_guid)
+
+    if 'patient_guid_CLEAN' in df.columns:
+        cleaned_guid = df['patient_guid_CLEAN']
+    else:
+        cleaned_guid = clean_patient_guid_series(df['patient_guid'])
+
     patient_counts = cleaned_guid.value_counts(dropna=True)
     eligible_patients = patient_counts[patient_counts >= min_records].index
-    
+
     mask = cleaned_guid.isin(eligible_patients)
     filtered_df = df[mask].copy()
-    filtered_df['patient_guid_CLEAN'] = cleaned_guid[mask]
-    
+    filtered_df['patient_guid_CLEAN'] = cleaned_guid[mask].values
+
     removed_patients = patient_counts.shape[0] - len(eligible_patients)
     print(f"Applied minimum record filter (>= {min_records} rows per patient).")
     print(f"Removed {removed_patients} patients; remaining patients: {filtered_df['patient_guid_CLEAN'].nunique()}.")
     print(f"Records after filtering: {len(filtered_df)}")
-    
+
     return filtered_df
 
 
@@ -69,25 +82,40 @@ def parse_value(value_str):
     if pd.isna(value_str):
         return None
     try:
-        # Remove quotes and whitespace
         value_clean = str(value_str).strip().replace('"""', '').replace('"', '').strip()
-        # Check for empty values
         if value_clean == '' or value_clean.lower() in ['nan', 'none', 'null', 'na']:
             return None
-        # Try to convert to float
         return float(value_clean)
-    except (valueError, TypeError):
+    except (ValueError, TypeError):
         return None
 
 
+def parse_value_series(series):
+    """Vectorized parse_value. Empty / null-like strings become NaN."""
+    s = (series.astype(str)
+         .str.replace('"""', '', regex=False)
+         .str.replace('"', '', regex=False)
+         .str.strip())
+    null_like = s.str.lower().isin(['', 'nan', 'none', 'null', 'na'])
+    s = s.where(~null_like, other=pd.NA)
+    return pd.to_numeric(s, errors='coerce')
+
+
 def parse_date(date_str):
-    """Parse date string, handling various formats."""
+    """Parse date string, handling various formats (scalar API kept for compat)."""
     if pd.isna(date_str):
         return None
     try:
         return pd.to_datetime(date_str)
-    except:
+    except Exception:
         return None
+
+
+def _is_preprocessed(df):
+    """Detect a DataFrame that has already been globally preprocessed."""
+    return isinstance(df, pd.DataFrame) and \
+        'patient_guid_CLEAN' in df.columns and \
+        'event_date_parsed' in df.columns
 
 
 def default_trend_logic(slope, first_val, last_val, r_value=None):
@@ -202,86 +230,76 @@ def analyze_value_trends(csv_file_path, symptom_name, snomed_codes, trend_logic=
         DataFrame with value trend analysis for each patient, and detailed records
     """
     
-    if isinstance(csv_file_path, pd.DataFrame):
+    preprocessed = _is_preprocessed(csv_file_path)
+    if preprocessed:
+        df = csv_file_path
+    elif isinstance(csv_file_path, pd.DataFrame):
         df = csv_file_path
         print(f"Using provided DataFrame ({len(df):,} rows).")
         is_lung_cancer_patient = True
+        if is_lung_cancer_patient:
+            filtered_df = filter_patients_by_min_records(df, min_records=150)
+            if filtered_df.empty:
+                print("No patients remain after applying the minimum record threshold (150).")
+                return pd.DataFrame(), pd.DataFrame()
+            df = filtered_df
     else:
         print(f"Loading data from {csv_file_path}...")
         df = pd.read_csv(csv_file_path)
         print(f"Total records loaded: {len(df)}")
         is_lung_cancer_patient = "lungCancer" in str(csv_file_path)
-    if is_lung_cancer_patient:
-        filtered_df = filter_patients_by_min_records(df, min_records=150)
-        if filtered_df.empty:
-            print("No patients remain after applying the minimum record threshold (150).")
-            return pd.DataFrame(), pd.DataFrame()
-        df = filtered_df
-    
-    # Clean patient_guid
-    df['patient_guid_CLEAN'] = df['patient_guid'].apply(clean_patient_guid)
-    
-    # Determine which columns to use based on event_type
+        if is_lung_cancer_patient:
+            filtered_df = filter_patients_by_min_records(df, min_records=150)
+            if filtered_df.empty:
+                print("No patients remain after applying the minimum record threshold (150).")
+                return pd.DataFrame(), pd.DataFrame()
+            df = filtered_df
+
+    if not preprocessed:
+        df = df.copy()
+        if 'patient_guid_CLEAN' not in df.columns:
+            df['patient_guid_CLEAN'] = clean_patient_guid_series(df['patient_guid'])
+        df['event_date_parsed'] = pd.to_datetime(df['event_date'], errors='coerce')
+        if 'event_age' in df.columns:
+            df['event_age'] = pd.to_numeric(df['event_age'], errors='coerce')
+        else:
+            print(f"Warning: event_age column not found in CSV file")
+
     if event_type == 'medication':
         code_col = 'med_code_id'
         term_col = 'drug_term'
-        # Convert med_code_id to numeric
-        if code_col in df.columns:
-            df[code_col] = pd.to_numeric(df[code_col], errors='coerce')
-        else:
-            print(f"Error: {code_col} column not found in CSV file")
-            return pd.DataFrame(), pd.DataFrame()
-    else:  # observation
+    else:
         code_col = 'snomed_c_t_concept_id'
         term_col = 'term'
-        # Convert snomed_c_t_concept_id to numeric
-        if code_col in df.columns:
-            df[code_col] = pd.to_numeric(df[code_col], errors='coerce')
-        else:
-            print(f"Error: {code_col} column not found in CSV file")
-            return pd.DataFrame(), pd.DataFrame()
-    
-    # Parse dates
-    df['event_date_parsed'] = df['event_date'].apply(parse_date)
-    
-    # Parse event_age if available
-    if 'event_age' in df.columns:
-        df['event_age'] = pd.to_numeric(df['event_age'], errors='coerce')
-    else:
-        print(f"Warning: event_age column not found in CSV file")
-    
-    # Filter by event_type if column exists
-    if 'event_type' in df.columns:
+
+    if code_col not in df.columns:
+        print(f"Error: {code_col} column not found in CSV file")
+        return pd.DataFrame(), pd.DataFrame()
+    if not preprocessed:
+        df[code_col] = pd.to_numeric(df[code_col], errors='coerce')
+
+    if 'event_type_lower' in df.columns:
+        df = df[df['event_type_lower'] == event_type.lower()]
+    elif 'event_type' in df.columns:
         df = df[df['event_type'].str.lower() == event_type.lower()].copy()
+    if not preprocessed:
         print(f"Filtered to {event_type} records: {len(df)}")
-    
-    # Filter records with symptom-related codes first
+
     symptom_records = df[df[code_col].isin(snomed_codes)].copy()
-    
+
     print(f"Records with {symptom_name}-related codes: {len(symptom_records)}")
-    
+
     if len(symptom_records) == 0:
         print(f"No {symptom_name}-related records found in the dataset.")
         return pd.DataFrame(), pd.DataFrame()
-    
-    # Filter out records with empty value column before parsing
-    def is_empty_value(val):
-        if pd.isna(val):
-            return True
-        val_str = str(val).strip().replace('"""', '').replace('"', '').strip()
-        return val_str == '' or val_str.lower() in ['nan', 'none', 'null', 'na']
-    
-    symptom_records = symptom_records[~symptom_records['value'].apply(is_empty_value)].copy()
-    
-    print(f"Records with non-empty value column: {len(symptom_records)}")
-    
-    # Parse values
+
+    # Vectorized value parsing (replaces two rows of .apply() per row)
     value_col_name = f'{symptom_name.upper()}_value'
-    symptom_records[value_col_name] = symptom_records['value'].apply(parse_value)
-    
-    # Filter out records with invalid dates or non-numeric values (after parsing)
+    symptom_records[value_col_name] = parse_value_series(symptom_records['value'])
+
+    # Filter out records with invalid dates or non-numeric values
     symptom_records = symptom_records[
-        (symptom_records['event_date_parsed'].notna()) & 
+        (symptom_records['event_date_parsed'].notna()) &
         (symptom_records[value_col_name].notna())
     ].copy()
     
