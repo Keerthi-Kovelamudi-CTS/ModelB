@@ -1,0 +1,25 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio,rationale
+449868002,OBS,CURRENT_SMOKER,Smokes tobacco daily,12.8,hand-curated pre-dx signal mapped to existing category
+858041000006100,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick bilirubin positive,12.4,hand-curated pre-dx signal mapped to existing category
+275742001,OBS,UROLOGICAL_CONDITIONS,Sterile pyuria,10.9,hand-curated pre-dx signal mapped to existing category
+364198000,OBS,LUTS,Frequency of urination,10.5,hand-curated pre-dx signal mapped to existing category
+201271000000102,OBS,URINE_LAB_ABNORMALITIES,Urine nitrite test = trace,10.1,hand-curated pre-dx signal mapped to existing category
+76618002,OBS,UROLOGICAL_CONDITIONS,Urethral stricture,10.0,hand-curated pre-dx signal mapped to existing category
+95570007,OBS,UROLOGICAL_CONDITIONS,Kidney stone,9.3,hand-curated pre-dx signal mapped to existing category
+431309003,OBS,RECURRENT_UTI,Acute urinary tract infection,9.3,hand-curated pre-dx signal mapped to existing category
+267064002,OBS,LUTS,Retention of urine,8.7,hand-curated pre-dx signal mapped to existing category
+1030641000000102,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for blood,7.9,hand-curated pre-dx signal mapped to existing category
+1030701000000107,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for pH,7.3,hand-curated pre-dx signal mapped to existing category
+858051000006103,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick bilirubin negative,7.0,hand-curated pre-dx signal mapped to existing category
+201231000000104,OBS,URINE_LAB_ABNORMALITIES,Urine nitrite test = +,6.8,hand-curated pre-dx signal mapped to existing category
+236648008,OBS,LUTS,Acute retention of urine,6.0,hand-curated pre-dx signal mapped to existing category
+29738008,OBS,URINE_LAB_ABNORMALITIES,Proteinuria,5.5,hand-curated pre-dx signal mapped to existing category
+858021000006107,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick leucocytes negative,5.2,hand-curated pre-dx signal mapped to existing category
+314138001,OBS,URINE_LAB_ABNORMALITIES,Urine nitrite negative,4.2,hand-curated pre-dx signal mapped to existing category
+1003181000000102,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for glucose,4.0,hand-curated pre-dx signal mapped to existing category
+1023721000000106,OBS,URINE_LAB_ABNORMALITIES,Urine nitrite level,3.8,hand-curated pre-dx signal mapped to existing category
+300471006,OBS,LUTS,Observation of frequency of urination,3.3,hand-curated pre-dx signal mapped to existing category
+1030631000000106,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for protein,3.2,hand-curated pre-dx signal mapped to existing category
+1026841000000103,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for ketones,3.0,hand-curated pre-dx signal mapped to existing category
+1024001000000102,OBS,URINE_LAB_ABNORMALITIES,Urine dipstick for nitrite,3.0,hand-curated pre-dx signal mapped to existing category
+230056004,OBS,CURRENT_SMOKER,Cigarette consumption,2.5,hand-curated pre-dx signal mapped to existing category

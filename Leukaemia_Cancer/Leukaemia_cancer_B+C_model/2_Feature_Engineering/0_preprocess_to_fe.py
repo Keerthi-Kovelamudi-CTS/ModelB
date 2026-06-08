@@ -30,11 +30,16 @@ from io_utils import read_table, write_table
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_RAW = SCRIPT_DIR / "data" / "raw" / "leukaemia_1mo_raw.csv"
 DEFAULT_OUT_DIR = SCRIPT_DIR / "data" / "1mo"
-DEFAULT_MAPPING = SCRIPT_DIR.parent / "codelists" / "code_category_mapping_v2.json"
+DEFAULT_MAPPING = SCRIPT_DIR.parent / "codelist2.0" / "code_category_mapping_2.0.json"
 
 # A/B time-window boundary. Events ≤ TIME_WINDOW_MID = window B (recent).
 # Events > TIME_WINDOW_MID and ≤ years_before*12 = window A (earlier).
-TIME_WINDOW_MID_MONTHS = 30   # midpoint of 60mo lookback (1-30 = B, 30-60 = A)
+# v3 horizon-specific A/B midpoint (months before anchor) = half of each window's
+# lookback, so window A (earlier) and B (recent) are balanced:
+#   1mo horizon  → 12-month lookback → mid 6    (B = 1-6mo,   A = 6-12mo)
+#   12mo horizon → 20-year lookback  → mid 126  (B = 12-126mo, A = 126-240mo)
+TIME_WINDOW_MID_BY_WINDOW = {"1mo": 6, "12mo": 126}
+TIME_WINDOW_MID_MONTHS = 30   # default; main() overrides per --prefix window (v3)
 
 PLACEHOLDER_CATEGORY = "__PLACEHOLDER__"
 
@@ -124,6 +129,12 @@ def main():
     if not args.mapping.exists():
         sys.exit(f"ERROR: mapping file not found: {args.mapping}")
     args.out_dir.mkdir(parents=True, exist_ok=True)
+
+    # v3: resolve the A/B midpoint for THIS window from the --prefix suffix.
+    global TIME_WINDOW_MID_MONTHS
+    _window = args.prefix.rsplit("_", 1)[-1]
+    TIME_WINDOW_MID_MONTHS = TIME_WINDOW_MID_BY_WINDOW.get(_window, TIME_WINDOW_MID_MONTHS)
+    print(f"  A/B midpoint for window '{_window}': TIME_WINDOW_MID_MONTHS={TIME_WINDOW_MID_MONTHS}")
 
     print(f"Loading raw: {args.raw}  ({args.raw.stat().st_size/1e9:.2f} GB)")
     df = read_table(args.raw, low_memory=False)

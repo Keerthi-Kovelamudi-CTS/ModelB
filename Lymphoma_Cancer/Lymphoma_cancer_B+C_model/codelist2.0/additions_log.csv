@@ -1,0 +1,2 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio,note
+,,,,,"NONE — codelist comprehensive (B-symptoms, lymphadenopathy, splenomegaly, autoimmune, recurrent infections, unexplained masses, skin symptoms). Leftover high-OR codes are admin/risk-scores/lab-workup/procedures (FNA, cystoscopy) and engagement noise — excluded."

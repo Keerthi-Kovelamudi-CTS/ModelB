@@ -123,7 +123,7 @@ def build_shared_split(
     y = unified_cohort["cancer_class"].astype(int).to_numpy()
 
     # ── Balance the surviving cohort to exactly 1:1 BEFORE splitting ──────────
-    # SQL oversamples non-cancer 5x; downsample the majority to the minority
+    # SQL is 1:1 (non_cancer_ratio=1, v3); downsample any majority to the minority
     # count here so TRAIN, VAL, and TEST all come out ~1:1 (not just train).
     _pos = np.where(y == 1)[0]; _neg = np.where(y == 0)[0]
     _n = min(len(_pos), len(_neg))

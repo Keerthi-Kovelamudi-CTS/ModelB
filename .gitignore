@@ -95,3 +95,11 @@ _all_cancer_results_*/
 # depends on them. Override the *.csv / *.tsv blanket above.
 !**/codelists/
 !**/codelists/**
+!**/codelist2.0/
+!**/codelist2.0/**
+
+# ─── Re-include curated SNOMED mapping sheets (not under codelists/) ──
+# Hand-curated SNOMED mapping spreadsheets that live in 1_Top_Snomeds/
+# folders. Same risk class as codelists/ — clinical mappings, no PHI.
+!**/1_Top_Snomeds/
+!**/1_Top_Snomeds/**

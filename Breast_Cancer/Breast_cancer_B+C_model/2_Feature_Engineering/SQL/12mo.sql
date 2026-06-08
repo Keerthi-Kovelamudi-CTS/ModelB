@@ -42,12 +42,13 @@ WITH params AS (
   SELECT
     DATE '1950-01-01' AS longterm_mh_start,
     DATE '2026-06-01' AS longterm_mh_end,
-    5                 AS years_before,                -- 60mo lookback (5 years)
+    20                AS years_before,                -- v3-aligned: 20-year lookback
     12                AS months_before,               -- 12mo gap before anchor (matches 12mo-prediction)
-    1                 AS min_obs_events_per_patient,  -- CANCER threshold: keep any cancer patient with ≥1 obs event (protect positives)
-    5                 AS min_obs_events_non_cancer,    -- NON-CANCER threshold: require ≥5 obs events in the (foreign-anchor) window
+    10                AS min_obs_events_per_patient,  -- v3-aligned: symmetric min obs events (cancer = non-cancer)
+    DATE '2010-01-01' AS anchor_window_start,        -- v3: anchor dates restricted to recent window (both classes)
+    DATE '2026-01-01' AS anchor_window_end,
     1                 AS min_med_events_per_patient,
-    5                 AS non_cancer_ratio,            -- oversample non-cancer 5x; build_shared_split downsamples to 1:1 across train/val/test (positives never discarded)
+    1                 AS non_cancer_ratio,            -- v3-aligned: 1:1 year-stratified (balance-to-1:1 kept at split as safety)
     '%breast%'        AS target_cancer_pattern
 ),
 
@@ -191,9 +192,11 @@ target_cancer_patients AS (
     FROM medical_history mh
     JOIN `prj-cts-ai-dev-sp.EMIS_MED_CODES.Dim_Cancer_Codes` dcc
       ON CAST(mh.snomed_c_t_concept_id AS STRING) = dcc.SNOMED_CODE
-    JOIN patients pp ON pp.patient_guid = mh.patient_guid AND pp.sex = 'F'
+    JOIN patients pp ON pp.patient_guid = mh.patient_guid  -- both sexes retained (rare male breast cancer kept; SEX preserved as feature + fairness sub-group)
     CROSS JOIN params param
     WHERE mh.effective_date IS NOT NULL
+      AND mh.effective_date >= param.anchor_window_start
+      AND mh.effective_date <  param.anchor_window_end
       AND DATE_DIFF(mh.effective_date, PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR) >= 18
       AND LOWER(dcc.cancer_id) NOT LIKE '%disease%'
       AND LOWER(dcc.cancer_id) LIKE param.target_cancer_pattern
@@ -217,8 +220,7 @@ non_cancer_patients AS (
   FROM medical_history mh
   JOIN patients pp
     ON pp.patient_guid = mh.patient_guid
-  WHERE pp.sex = 'F'                                  -- breast is female-only
-    AND NOT EXISTS (
+  WHERE NOT EXISTS (                                  -- both sexes retained (males kept for rare male breast cancer)
       SELECT 1 FROM any_cancer_patient acp
       WHERE acp.patient_guid = mh.patient_guid
     )
@@ -238,25 +240,34 @@ non_cancer_patients AS (
    Deterministic via FARM_FINGERPRINT for reproducibility.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-cancer_anchor_pool AS (
-  SELECT
-    date_of_diagnosis,
-    ROW_NUMBER() OVER (ORDER BY FARM_FINGERPRINT(CAST(patient_guid AS STRING))) AS pool_rn
-  FROM target_cancer_patients
-),
-
 non_cancer_with_anchor AS (
+  -- v3-aligned: ONE uniform-random own event per non-cancer patient (FARM_FINGERPRINT),
+  -- restricted to the anchor_window so both classes' anchor-years align by construction.
   SELECT
     ncp.patient_guid,
-    cap.date_of_diagnosis AS anchor_date
-  FROM (
-    SELECT
-      patient_guid,
-      MOD(ABS(FARM_FINGERPRINT(CAST(patient_guid AS STRING))),
-          (SELECT COUNT(*) FROM cancer_anchor_pool)) + 1 AS assigned_rn
-    FROM non_cancer_patients
-  ) ncp
-  JOIN cancer_anchor_pool cap ON ncp.assigned_rn = cap.pool_rn
+    mh.effective_date AS anchor_date
+  FROM non_cancer_patients ncp
+  JOIN medical_history mh
+    ON mh.patient_guid = ncp.patient_guid
+  JOIN patients pp ON pp.patient_guid = ncp.patient_guid
+  CROSS JOIN params param
+  WHERE DATE_DIFF(mh.effective_date, PARSE_DATE('%Y-%m-%d', pp.date_of_birth), YEAR) >= 18
+    AND mh.effective_date >= param.anchor_window_start
+    AND mh.effective_date <  param.anchor_window_end
+    AND mh.snomed_c_t_concept_id IS NOT NULL
+    AND NOT EXISTS (
+      SELECT 1 FROM cancer_snomed_codes csc
+      WHERE csc.snomed_code = mh.snomed_c_t_concept_id
+    )
+    AND mh.observation_type NOT IN ('Immunisation')
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY ncp.patient_guid
+    ORDER BY FARM_FINGERPRINT(CONCAT(
+      CAST(ncp.patient_guid AS STRING), '|',
+      CAST(mh.effective_date AS STRING), '|',
+      CAST(mh.snomed_c_t_concept_id AS STRING)
+    ))
+  ) = 1
 ),
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -332,7 +343,7 @@ non_cancer_event_counts AS (
       AND mh.observation_type NOT IN ('Immunisation')
   )
   GROUP BY 1, 2
-  HAVING COUNT(*) >= (SELECT min_obs_events_non_cancer FROM params)
+  HAVING COUNT(*) >= (SELECT min_obs_events_per_patient FROM params)
 ),
 
 /* ═══════════════════════════════════════════════════════════════════════════

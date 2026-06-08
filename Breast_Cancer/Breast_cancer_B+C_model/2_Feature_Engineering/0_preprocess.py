@@ -31,7 +31,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_RAW = SCRIPT_DIR / "data" / "raw" / "breast_1mo_raw.csv"
 DEFAULT_OUT_DIR = SCRIPT_DIR / "data" / "1mo"
 
-DEFAULT_MAPPING = SCRIPT_DIR.parent / "codelists" / "code_category_mapping_v2.json"
+DEFAULT_MAPPING = SCRIPT_DIR.parent / "codelist2.0" / "code_category_mapping_2.0.json"
 
 # A/B time-window boundary. Events ≤ TIME_WINDOW_MID = window B (recent).
 # Events > TIME_WINDOW_MID and ≤ years_before*12 = window A (earlier).

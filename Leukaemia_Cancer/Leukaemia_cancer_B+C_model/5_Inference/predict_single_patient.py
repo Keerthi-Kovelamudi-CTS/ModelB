@@ -119,9 +119,12 @@ def predict(feature_vector, window):
     decision = int(risk_proba >= thr)
     tier90_decision = int(risk_proba >= t90) if t90 is not None and not np.isnan(t90) else None
 
-    # Force zero risk if patient has no clinical features (matches training assumption)
+    # Force zero risk if patient has no clinical features (matches training assumption).
+    # Expose this as insufficient_data so the dual-horizon combiner can tell
+    # "confident no-cancer" apart from "we never had enough signal to judge".
     clinical_cols = [c for c in selected if c not in ("AGE_AT_INDEX", "AGE_BAND")]
-    if clinical_cols and (X[clinical_cols].abs().sum(axis=1).iloc[0] == 0):
+    insufficient_data = bool(clinical_cols and (X[clinical_cols].abs().sum(axis=1).iloc[0] == 0))
+    if insufficient_data:
         risk_proba = 0.0
         decision = 0
         if tier90_decision is not None:
@@ -137,49 +140,152 @@ def predict(feature_vector, window):
         "decision": decision,
         "tier90_threshold": float(t90) if t90 is not None and not np.isnan(t90) else None,
         "tier90_decision": tier90_decision,
+        "insufficient_data": insufficient_data,
         "n_seeds": len(seed_artifacts),
     }
 
 
-def predict_from_events(patient_json, window):
-    """Build features from raw events JSON, then predict.
+def build_feature_row_from_events(events, window):
+    """Compute the model's feature vector for ONE patient from raw events.
 
-    TODO (next session — biggest piece): replicate the FE pipeline (preprocess →
-    sanity → clean → FE → cleanup) on a single patient's events list. The
-    challenge is that 2_Feature_Engineering/3_pipeline.py is built for batch
-    DataFrame ops. Options:
-      A. Reuse the batch FE code with a 1-row DataFrame (slow but correct).
-      B. Write a lean per-patient FE that mirrors the same feature definitions.
-      C. Defer feature computation to the API layer; this script only predicts.
+    Option A (faithful): reuses the EXACT training FE functions from
+    2_Feature_Engineering, so features match training by construction.
 
-    For now this is a stub. Use predict() with a pre-computed feature vector.
+    `events`: list[dict] or DataFrame with the SQL-output schema per event row
+    (PATIENT_GUID, EVENT_TYPE, EVENT_DATE, SNOMED_C_T_CONCEPT_ID/MED_CODE_ID,
+    TERM/DRUG_TERM, VALUE, SEX, PATIENT_AGE, optional ANCHOR_DATE). For inference
+    ANCHOR_DATE defaults to the patient's most-recent EVENT_DATE.
+
+    Cohort-only steps are intentionally NOT applied (min_obs gating, NZV removal,
+    5_cleanup column-drops) — `predict()` aligns this row to the model's
+    selected_features, and 5_cleanup only drops columns (no value transforms).
+
+    ⚠️ MUST be validated once on the VM: run on a real patient and diff this
+    vector against that patient's row in feature_matrix_final — they must match.
     """
-    raise NotImplementedError(
-        "Building features from raw events is the larger TODO. "
-        "Use predict(feature_vector, window) with already-computed features. "
-        "See 2_Feature_Engineering/0_run_pipeline.py for the batch FE."
-    )
+    import importlib
+    fe_dir = str(PROJECT_ROOT / "2_Feature_Engineering")
+    if fe_dir not in sys.path:
+        sys.path.insert(0, fe_dir)
+    cfg  = importlib.import_module("config")
+    pre  = importlib.import_module("0_preprocess_to_fe")
+    pipe = importlib.import_module("3_pipeline")
+    canc = importlib.import_module("4_cancer_features")
+
+    df = pd.DataFrame(events).copy()
+    df.columns = df.columns.str.upper()
+    df["EVENT_DATE"] = pd.to_datetime(df["EVENT_DATE"], errors="coerce")
+    # anchor = MAX(event) for inference if not supplied (mirrors 0_preprocess_to_fe)
+    if "ANCHOR_DATE" not in df.columns:
+        df["ANCHOR_DATE"] = df.groupby("PATIENT_GUID")["EVENT_DATE"].transform("max")
+    df["ANCHOR_DATE"] = pd.to_datetime(df["ANCHOR_DATE"], errors="coerce")
+    if "MONTHS_BEFORE_ANCHOR" not in df.columns:
+        df["MONTHS_BEFORE_ANCHOR"] = ((df["ANCHOR_DATE"] - df["EVENT_DATE"]).dt.days // 30).astype("Int64")
+    df = df.rename(columns={"ANCHOR_DATE": "INDEX_DATE", "PATIENT_AGE": "AGE_AT_INDEX",
+                            "MONTHS_BEFORE_ANCHOR": "MONTHS_BEFORE_INDEX", "CANCER_CLASS": "LABEL"})
+    if "LABEL" not in df.columns:
+        df["LABEL"] = 0
+    is_obs = df["EVENT_TYPE"].astype(str).str.lower().str.startswith("obs")
+    df["CODE_ID"] = np.where(is_obs, df.get("SNOMED_C_T_CONCEPT_ID"), df.get("MED_CODE_ID"))
+    df["CODE_ID"] = pd.to_numeric(df["CODE_ID"], errors="coerce").astype("Int64")
+    if "TERM" not in df.columns: df["TERM"] = ""
+    if "DRUG_TERM" in df.columns:
+        df["TERM"] = np.where(is_obs, df["TERM"], df["DRUG_TERM"])
+
+    obs_map, med_map = pre.load_mapping(pre.DEFAULT_MAPPING)   # SAME mapping training used
+    df["CATEGORY"] = None
+    df.loc[is_obs,  "CATEGORY"] = pre.assign_category(df.loc[is_obs,  "CODE_ID"], obs_map).values
+    df.loc[~is_obs, "CATEGORY"] = pre.assign_category(df.loc[~is_obs, "CODE_ID"], med_map).values
+    # v3: use the SAME per-window A/B midpoint the training preprocess uses
+    pre.TIME_WINDOW_MID_MONTHS = getattr(pre, "TIME_WINDOW_MID_BY_WINDOW", {}).get(window, pre.TIME_WINDOW_MID_MONTHS)
+    months = pd.to_numeric(df["MONTHS_BEFORE_INDEX"], errors="coerce").fillna(-1).astype(int).values
+    df["TIME_WINDOW"] = pre.assign_time_window(months)
+    cat = df[df["CATEGORY"].notna() & df["TIME_WINDOW"].notna()].copy()
+    # NB: no min_obs gate, no placeholder needed (single patient is always scored);
+    # if cat is empty, predict()'s "all-zero clinical features ⇒ 0 risk" rule fires.
+
+    clin = cat[cat["EVENT_TYPE"].astype(str).str.lower().str.startswith("obs")].copy()
+    med  = cat[~cat["EVENT_TYPE"].astype(str).str.lower().str.startswith("obs")].copy()
+    for fr in (clin, med):
+        fr.columns = fr.columns.str.upper()
+        if "VALUE" in fr.columns: fr["VALUE"] = pd.to_numeric(fr["VALUE"], errors="coerce")
+    W = window.upper()
+    # build_clinical_features reads a module-global `window_name` for the encoder
+    # path (FE_RESULTS/<window>/encoder_mappings.json). At inference the TRAINING
+    # encoder must already exist there so categorical indices match training
+    # (it is loaded, not re-fit). Set the global the same way the batch run does.
+    pipe.window_name = window
+
+    # ── exact builder chain from 0_run_pipeline.run_feature_engineering ──
+    # NB: the batch builders assume cohort-scale inputs; for a SINGLE patient a
+    # degenerate group (e.g. zero medication events) can make a builder raise. At
+    # inference that simply means "no events of that type", so those features are 0
+    # (predict() fills any missing selected feature with 0). We guard each builder
+    # so a degenerate group → its features default to 0, never a crash. The CORE
+    # clinical builder is NOT guarded — if it fails that is a real error.
+    clin_feats = pipe.build_clinical_features(clin, cfg)   # core; let it raise
+    try:
+        med_feats = pipe.build_medication_features(med, cfg)
+    except Exception as e:
+        logger.warning(f"  build_medication_features skipped (no/degenerate med events: {e})")
+        med_feats = pd.DataFrame(index=clin_feats.index)
+    fm = clin_feats.join(med_feats, how="left")
+    med_cols = [c for c in fm.columns if c.startswith("MED_")]
+    if med_cols:
+        fm[med_cols] = fm[med_cols].fillna(0)
+    try:
+        fm = pipe.build_interaction_features(fm, cfg)
+    except Exception as e:
+        logger.warning(f"  build_interaction_features skipped ({e})")
+    for fn in (pipe.build_advanced_features, pipe.extract_maximum_features,
+               canc.build_cancer_specific_features, pipe.build_new_signal_features,
+               pipe.build_trend_features, pipe.build_acceleration_features):
+        try:
+            add = fn(clin, med, fm, W, cfg)
+            fm = fm.join(add, how="left", rsuffix="_x").fillna(0).replace([np.inf, -np.inf], 0)
+            fm = fm.loc[:, ~fm.columns.duplicated()]
+        except Exception as e:
+            logger.warning(f"  {fn.__name__} skipped (degenerate single-patient input: {e})")
+    if len(fm) != 1:
+        logger.warning(f"expected 1 feature row, got {len(fm)} — using the first")
+    return fm.iloc[0]
+
+
+def predict_from_events(events, window):
+    """Raw patient events → feature vector → calibrated risk + decision."""
+    fv = build_feature_row_from_events(events, window)
+    cfg, _ = load_artifacts(window)
+    selected = cfg["selected_features"]
+    covered = sum(1 for f in selected if f in fv.index and fv.get(f, 0) != 0)
+    logger.info(f"  feature coverage: {covered}/{len(selected)} selected features non-zero "
+                f"(rest default to 0 — verify against a training row before trusting)")
+    return predict(fv, window)
 
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--window", required=True, choices=["1mo", "3mo", "6mo", "12mo"])
+    p.add_argument("--window", required=True, choices=["1mo", "12mo"])
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument("--features-csv", help="One-row CSV with feature columns (and AGE_AT_INDEX)")
     g.add_argument("--features-json", help="JSON string of {feature_name: value}")
+    g.add_argument("--events-json", help="JSON list of raw event rows (SQL schema) — runs FE then predicts")
+    g.add_argument("--events-csv", help="CSV of raw event rows for one patient — runs FE then predicts")
     args = p.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    if args.features_csv:
-        df = pd.read_csv(args.features_csv)
-        if len(df) != 1:
-            raise ValueError(f"Expected 1 row, got {len(df)}")
-        fv = df.iloc[0]
+    if args.events_json or args.events_csv:
+        events = json.loads(args.events_json) if args.events_json else pd.read_csv(args.events_csv).to_dict("records")
+        result = predict_from_events(events, args.window)
     else:
-        fv = json.loads(args.features_json)
-
-    result = predict(fv, args.window)
+        if args.features_csv:
+            df = pd.read_csv(args.features_csv)
+            if len(df) != 1:
+                raise ValueError(f"Expected 1 row, got {len(df)}")
+            fv = df.iloc[0]
+        else:
+            fv = json.loads(args.features_json)
+        result = predict(fv, args.window)
     print(json.dumps(result, indent=2))
 
 

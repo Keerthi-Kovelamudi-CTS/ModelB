@@ -203,6 +203,23 @@ def _run_fe_blocks(preprocessed_df: pd.DataFrame, window_label: str, cfg) -> pd.
         if col in med_df.columns:
             med_df[col] = pd.to_numeric(med_df[col], errors='coerce')
 
+    # Single-patient robustness: the batch builders below assume non-degenerate
+    # input (e.g. build_medication_features does groupby().agg()['sum'] and
+    # crashes with KeyError on a patient with zero med events; others do
+    # .iloc[0] on a possibly-empty frame). At inference this transform runs on
+    # ONE patient's events, where empty med_df / sparse obs_df is common. Guard
+    # each builder so a degenerate group yields 0 features for that group rather
+    # than aborting the whole transform — the final fillna(0) + predict()'s
+    # reindex-to-selected_features fill the missing columns with 0. Mirrors the
+    # EMIS-five predict_single_patient.build_feature_row_from_events guards.
+    def _safe_join(_fm, fn, *fn_args, label):
+        try:
+            extra = fn(*fn_args)
+            return _fm.join(extra, how='left')
+        except Exception as e:  # noqa: BLE001 — degenerate single-patient group
+            logger.warning(f"  [transform] {label} skipped on degenerate input: {e}")
+            return _fm
+
     # NOTE: function signatures vary across variants:
     #   - A/B:       build_clinical_features(clin_df, cfg)              — 2 args
     #   - Clinical:  build_clinical_features(clin_df, cfg, window_name) — 3 args
@@ -213,21 +230,38 @@ def _run_fe_blocks(preprocessed_df: pd.DataFrame, window_label: str, cfg) -> pd.
     # Use inspect.signature to call build_clinical_features with the right arity.
     import inspect as _inspect
     _bcf_sig = _inspect.signature(_prostate_pipeline.build_clinical_features)
-    if 'window_name' in _bcf_sig.parameters:
-        fm = _prostate_pipeline.build_clinical_features(obs_df, cfg, window_label)
-    else:
-        fm = _prostate_pipeline.build_clinical_features(obs_df, cfg)
+    try:
+        if 'window_name' in _bcf_sig.parameters:
+            fm = _prostate_pipeline.build_clinical_features(obs_df, cfg, window_label)
+        else:
+            fm = _prostate_pipeline.build_clinical_features(obs_df, cfg)
+    except Exception as e:  # noqa: BLE001 — empty/degenerate obs_df
+        logger.warning(f"  [transform] build_clinical_features skipped on degenerate input: {e}")
+        # Base frame must still carry one row per patient so downstream joins +
+        # JSON packing emit the patient; features fill to 0 via final fillna.
+        _guids = pd.Index(preprocessed_df['PATIENT_GUID'].unique(), name='PATIENT_GUID')
+        fm = pd.DataFrame(index=_guids)
 
-    fm = fm.join(_prostate_pipeline.build_medication_features(med_df, cfg), how='left')
+    fm = _safe_join(fm, _prostate_pipeline.build_medication_features, med_df, cfg,
+                    label='build_medication_features')
     # build_interaction_features returns the full FM with interaction columns appended
     # (it does `pd.concat([fm, int_df], axis=1)` internally), so we replace, not join.
-    fm = _prostate_pipeline.build_interaction_features(fm, cfg)
-    fm = fm.join(_prostate_pipeline.build_advanced_features(obs_df, med_df, fm, window_label, cfg), how='left')
-    fm = fm.join(_prostate_pipeline.extract_maximum_features(obs_df, med_df, fm, window_label, cfg), how='left')
-    fm = fm.join(_prostate_specific.build_cancer_specific_features(obs_df, med_df, fm, window_label, cfg), how='left')
-    fm = fm.join(_prostate_pipeline.build_new_signal_features(obs_df, med_df, fm, window_label, cfg), how='left')
-    fm = fm.join(_prostate_pipeline.build_trend_features(obs_df, med_df, fm, window_label, cfg), how='left')
-    fm = fm.join(_prostate_pipeline.build_acceleration_features(obs_df, med_df, fm, window_label, cfg), how='left')
+    try:
+        fm = _prostate_pipeline.build_interaction_features(fm, cfg)
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"  [transform] build_interaction_features skipped on degenerate input: {e}")
+    fm = _safe_join(fm, _prostate_pipeline.build_advanced_features, obs_df, med_df, fm, window_label, cfg,
+                    label='build_advanced_features')
+    fm = _safe_join(fm, _prostate_pipeline.extract_maximum_features, obs_df, med_df, fm, window_label, cfg,
+                    label='extract_maximum_features')
+    fm = _safe_join(fm, _prostate_specific.build_cancer_specific_features, obs_df, med_df, fm, window_label, cfg,
+                    label='build_cancer_specific_features')
+    fm = _safe_join(fm, _prostate_pipeline.build_new_signal_features, obs_df, med_df, fm, window_label, cfg,
+                    label='build_new_signal_features')
+    fm = _safe_join(fm, _prostate_pipeline.build_trend_features, obs_df, med_df, fm, window_label, cfg,
+                    label='build_trend_features')
+    fm = _safe_join(fm, _prostate_pipeline.build_acceleration_features, obs_df, med_df, fm, window_label, cfg,
+                    label='build_acceleration_features')
 
     fm = fm.fillna(0).replace([np.inf, -np.inf], 0)
     fm = fm.loc[:, ~fm.columns.duplicated()]
@@ -438,7 +472,7 @@ def extract_prostate_features_json(
             packing so dtypes are reliable.
     """
     if mapping_path is None:
-        mapping_path = Path(__file__).parent / 'codelists' / 'code_category_mapping_v2.json'
+        mapping_path = Path(__file__).parent / 'codelist2.0' / 'code_category_mapping_2.0.json'
 
     # --- Load raw events -------------------------------------------------
     if isinstance(csv_or_bq, pd.DataFrame):

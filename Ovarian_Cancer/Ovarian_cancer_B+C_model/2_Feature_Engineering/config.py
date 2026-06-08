@@ -34,7 +34,7 @@ CANCER_NAME = 'ovarian'
 DATA_PREFIX = 'ovarian'          # CSV filename prefix: prostate_3mo_obs.csv
 PREFIX = 'OVAR_'                 # Feature prefix for cancer-specific columns
 LABEL_COL = 'LABEL'
-WINDOWS = ["1mo", "3mo", "6mo", "12mo"]
+WINDOWS = ["1mo", "12mo"]
 
 # ─── Paths (auto-resolved from this file's location) ────────
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -310,11 +310,9 @@ LAB_RANGES = {
 # ═══════════════════════════════════════════════════════════════
 SEEDS = [42]                     # single-seed pilot (multi-seed code still wired; just loops once)
 N_SELECT_FEATURES = 265           # fallback global; window-specific dict below takes precedence
-N_SELECT_FEATURES_PER_WINDOW = {  # tuned per window: dense signal early, sparse signal late
-    '1mo':  300,
-    '3mo':  275,
-    '6mo':  250,
-    '12mo': 225,
+N_SELECT_FEATURES_PER_WINDOW = {  # A0 = top 500 per window (rollout)
+    '1mo':  500,
+    '12mo': 500,
 }
 OPTUNA_TRIALS = 75
 TRAIN_RATIO = 0.75

@@ -21,14 +21,15 @@ DATA_PREFIX = 'prostate'
 PREFIX = 'PROST_'
 LABEL_COL = 'LABEL'
 
-# 3-window setup: one 12mo model + two 1mo variants for the lookback experiment
-WINDOWS = ["12mo", "1mo_5y", "1mo_12mo"]
+# 2-window setup (v3-aligned): 12mo horizon @ 20y lookback + 1mo horizon @ 12mo lookback.
+# (1mo_5y dropped — redundant once both 1mo variants would be 20y; we keep the
+#  short-lookback 1mo_12mo for the 1mo horizon per design.)
+WINDOWS = ["12mo", "1mo_12mo"]
 
 # Window-specific extract parameters (mirror the SQL params)
 WINDOW_PARAMS = {
-    "12mo":     {"months_before": 12, "years_before": 5},
-    "1mo_5y":   {"months_before": 1,  "years_before": 5},
-    "1mo_12mo": {"months_before": 1,  "years_before": 1},
+    "12mo":     {"months_before": 12, "years_before": 20},  # v3: 20-year lookback
+    "1mo_12mo": {"months_before": 1,  "years_before": 1},   # 1mo horizon: 12-month lookback
 }
 
 # Cohort filter — ≥5 events in each window (intersection cohort)
@@ -39,12 +40,10 @@ MIN_EVENTS_PER_WINDOW = 5
 # Must scale with each variant's lookback — otherwise the 1mo_12mo variant
 # (with only 12mo of lookback) puts EVERYTHING in window B and the A/B
 # split collapses. Half of each variant's total lookback:
-#   12mo:     48mo span (dx-6y to dx-12mo)  → mid = 36   (= 12 + 24)
-#   1mo_5y:   60mo span (dx-5y-1mo to dx-1mo) → mid = 30 (= 60/2)
-#   1mo_12mo: 12mo span (dx-13mo to dx-1mo) → mid = 6   (= 12/2)
+#   12mo:     228mo span (dx-20y to dx-12mo) → mid = 126  (= 12 + 228/2)
+#   1mo_12mo: 12mo span  (dx-13mo to dx-1mo)  → mid = 6    (= 12/2)
 TIME_WINDOW_MID_PER_WINDOW = {
-    "12mo":     36,
-    "1mo_5y":   30,
+    "12mo":     126,
     "1mo_12mo": 6,
 }
 
@@ -384,11 +383,9 @@ LAB_RANGES = {
 # ═══════════════════════════════════════════════════════════════
 SEEDS = [42]                     # single-seed pilot (multi-seed code still wired; just loops once)
 N_SELECT_FEATURES = 265           # fallback global; window-specific dict below takes precedence
-N_SELECT_FEATURES_PER_WINDOW = {  # tuned per window: dense signal early, sparse signal late
-    '1mo':  300,
-    '3mo':  275,
-    '6mo':  250,
-    '12mo': 225,
+N_SELECT_FEATURES_PER_WINDOW = {  # A0 = top 500 per window (rollout)
+    '12mo':     500,
+    '1mo_12mo': 500,
 }
 OPTUNA_TRIALS = 75
 TRAIN_RATIO = 0.75

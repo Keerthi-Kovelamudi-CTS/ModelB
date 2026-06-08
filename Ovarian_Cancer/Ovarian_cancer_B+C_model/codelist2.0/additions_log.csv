@@ -1,0 +1,4 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio
+300471006,OBS,URINARY_SYMPTOMS,Observation of frequency of urination,3.3
+83132003,OBS,ABDOMINAL_PAIN,Upper abdominal pain,2.8
+162031009,OBS,GI_SYMPTOMS,Indigestion symptoms,2.2

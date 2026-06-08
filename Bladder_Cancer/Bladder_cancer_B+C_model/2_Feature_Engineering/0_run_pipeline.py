@@ -100,6 +100,10 @@ def run_feature_engineering(cfg):
 
         # ── 4a: Base features ─────────────────────────────────
         logger.info(f"  4a: Base features...")
+        # build_clinical_features reads the module-global `window_name` for the
+        # per-window encoder_mappings.json path (load-or-fit). Set it each window
+        # (the single-patient transform sets it the same way via pipe.window_name).
+        _pipeline.window_name = window
         clin_features = build_clinical_features(clin, cfg)
         med_features = build_medication_features(med, cfg)
         fm = clin_features.join(med_features, how='left')
@@ -175,6 +179,24 @@ def run_feature_engineering(cfg):
         fm = fm.loc[:, ~fm.columns.duplicated()]
         del accel_feats
         logger.info(f"    +accel: {fm.shape[1]} total (+{fm.shape[1]-prev_cols})")
+
+        # ── 4h: v2 multi-scale recency windows (gated by env FE_V2=1) ─
+        import os as _os
+        if _os.environ.get('FE_V2', '').lower() in ('1', 'true', 'yes'):
+            prev_cols = fm.shape[1]
+            _rec = import_module('_recency_v2')
+            rec_feats = _rec.build_recency_window_features(clin, med, fm, window.upper(), cfg)
+            fm = fm.join(rec_feats, how='left').fillna(0).replace([np.inf, -np.inf], 0)
+            fm = fm.loc[:, ~fm.columns.duplicated()]
+            del rec_feats
+            logger.info(f"    +recency_v2: {fm.shape[1]} total (+{fm.shape[1]-prev_cols})")
+            prev_cols = fm.shape[1]
+            _xp = import_module('_xpoll_v2')
+            xp_feats = _xp.build_xpoll_features(clin, med, fm, window.upper(), cfg)
+            fm = fm.join(xp_feats, how='left').fillna(0).replace([np.inf, -np.inf], 0)
+            fm = fm.loc[:, ~fm.columns.duplicated()]
+            del xp_feats
+            logger.info(f"    +xpoll_v2: {fm.shape[1]} total (+{fm.shape[1]-prev_cols})")
 
         # ── Save final matrix for this window ────────────────
         write_table(fm, out_path, index=True)

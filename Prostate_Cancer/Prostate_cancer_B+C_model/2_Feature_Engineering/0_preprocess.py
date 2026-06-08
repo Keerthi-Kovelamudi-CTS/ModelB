@@ -46,7 +46,7 @@ except Exception:
 
 DEFAULT_RAW     = SCRIPT_DIR / "data" / "raw" / f"prostate_{_WINDOW}_raw.csv"
 DEFAULT_OUT_DIR = SCRIPT_DIR / "data" / _WINDOW
-DEFAULT_MAPPING = SCRIPT_DIR / "codelists" / "code_category_mapping_v2.json"
+DEFAULT_MAPPING = SCRIPT_DIR / "codelist2.0" / "code_category_mapping_2.0.json"
 
 PLACEHOLDER_CATEGORY = "__PLACEHOLDER__"
 

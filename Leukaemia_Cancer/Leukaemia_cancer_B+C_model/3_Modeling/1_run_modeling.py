@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# PROSTATE CANCER — MODELING PIPELINE  (1:1 BALANCED-COHORT VARIANT)
+# LEUKAEMIA CANCER — MODELING PIPELINE  (1:1 BALANCED-COHORT VARIANT)
 # Clinical + Text + TF-IDF + BERT embeddings
 # Multi-seed evaluation with tiered sensitivity/specificity
 #
@@ -10,7 +10,7 @@
 # on the val split as usual.
 #
 # Reads from: 2_Feature_Engineering/results/5_cleanup/
-# Writes to:  3_Modeling/results/1_training/{window}/  (all 6 windows)
+# Writes to:  3_Modeling/results/1_training/{window}/  (both windows: 1mo + 12mo)
 # ═══════════════════════════════════════════════════════════════
 
 import logging
@@ -70,6 +70,19 @@ import config as fe_config
 SEEDS = fe_config.SEEDS
 N_SELECT_FEATURES = fe_config.N_SELECT_FEATURES
 N_SELECT_FEATURES_PER_WINDOW = getattr(fe_config, 'N_SELECT_FEATURES_PER_WINDOW', {})
+import os as _os
+# A/B switch: when on, the model uses ALL clinical features (no top-N cap, no
+# correlation floor) so it can learn from weak-but-real signals too. The
+# anti-confound is_clinical_feature filter still applies (utilization stays OUT).
+# Toggle per-run via env `ALL_CLINICAL=1` or permanently via config.
+USE_ALL_CLINICAL_FEATURES = (_os.environ.get('ALL_CLINICAL', '').lower() in ('1', 'true', 'yes')
+                             or getattr(fe_config, 'USE_ALL_CLINICAL_FEATURES', False))
+# A/B 3rd arm: when on, SKIP the anti-confound is_clinical_feature filter and feed
+# raw utilization (event counts, visits, monthly volume) too. Confound risk — judge
+# on an independent holdout, not just val/test. Toggle via env `INCLUDE_UTILIZATION=1`.
+INCLUDE_UTILIZATION = (_os.environ.get('INCLUDE_UTILIZATION', '').lower() in ('1', 'true', 'yes')
+                       or getattr(fe_config, 'INCLUDE_UTILIZATION', False))
+CUMIMP_PCT = float(_os.environ.get('CUMIMP_PCT', '0') or '0')  # 0=off; 99=keep feats covering 99% of importance
 OPTUNA_TRIALS = fe_config.OPTUNA_TRIALS
 TRAIN_RATIO = fe_config.TRAIN_RATIO
 VAL_RATIO = fe_config.VAL_RATIO
@@ -197,9 +210,13 @@ def load_data():
 
         # Filter to clinical features
         all_cols = [c for c in fm.columns if c != 'LABEL']
-        keep = [c for c in all_cols if is_clinical_feature(c)]
+        if INCLUDE_UTILIZATION:
+            keep = all_cols
+            logger.info(f"  INCLUDE_UTILIZATION: keeping ALL {len(keep)} features (utilization NOT filtered out)")
+        else:
+            keep = [c for c in all_cols if is_clinical_feature(c)]
+            logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
         fm = fm[['LABEL'] + keep]
-        logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
 
         fm = fm.fillna(0).loc[:, ~fm.columns.duplicated()]
         matrices[window] = fm
@@ -246,6 +263,21 @@ def select_features(X_train, y_train, n_top=None):
 
     importances = _rank_norm(xgb_imp) + _rank_norm(lgb_imp)
 
+    if USE_ALL_CLINICAL_FEATURES:
+        final = list(X_train.columns)
+        if CUMIMP_PCT and CUMIMP_PCT < 100:
+            _raw = (xgb_imp / (xgb_imp.sum() or 1.0)) + (lgb_imp / (lgb_imp.sum() or 1.0))
+            _raw = _raw.reindex(final).fillna(0.0).sort_values(ascending=False)
+            _cum = _raw.cumsum() / (_raw.sum() or 1.0)
+            _n = int((_cum <= CUMIMP_PCT / 100.0).sum()) + 1
+            final = _raw.index[:_n].tolist()
+            logger.info(f"  CUMIMP {CUMIMP_PCT}%: kept {len(final)}/{len(_raw)} features (cumulative-importance cutoff)")
+        else:
+            logger.info(f"  USE_ALL_CLINICAL_FEATURES: keeping all {len(final)} features (no cap)")
+        if 'AGE_AT_INDEX' in X_train.columns and 'AGE_AT_INDEX' not in final:
+            final.append('AGE_AT_INDEX')
+        return final, importances
+
     clinical_feats = list(X_train.columns)
     clinical_imp = importances[clinical_feats]
     top_clinical = clinical_imp.nlargest(n_top * 2).index.tolist()
@@ -272,7 +304,7 @@ def select_features(X_train, y_train, n_top=None):
 def train_val_test_split(X, y, seed):
     """Balance cohort to 1:1, then stratified split into train/val/test.
 
-    The cohort SQL oversamples non-cancer 5x (non_cancer_ratio=5) as a buffer;
+    The cohort SQL is 1:1 (non_cancer_ratio=1, v3);
     here we downsample the majority class to the minority count BEFORE splitting,
     so train, val, AND test all come out ~1:1 and positive cases are never
     discarded. Mirrors the Truveta/breast build_shared_split(balance_to_1to1=True).

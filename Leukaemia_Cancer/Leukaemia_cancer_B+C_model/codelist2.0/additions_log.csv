@@ -1,0 +1,2 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio,note
+,,,,,"NONE — codelist already comprehensive (B-symptoms, lymphadenopathy, bleeding/bruising, blood-count abnormalities, infection, bone pain, autoimmune). High-OR leftover codes are workup/lab-ordering/engagement leakage (FMC7 immunophenotyping, CEA, U&E/ESR, repeat scripts) — excluded."

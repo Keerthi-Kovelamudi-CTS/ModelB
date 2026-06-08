@@ -5,7 +5,7 @@ import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_RESULTS = SCRIPT_DIR / 'results' / '1_training'
-WINDOWS = ['1mo', '2mo', '3mo', '6mo', '9mo', '12mo']
+WINDOWS = ['1mo', '12mo']
 
 
 def load_window(results_dir, window):

@@ -1,0 +1,5 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio
+433234005,OBS,PROSTATIC_CONDITIONS,Prostatic hyperplasia NOS,3.5
+19905009,OBS,PROSTATIC_CONDITIONS,Chronic prostatitis,3.1
+473327001,OBS,ERECTILE_DYSFUNCTION,Complaining of erectile dysfunction,2.2
+68566005,OBS,UTI,Urinary tract infectious disease,1.8

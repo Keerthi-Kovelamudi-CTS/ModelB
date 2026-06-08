@@ -24,7 +24,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-WINDOWS=("12mo" "1mo_5y" "1mo_12mo")
+WINDOWS=("12mo" "1mo_12mo")
 
 SKIP_BQ="${SKIP_BQ:-0}"
 SKIP_FE="${SKIP_FE:-0}"
@@ -131,7 +131,7 @@ if [ "$SKIP_COMPARE" = "1" ]; then
 else
     banner "STEP 5/6: Compare dual-horizon Setup A vs Setup B"
     cd "$ROOT/7_Holdout_Test"
-    python3 test_dual_horizon_compare.py
+    echo "  (compare step removed — single 1mo variant; analyze in 4_Inference)"
 fi
 
 # ─── Step 6: Explainability (batch SHAP per window) ───

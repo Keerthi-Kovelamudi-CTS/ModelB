@@ -70,6 +70,15 @@ import config as fe_config
 SEEDS = fe_config.SEEDS
 N_SELECT_FEATURES = fe_config.N_SELECT_FEATURES
 N_SELECT_FEATURES_PER_WINDOW = getattr(fe_config, 'N_SELECT_FEATURES_PER_WINDOW', {})
+import os as _os
+# A/B feature-scope switches (same as the EMIS B+C models). ALL_CLINICAL drops the
+# top-N cap + corr floor (keep every clinical feature); INCLUDE_UTILIZATION skips the
+# anti-confound filter (feeds raw utilization too — confound risk, judge on holdout).
+USE_ALL_CLINICAL_FEATURES = (_os.environ.get('ALL_CLINICAL','').lower() in ('1','true','yes')
+                             or getattr(fe_config,'USE_ALL_CLINICAL_FEATURES',False))
+INCLUDE_UTILIZATION = (_os.environ.get('INCLUDE_UTILIZATION','').lower() in ('1','true','yes')
+                       or getattr(fe_config,'INCLUDE_UTILIZATION',False))
+CUMIMP_PCT = float(_os.environ.get('CUMIMP_PCT', '0') or '0')  # 0=off; 99=keep feats covering 99% of importance
 OPTUNA_TRIALS = fe_config.OPTUNA_TRIALS
 # Whether to downsample ALL splits (train + val + test) to 1:1 cancer/non-cancer for clean cross-variant comparison
 BALANCE_TRAIN = getattr(fe_config, 'BALANCE_TRAIN', False)  # build_shared_split now balances ALL splits to 1:1
@@ -223,9 +232,13 @@ def load_data():
 
         # Filter to clinical features
         all_cols = [c for c in fm.columns if c != 'LABEL']
-        keep = [c for c in all_cols if is_clinical_feature(c)]
+        if INCLUDE_UTILIZATION:
+            keep = all_cols
+            logger.info(f"  INCLUDE_UTILIZATION: keeping ALL {len(keep)} features (utilization NOT filtered)")
+        else:
+            keep = [c for c in all_cols if is_clinical_feature(c)]
+            logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
         fm = fm[['LABEL'] + keep]
-        logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
 
         fm = fm.fillna(0).loc[:, ~fm.columns.duplicated()]
         matrices[window] = fm
@@ -272,6 +285,21 @@ def select_features(X_train, y_train, n_top=None):
         return r / r.max()
 
     importances = _rank_norm(xgb_imp) + _rank_norm(lgb_imp)
+
+    if USE_ALL_CLINICAL_FEATURES:
+        final = list(X_train.columns)
+        if CUMIMP_PCT and CUMIMP_PCT < 100:
+            _raw = (xgb_imp / (xgb_imp.sum() or 1.0)) + (lgb_imp / (lgb_imp.sum() or 1.0))
+            _raw = _raw.reindex(final).fillna(0.0).sort_values(ascending=False)
+            _cum = _raw.cumsum() / (_raw.sum() or 1.0)
+            _n = int((_cum <= CUMIMP_PCT / 100.0).sum()) + 1
+            final = _raw.index[:_n].tolist()
+            logger.info(f"  CUMIMP {CUMIMP_PCT}%: kept {len(final)}/{len(_raw)} features (cumulative-importance cutoff)")
+        else:
+            logger.info(f"  USE_ALL_CLINICAL_FEATURES: keeping all {len(final)} features (no cap)")
+        if 'AGE_AT_INDEX' in X_train.columns and 'AGE_AT_INDEX' not in final:
+            final.append('AGE_AT_INDEX')
+        return final, importances
 
     clinical_feats = list(X_train.columns)
     clinical_imp = importances[clinical_feats]

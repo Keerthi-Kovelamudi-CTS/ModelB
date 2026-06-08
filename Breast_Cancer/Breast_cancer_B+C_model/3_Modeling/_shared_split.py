@@ -183,7 +183,7 @@ def build_shared_split(
 
     If balance_to_1to1 is True (default), the majority class is randomly
     downsampled to the minority count BEFORE splitting, so TRAIN, VAL, and TEST
-    all come out ~1:1. The SQL oversamples non-cancer 5x; downstream filters can
+    all come out ~1:1. The SQL is 1:1 (non_cancer_ratio=1, v3); downstream filters can
     drop classes at different rates, so we re-balance here to guarantee balanced
     val/test (not just train). Mirrors the Truveta breast pipeline.
 

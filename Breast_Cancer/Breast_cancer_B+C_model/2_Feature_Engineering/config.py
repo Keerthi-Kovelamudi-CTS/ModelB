@@ -23,7 +23,7 @@ SANITY_RESULTS  = _RESULTS_ROOT / '1_sanity_check'
 SHARED_SPLIT_PATH       = SCRIPT_DIR.parent / '3_Modeling' / 'shared_split.json'
 MIN_EVENTS_PER_WINDOW   = 5
 
-CODELIST_MAPPING_JSON = SCRIPT_DIR.parent / 'codelists' / 'code_category_mapping_v2.json'
+CODELIST_MAPPING_JSON = SCRIPT_DIR.parent / 'codelist2.0' / 'code_category_mapping_2.0.json'
 SAVE_INTERMEDIATES = False
 
 

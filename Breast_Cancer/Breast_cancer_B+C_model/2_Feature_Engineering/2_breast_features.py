@@ -591,6 +591,32 @@ def build_cancer_specific_features(clin_df, med_df, existing_fm, window_name, cf
     pf[f'{PREFIX}VEL_oc_B_minus_A']    = cat_velocity('OC', med_AB)
 
     # ══════════════════════════════════════════════════════════
+    # BLOCK 18b: TIME-DECAY INTENSITY + ACCELERATION (restored 2026-06)
+    #   DECAY = sum of exp(-months/12) per category — recency-weighted event load.
+    #   ACCEL = 2nd difference across 1-15 / 15-30 / 30-60 mo bins — escalation rate.
+    # ══════════════════════════════════════════════════════════
+    logger.info(f"  BLOCK 18b: Time-decay intensity + acceleration (restored)...")
+    HALFLIFE_MO = 12.0
+    def cat_decay(cat, df_AB=obs_AB):
+        sub = df_AB[df_AB['CATEGORY'] == cat]
+        if len(sub) == 0:
+            return pd.Series(0.0, index=pf.index)
+        w = np.exp(-sub['MONTHS_BEFORE_INDEX'].astype(float).clip(lower=0) / HALFLIFE_MO)
+        return w.groupby(sub['PATIENT_GUID']).sum().reindex(pf.index, fill_value=0.0)
+    for cat in KEY_CATS:
+        pf[f'{PREFIX}DECAY_{cat}'] = cat_decay(cat).astype(float)
+    pf[f'{PREFIX}DECAY_HRT'] = cat_decay('HRT', med_AB).astype(float)
+
+    def cat_bin(cat, lo, hi, df_AB=obs_AB):
+        sub = df_AB[(df_AB['CATEGORY'] == cat) &
+                    (df_AB['MONTHS_BEFORE_INDEX'] >= lo) & (df_AB['MONTHS_BEFORE_INDEX'] < hi)]
+        return sub.groupby('PATIENT_GUID').size().reindex(pf.index, fill_value=0)
+    for cat in ['SYMPTOM_BREAST_LUMP', 'SYMPTOM_BREAST_PAIN', 'SYMPTOM_NIPPLE',
+                'BREAST_BENIGN', 'LAB_LIPIDS']:
+        rec = cat_bin(cat, 1, 15); mid = cat_bin(cat, 15, 30); ear = cat_bin(cat, 30, 60)
+        pf[f'{PREFIX}ACCEL_{cat}'] = ((rec - mid) - (mid - ear)).astype(int)
+
+    # ══════════════════════════════════════════════════════════
     # BLOCK 19: ENGAGEMENT-NORMALIZED FEATURES
     # ══════════════════════════════════════════════════════════
     logger.info(f"  BLOCK 19: Engagement-normalized signal...")

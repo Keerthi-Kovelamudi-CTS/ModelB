@@ -1,0 +1,3 @@
+CODE,EVENT_TYPE,CATEGORY,TERM,odds_ratio
+45198002,OBS,BREAST_BENIGN,Mastitis,45.9
+182933001,OBS,HRT,Hormone replacement therapy ongoing treatment,2.2

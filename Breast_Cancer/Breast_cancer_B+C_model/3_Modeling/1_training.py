@@ -71,6 +71,12 @@ import config as fe_config
 SEEDS = fe_config.SEEDS
 N_SELECT_FEATURES = fe_config.N_SELECT_FEATURES
 N_SELECT_FEATURES_PER_WINDOW = getattr(fe_config, 'N_SELECT_FEATURES_PER_WINDOW', {})
+import os as _os
+USE_ALL_CLINICAL_FEATURES = (_os.environ.get('ALL_CLINICAL','').lower() in ('1','true','yes')
+                             or getattr(fe_config,'USE_ALL_CLINICAL_FEATURES',False))
+INCLUDE_UTILIZATION = (_os.environ.get('INCLUDE_UTILIZATION','').lower() in ('1','true','yes')
+                       or getattr(fe_config,'INCLUDE_UTILIZATION',False))
+CUMIMP_PCT = float(_os.environ.get('CUMIMP_PCT', '0') or '0')  # 0=off; 99=keep feats covering 99% of importance
 OPTUNA_TRIALS = fe_config.OPTUNA_TRIALS
 TRAIN_RATIO = fe_config.TRAIN_RATIO
 VAL_RATIO = fe_config.VAL_RATIO
@@ -83,7 +89,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 CLEANUP_PATH = fe_config.CLEANUP_RESULTS
 RESULTS_PATH = SCRIPT_DIR / 'results'
 SHARED_SPLIT_PATH = getattr(fe_config, 'SHARED_SPLIT_PATH', SCRIPT_DIR / 'shared_split.json')
-BALANCE_TRAIN = False  # split is already 1:1 — SQL oversamples non-cancer 5x, build_shared_split downsamples to 1:1 across train/val/test
+BALANCE_TRAIN = False  # split is 1:1 — SQL is 1:1 (non_cancer_ratio=1, v3); build_shared_split keeps train/val/test at 1:1
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -200,9 +206,13 @@ def load_data():
 
         # Filter to clinical features
         all_cols = [c for c in fm.columns if c != 'LABEL']
-        keep = [c for c in all_cols if is_clinical_feature(c)]
+        if INCLUDE_UTILIZATION:
+            keep = all_cols
+            logger.info(f"  INCLUDE_UTILIZATION: keeping ALL {len(keep)} features (utilization NOT filtered)")
+        else:
+            keep = [c for c in all_cols if is_clinical_feature(c)]
+            logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
         fm = fm[['LABEL'] + keep]
-        logger.info(f"  Clinical filter: {len(all_cols)} -> {len(keep)} features")
 
         fm = fm.fillna(0).loc[:, ~fm.columns.duplicated()]
         matrices[window] = fm
@@ -248,6 +258,21 @@ def select_features(X_train, y_train, n_top=None):
         return r / r.max()
 
     importances = _rank_norm(xgb_imp) + _rank_norm(lgb_imp)
+
+    if USE_ALL_CLINICAL_FEATURES:
+        final = list(X_train.columns)
+        if CUMIMP_PCT and CUMIMP_PCT < 100:
+            _raw = (xgb_imp / (xgb_imp.sum() or 1.0)) + (lgb_imp / (lgb_imp.sum() or 1.0))
+            _raw = _raw.reindex(final).fillna(0.0).sort_values(ascending=False)
+            _cum = _raw.cumsum() / (_raw.sum() or 1.0)
+            _n = int((_cum <= CUMIMP_PCT / 100.0).sum()) + 1
+            final = _raw.index[:_n].tolist()
+            logger.info(f"  CUMIMP {CUMIMP_PCT}%: kept {len(final)}/{len(_raw)} features (cumulative-importance cutoff)")
+        else:
+            logger.info(f"  USE_ALL_CLINICAL_FEATURES: keeping all {len(final)} features (no cap)")
+        if 'AGE_AT_INDEX' in X_train.columns and 'AGE_AT_INDEX' not in final:
+            final.append('AGE_AT_INDEX')
+        return final, importances
 
     clinical_feats = list(X_train.columns)
     clinical_imp = importances[clinical_feats]
@@ -828,6 +853,9 @@ def run_modeling():
             'y_pred': y_pred,
             'y_pred_tier90': y_pred_t90,
             'age_band': test_bands,
+            # fairness sub-group audit: carry SEX so eval can report male vs female metrics
+            # (defensive: NaN if SEX_MALE absent, e.g. legacy female-only runs)
+            'sex_male': (X_test['SEX_MALE'].values if 'SEX_MALE' in X_test.columns else np.nan),
         })
         pred_df.to_csv(train_dir / f'predictions_{window}.csv', index=False)
 

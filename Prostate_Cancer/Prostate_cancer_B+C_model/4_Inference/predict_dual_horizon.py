@@ -57,19 +57,17 @@ from _load_features import load_alex_features  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
-# Prostate_B+C has TWO trained 1mo variants — 1mo_5y (baseline) and 1mo_12mo
-# (truncated lookback experiment). At deploy time only ONE variant is paired
-# with 12mo. Default to 1mo_5y; override with set_oneme_variant() if/when the
-# experiment picks 1mo_12mo.
-ONEMO_VARIANT = "1mo_5y"   # one of {"1mo_5y", "1mo_12mo"}
+# v3-aligned: the 1mo horizon uses the 1mo_12mo variant (12-month lookback);
+# the 1mo_5y variant was dropped. The 1mo_12mo model is paired with 12mo (20y lookback).
+ONEMO_VARIANT = "1mo_12mo"   # only "1mo_12mo" now (1mo_5y removed)
 WINDOWS = (ONEMO_VARIANT, "12mo")
 
 
 def set_oneme_variant(variant: str):
     """Switch which 1mo variant is paired with 12mo. Call once at boot."""
     global ONEMO_VARIANT, WINDOWS
-    if variant not in ("1mo_5y", "1mo_12mo"):
-        raise ValueError(f"variant must be '1mo_5y' or '1mo_12mo', got {variant!r}")
+    if variant not in ("1mo_12mo",):
+        raise ValueError(f"variant must be '1mo_12mo' (1mo_5y removed), got {variant!r}")
     ONEMO_VARIANT = variant
     WINDOWS = (ONEMO_VARIANT, "12mo")
 
