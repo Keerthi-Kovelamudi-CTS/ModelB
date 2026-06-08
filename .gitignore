@@ -11,6 +11,8 @@
 # ─── OS / editor noise ──────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+# Stray scratch scripts that shouldn't be tracked
+uniquepatients
 .ipynb_checkpoints/
 __pycache__/
 *.pyc
