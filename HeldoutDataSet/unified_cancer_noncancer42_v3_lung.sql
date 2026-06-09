@@ -46,7 +46,7 @@ WITH params AS (
   SELECT
     DATE '1900-01-01' AS longterm_mh_start,   --1950-01-01
     DATE '2025-01-01' AS longterm_mh_end,     --2026-01-01
-    DATE '1900-01-01' AS anchor_window_start, --2010-01-01        -- inclusive lower bound for anchor dates
+    DATE '2010-01-01' AS anchor_window_start, --2010-01-01        -- inclusive lower bound for anchor dates
     DATE '2025-01-01' AS anchor_window_end,   --2026-01-01        -- exclusive upper bound for anchor dates
     100                AS years_before,  -- 20
     12                AS months_before,  -- 12
