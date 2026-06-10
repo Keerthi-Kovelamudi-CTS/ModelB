@@ -418,7 +418,7 @@ non_cancer_ranked AS (
     EXTRACT(YEAR FROM anchor_date) AS anchor_year,
     ROW_NUMBER() OVER (
       PARTITION BY EXTRACT(YEAR FROM anchor_date)
-      ORDER BY FARM_FINGERPRINT(CAST(patient_guid AS STRING))
+      ORDER BY FARM_FINGERPRINT(CONCAT(CAST(patient_guid AS STRING), '|ncsalt'))
     ) AS rank_in_year
   FROM non_cancer_event_counts
 ),
