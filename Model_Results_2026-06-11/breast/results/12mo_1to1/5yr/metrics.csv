@@ -1,0 +1,4 @@
+lookback,split,n,n_pos,prevalence,threshold,auroc,auroc_lo,auroc_hi,auprc,auprc_lo,auprc_hi,sensitivity,sensitivity_lo,sensitivity_hi,specificity,specificity_lo,specificity_hi,ppv,ppv_lo,ppv_hi,npv,npv_lo,npv_hi
+5yr,internal_sens90,3404,1702,0.5,0.4146,0.7929,0.7776,0.808,0.7479,0.7285,0.7683,0.9001,0.886,0.9142,0.5576,0.5329,0.5823,0.6705,0.6586,0.6835,0.8481,0.8286,0.8668
+5yr,internal_sens93,3404,1702,0.5,0.3286,0.7929,0.7776,0.808,0.7479,0.7285,0.7683,0.9301,0.9183,0.9418,0.5094,0.4871,0.5347,0.6547,0.6434,0.6662,0.8793,0.8604,0.8983
+5yr,internal_sens95,3404,1702,0.5,0.3085,0.7929,0.7776,0.808,0.7479,0.7285,0.7683,0.9501,0.9395,0.9606,0.4595,0.4365,0.4842,0.6374,0.6272,0.6484,0.902,0.8827,0.9212

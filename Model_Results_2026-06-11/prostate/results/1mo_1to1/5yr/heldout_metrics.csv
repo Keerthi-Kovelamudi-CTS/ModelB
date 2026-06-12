@@ -1,0 +1,2 @@
+lookback,split,n,n_pos,prevalence,threshold,auroc,auroc_lo,auroc_hi,auprc,auprc_lo,auprc_hi,sensitivity,sensitivity_lo,sensitivity_hi,specificity,specificity_lo,specificity_hi,ppv,ppv_lo,ppv_hi,npv,npv_lo,npv_hi
+5yr,heldout,51500,1500,0.0291,0.5411,0.959,0.9556,0.9622,0.5258,0.5,0.5524,0.9547,0.944,0.9647,0.8312,0.8279,0.8346,0.1451,0.1424,0.148,0.9984,0.998,0.9987

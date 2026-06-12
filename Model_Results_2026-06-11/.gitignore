@@ -1,0 +1,51 @@
+# ════════════════════════════════════════════════════════════════════
+# Model_Results_2026-06-11/.gitignore
+#
+# Push scope: 1:1 models only. The 1:10 results/SQL and the King-Zeng
+# deployment artifacts are kept SEPARATE (local, not pushed).
+#
+# The repo-ROOT .gitignore is aggressive (blocks *.csv, *.joblib, *.parquet,
+# **/results/ for PHI safety). We re-include ONLY the PHI-free 1:1 result files.
+# ════════════════════════════════════════════════════════════════════
+
+# 1) Re-include ONLY the 1:1 results tree (root excludes **/results/).
+#    1:10 result dirs (*_1to10/) are NOT re-included -> they stay separate.
+!**/results/
+!**/results/*_1to1/
+!**/results/*_1to1/**
+
+# 2) Big trained models stay out (regeneratable, >100 MB) even inside 1:1 results.
+#    (tiny platt_calib_*.joblib calibrators are kept — they don't match this.)
+model_*.joblib
+
+# 3) 1:10 kept SEPARATE — cohort SQL and any 1:10 launcher/result dirs excluded from the 1:1 push.
+*_1to10.sql
+*_1to10/
+
+# 4) King-Zeng prior-correction artifacts are a deployment concern (parked) and
+#    appear inconsistently across cancers — exclude so all result dirs are uniform.
+kingzeng_*
+
+# 5) Stale / not-needed-to-run files (excluded from the push):
+# - _queue_after_breast.sh: VM queue-orchestration script (hardcoded paths, colon dirs)
+# - Holdout.sql: unused legacy; the code reads heldout_test_<gap>mo.sql
+_queue_after_breast.sh
+Holdout.sql
+# - lung standalone analysis one-offs (not imported by the core run path; not needed to run)
+recalibrate_holdout.py
+recalibrate_kingzeng.py
+realworld_eval.py
+final_realworld.py
+per_band_calib.py
+per_model_ci.py
+plot_full.py
+feat_importance.py
+fe_check.py
+
+# 6) Training scratch / telemetry under pipeline_code/.
+catboost_info/
+**/fe_work_*/
+**/raw_*/
+
+# Patient-level prediction parquets under metaclassifier/ stay IGNORED by the
+# root rule (*.parquet) on purpose — patient GUIDs. Delivered via GCS (see README).

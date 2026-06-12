@@ -1,0 +1,1 @@
+{"cancer": "bladder", "window": "5yr", "n_test": 35420, "pos_test": 420, "auroc": 0.9038, "ece_raw": 0.2664, "ece_platt": 0.0005, "ece_iso": 0.0014, "brier_raw": 0.13385, "brier_platt": 0.01097}

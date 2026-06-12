@@ -1,0 +1,1 @@
+{"cancer": "breast", "window": "5yr", "n_test": 36400, "pos_test": 1400, "auroc": 0.7959, "ece_raw": 0.4401, "ece_platt": 0.0005, "ece_iso": 0.0016, "brier_raw": 0.27919, "brier_platt": 0.03518}

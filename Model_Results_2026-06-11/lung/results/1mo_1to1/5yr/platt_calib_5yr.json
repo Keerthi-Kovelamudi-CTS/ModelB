@@ -1,0 +1,1 @@
+{"cancer": "lung", "window": "5yr", "n_test": 35350, "pos_test": 350, "auroc": 0.921, "ece_raw": 0.5049, "ece_platt": 0.0008, "ece_iso": 0.0009, "brier_raw": 0.31176, "brier_platt": 0.00893}

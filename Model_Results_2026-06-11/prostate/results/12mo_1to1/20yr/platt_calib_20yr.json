@@ -1,0 +1,1 @@
+{"cancer": "prostate", "window": "20yr", "n_test": 36050, "pos_test": 1050, "auroc": 0.9413, "ece_raw": 0.18, "ece_platt": 0.0023, "ece_iso": 0.0029, "brier_raw": 0.11724, "brier_platt": 0.02262}
