@@ -18,7 +18,7 @@ Model_Results_2026-06-11/
 ├── .gitignore
 ├── <cancer>/                  bladder | breast | lung | prostate
 │   ├── results/
-│   │   ├── 12mo_1to1/         12-month horizon, 1:1 train ratio
+│   │   ├── 12mo_1to1/         12-month horizon (1:1 model)
 │   │   │   ├── 5yr/  10yr/  20yr/  lifetime/      ← lookback window
 │   │   │   │     ├── metrics.csv            internal-test metrics (all operating points)
 │   │   │   │     ├── heldout_metrics.csv    held-out 500/50k metrics @ free/Youden threshold
@@ -39,7 +39,7 @@ Model_Results_2026-06-11/
 | Token | Meaning |
 |---|---|
 | `12mo` / `1mo` | **prediction horizon** — features must end ≥ 12 (or 1) months before diagnosis |
-| `1to1` / `1to10` | **train control ratio** — cancer:non-cancer (1:1 balanced, or 1:10 enriched) |
+| `1to1` | **balanced train set** — cancer:non-cancer = 1:1 |
 | `5yr / 10yr / 20yr / lifetime` | **lookback window** — how far back before the anchor features are drawn |
 
 ## Models are not in the repo
@@ -61,12 +61,11 @@ codelists) is in the repo. The small fitted Platt calibrators (`platt_calib_*.jo
 | `codelist2.0/` | hand-curated SNOMED/DMD codelists |
 
 **Reproduce a run:** from `<cancer>/pipeline_code/`,
-`GAP=12 NC_RATIO=1 python run_lookback_experiment.py all` then `GAP=12 NC_RATIO=1 python evaluate_holdout.py lifetime`
-(`GAP` = 12 or 1; `NC_RATIO` = 1 or 10).
+`GAP=12 python run_lookback_experiment.py all` then `GAP=12 python evaluate_holdout.py lifetime`
+(`GAP` = 12 or 1, for the 12-month / 1-month horizon).
 
-> **Scope — 1:1 only.** This archive contains the **1:1** models' results. The **1:10** results and
-> their cohort SQL, and the **King-Zeng** deployment prior-correction artifacts, are kept **separate**
-> (local, not pushed) — the 1:10 numbers are summarized in `CALIBRATION_NOTES.md`. Each 1:1 result
-> window dir is the uniform set: `metrics.csv`, `heldout_metrics.csv`, `platt_calib_<w>.{json,joblib}`,
-> `reliability_<w>.png`. (Lung carries a few extra pipeline scripts — it's a separate, more-developed
-> pipeline and is intentionally not forced to match the other three.)
+> **Scope.** This archive contains the **1:1** models' results. Each result window dir is the uniform
+> set: `metrics.csv`, `heldout_metrics.csv`, `platt_calib_<w>.{json,joblib}`, `reliability_<w>.png`.
+> Trained model binaries and deployment prior-correction artifacts are kept local / on GCS (not pushed).
+> (Lung carries a few extra pipeline scripts — it's a separate, more-developed pipeline and is
+> intentionally not forced to match the other three.)

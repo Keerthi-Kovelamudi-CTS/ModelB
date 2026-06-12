@@ -8,7 +8,7 @@ The same config-driven pipeline runs per cancer; only the cohort SQL + cancer-sp
 1. **Cohort (BigQuery).** Cancer cases + non-cancer controls from the EMIS bulk data. Controls exclude any cancer-SNOMED and palliative-care patients; sex filter per cancer (prostate = M, breast = F, lung/bladder = none). An **anchor (index) date** per patient; label = a diagnosis *after* anchor; **all features strictly before anchor minus a gap** = the **prediction horizon** (`months_before` = 12 or 1). A separate **500-cancer / 50k-control held-out** is carved out and **excluded from training**.
 2. **Event extraction.** One long table of pre-anchor clinical + medication events per patient (SNOMED concept, value, `days_before_anchor`, event_type, demographics), cached once.
 3. **Feature engineering (per lookback window).** For each window (5/10/20yr/lifetime), filter to `days_before_anchor <= window`, build risk-factor features (counts, frequency/recency, trajectory/trend, lab values & deltas, demographics) + **lab percentiles (xpoll) fit on train only**, applied to held-out (leakage-safe). Reindexed to the full cohort (no-event patients -> zero rows).
-4. **Training (per window x horizon x ratio).** 8-learner panel (LR/RF/ET/Ada/GB/XGB/LGBM/CatBoost), internal 80/10/10; **best single model or top-3 soft-voting ensemble** selected on internal validation -> `model_<window>_1to1.joblib`. Balanced **1:1** (and 1:10), both **12mo + 1mo** horizons.
+4. **Training (per window × horizon).** 8-learner panel (LR/RF/ET/Ada/GB/XGB/LGBM/CatBoost), internal 80/10/10; **best single model or top-3 soft-voting ensemble** selected on internal validation -> `model_<window>_1to1.joblib`. **1:1 balanced**, both **12mo + 1mo** horizons.
 5. **Internal evaluation.** Balanced test, **free/Youden** point, AUROC/AUPRC/Sens/Spec/PPV/NPV + bootstrap CIs.
 6. **Held-out evaluation (touch-once).** The 500/50k enriched held-out (**0% train overlap, verified**) FE'd per window, scored once at the internal threshold.
 7. **Probability calibration (this doc).** **Platt sigmoid on the held-out** (30% calib / 70% test) -> ECE ~0.001; saved `platt_calib_<window>.joblib`. Monotonic -> discrimination unchanged.
@@ -135,69 +135,6 @@ _Performance metrics (Sens/Spec/PPV/NPV/AUROC/AUPRC) below are on the **full hel
 | 20yr | Ens(XGB+Cat+LGBM) | 88.3 | 58.6 | 7.9 | 99.2 | 0.805 | 0.798–0.814 | 0.139 | 0.129–0.151 | 0.330→0.0010 |
 | lifetime ★ | Ens(LGBM+Cat+GB) | 89.7 | 57.3 | 7.8 | 99.3 | 0.810 | 0.803–0.819 | 0.150 | 0.140–0.163 | 0.341→0.0010 |
 
-# 1:10 held-out tables (lung + breast + bladder)
-Same format as the 1:1 tables above (held-out, free/Youden, Platt-calibrated). Best Model = the 1:10 model's top-3 ensemble / single best. (Prostate 1:10 pending its 1:10 training.)
-
-## Lung — 1:10
-
-**12mo · 1:10 model** — held-out **N=50,500** (500 cancer / 50,000 non-cancer), prevalence 1.0%. Best window (AUROC): **lifetime**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(GB+Cat+ET) | 84.0 | 84.0 | 5.0 | 99.8 | 0.913 | 0.902–0.923 | 0.128 | 0.110–0.152 | 0.179→0.0004 |
-| 10yr | Ens(GB+ET+RF) | 89.0 | 78.6 | 4.0 | 99.9 | 0.912 | 0.899–0.923 | 0.142 | 0.123–0.170 | 0.134→0.0008 |
-| 20yr | Ens(GB+ET+RF) | 84.4 | 83.0 | 4.7 | 99.8 | 0.916 | 0.904–0.927 | 0.155 | 0.134–0.182 | 0.108→0.0004 |
-| lifetime ★ | Ens(GB+RF+ET) | 93.0 | 73.0 | 3.3 | 99.9 | 0.917 | 0.906–0.927 | 0.152 | 0.131–0.181 | 0.122→0.0004 |
-
-**1mo · 1:10 model** — held-out **N=50,500**, prevalence 1.0%. Best window (AUROC): **20yr**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(Cat+GB+XGB) | 95.0 | 70.8 | 3.1 | 99.9 | 0.928 | 0.920–0.937 | 0.189 | 0.159–0.223 | 0.201→0.0007 |
-| 10yr | Ens(LGBM+XGB+Cat) | 87.0 | 86.8 | 6.2 | 99.9 | 0.943 | 0.935–0.951 | 0.227 | 0.194–0.261 | 0.112→0.0009 |
-| 20yr ★ | Ens(LGBM+Cat+GB) | 86.2 | 88.0 | 6.7 | 99.8 | 0.944 | 0.936–0.952 | 0.226 | 0.196–0.265 | 0.082→0.0012 |
-| lifetime | Ens(LGBM+XGB+Cat) | 84.6 | 89.6 | 7.5 | 99.8 | 0.943 | 0.934–0.951 | 0.227 | 0.196–0.265 | 0.090→0.0010 |
-
-## Breast — 1:10
-
-**12mo · 1:10 model** — held-out **N=52,000** (2,000 cancer / 50,000 non-cancer), prevalence 3.8%. Best window (AUROC): **20yr**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(GB+RF+ET) | 89.7 | 53.8 | 7.2 | 99.2 | 0.793 | 0.785–0.801 | 0.119 | 0.112–0.128 | 0.365→0.0010 |
-| 10yr | Ens(RF+Cat+GB) | 89.5 | 56.5 | 7.6 | 99.3 | 0.802 | 0.795–0.810 | 0.129 | 0.120–0.139 | 0.340→0.0004 |
-| 20yr ★ | Ens(GB+LGBM+RF) | 88.6 | 58.2 | 7.8 | 99.2 | 0.807 | 0.799–0.815 | 0.133 | 0.125–0.144 | 0.324→0.0006 |
-| lifetime | Ens(LGBM+GB+Cat) | 92.0 | 52.6 | 7.2 | 99.4 | 0.802 | 0.794–0.810 | 0.132 | 0.124–0.144 | 0.359→0.0023 |
-
-**1mo · 1:10 model** — held-out **N=52,000**, prevalence 3.8%. Best window (AUROC): **lifetime**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(LGBM+Cat+LR) | 93.8 | 46.2 | 6.5 | 99.5 | 0.795 | 0.787–0.804 | 0.129 | 0.120–0.140 | 0.428→0.0007 |
-| 10yr | GB | 87.4 | 59.2 | 7.9 | 99.2 | 0.805 | 0.797–0.813 | 0.135 | 0.126–0.148 | 0.329→0.0023 |
-| 20yr | Ens(Cat+RF+XGB) | 87.8 | 59.3 | 8.0 | 99.2 | 0.809 | 0.802–0.817 | 0.145 | 0.134–0.159 | 0.326→0.0009 |
-| lifetime ★ | Ens(Cat+GB+LGBM) | 88.4 | 59.1 | 8.0 | 99.2 | 0.811 | 0.803–0.819 | 0.150 | 0.139–0.163 | 0.323→0.0019 |
-
-## Bladder — 1:10
-
-**12mo · 1:10 model** — held-out **N=50,600** (600 cancer / 50,000 non-cancer), prevalence 1.2%. Best window (AUROC): **lifetime**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(Cat+Ada+GB) | 86.0 | 80.1 | 4.9 | 99.8 | 0.910 | 0.901–0.920 | 0.137 | 0.119–0.159 | 0.175→0.0012 |
-| 10yr | Ens(GB+Cat+XGB) | 87.8 | 78.6 | 4.7 | 99.8 | 0.913 | 0.904–0.922 | 0.136 | 0.120–0.158 | 0.130→0.0008 |
-| 20yr | Ens(Cat+GB+LGBM) | 88.7 | 79.5 | 4.9 | 99.8 | 0.915 | 0.906–0.924 | 0.142 | 0.124–0.165 | 0.131→0.0006 |
-| lifetime ★ | Ens(GB+Cat+Ada) | 87.3 | 80.8 | 5.2 | 99.8 | 0.917 | 0.909–0.926 | 0.139 | 0.122–0.161 | 0.164→0.0008 |
-
-**1mo · 1:10 model** — held-out **N=50,600**, prevalence 1.2%. Best window (AUROC): **20yr**.
-
-| Window | Best Model | Sens | Spec | PPV | NPV | AUROC | AUROC 95% CI | AUPRC | AUPRC 95% CI | ECE raw→Platt |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 5yr | Ens(Cat+GB+LGBM) | 83.0 | 88.4 | 7.9 | 99.8 | 0.932 | 0.922–0.940 | 0.296 | 0.258–0.332 | 0.109→0.0013 |
-| 10yr | Ens(GB+Cat+LGBM) | 84.2 | 87.2 | 7.3 | 99.8 | 0.927 | 0.918–0.937 | 0.226 | 0.198–0.259 | 0.044→0.0010 |
-| 20yr ★ | Ens(Cat+GB+XGB) | 85.2 | 87.3 | 7.5 | 99.8 | 0.936 | 0.927–0.944 | 0.297 | 0.260–0.335 | 0.101→0.0013 |
-| lifetime | Ens(GB+Cat+Ada) | 84.7 | 87.0 | 7.3 | 99.8 | 0.933 | 0.924–0.941 | 0.289 | 0.250–0.326 | 0.156→0.0013 |
-
 
 ## Deployment (future — not applied now)
 When deploying to a real GP population, the held-out's enriched prevalence is no longer the target. Apply a
@@ -212,11 +149,12 @@ it makes the probability and PPV meaningful at the real base rate.
 | Bladder | all-adult | 0.0002 | CRUK ~10.5k cases/yr ÷ ~53M adults |
 | Breast | female-adult | 0.002 | CRUK ~56k female cases/yr ÷ ~27M adult women |
 
-King-Zeng per-window outputs are retained in each window's `kingzeng_<window>.txt` (lung/breast). τ values are
-literature/BigQuery estimates — finalise from the deployment cohort before go-live.
+τ values are literature/BigQuery estimates — finalise from the deployment cohort before go-live.
 **References (deployment):** King & Zeng 2001; Elkan 2001; Saerens 2002; van Calster 2019; CRUK incidence statistics.
 
 ## Files
-Per window dir `<cancer>/<horizon>_1:1/lookback*/<window>/`:
-`model_<window>_1to1.joblib` (model) · `platt_calib_<window>.joblib` (calibrator) · `reliability_<window>.png` ·
-`platt_calib_<window>.json` (ECE/Brier) · `heldout_metrics.csv` (held-out metrics).
+Per window dir `<cancer>/results/<horizon>_1to1/<window>/`:
+`metrics.csv` (internal-test metrics) · `heldout_metrics.csv` (held-out 500/50k metrics) ·
+`platt_calib_<window>.json` (ECE/Brier) · `platt_calib_<window>.joblib` (fitted calibrator) ·
+`reliability_<window>.png` (reliability diagram). The trained model `model_<window>_1to1.joblib`
+is kept local / on GCS (not in the repo).
