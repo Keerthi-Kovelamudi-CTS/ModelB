@@ -18,9 +18,10 @@
 #    (tiny platt_calib_*.joblib calibrators are kept — they don't match this.)
 model_*.joblib
 
-# 3) 1:10 kept SEPARATE — cohort SQL and any 1:10 launcher/result dirs excluded from the 1:1 push.
+# 3) 1:10 kept SEPARATE — cohort SQL, launcher/result dirs, and the 1:10 notes excluded from the 1:1 push.
 *_1to10.sql
 *_1to10/
+CALIBRATION_NOTES_1to10.md
 
 # 4) King-Zeng prior-correction artifacts are a deployment concern (parked) and
 #    appear inconsistently across cancers — exclude so all result dirs are uniform.
