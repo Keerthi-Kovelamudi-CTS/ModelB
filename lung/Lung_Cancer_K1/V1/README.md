@@ -167,16 +167,22 @@ STEP 1 — code scoring   (independent track; run inside 1_Top_Snomed/, in order
      ▼
   output/{12mo,1mo}/Scores_lung/lung_combined_all.csv          ← ranked codes (deliverable)
 
-STEPS 2 + 3 — feature engineering + train/internal   (one command from the folder root)
+  ┌──────── STEPS 2 + 3 run from ONE command: GAP=12 NC_RATIO=1 python run_lookback_experiment.py ────────┐
+
+STEP 2 — feature engineering   (2_FE/; runs inside the Step 3 command, not separately)
   BigQuery (2_FE/SQL/{GAP}mo_1to{NC_RATIO}.sql)
-     │  GAP=12 NC_RATIO=1 python run_lookback_experiment.py
-     ▼  Step 2 (2_FE): events → feature matrix   →   Step 3 (3_Modeling): train 80/10/10 (free/Youden)
-  {GAP}mo_1to{NC_RATIO}/lookback/{5yr,10yr,20yr,lifetime}/   (model_*.joblib + metrics.csv)
-     │
+     ▼  events → transform_features.extract_lung_risk_factors + enhanced_features.enrich
+  {GAP}mo_1to{NC_RATIO}/lookback/{window}/train_features.csv   ← one-row-per-patient matrix
+
+STEP 3 — train + internal results   (3_Modeling/)
+     ▼  train the 7-learner cost-weighted panel, 80/10/10, pick best by internal ROC AUC (free/Youden)
+  {GAP}mo_1to{NC_RATIO}/lookback/{5yr,10yr,20yr,lifetime}/   (model_<window>_1to<NC_RATIO>.joblib + metrics.csv)
      ▼
   {GAP}mo_1to{NC_RATIO}/lookback/lookback_internal_summary.csv  ← compare windows, pick best
 
-STEP 4 — held-out eval + Platt recalibration   (one window per run, after a Step 3 model exists)
+  └────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+STEP 4 — held-out eval + Platt recalibration   (4_Holdout/; one window per run, after a Step 3 model exists)
   BigQuery (4_Holdout/SQL/heldout_test_{GAP}mo.sql)   [fixed 500/50k cohort]
      │  GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
      ▼  FE (TRAIN xpoll) → score chosen model → 30/70 calib/test → Platt
