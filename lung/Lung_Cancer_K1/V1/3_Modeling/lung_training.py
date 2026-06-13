@@ -34,8 +34,6 @@ from sklearn.ensemble import (
     VotingClassifier
 )
 from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import GaussianNB
 
 # Class Imbalance Handling
@@ -478,12 +476,9 @@ class LungCancerPredictor:
                 n_estimators=100, learning_rate=0.5, random_state=RANDOM_STATE
             ),
             'Naive Bayes': GaussianNB(),
-            'KNN': KNeighborsClassifier(n_neighbors=5, n_jobs=-1),
-            'MLP': MLPClassifier(
-                hidden_layer_sizes=(100, 50), max_iter=500,
-                random_state=RANDOM_STATE, early_stopping=True
-            ),
         }
+        # KNN + MLP removed: they support neither class_weight nor sample_weight (can't be
+        # cost-weighted for imbalance) and consistently lose to the weighted tree learners.
         
         # Add XGBoost if available
         if XGBOOST_AVAILABLE:
@@ -538,7 +533,7 @@ class LungCancerPredictor:
                 # XGBoost scale_pos_weight, CatBoost auto_class_weights. GradientBoosting,
                 # AdaBoost and NaiveBayes have no class-weight param but DO accept
                 # sample_weight in .fit() -> pass a 'balanced' weight so the minority
-                # (cancer) class is penalized too. KNN/MLP support neither (left as-is).
+                # (cancer) class is penalized too.
                 if name in ('Gradient Boosting', 'AdaBoost', 'Naive Bayes'):
                     from sklearn.utils.class_weight import compute_sample_weight
                     _sw = compute_sample_weight('balanced', y_train_use)
