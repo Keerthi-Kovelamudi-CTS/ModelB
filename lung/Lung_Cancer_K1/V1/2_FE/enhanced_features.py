@@ -427,13 +427,12 @@ def _patient_slope(sub, xcol, ycol, key='patient_guid_CLEAN'):
     return (a['n'] * a['Sxy'] - a['Sx'] * a['Sy']) / den
 
 
-def compute_band_features(df, bands=None, relative=True):
-    """Per-CONCEPT, per-time-band occurrence (+ value mean/latest for lab concepts).
+def compute_band_features(df, bands=None):
+    """Per-CONCEPT, per-time-band occurrence (+ value mean/latest/slope for lab concepts).
 
-    `relative=True` -> windows count back from each patient's most-recent event (gap-agnostic,
-    inference-safe; V1's _LAST_NM idea generalized to multiple disjoint bands, SAME bands for
-    every horizon). `relative=False` -> fixed months-before-anchor. count/present -> 0 when absent;
-    value cols -> NaN (median-imputed downstream)."""
+    Windows count back from EACH PATIENT'S most-recent event (band 0 = start of available data).
+    Per-patient => depends only on that patient (INFERENCE-SAFE, batch-independent); same bands
+    for every horizon. count/present -> 0 when absent; value cols -> NaN (median-imputed downstream)."""
     bands = bands or BANDS_RELATIVE
     code_col = 'snomed_c_t_concept_id'
     work = df.copy()
@@ -444,12 +443,8 @@ def compute_band_features(df, bands=None, relative=True):
     work['_dba'] = pd.to_numeric(work.get('days_before_anchor'), errors='coerce')
     work['_mb'] = _months_before(work)
     work = work[work['_mb'].notna()]
-    # Band 0 ALWAYS = start of available data (the SQL already applied the gap cutoff, so don't
-    # re-offset by it). relative -> per-patient last event; else -> cohort data cutoff (global min).
-    if relative:
-        work['_mb'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
-    else:
-        work['_mb'] = work['_mb'] - work['_mb'].min()
+    # band 0 = each patient's most-recent event (per-patient, not cohort -> inference-safe)
+    work['_mb'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
 
     patients = pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid')
     cols = {}                                            # accumulate then build once (no fragmentation)
@@ -474,10 +469,10 @@ def compute_band_features(df, bands=None, relative=True):
     return out.reset_index()
 
 
-def compute_cumulative_features(df, windows=None, relative=True):
+def compute_cumulative_features(df, windows=None):
     """Per-CONCEPT cumulative 'last-N months' windows (count + value mean/latest for lab concepts).
-    Overlapping windows from the start of available data; complements the disjoint bands. Generalizes
-    V1's single _LAST_NM to the full set. count -> 0 when absent; value cols -> NaN."""
+    Overlapping windows from each patient's most-recent event; complements the disjoint bands.
+    Per-patient => INFERENCE-SAFE. count -> 0 when absent; value cols -> NaN."""
     windows = windows or CUMULATIVE_WINDOWS
     code_col = 'snomed_c_t_concept_id'
     work = df.copy()
@@ -488,10 +483,8 @@ def compute_cumulative_features(df, windows=None, relative=True):
     work['_dba'] = pd.to_numeric(work.get('days_before_anchor'), errors='coerce')
     work['_mb'] = _months_before(work)
     work = work[work['_mb'].notna()]
-    if relative:
-        work['_mb'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
-    else:
-        work['_mb'] = work['_mb'] - work['_mb'].min()
+    # last-N counted from each patient's most-recent event (per-patient -> inference-safe)
+    work['_mb'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
 
     patients = pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid')
     cols = {}                                            # accumulate then build once (no fragmentation)
@@ -567,9 +560,9 @@ def enrich(matrix, df):
     matrix = matrix.merge(consults, on='patient_guid', how='left')
     # Per-concept time bands + cumulative windows (ALWAYS on). Patient-relative: windows count back
     # from each patient's most-recent event (gap-agnostic, inference-safe; same windows every horizon).
-    bands = compute_band_features(df, relative=True)
+    bands = compute_band_features(df)
     matrix = matrix.merge(bands, on='patient_guid', how='left')
-    cumul = compute_cumulative_features(df, relative=True)
+    cumul = compute_cumulative_features(df)
     matrix = matrix.merge(cumul, on='patient_guid', how='left')
     band_fill0 = [c for c in matrix.columns
                   if '_count_w' in c or '_present_w' in c or '_count_last' in c]
