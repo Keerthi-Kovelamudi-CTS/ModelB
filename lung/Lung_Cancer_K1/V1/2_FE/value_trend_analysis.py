@@ -246,7 +246,10 @@ def analyze_value_trends(csv_file_path, symptom_name, snomed_codes, trend_logic=
     if not preprocessed:
         print(f"Filtered to {event_type} records: {len(df)}")
 
-    symptom_records = df[df[code_col].isin(snomed_codes)].copy()
+    # Precision-safe match: DMD med codes (17-18 digits, > 2**53) lose precision as float64 -> int
+    # isin silently fails. Cast both column and codes to float64 (identical IEEE rounding) to match.
+    _codes_f = {float(c) for c in snomed_codes}
+    symptom_records = df[pd.to_numeric(df[code_col], errors='coerce').astype('float64').isin(_codes_f)].copy()
 
     print(f"Records with {symptom_name}-related codes: {len(symptom_records)}")
 

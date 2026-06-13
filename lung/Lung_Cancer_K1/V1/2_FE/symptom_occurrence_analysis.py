@@ -172,8 +172,11 @@ def analyze_symptom_occurrences(csv_file_path, symptom_name, snomed_codes, outpu
     if not preprocessed:
         print(f"Filtered to {event_type} records: {len(df)}")
     
-    # Filter records with symptom-related codes
-    symptom_records = df[df[code_col].isin(snomed_codes)].copy()
+    # Filter records with symptom-related codes. Precision-safe match: DMD med codes are 17-18 digits
+    # (> 2**53) and lose precision as float64 (NaN-mixed column) -> int isin silently fails. Cast both
+    # the column and the codes to float64 so the (identical) IEEE rounding matches regardless of dtype.
+    _codes_f = {float(c) for c in snomed_codes}
+    symptom_records = df[pd.to_numeric(df[code_col], errors='coerce').astype('float64').isin(_codes_f)].copy()
     
     print(f"Records with {symptom_name}-related codes: {len(symptom_records)}")
     
