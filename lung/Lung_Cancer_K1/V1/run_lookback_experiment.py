@@ -22,10 +22,10 @@ import numpy as np, pandas as pd
 # Value-dependent features: for a no-window-data patient, 0 would be a FAKE value (e.g. Hb=0),
 # so these are left NaN -> median-imputed (neutral). Everything else (counts/occurrence/flags)
 # is genuinely 0 when there are no events.
-VALUE_PAT = re.compile(r'_value|TREND_SLOPE|TREND_CORRELATION|PERCENT_CHANGE|ABSOLUTE_CHANGE|'
-                       r'TREND_DIRECTION|_EVENT_AGE|RECENCY_MONTHS|\bNLR\b|\bPLR\b|PACK_YEARS|CIGS_PER_DAY|'
-                       r'_LATEST|_VMAX|_VMIN|_VMEAN|PCTILE',
-                       re.IGNORECASE)
+VALUE_PAT = re.compile(r'_value|_val_|TREND_SLOPE|TREND_CORRELATION|PERCENT_CHANGE|ABSOLUTE_CHANGE|'
+                       r'TREND_DIRECTION|_EVENT_AGE|RECENCY_MONTHS|VALUE_ACCEL|\bNLR\b|\bPLR\b|PACK_YEARS|'
+                       r'CIGS_PER_DAY|_LATEST|_VMAX|_VMIN|_VMEAN|PCTILE',
+                       re.IGNORECASE)   # _val_ catches band/cumulative _val_mean/_val_slope (stay NaN, not fake-0)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 FE_DIR = os.path.join(ROOT, "2_FE"); MODEL_DIR = os.path.join(ROOT, "3_Modeling")
