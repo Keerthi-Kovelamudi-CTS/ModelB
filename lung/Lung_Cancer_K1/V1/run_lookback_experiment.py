@@ -119,8 +119,13 @@ def build_matrix(events_df, L, out_csv, full_frame, xpoll_fit=True, xpoll_ref_pa
     missing = ~aligned["patient_guid"].isin(present)         # patients with no events in this window
     value_cols = [c for c in feat_cols if VALUE_PAT.search(c)]
     count_cols = [c for c in feat_cols if c not in set(value_cols)]
-    aligned.loc[missing, count_cols] = aligned.loc[missing, count_cols].fillna(0)   # no events -> 0 (correct)
-    # value/lab/ratio cols stay NaN for no-data patients -> median-imputed downstream (NOT fake-0)
+    # Count / rate / occurrence features -> 0 when ABSENT, for ALL patients (not only no-window-data
+    # ones): a patient who lacks a concept genuinely has 0 of it, so it must not be median-imputed to
+    # a "typical" nonzero value downstream. This matches the enhanced features (already 0-filled).
+    # Numeric only (string trend cols are left to the model's categorical encoder). VALUE cols
+    # (labs / ratios / recency / value-trends) stay NaN -> median-imputed (correct for "not measured").
+    num_count = [c for c in count_cols if pd.api.types.is_numeric_dtype(aligned[c])]
+    aligned[num_count] = aligned[num_count].fillna(0)
     if "cancer_class" in aligned.columns:
         aligned["cancer_class"] = aligned.pop("cancer_class")
     aligned.to_csv(out_csv, index=False)
