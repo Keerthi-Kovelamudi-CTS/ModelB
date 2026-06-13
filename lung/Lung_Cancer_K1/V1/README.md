@@ -1,13 +1,13 @@
-# Lung Cancer — K1 pipeline
+# Lung Cancer — Prediction Pipeline
 
 End-to-end pipeline for the lung model, in **four steps**:
 
 1. **Code scoring** (`1_Top_Snomed/`) — rank which clinical codes separate cancer vs non-cancer.
 2. **Feature engineering** (`2_FE/`) — turn cohort events into a one-row-per-patient matrix.
 3. **Modeling** (`3_Modeling/`) — train the learner panel, pick the best on an internal test split.
-4. **Held-out evaluation** (`4_Holdout/`) — score the chosen model on the touch-once held-out + calibrate.
+4. **Held-out evaluation** (`4_Heldout/`) — score the chosen model on the touch-once held-out + calibrate.
 
-Step 1 is an **independent** track (clinical review / feature shortlisting). **Steps 2 + 3 run from a
+Step 1 is an **independent** track (clinical review / risk factors shortlisting). **Steps 2 + 3 run from a
 single command** (`run_lookback_experiment.py` — it builds the Step 2 matrix, then trains in Step 3).
 Step 4 runs once a Step 3 model exists. All steps use the **same cohort**.
 
@@ -21,7 +21,7 @@ Lung_Cancer_K1/
 ├── 1_Top_Snomed/                # Step 1 — code (feature) scoring
 ├── 2_FE/                        # Step 2 — feature-engineering modules + cohort SQL
 ├── 3_Modeling/                  # Step 3 — training + metrics (learner panel)
-└── 4_Holdout/                   # Step 4 — touch-once held-out eval + Platt recalibration
+└── 4_Heldout/                   # Step 4 — touch-once held-out eval + Platt recalibration
 ```
 
 ---
@@ -122,16 +122,16 @@ base rate** — they are recalibrated to the true prevalence by Platt scaling in
 
 ---
 
-## Step 4 — Held-out evaluation + Platt recalibration  (`4_Holdout/`)
+## Step 4 — Held-out evaluation + Platt recalibration  (`4_Heldout/`)
 Touch-once eval of a trained Step 3 model on the real **500 cancer / 50,000 non-cancer** held-out
 (0% train overlap), then **Platt scaling** to calibrate probabilities (the documented approach).
 Per-patient FE + the **TRAIN** xpoll reference (leakage-safe), scored with the train-fitted transforms.
 Unlike Step 3, this runs **ONE window per invocation** (no loop).
 
 ```bash
-GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:1 model
-GAP=1  NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 1mo,  5yr, 1:1 model
-GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:5 model
+GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 12mo, 5yr, 1:1 model
+GAP=1  NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 1mo,  5yr, 1:1 model
+GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 12mo, 5yr, 1:5 model
 # WINDOW = 5yr | 10yr | 20yr | lifetime   |   NC_RATIO = 1 | 5
 ```
 - The held-out cohort (`SQL/heldout_test_{GAP}mo.sql`) is **fixed regardless of `NC_RATIO`** —
@@ -182,9 +182,9 @@ STEP 3 — train + internal results   (3_Modeling/)
 
   └────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-STEP 4 — held-out eval + Platt recalibration   (4_Holdout/; one window per run, after a Step 3 model exists)
-  BigQuery (4_Holdout/SQL/heldout_test_{GAP}mo.sql)   [fixed 500/50k cohort]
-     │  GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+STEP 4 — held-out eval + Platt recalibration   (4_Heldout/; one window per run, after a Step 3 model exists)
+  BigQuery (4_Heldout/SQL/heldout_test_{GAP}mo.sql)   [fixed 500/50k cohort]
+     │  GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py
      ▼  FE (TRAIN xpoll) → score chosen model → 30/70 calib/test → Platt
   {GAP}mo_1to{NC_RATIO}/lookback/{WINDOW}/  heldout_recalib_{window}.txt + platt_calib_{window}.joblib
 ```

@@ -17,9 +17,9 @@ M1=1mo_1to5/lookback/5yr/model_5yr_1to5.joblib
 [ -f "$M1" ]  || { echo "[ho5] ABORT: missing $M1 (1:5 1mo training did not produce a model)"; exit 1; }
 
 echo "[ho5] === 1:5 held-out — 12mo 5yr ==="
-GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Heldout/evaluate_heldout.py
 
 echo "[ho5] === 1:5 held-out — 1mo 5yr ==="
-GAP=1 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+GAP=1 NC_RATIO=5 WINDOW=5yr python 4_Heldout/evaluate_heldout.py
 
 echo "[ho5] ALL DONE"

@@ -16,7 +16,7 @@ if [ -n "$HELDOUT_PID" ]; then
 fi
 
 echo "[chain] === 1mo 5yr held-out (1:1 model) ==="
-GAP=1 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+GAP=1 NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py
 
 echo "[chain] === 1:5 training — 12mo 5yr ==="
 GAP=12 NC_RATIO=5 python run_lookback_experiment.py 5yr

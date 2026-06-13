@@ -1,11 +1,11 @@
-# 4_Holdout — held-out evaluation + Platt recalibration
+# 4_Heldout — held-out evaluation + Platt recalibration
 
 Touch-once evaluation of a trained lookback model on the real **500 cancer / 50,000 non-cancer**
 held-out set (0% training overlap), plus **probability calibration via Platt scaling** — the
 documented approach (see `Model_Results_.../CALIBRATION_NOTES.md`).
 
 ```
-4_Holdout/
+4_Heldout/
 ├── evaluate_heldout.py        # export held-out -> FE -> score -> Platt calib -> metrics
 └── SQL/  heldout_test_12mo.sql, heldout_test_1mo.sql   (held-out cohort, per horizon)
 ```
@@ -34,9 +34,9 @@ Unlike training, this runs **ONE window per invocation** (no loop) — set `GAP`
 model you want to evaluate, and run it once per horizon/window you care about:
 ```bash
 cd Lung_Cancer_K1/V1
-GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:1 model
-GAP=1  NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 1mo,  5yr, 1:1 model
-GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:5 model
+GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 12mo, 5yr, 1:1 model
+GAP=1  NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 1mo,  5yr, 1:1 model
+GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Heldout/evaluate_heldout.py   # 12mo, 5yr, 1:5 model
 # WINDOW = 5yr | 10yr | 20yr | lifetime   |   NC_RATIO = 1 | 5
 ```
 The held-out cohort itself is fixed (`heldout_test_{GAP}mo.sql`) regardless of `NC_RATIO` — that

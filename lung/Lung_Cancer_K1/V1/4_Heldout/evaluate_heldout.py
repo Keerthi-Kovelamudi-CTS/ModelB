@@ -18,7 +18,7 @@ Flow:
 
 Env:  GAP=12|1   NC_RATIO=1|5   WINDOW=5yr|10yr|20yr|lifetime   [CALIB_FRAC=0.30]
 (NC_RATIO selects which trained model to score; the held-out cohort is the same fixed 500/50k set.)
-Run on the VM after the matching model exists:  GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+Run on the VM after the matching model exists:  GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Heldout/evaluate_heldout.py
 """
 import os
 import sys
@@ -33,7 +33,7 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss, roc_curve
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)                              # V1 root (parent of 4_Holdout)
+ROOT = os.path.dirname(HERE)                              # V1 root (parent of 4_Heldout)
 GAP = os.environ.get("GAP", "12")
 NC_RATIO = os.environ.get("NC_RATIO", "1")
 WINDOW = os.environ.get("WINDOW", "5yr")
