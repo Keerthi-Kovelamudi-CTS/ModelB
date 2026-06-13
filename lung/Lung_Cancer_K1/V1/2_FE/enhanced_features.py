@@ -447,27 +447,24 @@ def compute_band_features(df, bands=None, relative=True):
     else:
         work['_mb'] = work['_mb'] - work['_mb'].min()
 
-    patients = df['patient_guid_CLEAN'].dropna().unique()
-    out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
+    patients = pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid')
+    cols = {}                                            # accumulate then build once (no fragmentation)
     occ_defs = {**SYMPTOM_CODES, **COMORBIDITY_CODES}
     for lo, hi in bands:
         b = work[(work['_mb'] >= lo) & (work['_mb'] < hi)]
         tag = f'w{int(lo)}_{int(hi)}'
         for cat, codes in occ_defs.items():
             cnt = b[b[code_col].isin(codes)].groupby('patient_guid_CLEAN').size()
-            out[f'{cat}_count_{tag}'] = cnt
-            out[f'{cat}_present_{tag}'] = (cnt > 0).astype(int)
-        for cat, codes in LAB_VALUE_CODES.items():
-            sub = b[b[code_col].isin(codes) & b['_v'].notna()]
-            if sub.empty:
-                out[f'{cat}_val_mean_{tag}'] = np.nan
-                out[f'{cat}_val_latest_{tag}'] = np.nan
-                continue
-            out[f'{cat}_val_mean_{tag}'] = sub.groupby('patient_guid_CLEAN')['_v'].mean()
-            out[f'{cat}_val_latest_{tag}'] = (sub.sort_values('_dba')      # smallest days = most recent
-                                              .groupby('patient_guid_CLEAN')['_v'].first())
-            out[f'{cat}_val_slope_{tag}'] = _patient_slope(                # within-band value trend
+            cols[f'{cat}_count_{tag}'] = cnt
+            cols[f'{cat}_present_{tag}'] = (cnt > 0).astype(int)
+        for cat, codes in LAB_VALUE_CODES.items():       # always emit (deterministic schema)
+            sub = b[b[code_col].isin(codes) & b['_v'].notna()]   # empty -> NaN columns on build
+            cols[f'{cat}_val_mean_{tag}'] = sub.groupby('patient_guid_CLEAN')['_v'].mean()
+            cols[f'{cat}_val_latest_{tag}'] = (sub.sort_values('_dba')      # smallest days = most recent
+                                               .groupby('patient_guid_CLEAN')['_v'].first())
+            cols[f'{cat}_val_slope_{tag}'] = _patient_slope(               # within-band value trend
                 sub.assign(_x=-sub['_dba']), '_x', '_v')
+    out = pd.DataFrame(cols, index=patients)             # single build aligns each Series to patients
     cnt_cols = [c for c in out.columns if '_count_w' in c or '_present_w' in c]
     out[cnt_cols] = out[cnt_cols].fillna(0)
     return out.reset_index()
@@ -492,23 +489,20 @@ def compute_cumulative_features(df, windows=None, relative=True):
     else:
         work['_mb'] = work['_mb'] - work['_mb'].min()
 
-    patients = df['patient_guid_CLEAN'].dropna().unique()
-    out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
+    patients = pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid')
+    cols = {}                                            # accumulate then build once (no fragmentation)
     occ_defs = {**SYMPTOM_CODES, **COMORBIDITY_CODES}
     for n in windows:
         w = work[work['_mb'] < n]
         tag = f'last{n}'
         for cat, codes in occ_defs.items():
-            out[f'{cat}_count_{tag}'] = w[w[code_col].isin(codes)].groupby('patient_guid_CLEAN').size()
-        for cat, codes in LAB_VALUE_CODES.items():
-            sub = w[w[code_col].isin(codes) & w['_v'].notna()]
-            if sub.empty:
-                out[f'{cat}_val_mean_{tag}'] = np.nan
-                out[f'{cat}_val_latest_{tag}'] = np.nan
-                continue
-            out[f'{cat}_val_mean_{tag}'] = sub.groupby('patient_guid_CLEAN')['_v'].mean()
-            out[f'{cat}_val_latest_{tag}'] = (sub.sort_values('_dba')
-                                              .groupby('patient_guid_CLEAN')['_v'].first())
+            cols[f'{cat}_count_{tag}'] = w[w[code_col].isin(codes)].groupby('patient_guid_CLEAN').size()
+        for cat, codes in LAB_VALUE_CODES.items():       # always emit (deterministic schema)
+            sub = w[w[code_col].isin(codes) & w['_v'].notna()]   # empty -> NaN columns on build
+            cols[f'{cat}_val_mean_{tag}'] = sub.groupby('patient_guid_CLEAN')['_v'].mean()
+            cols[f'{cat}_val_latest_{tag}'] = (sub.sort_values('_dba')
+                                               .groupby('patient_guid_CLEAN')['_v'].first())
+    out = pd.DataFrame(cols, index=patients)
     cnt_cols = [c for c in out.columns if '_count_last' in c]
     out[cnt_cols] = out[cnt_cols].fillna(0)
     return out.reset_index()
