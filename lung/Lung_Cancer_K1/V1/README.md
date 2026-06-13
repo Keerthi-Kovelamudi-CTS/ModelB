@@ -16,7 +16,8 @@ Lung_Cancer_K1/
 ├── _run_pipeline.py             # shared driver: cohort SQL -> events -> FE -> model
 ├── 1_Top_Snomed/                # Step 1 - feature (code) scoring
 ├── 2_FE/                        # feature-engineering modules + cohort SQL
-└── 3_Modeling/                  # training + metrics
+├── 3_Modeling/                  # training + metrics
+└── 4_Holdout/                   # Step 4 - touch-once held-out eval + Platt recalibration
 ```
 
 ---
@@ -84,6 +85,21 @@ concepts). Both give count/value-per-window views *alongside* the lifetime featu
 **start at month 0 = the start of available data** (the cohort SQL already applies the gap cutoff).
 Windows count back from each patient's most-recent event (gap-agnostic, inference-safe), so they're
 the same for every horizon.
+
+---
+
+## Step 4 — Held-out evaluation + Platt recalibration  (folder: `4_Holdout/`)
+Touch-once eval of a trained lookback model on the real **500/50k** held-out (0% train overlap), then
+**Platt scaling** to calibrate probabilities (the documented approach). Per-patient FE + the **TRAIN**
+xpoll reference (leakage-safe), scored with the train-fitted transforms.
+
+```bash
+GAP=12 WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 12mo, 5yr model
+GAP=1  WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 1mo,  5yr model
+```
+Reports AUROC/AUPRC + Brier/ECE (raw vs Platt vs isotonic) + Sens/Spec/PPV/NPV at free-Youden on the
+70% test slice; saves `platt_calib_{window}.joblib` + reliability curve into the window's output dir.
+(King-Zeng true-prevalence offset is a separate *future deployment* step — not applied here.)
 
 ---
 

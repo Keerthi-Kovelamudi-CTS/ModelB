@@ -976,9 +976,9 @@ def extract_lung_risk_factors(CSV_FILE, time_window_months=None, n_jobs=None,
         print(f"[dedup] collapsed {_n0 - len(lung_risk_factors_dataframe)} split/duplicate rows "
               f"-> {len(lung_risk_factors_dataframe)} unique patients")
 
-    # Enhanced FE: recency-weighted decay, acceleration,
-    # recent-ratio, symptom burden, smoking dose (pack-years), interactions. Leakage-safe
-    # (symptom categories only, anchored on days_before_anchor). Gated by env FE_ENHANCED.
+    # Enhanced FE: recency-weighted decay, acceleration, recent-ratio, recent symptom burden,
+    # time bands + cumulative windows, smoking dose (pack-years), NLR/PLR/LMR (+ trends), CRP/albumin,
+    # problem-list flags, interactions. Per-patient (inference-safe); always runs (no flag).
     try:
         from enhanced_features import enrich as _enrich_enhanced
         lung_risk_factors_dataframe = _enrich_enhanced(lung_risk_factors_dataframe, df)
