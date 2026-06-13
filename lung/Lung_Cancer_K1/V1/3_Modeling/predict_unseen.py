@@ -99,6 +99,7 @@ class CancerPredictor:
         # TRAIN-fitted transforms (new models) -> apply identically to held-out (no refit/leakage).
         self.encoders = self.model_data.get('encoders', None)
         self.impute_medians = self.model_data.get('impute_medians', None)
+        self.value_cols = self.model_data.get('value_cols', None)   # fill w/ median; counts -> 0
         
         print(f"✓ Model loaded: {self.model_name}")
         print(f"  Model type: {type(self.model).__name__}")
@@ -169,7 +170,11 @@ class CancerPredictor:
                                      .map(mp).fillna(-1))
         df_processed = df_processed.reindex(columns=self.feature_names)   # align to TRAIN cols/order
         df_processed = df_processed.apply(pd.to_numeric, errors='coerce')
-        df_processed = df_processed.fillna(self.impute_medians).fillna(0.0)   # TRAIN medians (not refit)
+        # VALUE cols -> TRAIN median; COUNT cols -> 0 (absent concept = 0, not a 'typical' value)
+        val = [c for c in self.feature_names if self.value_cols and c in set(self.value_cols)]
+        if val:
+            df_processed[val] = df_processed[val].fillna(self.impute_medians)
+        df_processed = df_processed.fillna(0.0)
         X = df_processed.values
         if self.scaler is not None:
             X = self.scaler.transform(X)

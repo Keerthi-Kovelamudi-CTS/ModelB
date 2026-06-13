@@ -294,6 +294,9 @@ class LungCancerPredictor:
         # 2) drop high-missing columns (TRAIN missing fraction)
         keep = tr.columns[tr.isnull().mean() <= self._drop_threshold].tolist()
         tr, te, ca = tr[keep], te[keep], ca[keep]
+        # Value-type columns = those still carrying NaN in train (counts were 0-filled upstream by
+        # build_matrix). Held-out then fills value cols with the TRAIN median and count cols with 0.
+        nan_cols = set(tr.columns[tr.isnull().any()])
         # 3) median imputation — TRAIN medians (train-all-NaN cols -> 0)
         self._impute_medians = tr.median(numeric_only=True)
         tr = tr.fillna(self._impute_medians).fillna(0.0)
@@ -310,7 +313,9 @@ class LungCancerPredictor:
         keep = [c for c in tr.columns if c not in hi]
         tr, te, ca = tr[keep], te[keep], ca[keep]
         self.feature_names = keep
-        print(f"Dropped to {len(keep)} features (high-missing/low-var/high-corr fit on train)")
+        self._value_cols = [c for c in keep if c in nan_cols]   # NaN->median at held-out; rest->0
+        print(f"Dropped to {len(keep)} features (high-missing/low-var/high-corr fit on train); "
+              f"{len(self._value_cols)} value-type")
 
         # 6) scale — fit on TRAIN
         self.X_train = self.scaler.fit_transform(tr.values)
@@ -325,16 +330,18 @@ class LungCancerPredictor:
         return self
 
     def transform_external(self, df_raw):
-        """Apply the TRAIN-fitted pipeline (encoders -> kept cols -> median impute -> scale) to an
-        external/held-out frame, so it is processed identically to training (no refit). Returns a
-        scaled numpy array aligned to self.feature_names."""
+        """Apply the TRAIN-fitted pipeline (encoders -> kept cols -> fill -> scale) to an external/
+        held-out frame, identically to training (no refit). VALUE cols fill with the TRAIN median;
+        COUNT cols fill with 0 (absent concept = 0, not a 'typical' nonzero). Returns a scaled array
+        aligned to self.feature_names."""
         d = df_raw.copy()
         for col, mp in self.encoders.items():
             d[col] = (d[col].fillna('Unknown').astype(str).map(mp).fillna(-1) if col in d.columns else -1)
         d = d.reindex(columns=self.feature_names)            # same columns/order as train; missing -> NaN
         d = d.apply(pd.to_numeric, errors='coerce')
-        d = d.fillna(self._impute_medians).fillna(0.0)        # TRAIN medians
-        return self.scaler.transform(d.values)
+        val = [c for c in self.feature_names if c in set(self._value_cols)]
+        d[val] = d[val].fillna(self._impute_medians)         # value -> TRAIN median
+        return self.scaler.transform(d.fillna(0.0).values)   # remaining (count) -> 0
     
     def handle_imbalance(self, method='smote'):
         """Handle class imbalance using various techniques."""
@@ -1020,6 +1027,7 @@ class LungCancerPredictor:
             # transform_external): categorical code maps + median impute values.
             'encoders': getattr(self, 'encoders', {}),
             'impute_medians': getattr(self, '_impute_medians', None),
+            'value_cols': getattr(self, '_value_cols', None),   # fill these w/ median at held-out; rest -> 0
             'cat_cols': getattr(self, 'cat_cols', []),
         }
         
