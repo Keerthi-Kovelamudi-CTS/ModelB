@@ -65,6 +65,29 @@ GAP=1  NC_RATIO=5 python run_lookback_experiment.py 5yr    # 1:5, 1mo horizon
 > `2_FE/SQL/{GAP}mo_1to{NC_RATIO}.sql` and writes to `{GAP}mo_1to{NC_RATIO}/`). Internal-only:
 > no real-world held-out is run here.
 
+### Model panel (`3_Modeling/lung_training.py`)
+All candidates train on the same 80/10/10 split; the **best by internal-test ROC AUC** is saved as
+`model_<window>_1to<NC_RATIO>.joblib`. Every learner is **cost-sensitive for the minority (cancer)
+class** so imbalance is penalised directly (no SMOTE / resampling — `handle_imbalance("none")`):
+
+| Learner | Imbalance handling |
+|---|---|
+| CatBoost | `auto_class_weights='Balanced'` |
+| LightGBM | `class_weight='balanced'` |
+| XGBoost | `scale_pos_weight = n_neg / n_pos` |
+| Random Forest | `class_weight='balanced'` |
+| Extra Trees | `class_weight='balanced'` |
+| Gradient Boosting | `sample_weight='balanced'` (no `class_weight` param, but `.fit` takes weights) |
+| AdaBoost | `sample_weight='balanced'` |
+
+`class_weight`/`sample_weight='balanced'` auto-scale with `NC_RATIO`, so the minority penalty grows
+with the ratio. Because each learner rebalances internally, **raw probabilities sit at a ~balanced
+base rate** — they are recalibrated to the true prevalence by Platt scaling in `4_Holdout/`.
+
+> **Dropped learners:** KNN + MLP (support neither `class_weight` nor `sample_weight`, so can't be
+> cost-weighted), Naive Bayes (far weakest, ~0.75 AUROC — its feature-independence assumption is
+> broken by correlated clinical features), Logistic Regression (~0.90, weakest of the weighted set).
+
 ---
 
 ## Feature engineering (`2_FE/`)
