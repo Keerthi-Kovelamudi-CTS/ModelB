@@ -57,6 +57,47 @@ COMORBIDITY_CODES = {
     'FIBROSIS':  [700250006, 909731000006101, 51615001],
     'ASTHMA':    [195967001],
 }
+# Medication groups (med_code_id; copied from transform_features). Meds are excluded from the
+# observation-only dynamics/band functions, so they get their own dynamics here.
+MED_CODES = {
+    'ASTHMA_MED': [12906411000001100, 106511000001103, 3215311000001107, 9516911000001109,
+                   39113611000001102, 9205211000001104, 222311000001102, 4053411000001103,
+                   726611000001102, 2831211000001109, 3184911000001108, 3184311000001107,
+                   398511000001105, 42292311000001106, 35908811000001103],
+    'SMOKING_CESSATION_MED': [
+        88711000001104, 330811000001104, 352511000001102, 441911000001109, 457011000001103,
+        662311000001108, 703311000001108, 714711000001106, 768511000001107, 868611000001109,
+        2833611000001105, 2834111000001100, 2834711000001104, 2835311000001104, 3052211000001105,
+        3053411000001100, 3054111000001107, 3054911000001105, 3055311000001108, 3062511000001104,
+        3063211000001108, 3064011000001101, 3065411000001106, 3065811000001108, 3208111000001103,
+        3214111000001106, 3215211000001104, 3216011000001100, 3217711000001100, 3229811000001105,
+        3230611000001103, 3501611000001105, 3505611000001108, 3506011000001105, 3559411000001101,
+        3559511000001102, 3559611000001103, 4990511000001109, 4990811000001107, 5181211000001109,
+        5181511000001107, 5612711000001105, 5623211000001100, 8148611000001100, 8148911000001106,
+        9178211000001104, 9178511000001101, 10143711000001104, 10143911000001102, 10144111000001103,
+        10971311000001100, 10971611000001105, 10981211000001103, 10984311000001109, 11548311000001106,
+        11548611000001101, 13113011000001109, 14752711000001102, 14979111000001100, 14979311000001103,
+        14979811000001107, 14984411000001104, 15244211000001102, 15244511000001104, 16237311000001103,
+        16250511000001109, 16528011000001108, 18244311000001102, 18549811000001104, 18561411000001109,
+        18562311000001106, 19370611000001106, 19370911000001100, 19475011000001104, 19482211000001108,
+        21145711000001106, 21146211000001105, 21520411000001104, 22735911000001103, 22787211000001107,
+        23072811000001107, 26351211000001107, 26351611000001109, 30223311000001102, 30781011000001101,
+        32473711000001107, 34557011000001101, 34863411000001106, 34864011000001100, 35599911000001105,
+        35721211000001108, 35914111000001102, 36563611000001102, 36565311000001108, 36566311000001103,
+        37764511000001100, 38095911000001102, 38897211000001102, 38961311000001109, 39022411000001107,
+        39111611000001101, 39112811000001106, 39707011000001106, 39707111000001107, 41512611000001105,
+        41512911000001104, 41513211000001102, 42296911000001106, 42509011000001109, 44960711000001103,
+        45331611000001108, 45331811000001107],
+    'COPD_INHALER': [
+        42292811000001106, 39417611000001109, 38894511000001107, 3378211000001106, 3380011000001106,
+        9478911000001107, 9479011000001103, 12146911000001103, 12197411000001102, 20985511000001101,
+        21495411000001107, 21496211000001102, 24644611000001108, 24645511000001105, 27567911000001101,
+        27890611000001109, 28007211000001102, 28049611000001104, 28357211000001106, 28365011000001100,
+        29971311000001100, 29987211000001108, 33594911000001100, 33596311000001107, 34681611000001100,
+        34952211000001104, 37677711000001102, 37678011000001103, 37692511000001100, 37692711000001105,
+        38893611000001108, 39343611000001104, 39993311000001105, 40752211000001109],
+}
+
 # CareRecord_Problem value strings (profiled on 104.1M rows: clean, low-cardinality).
 ACTIVE_STATUS_VALUE = 'active problem'
 SIGNIFICANT_VALUE = 'significant problem'
@@ -114,6 +155,8 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
         acc_col = f'{cat}_ACCEL'
         rat_col = f'{cat}_RECENT_RATIO'
         prs_col = f'{cat}_PRESENT'
+        foc_col = f'{cat}_FIRST_OCCURRENCE_MONTHS'                  # new-vs-chronic: earliest occurrence
+        span_col = f'{cat}_SYMPTOM_SPAN_MONTHS'                     # how long they've had it (0 = single/new)
         present_cols.append(prs_col)
         if sub.empty:
             out[rec_col] = np.nan
@@ -121,10 +164,13 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
             out[acc_col] = 0.0
             out[rat_col] = 0.0
             out[prs_col] = 0
+            out[foc_col] = np.nan
+            out[span_col] = np.nan
             continue
         g = sub.groupby('patient_guid_CLEAN')
         total = g.size()
         recency = g['_mb'].min()                                   # RAW: staleness from prediction anchor
+        first_occ = g['_mb'].max()                                 # RAW: earliest occurrence (months before anchor)
         decay = (sub.assign(_w=np.exp(-sub['_mbrel'] / decay_tau_months))
                  .groupby('patient_guid_CLEAN')['_w'].sum())
         def _binct(lo, hi):
@@ -141,10 +187,12 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
         out[acc_col] = accel
         out[rat_col] = recent_ratio
         out[prs_col] = (total > 0).astype(int)
+        out[foc_col] = first_occ
+        out[span_col] = first_occ - recency                        # span = earliest - most-recent
 
-    # fill occurrence-based cols (missing patient = 0); recency stays NaN (no occurrence)
+    # fill occurrence-based cols (missing patient = 0); month-based cols stay NaN (no occurrence)
     for c in out.columns:
-        if c.endswith('_RECENCY_MONTHS'):
+        if c.endswith('_MONTHS'):                                  # recency/first-occurrence/span -> NaN
             continue
         out[c] = out[c].fillna(0)
     out['SYMPTOM_BURDEN'] = out[present_cols].sum(axis=1)
@@ -222,12 +270,16 @@ def compute_problem_flags(df, codes_map=None):
 NEUTROPHIL_CODE = [1022551000000104]
 LYMPHOCYTE_CODE = [1022581000000105]
 PLATELET_CODE = [1022651000000100]
+MONOCYTE_CODE = [1022591000000107]                 # Monocyte count (for LMR)
+CRP_CODES = [1001371000000100, 999651000000107]    # C-reactive protein
+ALBUMIN_CODES = [1000821000000103]                 # Serum albumin (CRP+albumin = mGPS-style marker)
 
 
 def compute_blood_ratios(df):
-    """Per-patient NLR (neutrophil/lymphocyte) and PLR (platelet/lymphocyte) from the most
-    recent value of each — recognised lung-cancer inflammatory markers. Missing -> NaN
-    (the modeling step median-imputes, which is correct for 'no CBC')."""
+    """Per-patient inflammatory/prognostic ratios from each analyte's most-recent value:
+    NLR (neutrophil/lymphocyte), PLR (platelet/lymphocyte), LMR (lymphocyte/monocyte), and
+    CRP_ALBUMIN_RATIO (modified Glasgow Prognostic Score proxy) — all recognised lung-cancer
+    markers. Per-patient (latest value), so inference-safe. Missing -> NaN (median-imputed)."""
     code_col = 'snomed_c_t_concept_id'
     work = df.copy()
     if 'event_type_lower' in work.columns:
@@ -241,11 +293,14 @@ def compute_blood_ratios(df):
         return s.groupby('patient_guid_CLEAN')['_v'].first()   # smallest days_before_anchor = most recent
 
     neut, lymph, plat = last_val(NEUTROPHIL_CODE), last_val(LYMPHOCYTE_CODE), last_val(PLATELET_CODE)
+    mono, crp, alb = last_val(MONOCYTE_CODE), last_val(CRP_CODES), last_val(ALBUMIN_CODES)
     patients = df['patient_guid_CLEAN'].dropna().unique()
     out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
     lymph_safe = lymph.replace(0, np.nan)
     out['NLR'] = neut / lymph_safe
     out['PLR'] = plat / lymph_safe
+    out['LMR'] = lymph / mono.replace(0, np.nan)               # lymphocyte/monocyte (low = worse)
+    out['CRP_ALBUMIN_RATIO'] = crp / alb.replace(0, np.nan)    # high = inflammation+hypoalbuminaemia (mGPS-style)
     return out.reset_index()
 
 
@@ -510,6 +565,48 @@ def compute_cumulative_features(df, windows=None):
     return out.reset_index()
 
 
+def compute_med_dynamics(df, bands=None, windows=None):
+    """Per-med-group medication dynamics. Meds are excluded from the observation-only functions, so
+    they get only a lifetime count in the base FE — this adds recency, recent-ratio (escalation), and
+    per-time-band + cumulative counts (rising respiratory / smoking-cessation med use can be prodromal).
+    Per-patient (windows count back from the patient's own most-recent event) -> inference-safe.
+    count/present/ratio -> 0 when absent; recency -> NaN."""
+    bands = bands or BANDS_RELATIVE
+    windows = windows or CUMULATIVE_WINDOWS
+    work = df.copy()
+    if 'event_type_lower' in work.columns:
+        work = work[work['event_type_lower'] == 'medication']
+    # DMD med codes are 17-18 digits (> 2**53): if med_code_id is read as float (NaN-mixed column),
+    # int matching silently fails. Force BOTH column and codes to float64 so the (identical) IEEE
+    # rounding matches consistently regardless of the source dtype.
+    work['med_code_id'] = pd.to_numeric(work.get('med_code_id'), errors='coerce').astype('float64')
+    work['_mb'] = _months_before(work)
+    work = work[work['_mb'].notna()]
+    work['_mbrel'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
+
+    patients = pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid')
+    cols = {}
+    for g, codes in MED_CODES.items():
+        sub = work[work['med_code_id'].isin({float(c) for c in codes})]
+        gg = sub.groupby('patient_guid_CLEAN')
+        total = gg.size()
+        cols[f'MED_{g}_COUNT'] = total
+        cols[f'MED_{g}_PRESENT'] = (total > 0).astype(int)
+        cols[f'MED_{g}_RECENCY_MONTHS'] = gg['_mb'].min()          # raw staleness from anchor
+        recent = sub[sub['_mbrel'] <= RECENT_RATIO_CUTOFF].groupby('patient_guid_CLEAN').size()
+        cols[f'MED_{g}_RECENT_RATIO'] = recent.reindex(total.index).fillna(0) / total
+        for lo, hi in bands:
+            cols[f'MED_{g}_count_w{int(lo)}_{int(hi)}'] = (
+                sub[(sub['_mbrel'] >= lo) & (sub['_mbrel'] < hi)].groupby('patient_guid_CLEAN').size())
+        for n in windows:
+            cols[f'MED_{g}_count_last{n}'] = sub[sub['_mbrel'] < n].groupby('patient_guid_CLEAN').size()
+    out = pd.DataFrame(cols, index=patients)
+    zero = [c for c in out.columns if c.endswith(('_PRESENT', '_COUNT', '_RECENT_RATIO'))
+            or '_count_w' in c or '_count_last' in c]                # recency stays NaN
+    out[zero] = out[zero].fillna(0)
+    return out.reset_index()
+
+
 def add_interactions(mat):
     """Add multiplicative interaction terms on the merged feature matrix (in place-safe)."""
     mat = mat.copy()
@@ -569,8 +666,11 @@ def enrich(matrix, df):
     matrix = matrix.merge(bands, on='patient_guid', how='left')
     cumul = compute_cumulative_features(df)
     matrix = matrix.merge(cumul, on='patient_guid', how='left')
+    meds = compute_med_dynamics(df)                              # medication recency/escalation/bands
+    matrix = matrix.merge(meds, on='patient_guid', how='left')
     band_fill0 = [c for c in matrix.columns
-                  if '_count_w' in c or '_present_w' in c or '_count_last' in c]
+                  if '_count_w' in c or '_present_w' in c or '_count_last' in c
+                  or c.endswith(('_PRESENT', '_COUNT', '_RECENT_RATIO'))]
     matrix[band_fill0] = matrix[band_fill0].fillna(0)
     print(f'[enhanced_features] added {bands.shape[1] - 1} band + '
           f'{cumul.shape[1] - 1} cumulative per-concept cols (anchor=patient_last).')
