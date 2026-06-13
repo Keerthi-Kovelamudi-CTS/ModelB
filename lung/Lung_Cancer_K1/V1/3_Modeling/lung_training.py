@@ -18,8 +18,7 @@ import seaborn as sns
 
 # Preprocessing
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 
 # Feature Selection
 from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif, RFE
@@ -226,110 +225,47 @@ class LungCancerPredictor:
         return self
     
     def preprocess_data(self, drop_threshold=0.95, variance_threshold=0.01):
-        """
-        Preprocess the data:
-        - Remove identifier columns
-        - Handle missing values
-        - Encode categorical variables
-        - Remove low-variance features
-        - Scale features
-        """
+        """LEAKAGE-FREE structural preprocessing only: drop identifier/date/text columns and
+        separate the target. Every DATA-DEPENDENT step (categorical encoding, high-missing /
+        low-variance / high-correlation dropping, median imputation, scaling) is deferred to
+        split_data and fit on the TRAINING split only (then applied to test/calib and saved for
+        held-out). This removes the train->test leakage those fitted transforms had when run on the
+        full dataset before the split."""
         print("\n" + "=" * 60)
-        print("PREPROCESSING DATA")
+        print("PREPROCESSING (structural only; data-dependent fits happen on TRAIN in split_data)")
         print("=" * 60)
-        
-        df_processed = self.df.copy()
-        
-        # Remove identifier and non-informative columns
-        cols_to_drop = ['index', 'patient_guid']
-        cols_to_drop = [c for c in cols_to_drop if c in df_processed.columns]
-        if cols_to_drop:
-            df_processed = df_processed.drop(columns=cols_to_drop)
-            print(f"Dropped identifier columns: {cols_to_drop}")
-        
-        # Separate target
-        self.y = df_processed['cancer_class'].values
-        df_processed = df_processed.drop(columns=['cancer_class'])
-        
-        # Identify column types
-        date_cols = [col for col in df_processed.columns if 'DATE' in col.upper()]
-        text_cols = [col for col in df_processed.columns if 'TERMS' in col.upper() or 'CODES' in col.upper()]
-        
-        # Drop date columns (or extract features from them)
-        print(f"Dropping {len(date_cols)} date columns and {len(text_cols)} text/code columns")
-        df_processed = df_processed.drop(columns=date_cols + text_cols, errors='ignore')
-        
-        # Handle categorical columns
-        cat_cols = df_processed.select_dtypes(include=['object']).columns.tolist()
-        print(f"\nEncoding {len(cat_cols)} categorical columns: {cat_cols}")
-        
-        for col in cat_cols:
-            le = LabelEncoder()
-            df_processed[col] = df_processed[col].fillna('Unknown')
-            df_processed[col] = le.fit_transform(df_processed[col].astype(str))
-        
-        # Handle missing values in numeric columns
-        numeric_cols = df_processed.select_dtypes(include=[np.number]).columns
-        
-        # Drop columns with too many missing values
-        missing_pct = df_processed[numeric_cols].isnull().sum() / len(df_processed)
-        cols_high_missing = missing_pct[missing_pct > drop_threshold].index.tolist()
-        if cols_high_missing:
-            df_processed = df_processed.drop(columns=cols_high_missing)
-            print(f"Dropped {len(cols_high_missing)} columns with >{drop_threshold*100}% missing values")
-        
-        # Impute remaining missing values with median
-        numeric_cols = df_processed.select_dtypes(include=[np.number]).columns
-        imputer = SimpleImputer(strategy='median')
-        df_processed[numeric_cols] = imputer.fit_transform(df_processed[numeric_cols])
-        
-        # Remove low variance features
-        variances = df_processed.var()
-        low_var_cols = variances[variances < variance_threshold].index.tolist()
-        if low_var_cols:
-            df_processed = df_processed.drop(columns=low_var_cols)
-            print(f"Dropped {len(low_var_cols)} low-variance features")
-        
-        # Remove highly correlated features (correlation > 0.95)
-        corr_matrix = df_processed.corr().abs()
-        upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
-        high_corr_cols = [col for col in upper.columns if any(upper[col] > 0.95)]
-        # Only remove up to half to avoid losing too much information
-        high_corr_cols = high_corr_cols[:len(high_corr_cols)//2]
-        if high_corr_cols:
-            df_processed = df_processed.drop(columns=high_corr_cols)
-            print(f"Dropped {len(high_corr_cols)} highly correlated features")
-        
-        self.X = df_processed.values
-        self.feature_names = df_processed.columns.tolist()
 
-        # Keep an aligned copy of patient_age for per-age-band calibration.
-        # (patient_age also stays in X as a legitimate feature.)
-        if 'patient_age' in df_processed.columns:
-            self.age = pd.to_numeric(df_processed['patient_age'], errors='coerce').values
-            print(f"Captured patient_age for per-age-band calibration "
-                  f"(median {np.nanmedian(self.age):.0f}).")
-        else:
-            self.age = None
-            print("patient_age not found — calibration will fall back to global isotonic.")
+        df = self.df.copy()
+        df = df.drop(columns=[c for c in ('index', 'patient_guid') if c in df.columns], errors='ignore')
+        self.y = df['cancer_class'].values
+        df = df.drop(columns=['cancer_class'])
+        date_cols = [c for c in df.columns if 'DATE' in c.upper()]
+        text_cols = [c for c in df.columns if 'TERMS' in c.upper() or 'CODES' in c.upper()]
+        df = df.drop(columns=date_cols + text_cols, errors='ignore')
+        print(f"Dropped {len(date_cols)} date + {len(text_cols)} text/code columns")
 
-        print(f"\nFinal dataset shape: {self.X.shape}")
-        print(f"Features: {len(self.feature_names)}")
-
+        self.cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+        self._drop_threshold = drop_threshold
+        self._variance_threshold = variance_threshold
+        # patient_age kept aligned for per-age-band calibration (also stays as a feature)
+        self.age = (pd.to_numeric(df['patient_age'], errors='coerce').values
+                    if 'patient_age' in df.columns else None)
+        self._pre_df = df.reset_index(drop=True)
+        print(f"Rows: {len(self._pre_df)}, raw feature columns: {self._pre_df.shape[1]} "
+              f"({len(self.cat_cols)} categorical). Transforms fit on train next.")
         return self
-    
-    def split_data(self, test_size=0.2, calib_size=0.0):
-        """Split data into train / (optional calibration) / test sets.
 
-        When ``calib_size`` > 0 a stratified calibration slice is carved out of the
-        training data (the model never trains on it) so isotonic calibration is
-        leakage-free. Splitting on indices keeps ``patient_age`` aligned to each split.
-        """
+    def split_data(self, test_size=0.2, calib_size=0.0):
+        """Split into train / (optional calibration) / test by index, then FIT every data-dependent
+        transform on the TRAIN split ONLY and apply to all splits (no leakage). The fitted
+        transformers (encoders, impute medians, kept-column order, scaler) are stored on self and
+        saved with the model so held-out scoring uses the SAME train-derived transforms."""
         print("\n" + "=" * 60)
-        print("SPLITTING DATA")
+        print("SPLITTING DATA (transforms then fit on TRAIN only)")
         print("=" * 60)
 
-        idx = np.arange(self.X.shape[0])
+        df = self._pre_df
+        idx = np.arange(len(df))
         tr_idx, te_idx = train_test_split(
             idx, test_size=test_size, random_state=RANDOM_STATE, stratify=self.y
         )
@@ -341,30 +277,64 @@ class LungCancerPredictor:
         else:
             ca_idx = np.array([], dtype=int)
 
-        self.X_train, self.y_train = self.X[tr_idx], self.y[tr_idx]
-        self.X_test,  self.y_test  = self.X[te_idx], self.y[te_idx]
-        self.X_calib, self.y_calib = self.X[ca_idx], self.y[ca_idx]
+        self.y_train, self.y_test, self.y_calib = self.y[tr_idx], self.y[te_idx], self.y[ca_idx]
+        tr, te, ca = df.iloc[tr_idx].copy(), df.iloc[te_idx].copy(), df.iloc[ca_idx].copy()
+
+        # 1) categorical encoding — fit code map on TRAIN; unseen categories -> -1
+        self.encoders = {}
+        for col in self.cat_cols:
+            mp = {c: i for i, c in enumerate(sorted(tr[col].fillna('Unknown').astype(str).unique()))}
+            self.encoders[col] = mp
+            for part in (tr, te, ca):
+                part[col] = part[col].fillna('Unknown').astype(str).map(mp).fillna(-1)
+        tr = tr.apply(pd.to_numeric, errors='coerce')       # all numeric now
+        te = te.apply(pd.to_numeric, errors='coerce')
+        ca = ca.apply(pd.to_numeric, errors='coerce')
+
+        # 2) drop high-missing columns (TRAIN missing fraction)
+        keep = tr.columns[tr.isnull().mean() <= self._drop_threshold].tolist()
+        tr, te, ca = tr[keep], te[keep], ca[keep]
+        # 3) median imputation — TRAIN medians (train-all-NaN cols -> 0)
+        self._impute_medians = tr.median(numeric_only=True)
+        tr = tr.fillna(self._impute_medians).fillna(0.0)
+        te = te.fillna(self._impute_medians).fillna(0.0)
+        ca = ca.fillna(self._impute_medians).fillna(0.0)
+        # 4) low-variance drop (TRAIN)
+        keep = tr.columns[tr.var() >= self._variance_threshold].tolist()
+        tr, te, ca = tr[keep], te[keep], ca[keep]
+        # 5) high-correlation drop (TRAIN), up to half to avoid over-pruning
+        corr = tr.corr().abs()
+        upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool))
+        hi = [c for c in upper.columns if (upper[c] > 0.95).any()]
+        hi = hi[:len(hi) // 2]
+        keep = [c for c in tr.columns if c not in hi]
+        tr, te, ca = tr[keep], te[keep], ca[keep]
+        self.feature_names = keep
+        print(f"Dropped to {len(keep)} features (high-missing/low-var/high-corr fit on train)")
+
+        # 6) scale — fit on TRAIN
+        self.X_train = self.scaler.fit_transform(tr.values)
+        self.X_test = self.scaler.transform(te.values) if len(te) else np.empty((0, len(keep)))
+        self.X_calib = self.scaler.transform(ca.values) if len(ca) else np.empty((0, len(keep)))
 
         if self.age is not None:
-            self.age_train = self.age[tr_idx]
-            self.age_test  = self.age[te_idx]
-            self.age_calib = self.age[ca_idx]
+            self.age_train, self.age_test, self.age_calib = self.age[tr_idx], self.age[te_idx], self.age[ca_idx]
 
-        print(f"Training set: {self.X_train.shape[0]} samples")
-        if len(ca_idx):
-            print(f"Calibration set: {self.X_calib.shape[0]} samples  "
-                  f"(class dist {np.bincount(self.y_calib)})")
-        print(f"Testing set: {self.X_test.shape[0]} samples")
-        print(f"Training class distribution: {np.bincount(self.y_train)}")
-        print(f"Testing class distribution: {np.bincount(self.y_test)}")
-
-        # Scale features (fit on train only)
-        self.X_train = self.scaler.fit_transform(self.X_train)
-        self.X_test = self.scaler.transform(self.X_test)
-        if len(ca_idx):
-            self.X_calib = self.scaler.transform(self.X_calib)
-
+        print(f"Train {self.X_train.shape}, test {self.X_test.shape}, calib {self.X_calib.shape}")
+        print(f"Train class dist {np.bincount(self.y_train)}; test {np.bincount(self.y_test)}")
         return self
+
+    def transform_external(self, df_raw):
+        """Apply the TRAIN-fitted pipeline (encoders -> kept cols -> median impute -> scale) to an
+        external/held-out frame, so it is processed identically to training (no refit). Returns a
+        scaled numpy array aligned to self.feature_names."""
+        d = df_raw.copy()
+        for col, mp in self.encoders.items():
+            d[col] = (d[col].fillna('Unknown').astype(str).map(mp).fillna(-1) if col in d.columns else -1)
+        d = d.reindex(columns=self.feature_names)            # same columns/order as train; missing -> NaN
+        d = d.apply(pd.to_numeric, errors='coerce')
+        d = d.fillna(self._impute_medians).fillna(0.0)        # TRAIN medians
+        return self.scaler.transform(d.values)
     
     def handle_imbalance(self, method='smote'):
         """Handle class imbalance using various techniques."""
@@ -1046,6 +1016,11 @@ class LungCancerPredictor:
             'selected_features': getattr(self, 'selected_features', None),
             'feature_selector': getattr(self, 'feature_selector', None),
             'calibrated_model': getattr(self, 'calibrated_model', None),
+            # TRAIN-fitted preprocessing transforms (for leakage-free held-out scoring via
+            # transform_external): categorical code maps + median impute values.
+            'encoders': getattr(self, 'encoders', {}),
+            'impute_medians': getattr(self, '_impute_medians', None),
+            'cat_cols': getattr(self, 'cat_cols', []),
         }
         
         joblib.dump(model_data, filepath)

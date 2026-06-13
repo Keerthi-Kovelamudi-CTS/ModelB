@@ -28,9 +28,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Preprocessing
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.impute import SimpleImputer
+# Preprocessing is applied via the TRAIN-fitted transforms loaded from the model
+# (encoders + impute medians + scaler) — no fit/refit happens here.
 
 # Metrics
 from sklearn.metrics import (
@@ -97,6 +96,9 @@ class CancerPredictor:
         self.feature_names = self.model_data.get('feature_names', None)
         self.selected_features = self.model_data.get('selected_features', None)
         self.feature_selector = self.model_data.get('feature_selector', None)
+        # TRAIN-fitted transforms (new models) -> apply identically to held-out (no refit/leakage).
+        self.encoders = self.model_data.get('encoders', None)
+        self.impute_medians = self.model_data.get('impute_medians', None)
         
         print(f"✓ Model loaded: {self.model_name}")
         print(f"  Model type: {type(self.model).__name__}")
@@ -153,73 +155,26 @@ class CancerPredictor:
         df_processed = df_processed.drop(columns=date_cols + text_cols, errors='ignore')
         print(f"✓ Dropped {len(date_cols)} date columns and {len(text_cols)} text/code columns")
         
-        # Step 3: Encode categorical columns (same as training)
-        cat_cols = df_processed.select_dtypes(include=['object']).columns.tolist()
-        for col in cat_cols:
-            le = LabelEncoder()
-            df_processed[col] = df_processed[col].fillna('Unknown')
-            df_processed[col] = le.fit_transform(df_processed[col].astype(str))
-        print(f"✓ Encoded {len(cat_cols)} categorical columns")
-        
-        # Step 4: Handle missing values (same as training)
-        numeric_cols = df_processed.select_dtypes(include=[np.number]).columns
-        
-        # Drop columns with too many missing values
-        missing_pct = df_processed[numeric_cols].isnull().sum() / len(df_processed)
-        cols_high_missing = missing_pct[missing_pct > drop_threshold].index.tolist()
-        if cols_high_missing:
-            df_processed = df_processed.drop(columns=cols_high_missing)
-            print(f"✓ Dropped {len(cols_high_missing)} columns with >{drop_threshold*100}% missing values")
-        
-        # Impute remaining missing values with median
-        numeric_cols = df_processed.select_dtypes(include=[np.number]).columns
-        imputer = SimpleImputer(strategy='median')
-        df_processed[numeric_cols] = imputer.fit_transform(df_processed[numeric_cols])
-        print(f"✓ Imputed missing values with median")
-        
-        # Step 5: Remove low variance features
-        variances = df_processed.var()
-        low_var_cols = variances[variances < variance_threshold].index.tolist()
-        if low_var_cols:
-            df_processed = df_processed.drop(columns=low_var_cols)
-            print(f"✓ Dropped {len(low_var_cols)} low-variance features")
-        
-        # Step 6: Remove highly correlated features (same logic as training)
-        corr_matrix = df_processed.corr().abs()
-        upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
-        high_corr_cols = [col for col in upper.columns if any(upper[col] > 0.95)]
-        high_corr_cols = high_corr_cols[:len(high_corr_cols)//2]
-        if high_corr_cols:
-            df_processed = df_processed.drop(columns=high_corr_cols)
-            print(f"✓ Dropped {len(high_corr_cols)} highly correlated features")
-        
-        print(f"\nAfter preprocessing: {df_processed.shape[1]} features")
-        
-        # Step 7: Align columns with training features
-        if self.feature_names:
-            # Add missing columns with 0s
-            missing_cols = set(self.feature_names) - set(df_processed.columns)
-            for col in missing_cols:
-                df_processed[col] = 0
-            
-            if missing_cols:
-                print(f"✓ Added {len(missing_cols)} missing columns (filled with 0)")
-            
-            # Remove extra columns not in training
-            extra_cols = set(df_processed.columns) - set(self.feature_names)
-            if extra_cols:
-                df_processed = df_processed.drop(columns=list(extra_cols), errors='ignore')
-                print(f"✓ Removed {len(extra_cols)} extra columns not in training")
-            
-            # Reorder columns to match training exactly
-            df_processed = df_processed[self.feature_names]
-            print(f"✓ Aligned {len(self.feature_names)} features with training data")
-        
-        # Step 8: Scale features using training scaler
+        # Steps 3-8: apply the TRAIN-fitted preprocessing so the held-out set is processed
+        # IDENTICALLY to training (no refit -> no leakage / distribution shift). The trainer saves
+        # the encoders, impute medians, feature order and scaler with the model; we just apply them.
+        if self.encoders is None or self.impute_medians is None or not self.feature_names:
+            raise ValueError(
+                "Model artifact lacks stored train transforms (encoders / impute_medians / "
+                "feature_names). Retrain with the current lung_training.py so held-out scoring uses "
+                "the SAME train-fitted preprocessing (no leakage).")
+        for col, mp in self.encoders.items():                    # categorical -> train code map
+            if col in df_processed.columns:
+                df_processed[col] = (df_processed[col].fillna('Unknown').astype(str)
+                                     .map(mp).fillna(-1))
+        df_processed = df_processed.reindex(columns=self.feature_names)   # align to TRAIN cols/order
+        df_processed = df_processed.apply(pd.to_numeric, errors='coerce')
+        df_processed = df_processed.fillna(self.impute_medians).fillna(0.0)   # TRAIN medians (not refit)
         X = df_processed.values
-        if self.scaler:
+        if self.scaler is not None:
             X = self.scaler.transform(X)
-            print("✓ Features scaled using training scaler")
+        print(f"✓ Applied TRAIN-fitted transforms (encoders + median impute + scaler) "
+              f"-> {X.shape[1]} features")
         
         # Step 9: Apply feature selection (same as training)
         if self.feature_selector is not None:
