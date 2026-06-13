@@ -59,7 +59,8 @@ SIGNIFICANT_VALUE = 'significant problem'
 # last record and go back). Same bands for every horizon. Generalizes V1's single _LAST_NM window
 # to multiple disjoint bands. Gated by env FE_BANDS (default '0' = OFF, preserves the production
 # matrix); set FE_BANDS=1 to add them. FE_BAND_ANCHOR=cohort_anchor uses months-before-anchor instead.
-BANDS_RELATIVE = [(0, 6), (6, 18), (18, 36), (36, 72)]
+BANDS_RELATIVE = [(0, 6), (6, 18), (18, 36), (36, 72), (72, 999)]   # final = open-ended catch-all
+CUMULATIVE_WINDOWS = [6, 12, 24, 60]   # cumulative "last-N months" windows (from start of data)
 
 DECAY_TAU_MONTHS = 12.0
 # Time bins measured from the DATA CUTOFF (= start of available data), so band 0 is the freshest
@@ -290,6 +291,19 @@ def compute_lab_stats(df, lab_codes=None):
         out[f'{name}_VMIN'] = g['_v'].min()
         out[f'{name}_VMEAN'] = g['_v'].mean()
         out[f'{name}_MEASURED'] = (g['_v'].size() > 0).astype(int)
+        # value acceleration: slope(recent half) - slope(older half) (>=4 measurements). +ve = steepening
+        s2 = sub.sort_values(['patient_guid_CLEAN', '_dba'], ascending=[True, False])   # oldest first
+        s2['_n'] = s2.groupby('patient_guid_CLEAN')['_v'].transform('size')
+        s2['_r'] = s2.groupby('patient_guid_CLEAN').cumcount()
+        h = s2[s2['_n'] >= 4].copy()
+        if h.empty:
+            out[f'{name}_VALUE_ACCEL'] = np.nan
+        else:
+            h['_half'] = np.where(h['_r'] < h['_n'] / 2.0, 'old', 'new')
+            h['_x'] = -h['_dba']
+            s_old = _patient_slope(h[h['_half'] == 'old'], '_x', '_v')
+            s_new = _patient_slope(h[h['_half'] == 'new'], '_x', '_v')
+            out[f'{name}_VALUE_ACCEL'] = s_new - s_old
     meas = [c for c in out.columns if c.endswith('_MEASURED')]
     out[meas] = out[meas].fillna(0).astype(int)
     return out.reset_index()
@@ -460,6 +474,47 @@ def compute_band_features(df, bands=None, relative=True):
     return out.reset_index()
 
 
+def compute_cumulative_features(df, windows=None, relative=True):
+    """Per-CONCEPT cumulative 'last-N months' windows (count + value mean/latest for lab concepts).
+    Overlapping windows from the start of available data; complements the disjoint bands. Generalizes
+    V1's single _LAST_NM to the full set. count -> 0 when absent; value cols -> NaN."""
+    windows = windows or CUMULATIVE_WINDOWS
+    code_col = 'snomed_c_t_concept_id'
+    work = df.copy()
+    if 'event_type_lower' in work.columns:
+        work = work[work['event_type_lower'] == 'observation']
+    work[code_col] = pd.to_numeric(work.get(code_col), errors='coerce')
+    work['_v'] = pd.to_numeric(work.get('value'), errors='coerce')
+    work['_dba'] = pd.to_numeric(work.get('days_before_anchor'), errors='coerce')
+    work['_mb'] = _months_before(work)
+    work = work[work['_mb'].notna()]
+    if relative:
+        work['_mb'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
+    else:
+        work['_mb'] = work['_mb'] - work['_mb'].min()
+
+    patients = df['patient_guid_CLEAN'].dropna().unique()
+    out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
+    occ_defs = {**SYMPTOM_CODES, **COMORBIDITY_CODES}
+    for n in windows:
+        w = work[work['_mb'] < n]
+        tag = f'last{n}'
+        for cat, codes in occ_defs.items():
+            out[f'{cat}_count_{tag}'] = w[w[code_col].isin(codes)].groupby('patient_guid_CLEAN').size()
+        for cat, codes in LAB_VALUE_CODES.items():
+            sub = w[w[code_col].isin(codes) & w['_v'].notna()]
+            if sub.empty:
+                out[f'{cat}_val_mean_{tag}'] = np.nan
+                out[f'{cat}_val_latest_{tag}'] = np.nan
+                continue
+            out[f'{cat}_val_mean_{tag}'] = sub.groupby('patient_guid_CLEAN')['_v'].mean()
+            out[f'{cat}_val_latest_{tag}'] = (sub.sort_values('_dba')
+                                              .groupby('patient_guid_CLEAN')['_v'].first())
+    cnt_cols = [c for c in out.columns if '_count_last' in c]
+    out[cnt_cols] = out[cnt_cols].fillna(0)
+    return out.reset_index()
+
+
 def add_interactions(mat):
     """Add multiplicative interaction terms on the merged feature matrix (in place-safe)."""
     mat = mat.copy()
@@ -520,9 +575,13 @@ def enrich(matrix, df):
         rel = os.environ.get('FE_BAND_ANCHOR', 'patient_last') == 'patient_last'
         bands = compute_band_features(df, relative=rel)
         matrix = matrix.merge(bands, on='patient_guid', how='left')
-        bcols = [c for c in matrix.columns if '_count_w' in c or '_present_w' in c]
-        matrix[bcols] = matrix[bcols].fillna(0)
-        print(f'[enhanced_features] FE_BANDS=1 -> added {bands.shape[1] - 1} per-concept band cols '
+        cumul = compute_cumulative_features(df, relative=rel)        # cumulative last-N windows
+        matrix = matrix.merge(cumul, on='patient_guid', how='left')
+        fill0 = [c for c in matrix.columns
+                 if '_count_w' in c or '_present_w' in c or '_count_last' in c]
+        matrix[fill0] = matrix[fill0].fillna(0)
+        print(f'[enhanced_features] FE_BANDS=1 -> added {bands.shape[1] - 1} band + '
+              f'{cumul.shape[1] - 1} cumulative per-concept cols '
               f'(anchor={os.environ.get("FE_BAND_ANCHOR", "patient_last")}).')
     if prob.shape[1] > 1:                       # has feature cols beyond patient_guid
         matrix = matrix.merge(prob, on='patient_guid', how='left')
