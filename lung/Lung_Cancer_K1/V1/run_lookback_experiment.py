@@ -83,6 +83,19 @@ def full_patient_frame(events_df):
     return f[keep].drop_duplicates("patient_guid").reset_index(drop=True)
 
 
+def _internal_train_guids(full_frame):
+    """The 80% TRAIN patient set the MODEL trains on — so xpoll (the only cross-patient FE) is FIT on
+    train ONLY and val/test are merely transformed onto it (no leakage). Mirrors _run_pipeline's
+    split_data(test_size=0.10, calib_size=0.10): same RANDOM_STATE=42, stratified on cancer_class,
+    same full_frame row order as the matrix. KEEP THESE IN SYNC with _run_pipeline.run_model."""
+    from sklearn.model_selection import train_test_split
+    y = full_frame["cancer_class"].to_numpy()
+    idx = np.arange(len(full_frame))
+    tr, _te = train_test_split(idx, test_size=0.10, random_state=42, stratify=y)
+    tr, _ca = train_test_split(tr, test_size=0.10 / 0.90, random_state=42, stratify=y[tr])
+    return set(full_frame.iloc[tr]["patient_guid"])
+
+
 def build_matrix(events_df, L, out_csv, full_frame, xpoll_fit=True, xpoll_ref_path=None):
     """Filter to the lookback window, build FE matrix (+ Phase-2 xpoll percentiles), then REINDEX
     to the full patient set (missing patients -> all-zero feature row). Returns matrix path.
@@ -103,9 +116,15 @@ def build_matrix(events_df, L, out_csv, full_frame, xpoll_fit=True, xpoll_ref_pa
                                if "event_type" in xdf.columns else "observation")
     try:
         if xpoll_fit:
-            xp, xref = ef.compute_xpoll(xdf, ref=None)
+            # LEAKAGE FIX: fit the percentile reference on the MODEL's TRAIN patients ONLY, then
+            # APPLY it to ALL patients. Internal val/test are transformed onto a train-fit reference
+            # and never inform their own percentiles (mirrors the held-out fit-on-train path).
+            train_guids = _internal_train_guids(full_frame)
+            xtr = xdf[xdf["patient_guid_CLEAN"].isin(train_guids)]
+            _, xref = ef.compute_xpoll(xtr, ref=None)            # FIT ref on TRAIN events only
             if xpoll_ref_path:
                 json.dump(xref, open(xpoll_ref_path, "w"))
+            xp = ef.compute_xpoll(xdf, ref=xref)                 # APPLY train ref to ALL patients
         else:
             xref = json.load(open(xpoll_ref_path)) if (xpoll_ref_path and os.path.exists(xpoll_ref_path)) else None
             xp = ef.compute_xpoll(xdf, ref=xref) if xref is not None else None
