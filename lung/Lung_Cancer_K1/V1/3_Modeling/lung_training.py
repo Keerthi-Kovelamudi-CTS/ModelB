@@ -339,8 +339,10 @@ class LungCancerPredictor:
         d[val] = d[val].fillna(self._impute_medians)         # value -> TRAIN median
         return self.scaler.transform(d.fillna(0.0).values)   # remaining (count) -> 0
     
-    def handle_imbalance(self, method='smote'):
-        """Handle class imbalance using various techniques."""
+    def handle_imbalance(self, method='none'):
+        """Handle class imbalance. Default 'none' = no resampling: the pipeline relies on
+        per-learner cost weighting (class_weight / scale_pos_weight / sample_weight) instead
+        of SMOTE. Other options: 'smote' / 'adasyn' / 'undersample' / 'smote_tomek'."""
         print("\n" + "=" * 60)
         print(f"HANDLING CLASS IMBALANCE ({method.upper()})")
         print("=" * 60)
@@ -500,7 +502,7 @@ class LungCancerPredictor:
         
         return models
     
-    def train_and_evaluate(self, use_resampled=True):
+    def train_and_evaluate(self, use_resampled=False):
         """Train multiple models and evaluate their performance."""
         print("\n" + "=" * 60)
         print("TRAINING AND EVALUATING MODELS")
@@ -525,11 +527,11 @@ class LungCancerPredictor:
             start_time = datetime.now()
             
             try:
-                # Train model. LR/RF/ExtraTrees/LightGBM use class_weight='balanced',
-                # XGBoost scale_pos_weight, CatBoost auto_class_weights. GradientBoosting,
-                # AdaBoost and NaiveBayes have no class-weight param but DO accept
-                # sample_weight in .fit() -> pass a 'balanced' weight so the minority
-                # (cancer) class is penalized too.
+                # Train model. RF/ExtraTrees/LightGBM use class_weight='balanced',
+                # XGBoost scale_pos_weight, CatBoost auto_class_weights. GradientBoosting
+                # and AdaBoost have no class-weight param but DO accept sample_weight in
+                # .fit() -> pass a 'balanced' weight so the minority (cancer) class is
+                # penalized too.
                 if name in ('Gradient Boosting', 'AdaBoost'):
                     from sklearn.utils.class_weight import compute_sample_weight
                     _sw = compute_sample_weight('balanced', y_train_use)
@@ -1042,15 +1044,17 @@ def main():
     # Initialize predictor
     predictor = LungCancerPredictor(data_path)
     
-    # Run pipeline
+    # Standalone demo only. The REAL entry point is run_lookback_experiment.py -> _run_pipeline.run_model,
+    # which uses an 80/10/10 split, handle_imbalance("none") (cost-weighting, no SMOTE) and cumulative-
+    # importance (99%) feature selection. Args below mirror that design so the demo doesn't contradict it.
     (predictor
      .load_data()
      .explore_data()
      .preprocess_data(drop_threshold=0.90)
-     .split_data(test_size=0.2)
-     .handle_imbalance(method='smote')
-     .select_features(n_features=150, method='mutual_info')
-     .train_and_evaluate(use_resampled=True)
+     .split_data(test_size=0.10, calib_size=0.10)
+     .handle_imbalance(method='none')
+     .select_features(method='cumimp', threshold=0.99)
+     .train_and_evaluate(use_resampled=False)
      .hyperparameter_tuning()
      .create_ensemble()
      .final_evaluation()

@@ -1,5 +1,6 @@
 """
-Lookback experiment for the Lung model: 5yr / 10yr / 20yr / lifetime, on the 12mo 1:1 config.
+Lookback experiment for the Lung model: 5yr / 10yr / 20yr / lifetime, for the horizon x ratio
+config selected by env vars GAP (12|1) and NC_RATIO (1|5).
 TRAINING + INTERNAL val/test ONLY (80/10/10 split of the training cohort). No held-out here:
 the real-world held-out (500/50k) is a separate, later concern and is NOT run in this pipeline.
 
@@ -13,8 +14,8 @@ Design:
 Outputs -> {GAP}mo_1to{NC_RATIO}/lookback/{5yr,10yr,20yr,lifetime}/ (features, model, metrics.csv)
         -> {GAP}mo_1to{NC_RATIO}/lookback/lookback_internal_summary.csv
 
-Run all four:  python run_lookback_experiment.py
-Run just one:  python run_lookback_experiment.py 5yr     (reuses cached events)
+Run all four:  GAP=12 NC_RATIO=1 python run_lookback_experiment.py
+Run just one:  GAP=12 NC_RATIO=1 python run_lookback_experiment.py 5yr     (reuses cached events)
 """
 import os, sys, re, importlib.util
 import numpy as np, pandas as pd
@@ -171,7 +172,7 @@ def run_one_lookback(L, train_ev_df, full_frame):
 
 
 def main():
-    print("=" * 70 + "\nLOOKBACK SWEEP (5/10/20/lifetime) — 12mo 1:1 — TRAIN + INTERNAL only\n" + "=" * 70)
+    print("=" * 70 + f"\nLOOKBACK SWEEP (5/10/20/lifetime) — {GAP}mo 1:{NC_RATIO} — TRAIN + INTERNAL only\n" + "=" * 70)
     tr = ensure_events()
     train_ev = pd.read_csv(tr, low_memory=False)
     full_frame = full_patient_frame(train_ev)
