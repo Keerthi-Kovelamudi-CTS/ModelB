@@ -25,7 +25,6 @@ from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classi
 from sklearn.decomposition import PCA
 
 # Models
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import (
     RandomForestClassifier, 
     GradientBoostingClassifier, 
@@ -456,9 +455,6 @@ class LungCancerPredictor:
     def get_models(self):
         """Get dictionary of models to train."""
         models = {
-            'Logistic Regression': LogisticRegression(
-                max_iter=1000, random_state=RANDOM_STATE, class_weight='balanced', n_jobs=-1
-            ),
             'Random Forest': RandomForestClassifier(
                 n_estimators=200, max_depth=15, min_samples_split=5,
                 random_state=RANDOM_STATE, class_weight='balanced', n_jobs=-1
@@ -475,9 +471,10 @@ class LungCancerPredictor:
                 n_estimators=100, learning_rate=0.5, random_state=RANDOM_STATE
             ),
         }
-        # KNN, MLP, Naive Bayes removed: KNN/MLP support neither class_weight nor sample_weight
-        # (can't be cost-weighted); Naive Bayes is the far-weakest learner (internal AUROC ~0.75 vs
-        # ~0.94 for the boosters) because its feature-independence assumption is broken here.
+        # KNN, MLP, Naive Bayes, Logistic Regression removed: KNN/MLP can't be cost-weighted
+        # (no class_weight/sample_weight); Naive Bayes far-weakest (~0.75 AUROC, broken independence
+        # assumption); Logistic Regression the weakest of the weighted learners (~0.90 vs ~0.94).
+        # Panel is now an all-tree/boosting ensemble, every member cost-sensitive for the minority.
         
         # Add XGBoost if available
         if XGBOOST_AVAILABLE:
@@ -649,13 +646,9 @@ class LungCancerPredictor:
                             max_depth=trial.suggest_int('max_depth', 3, 7),
                             learning_rate=trial.suggest_float('learning_rate', 0.01, 0.2, log=True),
                             min_samples_split=trial.suggest_int('min_samples_split', 2, 10))
-            if model_name == 'Logistic Regression':
-                return dict(C=trial.suggest_float('C', 1e-3, 10, log=True),
-                            penalty=trial.suggest_categorical('penalty', ['l1', 'l2']),
-                            solver='saga')
             return None
 
-        tunable = {'Random Forest', 'XGBoost', 'LightGBM', 'Gradient Boosting', 'Logistic Regression'}
+        tunable = {'Random Forest', 'XGBoost', 'LightGBM', 'Gradient Boosting'}
         if model_name not in tunable:
             print(f"No Optuna search space for {model_name}. Skipping tuning.")
             return self
