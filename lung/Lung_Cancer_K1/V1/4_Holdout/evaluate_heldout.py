@@ -46,7 +46,7 @@ import run_lookback_experiment as rl          # build_matrix, full_patient_frame
 from predict_unseen import CancerPredictor
 
 OUT_DIR = os.path.join(ROOT, f"{GAP}mo_1to{NC_RATIO}", "lookback", WINDOW)
-MODEL = os.path.join(OUT_DIR, f"model_{WINDOW}_1to1.joblib")
+MODEL = os.path.join(OUT_DIR, f"model_{WINDOW}_1to{NC_RATIO}.joblib")
 XREF = os.path.join(OUT_DIR, f"xpoll_ref_{WINDOW}.json")
 SQL = os.path.join(HERE, "SQL", f"heldout_test_{GAP}mo.sql")
 

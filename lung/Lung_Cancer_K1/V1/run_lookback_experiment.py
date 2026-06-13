@@ -140,7 +140,7 @@ def run_one_lookback(L, train_ev_df, full_frame):
     print(f"\n{'='*70}\nLOOKBACK = {tag}  (train + internal val/test)\n{'='*70}")
     tr_feat = build_matrix(train_ev_df, L, os.path.join(od, "train_features.csv"), full_frame,
                            xpoll_fit=True, xpoll_ref_path=os.path.join(od, f"xpoll_ref_{tag}.json"))
-    p = rp.run_model(tr_feat, od, tag, "1to1")              # saves model_{tag}_1to1.joblib
+    p = rp.run_model(tr_feat, od, tag, f"1to{NC_RATIO}")    # saves model_{tag}_1to{NC_RATIO}.joblib
     s_int = p.best_model.predict_proba(p.X_test)[:, 1]
     y_int = np.asarray(p.y_test).astype(int)
     # persist raw scores so ANY operating point can be recomputed later without re-running
