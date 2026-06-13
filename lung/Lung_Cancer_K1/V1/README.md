@@ -50,16 +50,19 @@ one** (reuses the cached cohort events).
 ```bash
 GAP=12 NC_RATIO=1 python run_lookback_experiment.py        # default: LOOP all windows (5/10/20yr/lifetime)
 GAP=12 NC_RATIO=1 python run_lookback_experiment.py 5yr    # ONLY this window (or 10yr|20yr|lifetime)
+GAP=12 NC_RATIO=5 python run_lookback_experiment.py 5yr    # 1:5 cohort (uses 2_FE/SQL/12mo_1to5.sql)
+GAP=1  NC_RATIO=5 python run_lookback_experiment.py 5yr    # 1:5, 1mo horizon
 ```
 - Pulls the cohort once (`2_FE/SQL/{GAP}mo_1to{NC_RATIO}.sql`) from BigQuery, builds the feature
   matrix, trains the model (80/10/10 train/val/internal-test), and reports the **free / Youden**
   operating point only.
-- Produces, under **`12mo_1to1/lookback/`**:
-  - `{5yr,10yr,20yr,lifetime}/` → `train_features.csv`, `model_<window>_1to1.joblib`,
+- Produces, under **`{GAP}mo_1to{NC_RATIO}/lookback/`** (e.g. `12mo_1to1/`, `12mo_1to5/`):
+  - `{5yr,10yr,20yr,lifetime}/` → `train_features.csv`, `model_<window>_1to<NC_RATIO>.joblib`,
     `metrics.csv` (one `internal_free` row), score arrays (`*.npz`)
   - **`lookback_internal_summary.csv`** ← internal metrics for all windows side by side
 
-> `GAP` = 12 or 1 (12-/1-month horizon). `NC_RATIO` = 1 (controls ratio). Internal-only:
+> `GAP` = 12 or 1 (12-/1-month horizon). `NC_RATIO` = 1 or 5 (non-cancer:cancer ratio; picks
+> `2_FE/SQL/{GAP}mo_1to{NC_RATIO}.sql` and writes to `{GAP}mo_1to{NC_RATIO}/`). Internal-only:
 > no real-world held-out is run here.
 
 ---

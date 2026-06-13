@@ -34,9 +34,11 @@ Unlike training, this runs **ONE window per invocation** (no loop) — set `GAP`
 model you want to evaluate, and run it once per horizon/window you care about:
 ```bash
 cd Lung_Cancer_K1/V1
-GAP=12 WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 12mo, 5yr model
-GAP=1  WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 1mo,  5yr model
-# WINDOW = 5yr | 10yr | 20yr | lifetime
+GAP=12 NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:1 model
+GAP=1  NC_RATIO=1 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 1mo,  5yr, 1:1 model
+GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py   # 12mo, 5yr, 1:5 model
+# WINDOW = 5yr | 10yr | 20yr | lifetime   |   NC_RATIO = 1 | 5
 ```
-Outputs land in `{GAP}mo_1to1/lookback/{WINDOW}/`. Requires `model_{WINDOW}_1to1.joblib` +
-`xpoll_ref_{WINDOW}.json` from the training run.
+The held-out cohort itself is fixed (`heldout_test_{GAP}mo.sql`) regardless of `NC_RATIO` — that
+only selects which trained model to score. Outputs land in `{GAP}mo_1to{NC_RATIO}/lookback/{WINDOW}/`;
+requires `model_{WINDOW}_1to{NC_RATIO}.joblib` + `xpoll_ref_{WINDOW}.json` from the training run.

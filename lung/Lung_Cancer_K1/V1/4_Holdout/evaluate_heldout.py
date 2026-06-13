@@ -16,8 +16,9 @@ Flow:
    -> report on the disjoint test slice: AUROC/AUPRC (threshold-free), Brier+ECE (raw/Platt/iso),
       Sens/Spec/PPV/NPV at free/Youden, and save platt_calib_{window}.joblib + reliability curve.
 
-Env:  GAP=12|1   NC_RATIO=1   WINDOW=5yr|10yr|20yr|lifetime   [CALIB_FRAC=0.30]
-Run on the VM after the matching model exists:  GAP=12 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
+Env:  GAP=12|1   NC_RATIO=1|5   WINDOW=5yr|10yr|20yr|lifetime   [CALIB_FRAC=0.30]
+(NC_RATIO selects which trained model to score; the held-out cohort is the same fixed 500/50k set.)
+Run on the VM after the matching model exists:  GAP=12 NC_RATIO=5 WINDOW=5yr python 4_Holdout/evaluate_heldout.py
 """
 import os
 import sys
