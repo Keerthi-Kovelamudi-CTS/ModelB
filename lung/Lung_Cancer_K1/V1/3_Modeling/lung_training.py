@@ -534,8 +534,17 @@ class LungCancerPredictor:
             start_time = datetime.now()
             
             try:
-                # Train model
-                model.fit(X_train_use, y_train_use)
+                # Train model. LR/RF/ExtraTrees/LightGBM use class_weight='balanced',
+                # XGBoost scale_pos_weight, CatBoost auto_class_weights. GradientBoosting,
+                # AdaBoost and NaiveBayes have no class-weight param but DO accept
+                # sample_weight in .fit() -> pass a 'balanced' weight so the minority
+                # (cancer) class is penalized too. KNN/MLP support neither (left as-is).
+                if name in ('Gradient Boosting', 'AdaBoost', 'Naive Bayes'):
+                    from sklearn.utils.class_weight import compute_sample_weight
+                    _sw = compute_sample_weight('balanced', y_train_use)
+                    model.fit(X_train_use, y_train_use, sample_weight=_sw)
+                else:
+                    model.fit(X_train_use, y_train_use)
                 
                 # Predict
                 y_pred = model.predict(self.X_test)
