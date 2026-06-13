@@ -116,6 +116,7 @@ BIN_RECENT = (0.0, 6.0)
 BIN_MID = (6.0, 18.0)
 BIN_OLD = (18.0, 42.0)
 RECENT_RATIO_CUTOFF = 24.0   # "recent" = within the most-recent 24mo of available data
+RECENT_BURDEN_WINDOWS = [6, 12]   # # distinct symptom categories present in the last N months
 
 
 def _months_before(df, ref_col='days_before_anchor'):
@@ -147,6 +148,7 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
     patients = df['patient_guid_CLEAN'].dropna().unique()
     out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
     present_cols = []
+    recent_present = {w: [] for w in RECENT_BURDEN_WINDOWS}     # for recent-window symptom burden
 
     for cat, codes in symptom_codes.items():
         sub = work[work[code_col].isin(codes)]
@@ -189,6 +191,15 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
         out[prs_col] = (total > 0).astype(int)
         out[foc_col] = first_occ
         out[span_col] = first_occ - recency                        # span = earliest - most-recent
+        for w in RECENT_BURDEN_WINDOWS:                            # present within last w months?
+            cw = sub[sub['_mbrel'] <= w].groupby('patient_guid_CLEAN').size()
+            recent_present[w].append((cw > 0).astype(int))
+
+    # recent symptom burden: # distinct symptom categories present in the last w months (acute
+    # multi-symptom presentation is a strong prodromal signal; complements lifetime SYMPTOM_BURDEN)
+    for w in RECENT_BURDEN_WINDOWS:
+        out[f'RECENT_SYMPTOM_BURDEN_{w}MO'] = (
+            pd.concat(recent_present[w], axis=1).sum(axis=1) if recent_present[w] else 0)
 
     # fill occurrence-based cols (missing patient = 0); month-based cols stay NaN (no occurrence)
     for c in out.columns:
@@ -301,6 +312,27 @@ def compute_blood_ratios(df):
     out['PLR'] = plat / lymph_safe
     out['LMR'] = lymph / mono.replace(0, np.nan)               # lymphocyte/monocyte (low = worse)
     out['CRP_ALBUMIN_RATIO'] = crp / alb.replace(0, np.nan)    # high = inflammation+hypoalbuminaemia (mGPS-style)
+
+    # Ratio TREND over time (not just the latest value): pair numerator/denominator by patient-day
+    # (CBC components share an effective_date), compute the ratio per day, then the per-patient slope
+    # (x = -days_before_anchor, so a positive slope = the ratio is rising toward the anchor). A rising
+    # NLR/PLR (or falling LMR) over time is a recognised prodromal inflammatory signal. NaN if <2 days.
+    def ratio_trend(num_codes, den_codes):
+        num = (work[work[code_col].isin(num_codes) & work['_v'].notna()]
+               .groupby(['patient_guid_CLEAN', '_dba'])['_v'].mean().rename('num'))
+        den = (work[work[code_col].isin(den_codes) & work['_v'].notna()]
+               .groupby(['patient_guid_CLEAN', '_dba'])['_v'].mean().rename('den'))
+        m = pd.concat([num, den], axis=1).dropna()
+        m = m[m['den'] != 0]
+        if m.empty:
+            return pd.Series(dtype=float)
+        m = m.reset_index()
+        m['_ratio'] = m['num'] / m['den']
+        m['_x'] = -m['_dba']
+        return _patient_slope(m, '_x', '_ratio')
+    out['NLR_TREND_SLOPE'] = ratio_trend(NEUTROPHIL_CODE, LYMPHOCYTE_CODE)
+    out['PLR_TREND_SLOPE'] = ratio_trend(PLATELET_CODE, LYMPHOCYTE_CODE)
+    out['LMR_TREND_SLOPE'] = ratio_trend(LYMPHOCYTE_CODE, MONOCYTE_CODE)
     return out.reset_index()
 
 
