@@ -93,7 +93,10 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
     work[code_col] = pd.to_numeric(work.get(code_col), errors='coerce')
     work['_mb'] = _months_before(work, ref_col)
     work = work[work['_mb'].notna()]
-    work['_mb'] = work['_mb'] - work['_mb'].min()   # re-reference to data cutoff -> bins start at 0
+    # Per-patient relative months: anchor on the patient's OWN most-recent event -> starts at 0.
+    # INFERENCE-SAFE: depends only on this patient's events (not the batch). Used for decay/accel/
+    # recent_ratio. recency stays RAW (_mb) = staleness from the prediction anchor.
+    work['_mbrel'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
 
     patients = df['patient_guid_CLEAN'].dropna().unique()
     out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
@@ -116,16 +119,16 @@ def compute_symptom_dynamics(df, symptom_codes=None, ref_col='days_before_anchor
             continue
         g = sub.groupby('patient_guid_CLEAN')
         total = g.size()
-        recency = g['_mb'].min()
-        decay = (sub.assign(_w=np.exp(-sub['_mb'] / decay_tau_months))
+        recency = g['_mb'].min()                                   # RAW: staleness from prediction anchor
+        decay = (sub.assign(_w=np.exp(-sub['_mbrel'] / decay_tau_months))
                  .groupby('patient_guid_CLEAN')['_w'].sum())
         def _binct(lo, hi):
-            return sub[(sub['_mb'] > lo) & (sub['_mb'] <= hi)].groupby('patient_guid_CLEAN').size()
+            return sub[(sub['_mbrel'] > lo) & (sub['_mbrel'] <= hi)].groupby('patient_guid_CLEAN').size()
         c_recent = _binct(BIN_RECENT[0] - 1e-9, BIN_RECENT[1]).reindex(total.index, fill_value=0)
         c_mid = _binct(*BIN_MID).reindex(total.index, fill_value=0)
         c_old = _binct(*BIN_OLD).reindex(total.index, fill_value=0)
         accel = c_recent - 2 * c_mid + c_old
-        recent = sub[sub['_mb'] <= RECENT_RATIO_CUTOFF].groupby('patient_guid_CLEAN').size()
+        recent = sub[sub['_mbrel'] <= RECENT_RATIO_CUTOFF].groupby('patient_guid_CLEAN').size()
         recent_ratio = recent.reindex(total.index, fill_value=0) / total
 
         out[rec_col] = recency
@@ -336,7 +339,8 @@ def compute_consultation_dynamics(df, ref_col='days_before_anchor'):
     work = df.copy()
     work['_mb'] = _months_before(work, ref_col)
     work = work[work['_mb'].notna()]
-    work['_mb'] = work['_mb'] - work['_mb'].min()   # re-reference to data cutoff -> bins start at 0
+    # per-patient relative months (inference-safe; depends only on this patient). recency stays RAW.
+    work['_mbrel'] = work['_mb'] - work.groupby('patient_guid_CLEAN')['_mb'].transform('min')
     key = 'event_date_parsed' if 'event_date_parsed' in work.columns else '_mb'
     enc = work.drop_duplicates(['patient_guid_CLEAN', key])      # one encounter per patient-day
     out = pd.DataFrame(index=pd.Index(df['patient_guid_CLEAN'].dropna().unique(), name='patient_guid'))
@@ -346,12 +350,12 @@ def compute_consultation_dynamics(df, ref_col='days_before_anchor'):
     out['CONSULT_RECENCY_MONTHS'] = g['_mb'].min()
 
     def _binct(lo, hi):
-        return enc[(enc['_mb'] > lo) & (enc['_mb'] <= hi)].groupby('patient_guid_CLEAN').size()
+        return enc[(enc['_mbrel'] > lo) & (enc['_mbrel'] <= hi)].groupby('patient_guid_CLEAN').size()
     c_recent = _binct(BIN_RECENT[0] - 1e-9, BIN_RECENT[1]).reindex(total.index, fill_value=0)
     c_mid = _binct(*BIN_MID).reindex(total.index, fill_value=0)
     c_old = _binct(*BIN_OLD).reindex(total.index, fill_value=0)
     out['CONSULT_ACCEL'] = c_recent - 2 * c_mid + c_old
-    recent = enc[enc['_mb'] <= RECENT_RATIO_CUTOFF].groupby('patient_guid_CLEAN').size().reindex(total.index, fill_value=0)
+    recent = enc[enc['_mbrel'] <= RECENT_RATIO_CUTOFF].groupby('patient_guid_CLEAN').size().reindex(total.index, fill_value=0)
     out['CONSULT_RECENT_RATE'] = recent / total
     for c in ('CONSULT_TOTAL', 'CONSULT_ACCEL', 'CONSULT_RECENT_RATE'):
         out[c] = out[c].fillna(0)
