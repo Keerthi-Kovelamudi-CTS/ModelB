@@ -1,22 +1,25 @@
 """
-Dual-horizon held-out evaluation: combine the 12mo and 1mo models on the SAME held-out patients.
+Dual-horizon held-out evaluation — per held-out DATASET, score it with BOTH models and combine.
 
-The 12mo and 1mo held-out cohorts are the SAME 500/50k patients/anchors, differing ONLY by the
-feature gap (months_before = 12 vs 1). So every held-out patient has two feature views; we score
-each with its matching model and merge per patient. Reuses the artifacts the single-horizon runs
-already produced (heldout_features_{window}.csv, model_{window}_1to{ratio}.joblib) — no re-FE.
+For each held-out scenario we run BOTH the 12mo-trained and 1mo-trained models on the SAME dataset,
+then merge per patient. This mirrors the single-horizon runs (12mo-on-12mo, 1mo-on-1mo) but adds
+the other ("cross") model and the dual combination on each dataset:
 
-On a shared stratified 70% test slice (Platt fit per horizon on the 30% calib slice, same split for
-both horizons so the test patients align), reports:
-  - 12mo only / 1mo only   : AUROC + Sens/Spec/PPV/NPV @Youden   (sanity vs the single-horizon runs)
-  - DUAL max-prob          : score = max(calibrated p12, p1); AUROC + Sens/Spec/PPV/NPV @Youden
-  - DUAL OR@thresholds     : flag if 12mo OR 1mo exceeds its OWN Youden threshold (deployment rule)
-  - True-cancer coverage   : among real cancers, caught by both / 12mo-only / 1mo-only / neither
+  DATASET heldout_test_12mo.sql  (events cut off 12 months pre-dx):
+     - 12mo model (matched) | 1mo model (cross) | DUAL = combine(both)
+  DATASET heldout_test_1mo.sql   (events cut off  1 month  pre-dx):
+     - 1mo model (matched)  | 12mo model (cross) | DUAL = combine(both)
 
-Noisy-OR is intentionally NOT reported (assumes the two models are independent; they are highly
-correlated, so noisy-OR would over-combine and be miscalibrated).
+Both models read the SAME dataset; each CancerPredictor reindexes it to its own trained feature set
+(missing cols -> 0). Reuses the heldout_features_{window}.csv that the single-horizon runs cached
+(no re-FE). Per dataset: shared 30% calib / 70% test split, Platt per model on calib, reported on test:
+  - matched model / cross model : AUROC + Sens/Spec/PPV/NPV @Youden
+  - DUAL max(p_matched,p_cross) : AUROC + Sens/Spec/PPV/NPV @Youden
+  - DUAL OR@thresholds          : flag if either model exceeds its own Youden threshold
+  - true-cancer coverage        : caught by both / matched-only / cross-only / neither
+Noisy-OR omitted (models correlated -> would over-combine).
 
-Env:  NC_RATIO=1|5|10   WINDOW=5yr|10yr|20yr|lifetime   [CALIB_FRAC=0.30]
+Env:  NC_RATIO=1|5|10   WINDOW=5yr|10yr|20yr|lifetime   [DATASET=both|12|1]   [CALIB_FRAC=0.30]
 Run:  NC_RATIO=1 WINDOW=5yr python 4_Heldout/evaluate_dual_horizon.py
 """
 import os
@@ -28,10 +31,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, average_precision_score, roc_curve
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)                     # V1 root
+ROOT = os.path.dirname(HERE)
 NC_RATIO = os.environ.get("NC_RATIO", "1")
 WINDOW = os.environ.get("WINDOW", "5yr")
 CALIB_FRAC = float(os.environ.get("CALIB_FRAC", "0.30"))
+DATASET = os.environ.get("DATASET", "both")          # which held-out dataset(s) to evaluate on
 
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "2_FE"))
@@ -39,20 +43,22 @@ sys.path.insert(0, os.path.join(ROOT, "3_Modeling"))
 from predict_unseen import CancerPredictor
 
 
-def _score(gap):
-    """Raw model probability per patient for one horizon (rows preserved -> positional guid)."""
-    d = os.path.join(ROOT, f"{gap}mo_1to{NC_RATIO}", "lookback", WINDOW)
-    feat = os.path.join(d, f"heldout_features_{WINDOW}.csv")
-    model = os.path.join(d, f"model_{WINDOW}_1to{NC_RATIO}.joblib")
-    assert os.path.exists(feat), f"missing {feat} (run the {gap}mo 1:{NC_RATIO} held-out first)"
-    assert os.path.exists(model), f"missing {model}"
-    df = pd.read_csv(feat, low_memory=False)
-    guid = df["patient_guid"].astype(str).values
-    cp = CancerPredictor(model)
-    X, y = cp.preprocess_data(df)                # drops COLUMNS only -> rows/order preserved
-    assert len(X) == len(guid), f"{gap}mo: row count changed in preprocess ({len(X)} vs {len(guid)})"
-    raw = joblib.load(model)["model"].predict_proba(X)[:, 1]
-    return pd.DataFrame({"guid": guid, "y": np.asarray(y).astype(int), f"raw{gap}": raw})
+def _model_path(gap):
+    return os.path.join(ROOT, f"{gap}mo_1to{NC_RATIO}", "lookback", WINDOW, f"model_{WINDOW}_1to{NC_RATIO}.joblib")
+
+
+def _dataset_path(gap):
+    return os.path.join(ROOT, f"{gap}mo_1to{NC_RATIO}", "lookback", WINDOW, f"heldout_features_{WINDOW}.csv")
+
+
+def _raw(df, model_gap):
+    """Score the given held-out matrix with the model trained for model_gap (reindexes to its features)."""
+    mp = _model_path(model_gap)
+    assert os.path.exists(mp), f"missing model {mp}"
+    cp = CancerPredictor(mp)
+    X, y = cp.preprocess_data(df.copy())
+    raw = joblib.load(mp)["model"].predict_proba(X)[:, 1]
+    return raw, np.asarray(y).astype(int)
 
 
 def _youden_T(y, p):
@@ -60,7 +66,7 @@ def _youden_T(y, p):
     return float(thr[int(np.argmax(tpr - fpr))])
 
 
-def _oppoint(y, pred):
+def _op(y, pred):
     tp = int((pred & (y == 1)).sum()); fp = int((pred & (y == 0)).sum())
     fn = int((~pred & (y == 1)).sum()); tn = int((~pred & (y == 0)).sum())
     sens = tp / (tp + fn) if tp + fn else 0.0; spec = tn / (tn + fp) if tn + fp else 0.0
@@ -68,53 +74,60 @@ def _oppoint(y, pred):
     return sens, spec, ppv, npv
 
 
-def main():
-    print(f"{'='*74}\nDUAL-HORIZON HELD-OUT — lung 1:{NC_RATIO} {WINDOW} (12mo + 1mo)\n{'='*74}")
-    s12 = _score(12); s1 = _score(1)
-    m = s12.merge(s1[["guid", "raw1", "y"]], on="guid", suffixes=("", "_b"))
-    assert (m["y"] == m["y_b"]).all(), "label mismatch between horizons for some patients"
-    m = m.drop(columns=["y_b"])
-    print(f"matched patients: {len(m):,}  (12mo {len(s12):,}, 1mo {len(s1):,})  pos={int(m['y'].sum())}")
+def eval_on_dataset(ds_gap):
+    """Score the ds_gap held-out dataset with BOTH the 12mo and 1mo models; combine."""
+    feat = _dataset_path(ds_gap)
+    assert os.path.exists(feat), f"missing {feat} (run the {ds_gap}mo 1:{NC_RATIO} held-out first)"
+    df = pd.read_csv(feat, low_memory=False)
+    raw12, y = _raw(df, 12)
+    raw1, y1 = _raw(df, 1)
+    assert (y == y1).all(), "label mismatch scoring the same dataset twice"
 
-    # shared stratified 30% calib / 70% test split (same partition for both horizons)
     rng = np.random.RandomState(42)
-    y = m["y"].values; idx = np.arange(len(m)); cal = np.zeros(len(m), bool)
+    idx = np.arange(len(y)); cal = np.zeros(len(y), bool)
     for c in (0, 1):
         ci = idx[y == c]; rng.shuffle(ci); cal[ci[:int(round(CALIB_FRAC * len(ci)))]] = True
     test = ~cal; yt = y[test]
 
-    def platt(col):
-        lr = LogisticRegression(C=1e12, solver="lbfgs").fit(m[col].values[cal].reshape(-1, 1), y[cal])
-        return lr.predict_proba(m[col].values[test].reshape(-1, 1))[:, 1]
-    p12 = platt("raw12"); p1 = platt("raw1"); dual = np.maximum(p12, p1)
+    def platt(raw):
+        lr = LogisticRegression(C=1e12, solver="lbfgs").fit(raw[cal].reshape(-1, 1), y[cal])
+        return lr.predict_proba(raw[test].reshape(-1, 1))[:, 1]
+    p12 = platt(raw12); p1 = platt(raw1); dual = np.maximum(p12, p1)
     T12 = _youden_T(yt, p12); T1 = _youden_T(yt, p1); Td = _youden_T(yt, dual)
 
-    lines = [f"# Dual-horizon held-out — lung 1:{NC_RATIO} {WINDOW} | test n={int(test.sum())} "
-             f"(pos {int(yt.sum())}, prev {yt.mean()*100:.2f}%)  [Platt per horizon on 30% calib]",
-             f"{'model':22s} {'AUROC':>7} {'AUPRC':>7} {'Sens':>6} {'Spec':>6} {'PPV':>6} {'NPV':>6}"]
+    matched, cross = (12, 1) if ds_gap == 12 else (1, 12)
+    pm, pc = (p12, p1) if ds_gap == 12 else (p1, p12)
+    Tm, Tc = (T12, T1) if ds_gap == 12 else (T1, T12)
+
+    L = [f"### DATASET = heldout_test_{ds_gap}mo.sql  | test n={int(test.sum())} (pos {int(yt.sum())}, prev {yt.mean()*100:.2f}%)",
+         f"{'model on this data':24s} {'AUROC':>7} {'AUPRC':>7} {'Sens':>6} {'Spec':>6} {'PPV':>6} {'NPV':>6}"]
 
     def row(name, p, T):
-        au = roc_auc_score(yt, p); ap = average_precision_score(yt, p)
-        sens, spec, ppv, npv = _oppoint(yt, p >= T)
-        return f"{name:22s} {au:7.3f} {ap:7.3f} {sens*100:6.1f} {spec*100:6.1f} {ppv*100:6.1f} {npv*100:6.1f}"
+        s, sp, pv, nv = _op(yt, p >= T)
+        return f"{name:24s} {roc_auc_score(yt,p):7.3f} {average_precision_score(yt,p):7.3f} {s*100:6.1f} {sp*100:6.1f} {pv*100:6.1f} {nv*100:6.1f}"
 
-    lines.append(row("12mo only", p12, T12))
-    lines.append(row("1mo only", p1, T1))
-    lines.append(row("DUAL max(p12,p1)", dual, Td))
-    sens, spec, ppv, npv = _oppoint(yt, (p12 >= T12) | (p1 >= T1))
-    lines.append(f"{'DUAL OR@thresholds':22s} {'-':>7} {'-':>7} {sens*100:6.1f} {spec*100:6.1f} {ppv*100:6.1f} {npv*100:6.1f}")
+    L.append(row(f"{matched}mo model (matched)", pm, Tm))
+    L.append(row(f"{cross}mo model (cross)", pc, Tc))
+    L.append(row("DUAL max(p12,p1)", dual, Td))
+    s, sp, pv, nv = _op(yt, (pm >= Tm) | (pc >= Tc))
+    L.append(f"{'DUAL OR@thresholds':24s} {'-':>7} {'-':>7} {s*100:6.1f} {sp*100:6.1f} {pv*100:6.1f} {nv*100:6.1f}")
 
-    pos = yt == 1; c12 = p12 >= T12; c1 = p1 >= T1
-    both = int((pos & c12 & c1).sum()); only12 = int((pos & c12 & ~c1).sum())
-    only1 = int((pos & ~c12 & c1).sum()); neither = int((pos & ~c12 & ~c1).sum())
-    lines += ["",
-              f"# True-cancer coverage @each horizon's Youden threshold (of {int(pos.sum())} cancers in test):",
-              f"  both={both}  12mo-only={only12}  1mo-only={only1}  missed-by-both={neither}",
-              f"  -> OR-rule catches {both+only12+only1}/{int(pos.sum())} ({(both+only12+only1)/max(pos.sum(),1)*100:.1f}%); "
-              f"1mo adds {only1} the 12mo misses, 12mo adds {only12} the 1mo misses."]
+    pos = yt == 1; cm = pm >= Tm; cc = pc >= Tc
+    both = int((pos & cm & cc).sum()); om = int((pos & cm & ~cc).sum())
+    oc = int((pos & ~cm & cc).sum()); none = int((pos & ~cm & ~cc).sum())
+    L += [f"# coverage of {int(pos.sum())} cancers: both={both}  {matched}mo-only={om}  {cross}mo-only={oc}  missed-by-both={none}",
+          f"#   -> dual OR catches {both+om+oc}/{int(pos.sum())} ({(both+om+oc)/max(pos.sum(),1)*100:.1f}%); "
+          f"the {cross}mo model adds {oc} that the matched {matched}mo misses."]
+    return "\n".join(L)
 
-    report = "\n".join(lines); print("\n" + report)
-    out = os.path.join(HERE, f"dual_heldout_{WINDOW}_1to{NC_RATIO}.txt")   # HERE = robust to folder name
+
+def main():
+    print(f"{'='*78}\nDUAL-HORIZON HELD-OUT (both models per dataset) — lung 1:{NC_RATIO} {WINDOW}\n{'='*78}")
+    gaps = [12, 1] if DATASET == "both" else [int(DATASET)]
+    blocks = [eval_on_dataset(g) for g in gaps]
+    report = ("\n\n".join(blocks))
+    print("\n" + report)
+    out = os.path.join(HERE, f"dual_heldout_{WINDOW}_1to{NC_RATIO}.txt")
     open(out, "w").write(report + "\n")
     print(f"\n-> saved {out}\nDUAL-HORIZON EVAL COMPLETE")
 
