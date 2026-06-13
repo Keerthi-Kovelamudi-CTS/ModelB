@@ -30,10 +30,13 @@ positive counts, no step artefacts. Monotonic → AUROC/Sens/Spec unchanged; onl
 > step (`deploy_calibration.py`). We are calibrating to the held-out's own prevalence for now.
 
 ## Run (on the VM, after the matching lookback model exists)
+Unlike training, this runs **ONE window per invocation** (no loop) — set `GAP` + `WINDOW` to the
+model you want to evaluate, and run it once per horizon/window you care about:
 ```bash
 cd Lung_Cancer_K1/V1
 GAP=12 WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 12mo, 5yr model
 GAP=1  WINDOW=5yr python 4_Holdout/evaluate_heldout.py     # 1mo,  5yr model
+# WINDOW = 5yr | 10yr | 20yr | lifetime
 ```
 Outputs land in `{GAP}mo_1to1/lookback/{WINDOW}/`. Requires `model_{WINDOW}_1to1.joblib` +
 `xpoll_ref_{WINDOW}.json` from the training run.

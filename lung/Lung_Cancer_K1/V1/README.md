@@ -43,11 +43,13 @@ python "Combined Scoring (ML+Stat).py"   # 1b  (scores 12mo + 1mo)
 ---
 
 ## Step 2 + 3 — Train + internal results  (entry: `run_lookback_experiment.py`)
-One command runs FE (`2_FE/`) → model (`3_Modeling/`) for each lookback window.
+One command runs FE (`2_FE/`) → model (`3_Modeling/`) per lookback window. **By default it LOOPS
+through all four windows (5yr / 10yr / 20yr / lifetime); pass a single window name to run only that
+one** (reuses the cached cohort events).
 
 ```bash
-GAP=12 NC_RATIO=1 python run_lookback_experiment.py        # all windows: 5yr/10yr/20yr/lifetime
-GAP=12 NC_RATIO=1 python run_lookback_experiment.py 5yr    # just one window (reuses cached events)
+GAP=12 NC_RATIO=1 python run_lookback_experiment.py        # default: LOOP all windows (5/10/20yr/lifetime)
+GAP=12 NC_RATIO=1 python run_lookback_experiment.py 5yr    # ONLY this window (or 10yr|20yr|lifetime)
 ```
 - Pulls the cohort once (`2_FE/SQL/{GAP}mo_1to{NC_RATIO}.sql`) from BigQuery, builds the feature
   matrix, trains the model (80/10/10 train/val/internal-test), and reports the **free / Youden**
