@@ -1,27 +1,35 @@
 """
 Enhanced per-patient FE for the Lung B+C model.
 
-Adds transform-features beyond the base FE, proven useful in our other
-B+C models. All occurrence-based transforms use ``days_before_anchor`` (the fixed,
-leakage-safe prediction anchor) and are applied ONLY to genuine presenting-symptom
-categories — never to investigations (spirometry/FEV/imaging) or diagnostic-pathway
-codes (2WW / fast-track referrals, "suspected lung cancer"), which would leak.
+Adds features beyond the base FE (transform_features). EVERYTHING here always runs (no flags) and
+is computed PER PATIENT — each feature depends only on that patient's own history, so it is
+identical at train and inference (batch-independent). Applied only to genuine symptom / comorbidity
+/ lab categories — never to investigations or diagnostic-pathway codes (2WW / fast-track /
+"suspected lung cancer"), which would leak.
 
-Features (per symptom category):
-  *_RECENCY_MONTHS    months from anchor to the MOST RECENT occurrence (lower = more recent)
-  *_DECAY_INTENSITY   sum of exp(-months_before/tau) over occurrences (recency-weighted load)
-  *_ACCEL             2nd-difference of occurrence counts across time bins (ramping-up signal)
-  *_RECENT_RATIO      occurrences in the most-recent allowed window / lifetime occurrences
-  *_PRESENT           1 if the category ever occurs
+ANCHORING: within-history dynamics (decay, accel, recent_ratio, time bands, cumulative windows) are
+referenced to EACH PATIENT'S most-recent event (= month 0). RECENCY is the raw months-before-anchor
+(staleness from the prediction point). The cohort SQL already applies the gap cutoff, so windows
+start at 0 and are the same for every horizon.
 
-Aggregate / dose / interaction:
-  SYMPTOM_BURDEN      count of distinct presenting-symptom categories present
-  PACK_YEARS_MAX      max recorded cigarette pack-years (direct codes)
-  CIGS_PER_DAY_MAX    max recorded cigarettes/day
-  INT_SMOKING_x_AGE, INT_SMOKING_x_COPD, INT_AGE_x_HAEMOPTYSIS
+Per symptom / comorbidity category:
+  *_RECENCY_MONTHS *_DECAY_INTENSITY *_ACCEL *_RECENT_RATIO *_PRESENT
+  *_count_w{lo}_{hi} *_present_w{lo}_{hi}    disjoint bands [0-6,6-18,18-36,36-72,72-999]mo
+  *_count_last{n}                            cumulative last-6/12/24/60mo
+Per lab analyte (value codes):
+  *_LATEST *_VMAX *_VMIN *_VMEAN *_MEASURED  level stats
+  *_VALUE_ACCEL                              recent-half slope - older-half slope (steepening)
+  *_val_mean_w* *_val_latest_w* *_val_slope_w* / *_val_mean_last* *_val_latest_last*
+  *_PCTILE *_AGEBAND_PCTILE                  cohort & age-band percentile (compute_xpoll; FIT-ON-TRAIN,
+                                             applied via the lookback driver — leakage-safe, not in enrich)
+Problem-list (CareRecord_Problem):
+  *_HAS_ACTIVE_PROBLEM *_HAS_SIGNIFICANT_PROBLEM  NUM_ACTIVE_SIGNIFICANT_PROBLEMS  SIGNIFICANT_PROBLEM_BURDEN
+Cross-concept / dose / inflammatory / interaction:
+  SYMPTOM_BURDEN  PACK_YEARS_MAX  CIGS_PER_DAY_MAX  NLR  PLR  *_CLUSTER_COUNT/_ANY
+  CONSULT_TOTAL/_RECENCY_MONTHS/_ACCEL/_RECENT_RATE  INT_* (smoking×age/copd/haemoptysis, clubbing×…)
 
-The two entry points are merged into the feature matrix on ``patient_guid`` by the
-orchestrator. All of it always runs (no enable/disable flags).
+Fill: count/flag/rate -> 0 when absent (genuine 0); value/level/recency -> NaN (median-imputed
+downstream, never fake-0). `enrich(matrix, df)` merges everything (except xpoll) onto the matrix.
 """
 import os
 import numpy as np
@@ -63,9 +71,7 @@ CUMULATIVE_WINDOWS = [6, 12, 24, 60]   # cumulative "last-N months" windows (fro
 
 DECAY_TAU_MONTHS = 12.0
 # Time bins measured from the DATA CUTOFF (= start of available data), so band 0 is the freshest
-# events for EVERY horizon. (Previously hardcoded 12-18/18-30/30-54 = the 12mo gap, which left the
-# 1mo horizon's fresh 1-12mo events in no bin -> accel ignored them. Fixed: the dynamics functions
-# re-reference _mb to its own min before binning.)
+# events for EVERY horizon. 
 BIN_RECENT = (0.0, 6.0)
 BIN_MID = (6.0, 18.0)
 BIN_OLD = (18.0, 42.0)
