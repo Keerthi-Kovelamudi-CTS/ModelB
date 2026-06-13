@@ -34,7 +34,6 @@ from sklearn.ensemble import (
     VotingClassifier
 )
 from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
 
 # Class Imbalance Handling
 from imblearn.over_sampling import SMOTE, ADASYN
@@ -475,10 +474,10 @@ class LungCancerPredictor:
             'AdaBoost': AdaBoostClassifier(
                 n_estimators=100, learning_rate=0.5, random_state=RANDOM_STATE
             ),
-            'Naive Bayes': GaussianNB(),
         }
-        # KNN + MLP removed: they support neither class_weight nor sample_weight (can't be
-        # cost-weighted for imbalance) and consistently lose to the weighted tree learners.
+        # KNN, MLP, Naive Bayes removed: KNN/MLP support neither class_weight nor sample_weight
+        # (can't be cost-weighted); Naive Bayes is the far-weakest learner (internal AUROC ~0.75 vs
+        # ~0.94 for the boosters) because its feature-independence assumption is broken here.
         
         # Add XGBoost if available
         if XGBOOST_AVAILABLE:
@@ -534,7 +533,7 @@ class LungCancerPredictor:
                 # AdaBoost and NaiveBayes have no class-weight param but DO accept
                 # sample_weight in .fit() -> pass a 'balanced' weight so the minority
                 # (cancer) class is penalized too.
-                if name in ('Gradient Boosting', 'AdaBoost', 'Naive Bayes'):
+                if name in ('Gradient Boosting', 'AdaBoost'):
                     from sklearn.utils.class_weight import compute_sample_weight
                     _sw = compute_sample_weight('balanced', y_train_use)
                     model.fit(X_train_use, y_train_use, sample_weight=_sw)
