@@ -21,7 +21,7 @@ Aggregate / dose / interaction:
   INT_SMOKING_x_AGE, INT_SMOKING_x_COPD, INT_AGE_x_HAEMOPTYSIS
 
 The two entry points are merged into the feature matrix on ``patient_guid`` by the
-orchestrator (gated by env FE_ENHANCED, default on).
+orchestrator. All of it always runs (no enable/disable flags).
 """
 import os
 import numpy as np
@@ -57,8 +57,7 @@ SIGNIFICANT_VALUE = 'significant problem'
 # Patient-relative time bands (V2-parity). Windows count back from EACH PATIENT'S most-recent
 # event (gap-agnostic, inference-safe — we don't know when a patient presents, so anchor on their
 # last record and go back). Same bands for every horizon. Generalizes V1's single _LAST_NM window
-# to multiple disjoint bands. Gated by env FE_BANDS (default '0' = OFF, preserves the production
-# matrix); set FE_BANDS=1 to add them. FE_BAND_ANCHOR=cohort_anchor uses months-before-anchor instead.
+# to multiple disjoint bands. ALWAYS computed (no flag). Final band is an open-ended catch-all.
 BANDS_RELATIVE = [(0, 6), (6, 18), (18, 36), (36, 72), (72, 999)]   # final = open-ended catch-all
 CUMULATIVE_WINDOWS = [6, 12, 24, 60]   # cumulative "last-N months" windows (from start of data)
 
@@ -552,11 +551,8 @@ def add_interactions(mat):
 
 
 def enrich(matrix, df):
-    """Merge all enhanced features into the feature matrix. Returns the enriched matrix.
-    No-op-safe: if env FE_ENHANCED == '0', returns the matrix unchanged."""
-    if os.environ.get('FE_ENHANCED', '1') == '0':
-        print('[enhanced_features] FE_ENHANCED=0 -> skipping enhanced features.')
-        return matrix
+    """Merge all enhanced features (incl. per-concept time bands + cumulative windows) into the
+    feature matrix. Everything here ALWAYS runs - there are no enable/disable flags."""
     n0 = matrix.shape[1]
     dyn = compute_symptom_dynamics(df)
     dose = compute_smoking_dose(df)
@@ -571,18 +567,17 @@ def enrich(matrix, df):
     matrix = matrix.merge(labs, on='patient_guid', how='left')
     matrix = matrix.merge(clusters, on='patient_guid', how='left')
     matrix = matrix.merge(consults, on='patient_guid', how='left')
-    if os.environ.get('FE_BANDS', '0') == '1':   # patient-relative per-concept time bands (opt-in)
-        rel = os.environ.get('FE_BAND_ANCHOR', 'patient_last') == 'patient_last'
-        bands = compute_band_features(df, relative=rel)
-        matrix = matrix.merge(bands, on='patient_guid', how='left')
-        cumul = compute_cumulative_features(df, relative=rel)        # cumulative last-N windows
-        matrix = matrix.merge(cumul, on='patient_guid', how='left')
-        fill0 = [c for c in matrix.columns
-                 if '_count_w' in c or '_present_w' in c or '_count_last' in c]
-        matrix[fill0] = matrix[fill0].fillna(0)
-        print(f'[enhanced_features] FE_BANDS=1 -> added {bands.shape[1] - 1} band + '
-              f'{cumul.shape[1] - 1} cumulative per-concept cols '
-              f'(anchor={os.environ.get("FE_BAND_ANCHOR", "patient_last")}).')
+    # Per-concept time bands + cumulative windows (ALWAYS on). Patient-relative: windows count back
+    # from each patient's most-recent event (gap-agnostic, inference-safe; same windows every horizon).
+    bands = compute_band_features(df, relative=True)
+    matrix = matrix.merge(bands, on='patient_guid', how='left')
+    cumul = compute_cumulative_features(df, relative=True)
+    matrix = matrix.merge(cumul, on='patient_guid', how='left')
+    band_fill0 = [c for c in matrix.columns
+                  if '_count_w' in c or '_present_w' in c or '_count_last' in c]
+    matrix[band_fill0] = matrix[band_fill0].fillna(0)
+    print(f'[enhanced_features] added {bands.shape[1] - 1} band + '
+          f'{cumul.shape[1] - 1} cumulative per-concept cols (anchor=patient_last).')
     if prob.shape[1] > 1:                       # has feature cols beyond patient_guid
         matrix = matrix.merge(prob, on='patient_guid', how='left')
     matrix = add_interactions(matrix)

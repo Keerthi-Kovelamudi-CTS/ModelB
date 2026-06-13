@@ -65,7 +65,7 @@ GAP=12 NC_RATIO=1 python run_lookback_experiment.py 5yr    # just one window (re
 
 The cohort events are turned into a one-row-per-patient matrix by
 `transform_features.extract_lung_risk_factors` (per-concept occurrence + value trends, **lifetime**),
-then enriched by `enhanced_features.enrich` (env `FE_ENHANCED=1`, default on). Per clinical concept:
+then enriched by `enhanced_features.enrich` (always runs — no flags). Per clinical concept:
 
 - **Occurrence dynamics** — count, recency, decay (recency-weighted, all history), `recent_ratio`,
   **acceleration**, frequency, intervals, first/second-half frequency, `is_worsening`.
@@ -75,15 +75,15 @@ then enriched by `enhanced_features.enrich` (env `FE_ENHANCED=1`, default on). P
 - **Cross-concept** — NLR/PLR, symptom/comorbid clusters, consultation dynamics, problem-list
   (active/significant) flags, smoking dose, interaction terms.
 
-**Time windows (opt-in, `FE_BANDS=1`):** per-concept **disjoint bands** `[0–6,6–18,18–36,36–72,72–999]mo`
+**Time windows (always computed):** per-concept **disjoint bands** `[0–6,6–18,18–36,36–72,72–999]mo`
 + **cumulative** `last-6/12/24/60mo`, each with count/present (+ value mean/latest/slope for lab
 concepts). Both give count/value-per-window views *alongside* the lifetime features.
 
 **No trends are truncated.** All trends/intervals/slopes use the **full lifetime**; the bands/
 `recent_ratio`/`accel` are additional *windowed views*, not limits. All windowed/recency features
-**start at month 0 = the start of available data** (the cohort SQL already applies the gap cutoff;
-`FE_BAND_ANCHOR=patient_last` (default) counts back from each patient's most-recent event, gap-agnostic
-and inference-safe; `cohort_anchor` counts from the cohort cutoff). Same windows for every horizon.
+**start at month 0 = the start of available data** (the cohort SQL already applies the gap cutoff).
+Windows count back from each patient's most-recent event (gap-agnostic, inference-safe), so they're
+the same for every horizon.
 
 ---
 
