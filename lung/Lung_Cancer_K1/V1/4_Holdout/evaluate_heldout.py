@@ -39,6 +39,7 @@ WINDOW = os.environ.get("WINDOW", "5yr")
 CALIB_FRAC = float(os.environ.get("CALIB_FRAC", "0.30"))
 L = {"5yr": 5, "10yr": 10, "20yr": 20, "lifetime": 100}[WINDOW]
 
+sys.path.insert(0, ROOT)                       # V1 root (for run_lookback_experiment)
 sys.path.insert(0, os.path.join(ROOT, "2_FE"))
 sys.path.insert(0, os.path.join(ROOT, "3_Modeling"))
 import run_lookback_experiment as rl          # build_matrix, full_patient_frame, rp (export), GCS
