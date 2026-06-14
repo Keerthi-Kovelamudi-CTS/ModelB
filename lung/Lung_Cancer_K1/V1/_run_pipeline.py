@@ -1,5 +1,5 @@
 """
-Lung B+C - shared pipeline driver: cohort SQL -> events -> feature matrix -> model.
+Lung Cancer - shared pipeline driver: cohort SQL -> events -> feature matrix -> model.
 
 Flow per config (window x ratio):
   FE   : 2_FE/SQL/{window}_{ratio}.sql  --(BigQuery)-->  events

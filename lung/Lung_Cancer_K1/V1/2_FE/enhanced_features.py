@@ -1,5 +1,5 @@
 """
-Enhanced per-patient FE for the Lung B+C model.
+Enhanced per-patient FE for the Lung Cancer model.
 
 Adds features beyond the base FE (transform_features). EVERYTHING here always runs (no flags) and
 is computed PER PATIENT — each feature depends only on that patient's own history, so it is
