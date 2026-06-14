@@ -75,7 +75,8 @@ care_record_problem AS (
     patient_guid,
     source_practice_code,
     problem_status_description,
-    significance_description
+    significance_description,
+    comment
   FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.CareRecord_Problem`
   QUALIFY ROW_NUMBER() OVER (
     PARTITION BY patient_guid, source_practice_code, observation_guid ORDER BY SOURCE_DATE DESC
@@ -99,7 +100,8 @@ medical_history AS (
     dc.snomed_c_t_description_id,
     dc.source_practice_code                      AS dc_source_practice_code,
     prob.problem_status_description              AS problem_status_description,
-    prob.significance_description                AS significance_description
+    prob.significance_description                AS significance_description,
+    prob.comment                                 AS problem_comment
   FROM `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.CareRecord_Observation` AS co
   LEFT JOIN diagnostic_codes AS dc
     ON SAFE_CAST(co.code_id AS INT64) = SAFE_CAST(dc.code_id AS INT64)
@@ -351,6 +353,7 @@ observation_events_raw AS (
     CAST(mh.value AS STRING)                                  AS value,
     CAST(mh.problem_status_description AS STRING)             AS problem_status_description,
     CAST(mh.significance_description AS STRING)               AS significance_description,
+    CAST(mh.problem_comment AS STRING)                       AS problem_comment,
     CAST(NULL AS INT64)                                       AS med_code_id,
     CAST(NULL AS STRING)                                      AS drug_term,
     CAST(NULL AS INT64)                                       AS duration
@@ -419,6 +422,7 @@ medication_events_raw AS (
     CAST(NULL AS STRING)                                      AS value,
     CAST(NULL AS STRING)                                      AS problem_status_description,
     CAST(NULL AS STRING)                                      AS significance_description,
+    CAST(NULL AS STRING)                                      AS problem_comment,
     fm.code_id                                                AS med_code_id,
     fm.drug_term,
     fm.duration
