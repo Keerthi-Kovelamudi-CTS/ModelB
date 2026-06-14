@@ -102,9 +102,10 @@ def run_model(feat_path, out_dir, window, ratio):
        .split_data(test_size=0.10, calib_size=0.10)       # 80/10/10 train / calib-val / internal-test
        .handle_imbalance(method="none")                   # scale_pos_weight (no SMOTE)
        .select_features(method=feat_method, threshold=0.99)
-       .train_and_evaluate(use_resampled=False)
-       .hyperparameter_tuning()
-       .create_ensemble()
+       .train_and_evaluate(use_resampled=False))
+    if os.environ.get("TUNE", "1") != "0":                # Optuna 100-trial tuning; set TUNE=0 to skip
+        p.hyperparameter_tuning()                         # (slow; ~noise-level gain, often discarded by the ensemble)
+    (p.create_ensemble()
        .calibrate(method="isotonic", by_age_band=True)
        .final_evaluation()
        .plot_results(save_path=os.path.join(out_dir, f"results_{tag}.png"))

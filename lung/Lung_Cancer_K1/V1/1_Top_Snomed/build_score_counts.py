@@ -33,10 +33,35 @@ Run (on a VM with BigQuery access, e.g. lungenv) - both horizons in one go:
 """
 import os
 import re
+import numpy as np
 from google.cloud import bigquery
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HORIZONS = ["12mo", "1mo"]      # always build BOTH horizons in one run
+
+
+def _clean_guid(series):
+    """Match 2_FE's clean_patient_guid_series EXACTLY (strip triple-quote / brace chars + whitespace)
+    so the train split here aligns to the model's split, which operates on cleaned guids."""
+    return (series.astype(str).str.replace('"""', '', regex=False)
+            .str.replace('{', '', regex=False).str.replace('}', '', regex=False).str.strip())
+
+
+def _train_guids(ev):
+    """The 80% TRAIN patient guids the MODEL trains on (CLEANED guids). Code selection (counts + ML
+    importance) must use TRAIN ONLY — otherwise the internal 10% test leaks into WHICH codes get picked
+    (a code chosen because it separates cancer/non-cancer on the very patients we later test on).
+    Replicates the model's split_data(test_size=0.10, calib_size=0.10): seed 42, stratified on
+    cancer_class, on the patient set SORTED by CLEANED guid (the same canonical order the model splits
+    on — full_patient_frame is cleaned-guid-sorted), so the model's internal 10% test is exactly the
+    complement of this train set. The held-out 500/50k is already excluded from the cohort SQL at source."""
+    from sklearn.model_selection import train_test_split
+    pat = (ev.assign(_cg=_clean_guid(ev["patient_guid"]))[["_cg", "cancer_class"]]
+             .drop_duplicates("_cg").sort_values("_cg").reset_index(drop=True))
+    y = pat["cancer_class"].to_numpy(); idx = np.arange(len(pat))
+    tr, _te = train_test_split(idx, test_size=0.10, random_state=42, stratify=y)
+    tr, _ca = train_test_split(tr, test_size=0.10 / 0.90, random_state=42, stratify=y[tr])
+    return set(pat["_cg"].to_numpy()[tr].tolist())
 
 # (cancer_class, event_type, output filename, code column, term column, output code-column name)
 COUNT_SPEC = [
@@ -72,6 +97,13 @@ def load_events(horizon):
     print(f"  pulled {len(ev):,} events | {ev.patient_guid.nunique():,} patients "
           f"({ev[ev.cancer_class == 1].patient_guid.nunique():,} cancer / "
           f"{ev[ev.cancer_class == 0].patient_guid.nunique():,} non-cancer)")
+    # LEAKAGE FIX: restrict scoring to the model's 80% TRAIN split, so the codelist is selected
+    # WITHOUT the internal 10% test (and the held-out, already excluded at source).
+    tg = _train_guids(ev)
+    ev = ev[_clean_guid(ev["patient_guid"]).isin(tg)].copy()
+    print(f"  TRAIN-only (leak-safe) scoring: {len(tg):,} train patients "
+          f"({ev[ev.cancer_class == 1].patient_guid.nunique():,} cancer / "
+          f"{ev[ev.cancer_class == 0].patient_guid.nunique():,} non-cancer); internal test + held-out excluded")
     return ev
 
 

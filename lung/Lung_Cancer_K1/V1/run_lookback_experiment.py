@@ -80,7 +80,10 @@ def full_patient_frame(events_df):
     f = events_df.drop_duplicates("patient_guid").copy()
     f["patient_guid"] = fe.clean_patient_guid_series(f["patient_guid"])
     keep = ["patient_guid"] + [c for c in ID_COLS if c in f.columns]
-    return f[keep].drop_duplicates("patient_guid").reset_index(drop=True)
+    # SORT by cleaned patient_guid -> deterministic, reproducible row order so the model's positional
+    # seed-42 split matches Step-1's (build_score_counts._train_guids), i.e. the internal 10% test is
+    # exactly the complement of the TRAIN set used to select the codelist (no code-selection leakage).
+    return f[keep].drop_duplicates("patient_guid").sort_values("patient_guid").reset_index(drop=True)
 
 
 def _internal_train_guids(full_frame):

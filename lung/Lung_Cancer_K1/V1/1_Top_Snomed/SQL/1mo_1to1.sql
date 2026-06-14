@@ -48,7 +48,7 @@ WITH params AS (
     DATE '2025-01-01' AS longterm_mh_end,     --2026-01-01
     DATE '2010-01-01' AS anchor_window_start, --2010-01-01        -- inclusive lower bound for anchor dates
     DATE '2025-01-01' AS anchor_window_end,   --2026-01-01        -- exclusive upper bound for anchor dates
-    5               AS years_before,  -- 20
+    5               AS years_before,  -- 5yr scoring window (matches the model's 5yr feature window)
     1                 AS months_before,  -- 12
     0                 AS min_obs_events_per_patient,  --10    minimum observation events required per patient
     0                 AS min_med_events_per_patient,  --      minimum medication events required per patient
