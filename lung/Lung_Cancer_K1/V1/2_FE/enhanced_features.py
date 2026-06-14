@@ -675,6 +675,66 @@ def add_interactions(mat):
     return mat
 
 
+# Free-text problem-list COMMENT keywords. LEAKAGE-SAFE: prodromal lung symptoms + risk factors
+# ONLY — deliberately NO cancer/carcinoma/malignant/tumour/mass/nodule/lesion/2WW/referral/"suspected"
+# terms (those reference the outcome / referral pathway and would leak the label).
+COMMENT_KEYWORDS = {
+    'HAEMOPTYSIS':     ['haemopt', 'hemopt', 'coughing up blood', 'blood in sputum', 'bloody sputum'],
+    'COUGH':           ['cough'],
+    'DYSPNOEA':        ['dyspnoea', 'dyspnea', 'breathless', 'shortness of breath', 'short of breath', ' sob'],
+    'CHEST_PAIN':      ['chest pain'],
+    'WEIGHT_LOSS':     ['weight loss', 'wt loss', 'losing weight', 'lost weight'],
+    'FATIGUE':         ['fatigue', 'lethargy', 'malaise'],
+    'HOARSENESS':      ['hoarse', 'voice change'],
+    'CHEST_INFECTION': ['chest infection', 'pneumonia', 'lrti'],
+    'APPETITE':        ['poor appetite', 'loss of appetite', 'anorexia'],
+    'NIGHT_SWEATS':    ['night sweat'],
+    'CLUBBING':        ['clubbing'],
+    'SMOKING':         ['smok', 'cigarette', 'tobacco', 'pack year'],
+}
+
+
+def compute_comment_features(df, ref_col='days_before_anchor'):
+    """Per-patient features from the free-text problem-list comment (`problem_comment`). Presence +
+    volume + per-keyword counts of PRODROMAL symptom / risk-factor terms (see COMMENT_KEYWORDS) +
+    distinct-symptom-group burden + recency of any red-flag comment. Leakage-safe (no outcome /
+    referral terms). Per-patient, inference-safe. No-op (just patient_guid) if problem_comment absent.
+    Counts/flags -> 0 when absent (build_matrix); recency (`_MONTHS`) -> NaN (median-imputed)."""
+    import re
+    patients = df['patient_guid_CLEAN'].dropna().unique()
+    out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
+    if 'problem_comment' not in df.columns:
+        return out.reset_index()                       # column absent in this extract -> skip cleanly
+    work = df.copy()
+    if 'event_type_lower' in work.columns:
+        work = work[work['event_type_lower'] == 'observation']
+    work['_c'] = work['problem_comment'].astype(str).str.strip().str.lower()
+    work = work[~work['_c'].isin(['', 'nan', 'none', 'null'])]
+    if work.empty:
+        return out.reset_index()
+    gk = 'patient_guid_CLEAN'
+    out['NUM_PROBLEM_COMMENTS'] = work.groupby(gk).size()
+    out['HAS_PROBLEM_COMMENT'] = (out['NUM_PROBLEM_COMMENTS'] > 0).astype(float)   # only patients WITH a comment
+    grp_present = pd.DataFrame(index=out.index)
+    redflag = pd.Series(False, index=work.index)
+    for grp, terms in COMMENT_KEYWORDS.items():
+        pat = '|'.join(re.escape(t) for t in terms)
+        m = work['_c'].str.contains(pat, regex=True, na=False)
+        redflag = redflag | m
+        cnt = work[m].groupby(gk).size()
+        out[f'COMMENT_KW_{grp}'] = cnt
+        grp_present[grp] = (cnt > 0)
+    out['COMMENT_SYMPTOM_GROUPS'] = grp_present.reindex(out.index).fillna(False).astype(int).sum(axis=1)
+    rf = work[redflag]
+    if not rf.empty and ref_col in work.columns:
+        out['COMMENT_REDFLAG_RECENCY_MONTHS'] = (
+            pd.to_numeric(rf[ref_col], errors='coerce').groupby(rf[gk]).min() / 30.44)
+    out = out.reset_index()
+    cnt_cols = [c for c in out.columns if c != 'patient_guid' and not c.endswith('_MONTHS')]
+    out[cnt_cols] = out[cnt_cols].fillna(0)            # genuine-absence counts/flags -> 0
+    return out
+
+
 def enrich(matrix, df):
     """Merge all enhanced features (incl. per-concept time bands + cumulative windows) into the
     feature matrix. Everything here ALWAYS runs - there are no enable/disable flags."""
@@ -682,6 +742,7 @@ def enrich(matrix, df):
     dyn = compute_symptom_dynamics(df)
     dose = compute_smoking_dose(df)
     prob = compute_problem_flags(df)
+    comments = compute_comment_features(df)      # free-text problem-list comment keyword/presence FE
     ratios = compute_blood_ratios(df)
     labs = compute_lab_stats(df)                 # Phase 1: fuller per-analyte level stats
     clusters = compute_clusters(df)              # Phase 1: symptom/comorbid cluster co-occurrence
@@ -708,6 +769,8 @@ def enrich(matrix, df):
           f'{cumul.shape[1] - 1} cumulative per-concept cols (anchor=patient_last).')
     if prob.shape[1] > 1:                       # has feature cols beyond patient_guid
         matrix = matrix.merge(prob, on='patient_guid', how='left')
+    if comments.shape[1] > 1:                   # free-text comment keyword/presence features
+        matrix = matrix.merge(comments, on='patient_guid', how='left')
     matrix = add_interactions(matrix)
     # Count/flag/rate cols -> 0 when a patient is absent from a sub-table. VALUE-level cols
     # (*_LATEST/_VMAX/_VMIN/_VMEAN, *_RECENCY_MONTHS) stay NaN -> median-imputed downstream.
