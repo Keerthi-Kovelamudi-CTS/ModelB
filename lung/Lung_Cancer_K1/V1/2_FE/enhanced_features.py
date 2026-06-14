@@ -735,6 +735,31 @@ def compute_comment_features(df, ref_col='days_before_anchor'):
     return out
 
 
+def compute_global_features(df):
+    """Per-patient cross-code VOLUME / record-complexity aggregates (ported from V2 global_features):
+    TOTAL_EVENTS, DISTINCT_{OBS,MED}_CODES, DISTINCT_CODES, NUM_MEASURED_EVENTS. These capture overall
+    healthcare-utilization intensity / record richness — strong, leakage-safe (a patient's own totals)
+    signals that the per-concept features don't. Counts -> 0 when absent (no events)."""
+    gk = 'patient_guid_CLEAN'
+    patients = df[gk].dropna().unique()
+    out = pd.DataFrame(index=pd.Index(patients, name='patient_guid'))
+    w = df.copy()
+    et = (w['event_type'].astype(str).str.lower() if 'event_type' in w.columns
+          else pd.Series('observation', index=w.index))
+    w['_snomed'] = pd.to_numeric(w.get('snomed_c_t_concept_id'), errors='coerce')
+    w['_med'] = pd.to_numeric(w.get('med_code_id'), errors='coerce')
+    w['_val'] = pd.to_numeric(w.get('value'), errors='coerce')
+    out['TOTAL_EVENTS'] = w.groupby(gk).size()
+    out['DISTINCT_OBS_CODES'] = w[et.eq('observation')].dropna(subset=['_snomed']).groupby(gk)['_snomed'].nunique()
+    out['DISTINCT_MED_CODES'] = w[et.eq('medication')].dropna(subset=['_med']).groupby(gk)['_med'].nunique()
+    out['NUM_MEASURED_EVENTS'] = w[w['_val'].notna()].groupby(gk).size()
+    out = out.reset_index()
+    for c in ['TOTAL_EVENTS', 'DISTINCT_OBS_CODES', 'DISTINCT_MED_CODES', 'NUM_MEASURED_EVENTS']:
+        out[c] = out[c].fillna(0)
+    out['DISTINCT_CODES'] = out['DISTINCT_OBS_CODES'] + out['DISTINCT_MED_CODES']
+    return out
+
+
 def enrich(matrix, df):
     """Merge all enhanced features (incl. per-concept time bands + cumulative windows) into the
     feature matrix. Everything here ALWAYS runs - there are no enable/disable flags."""
@@ -743,6 +768,7 @@ def enrich(matrix, df):
     dose = compute_smoking_dose(df)
     prob = compute_problem_flags(df)
     comments = compute_comment_features(df)      # free-text problem-list comment keyword/presence FE
+    glob = compute_global_features(df)           # per-patient cross-code volume / utilization aggregates
     ratios = compute_blood_ratios(df)
     labs = compute_lab_stats(df)                 # Phase 1: fuller per-analyte level stats
     clusters = compute_clusters(df)              # Phase 1: symptom/comorbid cluster co-occurrence
@@ -771,6 +797,8 @@ def enrich(matrix, df):
         matrix = matrix.merge(prob, on='patient_guid', how='left')
     if comments.shape[1] > 1:                   # free-text comment keyword/presence features
         matrix = matrix.merge(comments, on='patient_guid', how='left')
+    if glob.shape[1] > 1:                       # per-patient cross-code volume aggregates
+        matrix = matrix.merge(glob, on='patient_guid', how='left')
     matrix = add_interactions(matrix)
     # Count/flag/rate cols -> 0 when a patient is absent from a sub-table. VALUE-level cols
     # (*_LATEST/_VMAX/_VMIN/_VMEAN, *_RECENCY_MONTHS) stay NaN -> median-imputed downstream.

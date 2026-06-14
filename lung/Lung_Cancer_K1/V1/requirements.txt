@@ -1,4 +1,5 @@
-# Lung_Cancer_K1 pipeline dependencies  (Python 3.9+)
+# Lung_Cancer_K1 pipeline dependencies
+# Python 3.10  (the VM env `lungenv` runs Python 3.10; 3.9+ should work, 3.10 is what it's run/tested on)
 
 # core
 pandas
@@ -14,6 +15,10 @@ xgboost
 lightgbm
 catboost
 optuna                    # hyperparameter search (5-fold CV tuning)
+
+# explainability (optional - predict_unseen.py uses it for SHAP feature attributions;
+# code degrades gracefully if absent, so only needed if you want SHAP explanations)
+shap
 
 # plots (metrics / results figures)
 matplotlib
