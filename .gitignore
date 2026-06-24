@@ -105,3 +105,10 @@ _all_cancer_results_*/
 # folders. Same risk class as codelists/ — clinical mappings, no PHI.
 !**/1_Top_Snomeds/
 !**/1_Top_Snomeds/**
+
+# ─── Re-include curated SNOMED→category maps ──────────────────────────
+# Hand-curated SNOMED→category mapping spreadsheets used by the lung
+# freetext_merge 160-category pipeline. Same risk class as codelists/
+# — clinical mappings, no PHI.
+!**/categorized_list_top160cat/
+!**/categorized_list_top160cat/**

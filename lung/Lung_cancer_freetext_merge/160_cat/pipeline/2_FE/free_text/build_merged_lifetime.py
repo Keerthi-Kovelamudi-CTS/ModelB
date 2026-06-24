@@ -36,7 +36,7 @@ dba=pd.to_numeric(tx["days_before_anchor"],errors="coerce")
 rows["days_before_anchor"]=dba.astype("int64").values
 rows["snomed_c_t_concept_id"]=pd.to_numeric(tx["snomed_id"],errors="coerce").astype("Int64").astype("int64").values
 rows["term"]=tx["concept_name"].astype(str).values
-rows["event_type"]="text"
+rows["event_type"]="observation"  # FIX: was "text" -> FE used med_code_id (null) -> events dropped
 rows["problem_status_description"]=tx["assertion_status"].astype(str).values
 rows["significance_description"]=""
 rows["problem_comment"]=tx["source_raw_term"].astype(str).values
