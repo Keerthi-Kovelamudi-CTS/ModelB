@@ -184,6 +184,7 @@ BLOOD_RATIOS_FE = _b("BLOOD_RATIOS_FE", False)  # OFF — feature-importance aud
 # thrombocytosis (platelets >400 ×10^9/L; p95=408) and raised CRP (>10 mg/L; med 4). Hb/anaemia omitted —
 # Hb values are absent/mixed-unit here (anaemia is already captured as the "Anaemia" diagnosis category).
 CLINICAL_FE        = _b("CLINICAL_FE", False)  # OFF — feature-importance audit (12mo, 2026-06-20): DEAD (0.32% total imp, 3 feats). Set =1 to re-test.
+ASSERTION_FE       = _b("ASSERTION_FE", False)  # free-text: base families count POSITIVE findings only; emit absent/family counts + duration/frequency stats per category. NOTE: only produces features if the merge emits ft_assertion/ft_dur/ft_freq (build_textstruct-style) — 160's build_merged_lifetime does NOT yet.
 THROMBOCYTOSIS_PLT = _f("THROMBOCYTOSIS_PLT", 400.0)   # platelet count upper-normal (×10^9/L; cohort p95=408)
 RAISED_CRP_MGL     = _f("RAISED_CRP_MGL", 10.0)        # CRP upper-normal (mg/L; cohort med=4)
 HYPOALBUMINEMIA_GL = _f("HYPOALBUMINEMIA_GL", 35.0)    # serum albumin lower-normal (g/L; cohort p5=35) — cachexia/cancer marker,

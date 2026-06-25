@@ -220,6 +220,12 @@ def load_events(h, sql_path=None, years=None):
                     == ACTIVE_STATUS_VALUE).astype(int)
     ev["sig"] = (ev["significance_description"].astype(str).str.strip().str.lower()
                  == SIGNIFICANT_VALUE).astype(int)
+    # Free-text enrichment fields (ASSERTION_FE). Absent in a baseline cache -> safe defaults
+    # (every event treated as a positive finding; no duration/frequency) so baseline FE is unchanged.
+    ev["ft_assertion"] = (ev["ft_assertion"].astype(str).str.strip().str.lower()
+                          if "ft_assertion" in ev.columns else "")
+    ev["ft_dur"]  = pd.to_numeric(ev["ft_dur"],  errors="coerce") if "ft_dur"  in ev.columns else np.nan
+    ev["ft_freq"] = pd.to_numeric(ev["ft_freq"], errors="coerce") if "ft_freq" in ev.columns else np.nan
     ev = ev.dropna(subset=["code"])
     ev["code"] = ev["code"].astype("int64")
     print(f"  {len(ev):,} events | {ev.patient_guid.nunique():,} patients")
@@ -309,9 +315,8 @@ def occurrence_features(ev, moc_zero=None):
     # first-half vs second-half frequency + is_worsening (within the trend window)
     first_half_freq, second_half_freq, is_worsening = _halves(tev, keys)
 
-    present = (count > 0).astype(int)
-    parts = {
-        "count": count, "present": present, "recency_months": recency,
+    parts = {                                            # 'present' dropped: ==(count>0), corr 0.95 — trees derive it from count
+        "count": count, "recency_months": recency,
         "decay_intensity": decay, "accel": accel, "recent_ratio": recent_ratio,
         "freq_per_year": freq_per_year, "timespan_years": timespan_years,
         "interval_median": interval_median, "interval_min": interval_min,
@@ -451,8 +456,7 @@ def band_features(ev, bands, value_codes, relative, pmin=None, moc_zero=None):
         m = (ev["_mo"] >= lo) & (ev["_mo"] < hi)
         tag = f"w{int(lo)}_{int(hi)}"
         cnt = ev[m].groupby(keys).size()
-        blocks.append(_wide(cnt, f"count_{tag}"))
-        blocks.append(_wide((cnt > 0).astype(int), f"present_{tag}"))
+        blocks.append(_wide(cnt, f"count_{tag}"))        # 'present_{tag}' dropped: ==(count_{tag}>0), redundant with count
         vsub = ev[m & is_val].dropna(subset=["value_num"])
         if not vsub.empty:
             blocks.append(_wide(vsub.groupby(keys)["value_num"].mean(), f"val_mean_{tag}"))
@@ -892,6 +896,33 @@ def _zero_fill_genuine_absence(mat):
     return mat
 
 
+def assertion_attribute_features(ev):
+    """Free-text assertion-split + attribute features, per (patient, category). ASSERTION_FE only.
+    `ev` is the all-assertion mapped stream (`code` = category). Negated ("absent") and family-history
+    mentions are kept SEPARATE from the positive-finding burden (which the base families already count),
+    so "no cough" never inflates the "cough" count. Duration/frequency stats are over positive findings."""
+    keys = ["patient_guid", "code"]
+    a = ev["ft_assertion"].astype(str)
+    out = []
+    for tag, mask in (("absent", a.eq("absent")), ("fhx", a.eq("family"))):
+        sub = ev[mask]
+        if len(sub):
+            cnt = sub.groupby(keys).size()
+            out.append(_wide(cnt, f"{tag}_count"))
+            out.append(_wide((cnt > 0).astype(int), f"{tag}_present"))
+    pos = ev[a.isin(["present", "historical", ""])]
+    for col, sfx in (("ft_dur", "dur"), ("ft_freq", "freq")):
+        sub = pos.dropna(subset=[col])
+        if len(sub):
+            g = sub.groupby(keys)[col]
+            out.append(_wide(g.mean(), f"{sfx}_mean"))
+            out.append(_wide(g.max(),  f"{sfx}_max"))
+            out.append(_wide(g.last(), f"{sfx}_last"))
+    if not out:
+        return pd.DataFrame(index=pd.Index([], name="patient_guid"))
+    return pd.concat(out, axis=1)
+
+
 def build(h, sql_path=None, fit_split=True, years=None, patient_ids=None, shared=None, schema_only=False, keep_features=None):
     """Build the per-code feature matrix for horizon `h`.
     `sql_path`  : override the default 0_SQL cohort (e.g. 4_Heldout's held-out SQL).
@@ -918,6 +949,7 @@ def build(h, sql_path=None, fit_split=True, years=None, patient_ids=None, shared
             if _dropped:
                 print(f"[{h}] LEAKAGE guard: dropped {_dropped:,} event(s) for {len(_leaky)} post-dx surgical code(s)")
 
+        ev_assert = None   # ASSERTION_FE: the all-assertion mapped stream (absent/family), set in the categorized branch
         if categorized:
             # --- CATEGORIZED FE: the grouping key flips from per-SNOMED `code` to a hand-assigned CATEGORY.
             # Read the SNOMED->category map for THIS (horizon, lookback), restrict the stream to mapped codes,
@@ -956,6 +988,16 @@ def build(h, sql_path=None, fit_split=True, years=None, patient_ids=None, shared
             if _cov < 50:
                 print(f"[{h}]   [QC warn] only {_cov:.1f}% of coded events are categorized — much signal falls "
                       f"outside the map (consider widening the category map)")
+            # ASSERTION_FE: the base per-category families count POSITIVE findings only. Absent/family events
+            # (free-text) are held aside in ev_assert for assertion_attribute_features so "no cough" never
+            # inflates the "cough" count. Structured events (ft_assertion="") are positive by default.
+            if getattr(C, "ASSERTION_FE", False):
+                _a = ev["ft_assertion"]
+                _pos = _a.isin(["present", "historical", ""]) | _a.isna()
+                ev_assert = ev.copy()
+                ev = ev[_pos].copy()
+                print(f"[{h}] ASSERTION_FE: base families on {len(ev):,} positive findings; "
+                      f"{int((~_pos).sum()):,} absent/family events routed to the assertion block")
             ev_remaining = ev                            # all category events get the generic per-category families
             # STRICT category-only FE: every feature derives from the user's categorized_codelist (categories)
             # + category-structure + patient demographics. No hardcoded clinical codes, no concept tier.
@@ -1164,16 +1206,20 @@ def build(h, sql_path=None, fit_split=True, years=None, patient_ids=None, shared
                                      f"run the training FE (or a fit_split pass) for {h} {yrs}yr first to persist them.")
         if schema_only:
             return {"ev_full": ev_full, "ev_remaining": ev_remaining, "roster": _roster,
-                    "value_codes": value_codes, "vb_codes": vb_codes, "top_cats": top_cats, "moc_zero": moc_zero}
+                    "value_codes": value_codes, "vb_codes": vb_codes, "top_cats": top_cats, "moc_zero": moc_zero,
+                    "ev_assert": ev_assert}
     else:
         ev_full = shared["ev_full"]; ev_remaining = shared["ev_remaining"]; _roster = shared["roster"]
         value_codes = shared["value_codes"]; vb_codes = shared["vb_codes"]
         top_cats = shared["top_cats"]; moc_zero = shared["moc_zero"]; tr_guids = set(); ev = ev_remaining
+        ev_assert = shared.get("ev_assert")
         if patient_ids is not None:
             _pid = set(patient_ids)
             ev_full = ev_full[ev_full["patient_guid"].isin(_pid)]
             ev_remaining = ev_remaining[ev_remaining["patient_guid"].isin(_pid)]
             _roster = _roster[_roster["patient_guid"].isin(_pid)]
+            if ev_assert is not None:
+                ev_assert = ev_assert[ev_assert["patient_guid"].isin(_pid)]
         patients = _roster.set_index("patient_guid")[["cancer_class"]]
     fam = dict(FEATURE_FAMILIES)
     if categorized:
@@ -1264,6 +1310,9 @@ def build(h, sql_path=None, fit_split=True, years=None, patient_ids=None, shared
     if getattr(C, "CLINICAL_FE", False):   # Arm C: absolute clinical-threshold flags on RAW values (full stream -> parity-safe)
         print(f"[{h}]   clinical-threshold flags (thrombocytosis / raised-CRP, raw values) ...")
         blocks.append(clinical_concept_features(ev_full))
+    if getattr(C, "ASSERTION_FE", False) and ev_assert is not None:   # free-text assertion-split + duration/frequency per category
+        print(f"[{h}]   assertion-split (absent/family counts) + duration/frequency stats per category ...")
+        blocks.append(assertion_attribute_features(ev_assert))
 
     mat = patients.join(blocks, how="left")
     # DENSITY-PROXY prune (mirror of AGE_PROXY_FE): drop the pure utilisation-volume / lifetime-breadth
