@@ -19,5 +19,8 @@ catboost_info/
 run_metadata_*.json
 *.log
 
+# Exceptions: small free-text concept lookup parquet (~1.8 MB, hand-built mapping table)
+!2_FE/free_text/concept_event_table_snomed_mapped_bb_6_19_26.parquet
+
 # local env
 .env
