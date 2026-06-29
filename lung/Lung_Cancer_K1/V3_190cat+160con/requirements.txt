@@ -1,0 +1,29 @@
+# V3 lung pipeline — runtime deps. PINNED with conservative major-version ceilings anchored at the
+# validated env (allows patch/minor updates, blocks breaking majors) for reproducible production builds.
+# data / compute
+numpy>=1.26,<2              # numpy 2.0 has breaking ABI/API changes — keep <2 with the validated 1.26.x
+scipy>=1.11,<2
+pandas>=2.0,<3              # the FE engine for this CATEGORIZED variant (pandas-only) + BigQuery -> DataFrame
+pyarrow>=14                 # parquet I/O (intermediate matrices) + arrow interchange
+# BigQuery
+google-cloud-bigquery>=3,<4
+google-cloud-bigquery-storage>=2,<3  # Arrow Storage API: 5-10x faster .to_dataframe() on the one-time lifetime pull
+db-dtypes>=1,<2                   # required for client.query(...).to_dataframe()
+# modeling
+scikit-learn>=1.3,<2
+xgboost>=2,<3               # PINNED: shap 0.49.x TreeExplainer can't parse xgboost 3.x's vector base_score ('[4.85E-1]') -> ValueError; 2.x serializes it scalar so exact tree SHAP works
+lightgbm>=4,<5
+catboost>=1.2,<2
+optuna>=3,<5                      # hyperparameter tuning (only when TUNE=1)
+# plots + explainability
+matplotlib>=3.7,<4
+seaborn>=0.12,<1
+shap>=0.44,<0.50            # PINNED with xgboost<3: the exact-tree base_score reasoning depends on shap 0.49.x; a new major could shift it
+# io / config
+joblib>=1.3,<2
+python-dotenv>=1,<2               # OPTIONAL: config.py loads a .env if present (config defaults suffice without it)
+gcsfs>=2023.1,<2027                       # read/write splits + artifacts on gs:// (GCS)
+# OPTIONAL (not required for the default run): imbalanced-learn — imported LAZILY in handle_imbalance()
+# only when method != "none" (SMOTE/ADASYN/undersample/smote_tomek). The default is "none"
+# (cost-weighting), so the pipeline runs without it. Install only if you opt into resampling:
+#   pip install imbalanced-learn

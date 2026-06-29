@@ -1,0 +1,701 @@
+Code,Name,Category
+809081000000100,Abdominal aortic aneurysm screen ultrasound scan normal,AAA test
+698356002,Abdominal aortic aneurysm screening,AAA test
+698461004,Aortic aneurysm screening normal,AAA test
+49436004,Atrial fibrillation,AF
+248411000000105,Atrial fibrillation annual review,AF
+42208511000001101,Digoxin 125microgram tablets,AF medication
+939531000000109,Provision of written information about acute kidney injury,AKI
+48167000,Amnesia,Amnesia
+194828000,Angina pectoris,Angina
+267039000,Ankle swelling,Ankle swelling
+19842211000001107,Rivaroxaban 20mg tablets,Anticoagulant
+22193007,Degenerative joint disease of hand,Arthritis
+201819000,Generalised osteoarthritis,Arthritis
+396275006,Osteoarthritis,Arthritis
+239872002,Osteoarthritis of hip,Arthritis
+195967001,Asthma,Asthma
+370207001,Asthma limits walking up hills or stairs,Asthma
+222311000001102,Ventolin 100micrograms/dose Evohaler (GlaxoSmithKline UK Ltd),Asthma medication - bronchodilator
+39113611000001102,Salbutamol 100micrograms/dose inhaler CFC free,Asthma medication - bronchodilator
+32921008,Audiogram,Audio test
+170823005,B12 injections - at surgery,B12 deficiency - medication
+39731911000001109,Amlodipine 10mg tablets,Blood pressure medication
+39732011000001102,Amlodipine 5mg tablets,Blood pressure medication
+1091811000000102,Diastolic arterial pressure,Blood pressure test
+72313002,Systolic arterial pressure,Blood pressure test
+315613000,Target diastolic blood pressure,Blood pressure test
+315612005,Target systolic blood pressure,Blood pressure test
+1000821000000103,Serum albumin level,Blood test - albumin
+1000621000000104,Serum alkaline phosphatase level,Blood test - ALP
+1018251000000107,Serum alanine aminotransferase level,Blood test - ALT
+1022571000000108,Basophil count,Blood test - Basophil count
+1012131000000106,Brain natriuretic peptide level,Blood test - BNP
+1016291000000103,Plasma B natriuretic peptide level,Blood test - BNP
+998431000000108,Serum N-terminal pro B-type natriuretic peptide concentration,Blood test - BNP
+935051000000108,Serum adjusted calcium concentration,Blood test - calcium
+1000691000000101,Serum calcium level,Blood test - calcium
+1026701000000107,Carcinoembryonic antigen level,Blood test - CEA
+1005671000000105,Serum cholesterol level,Blood test - cholesterol
+1015681000000109,Serum cholesterol/high density lipoprotein ratio,Blood test - cholesterol
+1005681000000107,Serum high density lipoprotein cholesterol level,Blood test - cholesterol
+1.02219E+15,Serum low density lipoprotein cholesterol level,Blood test - cholesterol
+1006191000000106,Serum non high density lipoprotein cholesterol level,Blood test - cholesterol
+1005691000000109,Serum triglycerides level,Blood test - cholesterol
+968191000000100,Estimated creatinine clearance (Cockcroft-Gault formula),Blood test - Creatine clearance
+1000731000000107,Serum creatinine level,Blood test - creatinine
+999651000000107,Plasma C reactive protein,Blood test - CRP
+1.00137E+15,Serum CRP (C reactive protein) level,Blood test - CRP
+1020291000000106,GFR (glomerular filtration rate) calculated by abbreviated Modification of Diet in Renal Disease Study Group calculation,Blood test - eGFR
+1022561000000101,Eosinophil count,Blood test - Eosinophil count
+1022511000000103,Erythrocyte sedimentation rate,Blood test - ESR
+1022441000000101,FBC - full blood count,Blood test - FBC
+1022291000000105,Haematocrit,Blood test - haematocrit
+999791000000106,Haemoglobin A1c level - International Federation of Clinical Chemistry and Laboratory Medicine standardised,Blood test - HbA1c
+1022431000000105,Haemoglobin estimation,Blood test - HbA1c
+271026005,Haemoglobin level estimation,Blood test - HbA1c
+997011000000105,IgG,Blood test - IgG
+997021000000104,IgM,Blood test - IgM
+1000921000000108,Serum lactate dehydrogenase level,Blood test - LDH
+997531000000108,Liver function test,Blood test - LFTs
+1.02265E+15,Platelet count,Blood test - platelets
+1000651000000109,Serum potassium level,Blood test - Potassium
+1022181000000102,Serum protein electrophoresis,Blood test - protein electrophoresis
+396152005,Raised PSA,Blood test - PSA
+1000381000000105,Serum PSA (prostate specific antigen) level,Blood test - PSA
+1022451000000103,Red blood cell count,Blood test - RBC
+1017381000000106,Plasma sodium level,Blood test - sodium
+1000661000000107,Serum sodium level,Blood test - sodium
+1022791000000101,Serum TSH (thyroid stimulating hormone) level,Blood test - TSH
+1000951000000103,Serum urea level,Blood test - urea
+1022541000000102,Total white cell count,Blood test - WCC
+241686001,DEXA - Dual energy X-ray photon absorptiometry,Bone density test
+266569009,Benign prostatic hypertrophy,BPH
+42209111000001103,Doxazosin 1mg tablets,BPH and blood pressure medication
+42209211000001109,Doxazosin 2mg tablets,BPH and blood pressure medication
+42036011000001106,Finasteride 5mg tablets,BPH medication
+38754011000001109,Tamsulosin 400microgram modified-release capsules,BPH medication
+161940008,Breathless - mild exertion,Breathlessness
+161939006,Breathless - moderate exertion,Breathlessness
+267036007,Dyspnoea,Breathlessness
+60845006,Dyspnoea on exertion,Breathlessness
+391120009,MRC Breathlessness Scale: grade 1,Breathlessness
+391123006,MRC Breathlessness Scale: grade 2,Breathlessness
+391124000,MRC Breathlessness Scale: grade 3,Breathlessness
+391125004,MRC Breathlessness Scale: grade 4,Breathlessness
+492611000000102,Cardiovascular disease high risk review,Cardiovascular disease
+170601008,CHD monitoring,Cardiovascular disease
+315614006,Coronary heart disease annual review,Cardiovascular disease
+401250009,Coronary heart disease monitoring 1st letter,Cardiovascular disease
+401251008,Coronary heart disease monitoring 2nd letter,Cardiovascular disease
+161640005,High risk of heart disease,Cardiovascular disease
+704180000,"Hypertension, abnormal renal/liver function, stroke, bleeding history or predisposition, labile international normalized ratio, elderly over 65, and drugs/alcohol concomitantly bleeding risk score",Cardiovascular disease
+63491006,Intermittent claudication,Cardiovascular disease
+400047006,Peripheral vascular disease,Cardiovascular disease
+1084161000000107,Right brachial Doppler pressure,Cardiovascular disease
+1026401000000103,Serum pro-BNP peptide level,Cardiovascular disease
+414545008,Ischaemic heart disease,Cardiovascular disease
+1087531000000101,Left dorsalis pedis Doppler pressure,Cardiovascular disease test
+1084151000000109,Left posterior tibial Doppler pressure,Cardiovascular disease test
+1087541000000105,Right dorsalis pedis Doppler pressure,Cardiovascular disease test
+1084141000000106,Right posterior tibial Doppler pressure,Cardiovascular disease test
+315054007,ACE inhibitor prophylaxis,Cardiovascular medication
+1364181000000104,Direct-acting oral anticoagulant dose unchanged,Cardiovascular medication - anticoagulant
+134392003,Warfarin not indicated,Cardiovascular medication - anticoagulant - not
+42206511000001102,Apixaban 5mg tablets,Cardiovascular medication - anticoagulation
+413560001,Anticoagulation not indicated,Cardiovascular medication - anticoagulation - not
+39689111000001106,Clopidogrel 75mg tablets,Cardiovascular medication - antiplatelet
+407571005,Clopidogrel not indicated,Cardiovascular medication - antiplatelet - not
+266716006,Salicylate prophylaxis,Cardiovascular medication - aspirin
+315052006,Beta blocker prophylaxis,Cardiovascular medication - beta blocker
+4.23711E+16,Bisoprolol 1.25mg tablets,Cardiovascular medication - beta blocker
+315214003,Beta blocker not indicated,Cardiovascular medication - beta blocker - not
+4.22947E+16,Furosemide 20mg tablets,Cardiovascular medication - Diuretic
+42294811000001108,Furosemide 40mg tablets,Cardiovascular medication - Diuretic
+134390006,Angiotensin converting enzyme inhibitor not indicated,Cardiovascular medication - not
+407572003,Angiotensin II receptor antagonist not indicated,Cardiovascular medication - not
+41988111000001106,Quinine bisulfate 300mg tablets,Cardiovascular medication - quinine
+4.19882E+16,Quinine sulfate 200mg tablets,Cardiovascular medication - quinine
+41988311000001108,Quinine sulfate 300mg tablets,Cardiovascular medication - quinine
+39695411000001103,Atorvastatin 10mg tablets,Cardiovascular medication - statin
+4896711000001108,Simvador 40mg tablets (Dexcel-Pharma Ltd),Cardiovascular medication - statin
+42381911000001105,Simvastatin 10mg tablets,Cardiovascular medication - statin
+315053001,Statin prophylaxis,Cardiovascular medication - statin
+134396000,Statin declined,Cardiovascular medication - statin - not
+413174003,Statin not tolerated,Cardiovascular medication - statin - not
+913681000000100,Admission avoidance care plan agreed,Care plan
+797151000000101,Admission avoidance care started,Care plan
+844571000000103,Agreeing on health professional actions in care plan,Care plan
+844591000000104,Agreeing on patient actions in care plan,Care plan
+842271000000109,Assessment of Year of Care goal importance,Care plan
+170549007,Chronic disease monitoring,Care plan
+185679000,Chronic disease monitoring - first recall,Care plan
+185680002,Chronic disease monitoring - second recall,Care plan
+445142003,Counselling about disease,Care plan
+736161001,Education for care planning,Care plan
+225294001,Identifying goals,Care plan
+182838006,Medication changed,Care plan
+961861000000105,Medication review done by medicines management technician,Care plan
+719478008,Medication review done by nurse,Care plan
+88551000000109,Medication review with patient,Care plan
+305599003,Under care of podiatrist,Care plan
+523051000000100,Personal care plan completed,Care plan
+913721000000107,Review of admission avoidance care plan,Care plan
+425268008,Review of care plan,Care plan
+523031000000107,Review of personal care plan,Care plan
+414041006,Does not have a carer,Carer - not
+161676006,[V]Pseudophakia,Cataract
+95722004,Bilateral cataracts,Cataract
+193570009,Cataract,Cataract
+84149000,Phacoemulsification of lens,Cataract
+401306006,Phacoemulsification of lens and insertion of prosthetic replacement,Cataract
+449710006,Cellulitis of lower limb,Cellulitis
+387800004,Cervical spondylosis,Arthritis
+285381006,Acute infective exacerbation of chronic obstructive airways disease,Chest infection
+195742007,Acute lower respiratory tract infection,Chest infection
+195647007,Acute respiratory infections,Chest infection
+54398005,Acute upper respiratory infection,Chest infection
+396285007,Bronchopneumonia,Chest infection
+54150009,Upper respiratory infection,Chest infection
+102589003,Atypical chest pain,Chest pain
+29857009,Chest pain,Chest pain
+2237002,Pleuritic pain,Chest pain
+168731009,Standard chest X-ray,Chest x-ray
+249171000000102,Chronic kidney disease annual review,CKD
+433144002,Chronic kidney disease stage 3,CKD
+700378005,Chronic kidney disease stage 3A,CKD
+1085151000000108,6CIT (Six Item Cognitive Impairment Test) total score,Cognitive test
+869561000000101,Assessment for dementia,Cognitive test
+68496003,Colonic polyp,Colon polyp
+313172000,Colonoscopy abnormal,Colonoscopy
+174184006,Diagnostic colonoscopy,Colonoscopy
+909721000006104,[RFC] Reason for care : Emphysema,COPD
+170628003,Airways obstruction irreversible,COPD
+32398004,Bronchitis,COPD
+68328006,Centrilobular emphysema,COPD
+13645005,Chronic obstructive pulmonary disease,COPD
+760621000000103,Chronic obstructive pulmonary disease 6 monthly review,COPD
+394703002,Chronic obstructive pulmonary disease annual review,COPD
+446660005,Chronic obstructive pulmonary disease assessment test score,COPD
+736283006,Chronic obstructive pulmonary disease clinical management plan,COPD
+198411000000102,Chronic obstructive pulmonary disease does not disturb sleep,COPD
+394702007,Chronic obstructive pulmonary disease follow-up,COPD
+716241000000106,Chronic obstructive pulmonary disease monitoring first letter,COPD
+717021000000106,Chronic obstructive pulmonary disease monitoring second letter,COPD
+716901000000101,Chronic obstructive pulmonary disease monitoring telephone invitation,COPD
+717521000000104,Chronic obstructive pulmonary disease monitoring third letter,COPD
+716281000000103,Chronic obstructive pulmonary disease monitoring verbal invite,COPD
+371611000000107,Chronic obstructive pulmonary disease patient unsuitable for pulmonary rehabilitation,COPD
+820341000000109,Chronic obstructive pulmonary disease rescue pack not indicated,COPD
+811961000000106,Chronic obstructive pulmonary disease self-management plan agreed,COPD
+810951000000101,Chronic obstructive pulmonary disease self-management plan review,COPD
+1066821000000101,COPD (chronic obstructive pulmonary disease) monitoring SMS (short message service) text message first invitation,COPD
+1066281000000104,COPD (chronic obstructive pulmonary disease) monitoring SMS (short message service) text message invitation,COPD
+939991000006108,COPD medication review,COPD
+390891009,COPD self-management plan given,COPD
+736601004,Demonstration of inhaler technique,COPD
+110011000000107,DNA - Did not attend chronic obstructive pulmonary disease clinic,COPD
+741056003,Education about chronic obstructive pulmonary disease,COPD
+716291000000101,Excepted from COPD quality indicators - informed dissent,COPD
+716311000000100,Excepted from COPD quality indicators - patient unsuitable,COPD
+27567911000001101,Incruse Ellipta 55micrograms/dose dry powder inhaler (GlaxoSmithKline UK Ltd),COPD
+718241000000107,Issue of chronic obstructive pulmonary disease rescue pack,COPD
+313296004,Mild chronic obstructive pulmonary disease,COPD
+313297008,Moderate chronic obstructive pulmonary disease,COPD
+391111000,Negative reversibility test to salbutamol,COPD
+767906009,Post bronchodilator spirometry,COPD
+87433001,Pulmonary emphysema,COPD
+21495411000001107,Seebri Breezhaler 44microgram inhalation powder capsules with device (Novartis Pharmaceuticals UK Ltd),COPD
+3188311000001102,Seretide 500 Accuhaler (GlaxoSmithKline UK Ltd),COPD
+313299006,Severe chronic obstructive pulmonary disease,COPD
+204991000000107,Suspected chronic obstructive pulmonary disease,COPD
+473202005,Optimisation of medication for chronic obstructive pulmonary disease,COPD
+195951007,Acute exacerbation of chronic obstructive airways disease,COPD - worsening
+723245007,Number of chronic obstructive pulmonary disease exacerbations in past year,COPD - worsening
+38893611000001108,Aclidinium bromide 375micrograms/dose dry powder inhaler,COPD medication
+2.8365E+16,Aclidinium bromide 396micrograms/dose / Formoterol 11.8micrograms/dose dry powder inhaler,COPD medication
+9516911000001109,AeroChamber Plus (Trudell Medical UK Ltd),COPD medication
+24644611000001108,Anoro Ellipta 55micrograms/dose / 22micrograms/dose dry powder inhaler (GlaxoSmithKline UK Ltd),COPD medication
+3.35949E+16,Braltus 10microgram inhalation powder capsules with Zonda inhaler (Teva UK Ltd),COPD medication - bronchodilator
+9205211000001104,Easyhaler Salbutamol sulfate 100micrograms/dose dry powder inhaler (Orion Pharma (UK) Ltd),COPD medication - bronchodilator
+3215311000001107,Salamol 100micrograms/dose Easi-Breathe inhaler (Teva UK Ltd),COPD medication - bronchodilator
+106511000001103,Salamol 100micrograms/dose inhaler CFC free (Teva UK Ltd),COPD medication - bronchodilator
+20985511000001101,Eklira 322micrograms/dose Genuair (Covis Pharma GmbH),COPD medication - LAMA
+21496211000001102,Glycopyrronium bromide 55microgram inhalation powder capsules with device,COPD medication - LAMA
+3380011000001106,Spiriva 18microgram inhalation powder capsules (Boehringer Ingelheim Ltd),COPD medication - LAMA
+3378211000001106,Spiriva 18microgram inhalation powder capsules with HandiHaler (Boehringer Ingelheim Ltd),COPD medication - LAMA
+12146911000001103,Spiriva Respimat 2.5micrograms/dose inhalation solution cartridge with device (Boehringer Ingelheim Ltd),COPD medication - LAMA
+37677711000001102,Spiriva Respimat 2.5micrograms/dose inhalation solution refill cartridge (Boehringer Ingelheim Ltd),COPD medication - LAMA
+33596311000001107,Tiotropium bromide 10microgram inhalation powder capsules with device,COPD medication - LAMA
+9478911000001107,Tiotropium bromide 18microgram inhalation powder capsules,COPD medication - LAMA
+9479011000001103,Tiotropium bromide 18microgram inhalation powder capsules with device,COPD medication - LAMA
+12197411000001102,Tiotropium bromide 2.5micrograms/dose solution for inhalation cartridge with device CFC free,COPD medication - LAMA
+2.99713E+16,Spiolto Respimat 2.5micrograms/dose / 2.5micrograms/dose inhalation solution cartridge with device (Boehringer Ingelheim Ltd),COPD medication - LAMA/LABA
+37678011000001103,Spiolto Respimat 2.5micrograms/dose / 2.5micrograms/dose inhalation solution refill cartridge (Boehringer Ingelheim Ltd),COPD medication - LAMA/LABA
+28007211000001102,Ultibro Breezhaler 85microgram/43microgram inhalation powder capsules with device (Novartis Pharmaceuticals UK Ltd),COPD medication - LAMA/LABA
+24645511000001105,Umeclidinium bromide 65micrograms/dose / Vilanterol 22micrograms/dose dry powder inhaler,COPD medication - LAMA/LABA
+27890611000001109,Umeclidinium bromide 65micrograms/dose dry powder inhaler,COPD medication - LAMA/LABA
+28357211000001106,Duaklir 340micrograms/dose / 12micrograms/dose Genuair (Covis Pharma GmbH),COPD medication - mix LAMA/LABA
+25254111000001105,DuoResp Spiromax 160micrograms/dose / 4.5micrograms/dose dry powder inhaler (Teva UK Ltd),COPD medication - mix steroid/LABA
+25254711000001106,DuoResp Spiromax 320micrograms/dose / 9micrograms/dose dry powder inhaler (Teva UK Ltd),COPD medication - mix steroid/LABA
+38897411000001103,Fluticasone propionate 500micrograms/dose / Salmeterol 50micrograms/dose dry powder inhaler,COPD medication - mix steroid/LABA
+1.29064E+16,Fostair 100micrograms/dose / 6micrograms/dose inhaler (Chiesi Ltd),COPD medication - mix steroid/LABA
+34952211000001104,Trelegy Ellipta 92micrograms/dose / 55micrograms/dose / 22micrograms/dose dry powder inhaler (GlaxoSmithKline UK Ltd),COPD medication - mix steroid/LAMA/LABA
+3.46816E+16,Trimbow 87micrograms/dose / 5micrograms/dose / 9micrograms/dose inhaler (Chiesi Ltd),COPD medication - mix steroid/LAMA/LABA
+39993311000001105,Trimbow NEXThaler 88micrograms/dose / 5micrograms/dose / 9micrograms/dose dry powder inhaler (Chiesi Ltd),COPD medication - mix steroid/LAMA/LABA
+42292811000001102,Carbocisteine 375mg capsules,COPD medication - mucolytic
+39417611000001109,Carbocisteine 750mg capsules,COPD medication - mucolytic
+42292311000001106,Beclometasone 100micrograms/dose inhaler,COPD medication - steroid
+35908811000001103,Beclometasone 250micrograms/dose inhaler,COPD medication - steroid
+4378111000001103,Budesonide 400micrograms/dose / Formoterol 12micrograms/dose dry powder inhaler,COPD medication - steroid
+170662003,Using inhaled steroids - high dose,COPD medication - steroid
+161929000,Chesty cough,Cough
+68154008,Chronic cough,Cough
+49727002,Cough,Cough
+11833005,Dry cough,Cough
+161923004,Productive cough -clear sputum,Cough
+284523002,Persistent cough,Cough
+161924005,Productive cough -green sputum,Cough
+168302007,Sputum sent for C/S,Cough test
+40801911000001102,"COVID-19 Vaccine Spikevax 0 (Zero)/O (Omicron) 0.1mg/ml dispersion for injection multidose vials (Moderna, Inc)",Covid vaccine
+77477000,Computerised tomograph scan,CT scan
+169069000,CT of chest,CT scan
+176185005,Diagnostic cystoscopy using flexible instrument,Cystoscopy
+285055002,Hearing aid worn,Deafness
+162340000,Hearing difficulty,Deafness
+698464007,At risk of dementia,Dementia
+880571000000101,Dementia screening declined,Dementia test
+756511000000104,General practitioner assessment of cognition patient score,Dementia test
+247602005,Memory function normal,Dementia test
+1034921000000105,Memory: months of year in reverse unsuccessful,Dementia test
+415276009,Referral to memory clinic,Dementia test
+888901000000102,Initial memory assessment,Dementia test
+888881000000100,Initial memory assessment declined,Dementia test
+35914111000001102,Bupropion 150mg modified-release tablets,Depression medication
+200971000000100,Depression screening using questions,Depression test
+394668001,10g monofilament sensation L foot abnormal,Diabetes
+394667006,10g monofilament sensation R foot abnormal,Diabetes
+887861000000105,Diabetes Year of Care annual review,Diabetes
+170774007,Diabetes: practice programme,Diabetes
+170763003,Diabetic - good control,Diabetes
+754081000000109,Diabetic dietary review,Diabetes
+367011000000100,Diabetic foot screen,Diabetes
+170745003,Diabetic on diet only,Diabetes
+768291000000101,Frequency of blood glucose self-monitoring,Diabetes
+385805005,Health education - diabetes,Diabetes
+313340009,Seen in diabetic eye clinic,Diabetes
+397881000,Diverticular disease,Diverticular disease
+307496006,Diverticulitis,Diverticular disease
+473327001,C/O erectile dysfunction,Erectile dysfunction
+473328006,Does not complain of erectile dysfunction,Erectile dysfunction - not
+42089311000001109,Sildenafil 100mg tablets,Erectile dysfunction medication
+42090111000001101,Tadalafil 20mg tablets,Erectile dysfunction medication
+281018007,Ex-cigarette smoker,Ex-smoker
+266924008,Ex-heavy cigarette smoker (20-39/day),Ex-smoker
+266923002,Ex-moderate cigarette smoker (10-19/day),Ex-smoker
+8517006,Ex-smoker,Ex-smoker
+266925009,Ex-very heavy cigarette smoker (40+/day),Ex-smoker
+395177003,Smoking free weeks,Ex-smoker
+160617001,Stopped smoking,Ex-smoker
+755541000000109,Brief intervention for physical activity declined,Exercise advice
+3151011000001104,Viscotears 2mg/g liquid gel (Bausch & Lomb UK Ltd),Eye drops
+298345007,Does not fall,Falls risk - not
+40085311000001103,"Adjuvanted quadrivalent influenza vaccine (surface antigen, inactivated) suspension for injection 0.5ml pre-filled syringes (Seqirus UK Ltd)",Flu vaccine
+43207711000001104,"Adjuvanted trivalent influenza vaccine (surface antigen, inactivated) suspension for injection 0.5ml pre-filled syringes (Seqirus UK Ltd)",Flu vaccine
+37514711000001105,Fluad vaccine suspension for injection 0.5ml pre-filled syringes (Seqirus UK Ltd),Flu vaccine
+39716611000001104,"Influenza vaccine (surface antigen, inactivated) suspension for injection 0.5ml pre-filled syringes",Flu vaccine
+763264000,CSHA (Canadian Study of Health and Aging) Clinical Frailty Scale score,Fragile score
+788921000000108,At risk of emergency hospital admission,Frailty
+925861000000102,Severe frailty,Frailty
+713636003,Frailty Index score,Frailty test
+225582009,Wears glasses,Glasses
+4053411000001103,Lansoprazole 15mg orodispersible tablets,GORD medication - PPI
+39731311000001108,Alendronic acid 70mg tablets,Gout medication
+42101011000001101,Colchicine 500microgram tablets,Gout medication
+66857006,Haemoptysis,Haemoptysis
+57054005,Acute myocardial infarction,Heart attack
+84114007,Heart failure,Heart failure
+78564009,Pulse rate,Heart rate test
+34945008,Angiogram,Heart test
+33367005,Coronary angiography,Heart test
+169241000,Echocardiogram abnormal,Heart test
+390791001,Referral for echocardiography,Heart test
+60573004,Aortic valve stenosis,Heart valve narrowing
+396232000,Inguinal hernia,Hernia
+59621000,Essential hypertension,High blood pressure
+401118009,Hypertension annual review,High blood pressure
+275944005,Hypertension monitoring,High blood pressure
+270440008,Hypertension monitoring check done,High blood pressure
+401048005,Hypertension six month review,High blood pressure
+42206611000001103,Bendroflumethiazide 2.5mg tablets,High blood pressure - medication
+1300561000000107,High risk category for developing complication from COVID-19 infection,High risk covid
+408740001,Plain X-ray hip joint,Hip x-ray
+161036002,Housing adequate,Housing good
+390862006,Good compliance with inhaler,Inhaler technique
+170625000,Inhaler technique - good,Inhaler technique
+170626004,Inhaler technique - poor,Inhaler technique
+170614009,Inhaler technique observed,Inhaler technique
+702606006,Review of inhaler technique using inhaler checking device,Inhaler technique
+385855002,Education for inhaled therapy,Inhaler training
+449917004,Cramp in lower limb,Leg cramp
+89627008,Hyponatraemia,Low sodium
+305371000000101,Pulmonary rehabilitation declined,Lung disease
+913981000000106,Pulmonary rehabilitation offered,Lung disease
+391130000,Pulmonary rehabilitation programme completed,Lung disease
+51615001,Fibrosis of lung,Lung fibrosis
+310520004,Expected FEV1,Lung function
+310521000,Expected FVC,Lung function
+401013003,FEV1 after bronchodilation,Lung function
+401012008,FEV1 before bronchodilation,Lung function
+314472003,FEV1/FVC < 70% of predicted,Lung function
+314473008,FEV1/FVC > 70% of predicted,Lung function
+313222007,FEV1/FVC percent,Lung function
+251944000,FEV1/FVC ratio,Lung function
+407603001,FEV1/FVC ratio after bronchodilator,Lung function
+407602006,FEV1/FVC ratio before bronchodilator,Lung function
+251943006,FEV1/VC percent,Lung function
+165041004,Forced expired volume,Lung function
+59328004,Forced expired volume in 1 second,Lung function
+50834005,Forced vital capacity,Lung function
+407561008,FVC after bronchodilation,Lung function
+407576000,FVC/Expected FVC percent,Lung function
+1709401000006107,Percent predicted FEF 25-75,Lung function
+313223002,Percent predicted FEV1,Lung function
+134432000,Recorded/predicted peak expiratory flow rate ratio,Lung function
+415261001,Referral for spirometry,Lung function
+24461000000105,Referral to pulmonary rehabilitation,Lung function
+306275005,Referral to respiratory physician,Lung function
+699092002,Spirometric lung age,Lung function
+127783003,Spirometry,Lung function
+285671000000103,Spirometry contraindicated,Lung function
+415570002,Spirometry not indicated,Lung function
+314980001,Spirometry reversibility negative,Lung function
+314981002,Spirometry reversibility positive,Lung function
+171255006,Spirometry screening,Lung function
+167990003,Sputum appears normal,Lung function
+711382009,Unable to perform spirometry,Lung function
+268379003,Vital capacity,Lung function
+271507006,Peak flow rate after bronchodilation,Lung function
+866661000000106,Peripheral blood oxygen saturation on room air at rest,Lung function
+165034005,Respiratory flow rate measured,Lung function
+165044007,FEV1/FVC ratio abnormal,Lung function 
+427359005,Solitary nodule of lung,Lung nodule
+315045009,Advice about taking aspirin,Medication - aspirin
+42291811000001106,Aspirin 75mg dispersible tablets,Medication - aspirin
+42291911000001101,Aspirin 75mg gastro-resistant tablets,Medication - aspirin
+134394002,Aspirin not indicated,Medication - aspirin - not
+312451002,Aspirin prophylaxis contra-indicated,Medication - aspirin - not
+870661000000100,Polypharmacy medication review,Medication review
+160680006,Fully mobile,Mobile
+312894000,Osteopenia,Osteoporosis
+64859006,Osteoporosis,Osteoporosis
+806241000006100,Grade 1 - no limitation of ordinary activity,Physical activity assessment - good
+1746341000006104,GPPAQ hours in last week spent walking - none,Physical activity assessment - poor
+1.74636E+15,GPPAQ hrs in last week spent walking-1hr but less than 3hrs,Physical activity assessment - poor
+1746351000006102,GPPAQ hrs in last week spent walking-some but less than 1hr,Physical activity assessment - poor
+1746251000006108,GPPAQ hrs last wk spent physical exercise-some but less than 1hr,Physical activity assessment - poor
+1746501000006106,GPPAQ usual level of walking pace - slow,Physical activity assessment - poor
+1746171000006105,GPPAQ not in employment,Physical activity assessment - unemployed
+160629005,Exercise physically impossible,Poor exercise performance
+366121000000108,General practice physical activity questionnaire physical activity index: inactive,Poor exercise performance
+713481000000109,Audit administration,Practice audit work
+9414007,[D]Prediabetes,Pre-diabetes
+201101007,Actinic keratosis,Precancerous skin lesion
+11441004,Prostatism,Prostate symptoms
+308436005,Refer to district nurse,Referral
+105493001,Retired,Retired
+35646002,Excision of lesion of skin,Skin lesion removal
+185789006,Attends stop smoking monitoring,Smoker
+59978006,Cigar smoker,Smoker
+230056004,Cigarette consumption,Smoker
+401201003,Cigarette pack-years,Smoker
+65568007,Cigarette smoker,Smoker
+77176002,Current smoker,Smoker
+755741000000100,Declined consent for follow-up by smoking cessation team,Smoker
+160605003,Heavy cigarette smoker (20-39 cigs/day),Smoker
+394872000,Ready to stop smoking,Smoker
+395700008,Referral to smoking cessation advisor,Smoker
+871641000000105,Referral to smoking cessation service declined,Smoker
+401068004,Seen by smoking cessation advisor,Smoker
+225323000,Smoking cessation advice,Smoker
+527151000000107,Smoking cessation advice declined,Smoker
+822591000000108,Smoking cessation drug therapy declined,Smoker
+390900001,Smoking cessation milestones,Smoker
+1087441000000106,Smoking cessation programme declined,Smoker
+783011000000105,Stop smoking service opportunity signposted,Smoker
+394871007,Thinking about stopping smoking,Smoker
+365981007,Tobacco smoking behaviour - finding,Smoker
+228487000,Total time smoked,Smoker
+160616005,Trying to give up smoking,Smoker
+160619003,Rolls own cigarettes,Smoker
+39707011000001106,Varenicline 1mg tablets,Smoking cessation medication
+10984311000001109,Varenicline 1mg tablets and Varenicline 500microgram tablets,Smoking cessation medication
+39707111000001107,Varenicline 500microgram tablets,Smoking cessation medication
+10981211000001103,Champix 0.5mg/1mg 2 week treatment initiation pack (Pfizer Ltd),Smoking medication
+32473711000001107,Champix 0.5mg/1mg 4 week treatment initiation pack (Pfizer Ltd),Smoking medication
+10971611000001105,Champix 1mg tablets (Pfizer Ltd),Smoking medication
+3208111000001103,Nicorette 10mg Inhalator (McNeil Products Ltd),Smoking medication
+3229811000001105,Nicorette 10mg patches (McNeil Products Ltd),Smoking medication
+19475011000001104,Nicorette 15mg Inhalator (McNeil Products Ltd),Smoking medication
+3230611000001103,Nicorette 15mg patches (McNeil Products Ltd),Smoking medication
+21145711000001106,Nicorette Cools 2mg lozenges (McNeil Products Ltd),Smoking medication
+15244511000001104,Nicorette Icy White 4mg medicated chewing gum (McNeil Products Ltd),Smoking medication
+1.49791E+16,Nicorette invisi 10mg/16hours patches (McNeil Products Ltd),Smoking medication
+14979311000001103,Nicorette invisi 15mg/16hours patches (McNeil Products Ltd),Smoking medication
+14979811000001107,Nicorette invisi 25mg/16hours patches (McNeil Products Ltd),Smoking medication
+2833611000001105,Nicorette Microtab 2mg sublingual tablets (McNeil Products Ltd),Smoking medication
+18561411000001109,Nicorette QuickMist 1mg/dose mouthspray freshmint (McNeil Products Ltd),Smoking medication
+3501611000001105,Nicotine 10mg inhalation cartridges with device,Smoking medication
+36563611000001102,Nicotine 10mg/16hours transdermal patches,Smoking medication
+36565311000001108,Nicotine 14mg/24hours transdermal patches,Smoking medication
+19482211000001108,Nicotine 15mg inhalation cartridges with device,Smoking medication
+36566311000001103,Nicotine 15mg/16hours transdermal patches,Smoking medication
+18562311000001106,Nicotine 1mg/dose oromucosal spray sugar free,Smoking medication
+39022411000001107,Nicotine 21mg/24hours transdermal patches,Smoking medication
+14984411000001104,Nicotine 25mg/16hours transdermal patches,Smoking medication
+3505611000001108,Nicotine 2mg lozenges sugar free,Smoking medication
+3559511000001102,Nicotine 2mg medicated chewing gum sugar free,Smoking medication
+39111611000001101,Nicotine 2mg sublingual tablets sugar free,Smoking medication
+3559611000001103,Nicotine 4mg medicated chewing gum sugar free,Smoking medication
+39112811000001106,Nicotine 5mg/16hours transdermal patches,Smoking medication
+38897211000001102,Nicotine 7mg/24hours transdermal patches,Smoking medication
+3559411000001101,Nicotine bitartrate 1mg lozenges sugar free,Smoking medication
+313396002,Nicotine replacement therapy,Smoking medication
+3.21601E+15,Nicotinell TTS 10 patches (Dr Reddy's Laboratories (UK) Ltd),Smoking medication
+768511000001107,Nicotinell TTS 20 patches (Dr Reddy's Laboratories (UK) Ltd),Smoking medication
+662311000001108,Nicotinell TTS 30 patches (Dr Reddy's Laboratories (UK) Ltd),Smoking medication
+352511000001102,NiQuitin 14mg patches (Omega Pharma Ltd),Smoking medication
+330811000001104,NiQuitin 21mg patches (Omega Pharma Ltd),Smoking medication
+3214111000001106,NiQuitin 7mg patches (Omega Pharma Ltd),Smoking medication
+441911000001109,NiQuitin Clear 14mg patches (Omega Pharma Ltd),Smoking medication
+88711000001104,NiQuitin Clear 21mg patches (Omega Pharma Ltd),Smoking medication
+16250511000001109,NiQuitin Minis Mint 1.5mg lozenges (Omega Pharma Ltd),Smoking medication
+16237311000001103,NiQuitin Minis Mint 4mg lozenges (Omega Pharma Ltd),Smoking medication
+390902009,Smoking status at 4 weeks,Smoking status
+401188002,Does not use spacer device,Spacer - not
+313149002,Spacer device in use,Spacer used
+995481000000100,"Respiratory microscopy, culture and sensitivities",Sputum test
+185621000000100,Suture removal generated from secondary care done by practice,Stitch removal
+993771000000105,Clostridium difficile toxin level,Stool test - C.diff
+230690007,Cerebrovascular accident,Stroke
+699270006,CVA annual review,Stroke
+266257000,Transient ischaemic attack,Stroke - mini
+196041000000105,Dipyridamole not indicated,Stroke prevention medication
+735259005,"CHA2DS2-VASc (congestive heart failure, hypertension, age 2, diabetes mellitus, stroke 2, vascular disease, age, sex category) stroke risk score",Stroke score
+763008007,"CHADS2 (congestive heart failure, hypertension, age 75 years or older, diabetes mellitus and previous stroke or transient ischaemic attack) score",Stroke score
+829061000000103,Adheres to medication regimen,Takes medication
+182884001,Drug compliance good,Takes medication
+408362004,Drug monitoring up to date,Takes medication
+314849005,Telephone contact by consultant,Type of appointment
+439708006,Home visit,Type of visit
+1023491000000104,Urine albumin:creatinine ratio,Urine test - ACR
+1003301000000109,Urine albumin level,Urine test - albumin
+1010251000000109,Urine microalbumin level,Urine test - albumin
+1015381000000102,Urine Bence Jones protein,Urine test - BJP
+1003271000000106,Urine creatinine level,Urine test - creatinine
+823371000000105,Administration of vaccine under patient specific direction,Vaccine
+895931000000104,Shingles vaccination invitation,Vaccine - shingles
+20113811000001103,Shingles (Herpes Zoster) vaccine (live) powder and solvent for suspension for injection 0.65ml pre-filled syringes,Vaccine - shingles
+183554009,Referred to vascular surgeon,Vascular referral
+446841001,Ankle brachial pressure index,Vascular test
+765172009,Doppler studies,Vascular test
+312369005,Doppler studies normal,Vascular test normal
+162863004,Body mass index index 25-29 - overweight,Weight - overweight
+28049611000001104,Indacaterol 85micrograms/dose / Glycopyrronium bromide 54micrograms/dose inhalation powder capsules with device,COPD medication - mix LAMA/LABA
+129041007,Independent bathing,Physical activity assessment - good
+160724009,"Independent housing, not alone",Physical activity assessment - good
+165245003,Independent walking,Physical activity assessment - good
+129035000,Independent with dressing,Physical activity assessment - good
+408343002,Indication for each drug checked,Care plan
+312342009,Infective pneumonia,Chest infection
+38894511000001107,Ipratropium bromide 20micrograms/dose inhaler CFC free,COPD medication - bronchodilator
+39024311000001107,Isosorbide mononitrate 60mg modified-release tablets,Cardiovascular disease - nitrates
+1084181000000103,Left brachial Doppler pressure,Vascular test
+248480008,Linagliptin 5mg tablets,Leg swelling
+19525211000001103,,Diabetes medication - gliptin
+160725005,Lives alone - help available,Lives alone
+42376811000001102,Losartan 25mg tablets,Blood pressure medication
+386619000,Low salt diet,Low salt diet
+50417007,Lower respiratory tract infection,Chest infection
+239880009,Lumbar spondylosis,Arthritis
+165016006,Lung function testing done,Lung function
+1022581000000105,Lymphocyte count,Blood test - lymphocytes
+270211000001108,Maxitrol eye drops (Novartis Pharmaceuticals UK Ltd),Eye drops
+1022471000000107,MCH - Mean corpuscular haemoglobin,Blood test - MCH
+1022481000000109,MCHC - Mean corpuscular haemoglobin concentration,Blood test - MCHC
+1022491000000106,MCV - Mean corpuscular volume,Blood test - MCV
+197940006,Microscopic haematuria,Haematuria
+925791000000100,Mild frailty,Frailty
+160604004,Moderate cigarette smoker (10-19 cigs/day),Smoker
+925831000000107,Moderate frailty,Frailty
+1022591000000107,Monocyte count,Blood test - monocyte count
+932321000000105,Name of care coordinator,Care plan
+1022551000000104,Neutrophil count,Blood test - neutrophil
+42214811000001109,Nicorandil 10mg tablets,Cardiovascular medication - potassium channel activator
+408553000,No family history of respiratory disease,Family history of respiratory disease - no
+160268005,No FH: Allergy,Family history of allergies - no
+161980004,No oedema present,Oedema - no
+139394000,Nocturia,Nocturia
+161947006,Nocturnal cough / wheeze,Nocturnal cough / wheeze
+394873005,Not interested in stopping smoking,Smoker
+391002003,Number of falls in last year,Falls risk
+163020007,O/E - blood pressure reading,Blood pressure test
+162965007,O/E - coarse crepitations,O/E - coarse crepitations
+394681008,O/E - Left diabetic foot at moderate risk,Diabetes
+414903001,O/E - No right foot deformity,Feet normal
+162780006,O/E - oedema not present,Oedema - no
+394682001,O/E - Right diabetic foot at moderate risk,Diabetes
+274681000006102,O/E - Touch sensation left foot normal,Feet normal
+274701000006104,O/E - touch sensation right foot normal,Feet normal
+395149007,O/E - vibration sense left foot reduced,Sensation in feet abnormal
+163949002,O/E - visual acuity L-eye,Visual acuity examined
+163951003,O/E - visual acuity L-eye =6/6,Visual acuity normal
+163935006,O/E - visual acuity R-eye,Visual acuity examined
+267038008,Oedema,Oedeoma
+163000006,On examination - pulse irregularly irregular,AF
+163101007,On examination - right-leg pulses all present,Feet normal
+818241000000105,On integrated care pathway,Care plan
+904591000006106,Ophthalmology referral,Eye referral
+134186004,Over 75 health check,Care plan
+314481009,Over the counter aspirin therapy,Cardiovascular medication - aspirin
+42038911000001109,Oxybutynin 2.5mg tablets,Urinary incontinence medication
+315609007,Pack years,Smoker
+282825002,Paroxysmal atrial fibrillation,AF
+962851000000103,Patient Activation Measure Level,Care plan
+713644003,Patient Activation Measure score,Care plan
+248591000000100,Patient given advice about suitable footwear,Care plan
+394835006,Patient medication advice,Care plan
+1103691000000102,Patient offered diabetes structured education programme,Diabetes
+407568002,Patient on maximal tolerated lipid lowering therapy,Hypercholesterolaemia
+408363009,Patient understands why taking all medication,Care plan
+359746009,Patient's condition stable,Care plan
+445210000,Percentage of predicted forced vital capacity,Lung function
+447254005,Percentage predicted forced expiratory volume in 1 second after bronchodilation,Lung function
+165791000000107,Phlebotomy generated from secondary care done by practice,Care plan
+933601000000101,Post hospital discharge followed up within 3 days,Care plan
+266714009,Previous treatment continue,Treatment continuing
+23622011000001107,Relvar Ellipta 92micrograms/dose / 22micrograms/dose dry powder inhaler (GlaxoSmithKline UK Ltd),COPD medication - mix steroid/LABA
+443999008,Risk of exposure to communicable disease,Risk of communicable diseases
+305788003,Seen by pharmacist,Pharmacist review
+305665008,Seen by respiratory physician,Respiratory referral
+428489000,Seen in respiratory clinic,Respiratory referral
+201501000000108,Seen in stroke clinic,Stroke referral
+185220009,Seen in urology clinic,Urology referral
+313148005,Seen in vascular clinic,Vascular referal
+10601006,Leg pain,Leg pain
+1084381000000100,Signposting to smoking cessation service,Smoking status
+116566001,Corticosteroid,Medication - corticosteroid
+116602009,Prednisolone,Medication - corticosteroid
+128070006,Chest and lung infection,Chest infection
+128306009,Cataract,Cataract
+129006008,Walking,Walking
+129014002,Doing housework,Doing housework
+13644009,Hypercholesterolaemia,High cholesterol
+14760008,Constipation,Constipation
+15167005,Alcohol abuse,Alcohol misuse
+15188001,Hearing loss,Deafness / hearing loss
+160165004,Farmer,Occupation
+160573003,Alcohol consumption,Alcohol use
+161891005,Back pain,Back pain
+162866007,O/E - wound healing,Injury/wound - unspecified
+16386004,Dry skin,Dry skin
+1672871000006105,GP Surgery,GP visit
+16985007,Fasting,Fasting
+1779681000006107,Date of travel,Date of travel
+182531007,Dressing of wound,Dressing / wound care
+183302000,Active exercise,Exercise
+185361000000102,Medication,Medication
+1882421000006109,1 COPD exacerbation in past year,COPD - exacerbation
+1912002,Fall,Falls
+193462001,Insomnia,Insomnia
+21522001,Abdominal pain,Abdominal pain
+22253000,Pain,Pain (unspecified site)
+226234005,Healthy diet,Diet / nutrition advice
+233604007,Pneumonia,Pneumonia
+248274002,Generally unwell,Generally unwell
+248279007,Frailty,Frailty
+255631004,Antibiotic,Antibiotic - unspecified
+271587009,Stiffness,Stiffness
+271737000,Anaemia,Anaemia
+271739002,Wax in ear,Wax in ear
+275895008,O/E - tenderness,Tenderness
+277908001,Green sputum,Cough
+283682007,Bite - wound,Injury/wound - unspecified
+285385002,General well-being good,General wellbeing
+287045000,Pain in left arm,Arm / hand pain
+28743005,Productive cough,Cough
+29738008,Proteinuria,Proteinuria
+300749002,Ability to perform gardening activities,Physical activity assessment
+300848003,Lump,Lump / swelling
+302866003,Hypoglycaemia,Hypoglycaemia
+30953006,Drinking,Drinking
+30989003,Knee pain,Knee pain
+310252000,Body mass index normal,Weight normal
+310500000,Diet good,Diet / nutrition advice
+33359002,Degenerative change,Degenerative change
+34436003,Haematuria,Haematuria
+363803005,Mobility,Mobility
+363805003,Weight gain (amount),Weight gain
+363983007,Visual acuity,Visual acuity examined
+372567009,Metformin,Antidiabetic - metformin
+372656001,Amitriptyline,Medication - antidepressant
+372912004,HMG-CoA reductase inhibitor (statin),Statin
+373444002,Atorvastatin,Statin
+373492002,Tramadol,Analgesic - opioid
+38341003,Hypertensive disease,Hypertension
+385425000,Improving,Clinical status - improving
+386713009,Redness,Skin - erythema / redness
+386807006,Memory disturbance,Memory disturbance
+386864001,Amlodipine,Medication - calcium channel blocker
+386872004,Ramipril,Medication - ACE inhibitor
+387137007,Omeprazole,Medication - proton pump inhibitor
+391129005,Fruit and vegetable intake,Fruit and vegetable intake
+394774009,Active problem,Active problem
+397803000,Erectile dysfunction,Erectile dysfunction
+398081001,Damp in house,Damp in house
+399208008,Chest x-ray,X-ray - chest
+404640003,Dizziness,Dizziness / vertigo
+40733004,Infectious disease (disorder),Infection
+40917007,Confusion,Confusion
+418633004,Good compliance with medication,Medication adherence
+418799008,Symptom,Symptom (non-specific)
+422587007,Nausea,Nausea / vomiting
+43396009,Haemoglobin A1c measurement,Blood test - HbA1c
+44077006,Numbness,Numbness / paraesthesia
+441456002,Polyp,Polyp
+45326000,Shoulder pain,Shoulder pain
+45710003,Sputum,Cough
+4740000,Shingles,Shingles
+48409008,Respiratory crackles,Respiratory crackles
+48694002,Anxiousness - symptom,Anxiety
+49158009,Emphysema,Emphysema
+49218002,Hip pain,Hip pain
+52685006,Administration of analgesic,Analgesic - other
+52988006,Lesion,Lesion
+55533009,Forgetful,Forgetful
+56018004,Wheezing,Wheeze
+59108006,Injection,Injection (therapeutic)
+6142004,Influenza,Influenza
+62315008,Diarrhoea,Diarrhoea
+63476009,Prostate specific antigen measurement,Blood test - PSA
+65124004,Swelling,Lump / swelling
+65801008,Excision,Skin lesion removal
+67889009,Irrigation,Irrigation
+68130003,Physical activity,Physical activity assessment
+69896004,Rheumatoid arthritis,Rheumatoid arthritis
+714628002,Prediabetes,Prediabetes
+726527001,Weight,Weight
+73211009,Diabetes mellitus,Diabetes mellitus
+74506000,Bereavement,Bereavement
+75367002,Blood pressure,Blood pressure
+786838002,Nodule of lung,Lump / swelling
+80394007,Hyperglycaemia,Hyperglycaemia
+81680005,Neck pain,Neck pain
+84229001,Fatigue,Fatigue / malaise
+84698008,Cholesterol,Blood test - lipids/cholesterol
+8510008,Reduced mobility,Mobility
+86273004,Biopsy,Biopsy (site unspecified)
+89362005,Weight loss,Weight loss
+90688005,Chronic renal failure,CKD
+997671000000106,Blood glucose level,Blood test - glucose
+27113001,Body weight,Weight
