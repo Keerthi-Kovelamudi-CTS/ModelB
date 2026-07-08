@@ -13,6 +13,13 @@ Layout example (a preview of what the page looks like): `https://claude.ai/code/
 — your real output is a **local file**, not a hosted link. (That hosted preview is deliberately **guid-free**; your local
 report carries `patient_guid`s and therefore must never be hosted/published.)
 
+> **⚙ Cancer-agnostic vs. lung-specific.** The **layout/design is fixed for every cancer**. But the preview is
+> **lung**, and its *narrative* reflects lung's actual findings — the headline, the archetype emphasis, the
+> clinical red-flag examples, and the "ceiling" story. **Do NOT copy lung's conclusions for another cancer.**
+> Everywhere marked **⚙** below, **derive the wording from THIS model's own data** (its real top drivers,
+> subgroup gaps, error patterns) — if age isn't the dominant driver for your cancer, don't say it is. Swap
+> lung clinical examples (haemoptysis, COPD, chest X-ray) for your cancer's red-flags.
+
 ---
 
 ## Step 1 — produce the inputs (a normal run)
@@ -41,17 +48,17 @@ other `predict_proba` model (slower, capped).
 > - `<RUN_DIR>/fe/features_p005_{h}_stable.parquet` — use `split=='test'`. "On record" = the patient's top non-admin categories where `<cat>_count > 0`.
 > - *(optional)* `<held-out predictions>` (`prob` + label) for a held-out threshold sweep.
 >
-> **Compute:** recompute each patient's confusion segment at threshold **0.50** (cancer if prob ≥ 0.5). Split each patient's features into **↓ lowered** (SHAP < 0) / **↑ raised** (SHAP > 0). Classify each FN/FP into an archetype: *Data-gap* (≤ 8 categories on record), *Age-suppressed* (FN where `age` is the top ↓ driver), *Signal-poor* (other FN), *Look-alike* (FP).
+> **Compute:** recompute each patient's confusion segment at threshold **0.50** (cancer if prob ≥ 0.5). Split each patient's features into **↓ lowered** (SHAP < 0) / **↑ raised** (SHAP > 0). Classify each FN/FP into an archetype: *Data-gap* (≤ 8 categories on record), *Age-suppressed* (FN where `age` is the top ↓ driver), *Signal-poor* (other FN), *Look-alike* (FP). **⚙ These archetypes are derived from the data (they only fire when the data says so — e.g. "Age-suppressed" only applies to patients whose top ↓ driver really is age). If your model's misses are driven by something else, rename/replace the buckets to match what the SHAP actually shows — don't force lung's age framing.**
 >
 > **Build ONE self-contained, white-background HTML page** — a **complete standalone document** starting with `<!doctype html><html><head><meta charset="utf-8">…` (this is a local file, so the charset is required or the `↓ ↑ · —` symbols render as mojibake), no external assets, no matplotlib images — with:
-> 1. **Header:** model name · n · operating point 0.50 · Sens/Spec; headline “The model misses the young and over-flags the old”; and an **age strip** — a dot per FN and per FP placed by age, in two rows with the labels in a left gutter (must not overlap the dots or ticks).
+> 1. **Header:** model name · n · operating point 0.50 · Sens/Spec; **⚙ headline = THIS model's actual dominant error pattern, derived from the data** (e.g. lung's is “The model misses the young and over-flags the old” because age is the top driver of both FN and FP — check whether that's true for your cancer before using it; otherwise state whatever the SHAP/subgroup data shows); and an **age strip** — a dot per FN and per FP placed by age, in two rows with the labels in a left gutter (must not overlap the dots or ticks). *(The age strip is always fine to show; just don't assert an age-bias conclusion the data doesn't support.)*
 > 2. **Confusion tiles** (TP/FP/FN/TN) + Sens/Spec.
 > 3. **Archetype buckets** — counts for the FN reasons and the FP reasons.
 > 4. **Legend** — how to read a card (risk %, on record, ↓ lowered, ↑ raised; miss = ↓ outweigh ↑, false alarm = ↑ win).
 > 5. **A card for every FN and every FP** (youngest first): `age · sex · ethnicity · events · categories · patient_guid` (put the **`patient_guid`** in the header, small/monospace/selectable, so a clinician can trace the patient back in the source data — join it from the stable matrix / layout-B column), a one-sentence plain-English narrative of why it went wrong (tailored to its archetype), then chip rows for **on record**, **↓ lowered**, **↑ raised** (show up to ~12 factors each). *(The guid makes this file patient-identifiable — another reason it stays local and is never published/hosted.)*
 > 6. **Aggregate SHAP** — one small table per segment (TP/FP/TN/FN): top ~20 features by mean |SHAP| with direction.
 > 7. **Threshold trade** — an **internal** sweep table (Sens/Spec/PPV/Flagged/Missed/False-alarms across thresholds 0.2–0.8, from the internal probs) and, if held-out preds are given, a **held-out** sweep. Highlight the operating-point row.
-> 8. A dark **“The ceiling — what is genuinely hard, and what could move it”** section: three floor cards (Young & undocumented, Signal-poor, Clinical look-alikes) + an honest-ceiling paragraph (age inflates the headline AUROC; within-age discrimination is the honest number; single-digit PPV at low prevalence is a discrimination ceiling; real gains need a new signal — imaging — or a higher-prevalence, high-risk-only screen).
+> 8. A dark **“The ceiling — what is genuinely hard, and what could move it”** section. **⚙ Write this from THIS model's actual failure modes — do not copy lung's.** The lung version (example) used three floor cards (Young & undocumented, Signal-poor, Clinical look-alikes) + an honest-ceiling paragraph (age inflates the headline AUROC; within-age discrimination is the honest number; single-digit PPV at low prevalence is a discrimination ceiling; real gains need a new signal — imaging — or a higher-prevalence, high-risk-only screen). For another cancer, replace the floor cards with the archetypes your data actually shows, and re-state the ceiling in terms of *its* drivers, prevalence and PPV.
 > 9. **Footer:** model long name + internal AUROC + confusion counts; “risk % = calibrated probability; chips = the model’s top SHAP contributors.”
 >
 > **Feature naming:** show the **full feature name exactly as in the data** (e.g. `COPD_distinct_ratio`, `Blood test - neutrophils_val_max`, `age_at_prediction`) in the ↓/↑ chips and the aggregate tables — do **not** shorten to the category. (The **on-record** chips are the exception — those are the patient's clinical *categories*.)
