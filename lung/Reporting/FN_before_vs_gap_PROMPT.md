@@ -19,13 +19,22 @@ detector, hovers, colours, outputs). This file gives the FN-specific window, SQL
 
 ## Paste this to Claude (swap `<RUN>`)
 
-> **Build a local per-patient FN "before vs the excluded year" sheet for our lung-cancer model. Save HTML +
+> **Build a local per-patient FN "before vs the excluded year" sheet for our <cancer> model (⚙ set your cancer). Save HTML +
 > PDF + Excel locally — do NOT publish or upload (it carries patient_guids + clinical detail).**
+>
+> **0. Parameters — auto-derive from the run, do NOT hardcode.**
+> - **`{h}` / `gap`** (horizon, months): read from the stable-matrix filename `fe/features_p005_{h}_stable.parquet`
+>   (e.g. `12mo` → `gap=12`) or `config`. Use `gap` in every SQL `INTERVAL … MONTH` and every window label.
+> - **`THR`** (operating threshold): if you report at a fitted operating point, read
+>   `modeling/operating_threshold_{h}.json` → `threshold`; otherwise use **0.50** (balanced internal set). State which.
+> - **FE type**: if features are `<category>_<family>` (V3 categorized), the decoder + "on record" categories apply
+>   as-is; if the model is **raw-SNOMED / other naming**, decode from the feature's own text and show top *codes*
+>   for "on record". (See PER_PATIENT_METHOD.md → Assumptions & limits.)
 >
 > **1. Identify the missed cancers.** From `<RUN>/modeling/explainability_internal/patient_explanations.csv`
 > — **must be schema A** (`row, segment, y_true, prob, factor_1..N, shap_1..N`, i.e. *signed* SHAP; if your run
 > only has schema B / unsigned `Top_Factor_N`, re-run explainability for signed SHAP or drop the why-line) —
-> sorted by `row`, take `y_true==1 & prob<0.50`. Map each to its `patient_guid` via the stable matrix test
+> sorted by `row`, take `y_true==1 & prob < THR`. Map each to its `patient_guid` via the stable matrix test
 > slice (`<RUN>/fe/features_p005_{h}_stable.parquet`, `{h}` = your horizon e.g. `12mo`; `split=='test'`, same
 > row order). **Verify** stable age == cache age for every patient.
 >
@@ -33,7 +42,7 @@ detector, hovers, colours, outputs). This file gives the FN-specific window, SQL
 > (run/cancer-specific; lung's is `…/keerthi/Lung_Cancer/raw_events/Astra_10yr_7k_withtext_internal.parquet`):
 > `anchor = event_date + days_before_anchor`
 > (constant per patient — assert 0 spread). Left column = the patient's cache events grouped to distinct
-> `(snomed_c_t_concept_id, term)` with a count + `event_type` + problem status. Sort lung-relevant first, then
+> `(snomed_c_t_concept_id, term)` with a count + `event_type` + problem status. Sort organ-relevant first, then
 > by count.
 >
 > **3. EXCLUDED-YEAR pull (right column) — BigQuery, window `[anchor − 12mo, anchor)`.** Get **every**
@@ -62,10 +71,10 @@ detector, hovers, colours, outputs). This file gives the FN-specific window, SQL
 >        FROM o JOIN dc USING(code_id, source_practice_code) GROUP BY patient_guid, sct)
 > SELECT f.patient_guid, f.sct, f.term, f.first_ed, f.psd
 > FROM firstseen f JOIN anchors a ON a.guid=f.patient_guid
-> WHERE f.first_ed >= DATE_SUB(a.anchor, INTERVAL 12 MONTH) AND f.first_ed < a.anchor;
+> WHERE f.first_ed >= DATE_SUB(a.anchor, INTERVAL {gap} MONTH) AND f.first_ed < a.anchor;
 > ```
 > **3b. ALL observations in the gap** — same `dc`/`o` CTEs but add the window to the `o` `WHERE`
-> (`ed >= DATE_SUB(a.anchor,INTERVAL 12 MONTH) AND ed < a.anchor`), then
+> (`ed >= DATE_SUB(a.anchor,INTERVAL {gap} MONTH) AND ed < a.anchor`), then
 > `SELECT patient_guid, sct, term, COUNT(*) n_gap, MIN(ed) first_in_gap, ARRAY_TO_STRING(ARRAY_AGG(DISTINCT psd …),'; ') psd GROUP BY 1,2,3`.
 > **3c. ALL medications in the gap:** `Prescribing_DrugRecord dr` (dedupe `drug_record_guid`, latest file) →
 > `Prescribing_IssueRecord ir` (dedupe `issue_record_guid`, parse `effective_date`) →
@@ -81,13 +90,13 @@ detector, hovers, colours, outputs). This file gives the FN-specific window, SQL
 >
 > **5. "Why missed" line (light red).** From the patient's SHAP factors, take the negative (↓) drivers:
 > - if the record is very thin (≤ ~10 coded items) → *"The record held only N coded items in the model's
->   10-year window — too little to find cancer signal, so it defaulted to a low score (p%), driven mainly by
+>   lookback window — too little to find cancer signal, so it defaulted to a low score (p%), driven mainly by
 >   the patient being {age}."*
 > - else if age (`age_at_prediction`/`ageband_u50`) is the top ↓ driver → *"The model gave this p%. By far the
 >   biggest downward pull was the patient's age ({age}, SHAP −0.xx) — it outweighed everything else. Next
 >   strongest were {plain-English next drivers}."*
 > - else → *"The model gave this p%. The score was held down most by {top ↓ driver} (SHAP −0.xx). … No single
->   lung red-flag was strong enough to lift it over the line."*
+>   {organ} red-flag⚙ was strong enough to lift it over the line."*
 >
 > **6. Build the HTML** per PER_PATIENT_METHOD.md §E–F: two columns — **MODEL WINDOW — before the gap** (left) and
 > **EXCLUDED 12 MONTHS — the full gap** (right, `[anchor−12mo, anchor)`; blue = first-ever, grey = recurring,
@@ -123,15 +132,17 @@ Do **not** paraphrase the **design** — copy it exactly (this is what makes rep
 the exact design is written out below). Items marked **⚙** are **cancer-specific** — substitute
 per PER_PATIENT_METHOD.md §D2 (here shown with the lung example). Everything else is identical for every cancer.
 
-**Threshold** 0.50 · **window** `[anchor−12mo, anchor)` · show **all** codes (no top-N truncation) · **dedupe
-the right column by display term** (one chip per term).
+**Threshold** = your model's operating point (**0.50** = lung example) · **window** `[anchor − gap, anchor)`
+where **gap = your model's horizon** (**12mo** = lung example; change the SQL `INTERVAL {gap} MONTH` accordingly) ·
+show **all** codes (no top-N) · **dedupe the right column by display term** (one chip per term).
+*(These two are per-model, not design — see Assumptions & limits.)*
 
 **Colours (hex):** miss `#b0413e`, new `#2e6e8e`, recurring = muted grey, medication `#3f7a52`, lung
 `#a8560f`, workup line `#6a4c93`.
 
 **Sort orders (exact):**
-- LEFT (model window): lung-relevant first, then count desc.
-- RIGHT (gap): `obs before med`, then lung-relevant, then new-before-recurring, then problem-diagnosis, then count desc.
+- LEFT (model window): organ-relevant first, then count desc.
+- RIGHT (gap): `obs before med`, then organ-relevant, then new-before-recurring, then problem-diagnosis, then count desc.
 
 **Classification → badge (exact predicate, evaluated over ALL gap codes new+recurring):**
 - **pathway** → badge **“On cancer pathway in gap”** — *any* gap term matches the workup detector (PER_PATIENT_METHOD.md §D).
@@ -150,8 +161,8 @@ your cancer, e.g. "lung investigations".)
 `lr`(lung) + `dx`(problem diagnosis, bold).
 
 **“Why missed” line (light red, one sentence) — pick ONE template verbatim (fill placeholders):**
-1. *data-gap* (≤10 coded items, or prob<3% & <20 items): “The record held only {N} coded items in the
-   model's 10-year window — too little for the model to find cancer signal, so it defaulted to a low score
+1. *data-gap* (heuristic — tune per data; ≤10 coded items, or prob<3% & <20 items): “The record held only {N} coded items in the
+   model's lookback window — too little for the model to find cancer signal, so it defaulted to a low score
    ({p}%), driven mainly by the patient being {age}.”
 2. *age-suppressed* (top ↓ driver is age): “The model gave this {p}%. By far the biggest downward pull was the
    patient's age ({age}, SHAP {−0.xx}) — it outweighed everything else. Next strongest were {next 2 ↓ drivers
@@ -170,6 +181,6 @@ of {cat} value(s)”, `_max_abs_z`→“how unusual the {cat} values are”, `_f
 
 **Outputs (exact names):** `fn_contrast_internal.html`, `fn_contrast_internal.pdf`,
 `fn_before_vs_gap.xlsx`. **Excel columns (exact order):** `cohort, patient, patient_guid, age, sex,
-anchor_date, window, code_term, snomed, code_type, lung_relevant, count_in_window, problem_list_dx,
+anchor_date, window, code_term, snomed, code_type, organ_relevant, count_in_window, problem_list_dx,
 first_seen_date, gap_status` (`window` ∈ {`model window (before gap)`, `excluded 12mo (gap)`};
 `gap_status` ∈ {`new (first-ever)`, `recurring`, `medication`}).

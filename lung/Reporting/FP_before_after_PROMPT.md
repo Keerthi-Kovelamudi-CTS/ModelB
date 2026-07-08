@@ -23,11 +23,15 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 
 ## Paste this to Claude (swap `<RUN>`)
 
-> **Build a local per-patient FP "±1 year around the flag" sheet for our lung-cancer model. Save HTML + PDF +
+> **Build a local per-patient FP "±1 year around the flag" sheet for our <cancer> model (⚙ set your cancer). Save HTML + PDF +
 > Excel locally — do NOT publish or upload (patient_guids + clinical detail).**
 >
+> **0. Parameters — auto-derive from the run, do NOT hardcode** (same as FN §0): **`gap`** = horizon months from
+> `features_p005_{h}_stable.parquet` (use in every `INTERVAL … MONTH` and label); **`THR`** = fitted
+> `operating_threshold_{h}.json`→`threshold` or **0.50**; **FE type** = categorized vs raw-SNOMED (see PER_PATIENT_METHOD.md → Assumptions & limits).
+>
 > **1. Identify the false alarms.** From `patient_explanations.csv` (**schema A / signed SHAP — see FN §1**)
-> take `y_true==0 & prob>=0.50`; map to `patient_guid` via the stable test slice
+> take `y_true==0 & prob >= THR`; map to `patient_guid` via the stable test slice
 > (`fe/features_p005_{h}_stable.parquet`); verify stable age == cache age.
 >
 > **2. Anchor + MODEL WINDOW (left column).** From **your run's** internal raw-events cache ⚙ (run/cancer-specific
@@ -35,7 +39,7 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 > in the cache — assert it.)
 >
 > **3. ±1-year pull — BigQuery, window `[anchor − 12mo, anchor + 12mo)`.** Same table joins as the FN prompt
-> (§3), but extend the upper bound to `DATE_ADD(a.anchor, INTERVAL 12 MONTH)` and return **before/after
+> (§3), but extend the upper bound to `DATE_ADD(a.anchor, INTERVAL {gap} MONTH)` and return **before/after
 > counts** per code:
 > ```sql
 > -- anchors + dc CTEs exactly as in FN §3. Carry a.anchor INTO o so the COUNTIFs can compare to it:
@@ -46,8 +50,8 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 >       LEFT JOIN `prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.CareRecord_Problem` prob
 >         ON prob.observation_guid=co.observation_guid AND prob.patient_guid=co.patient_guid AND prob.source_practice_code=co.source_practice_code
 >       WHERE co.effective_date IS NOT NULL
->         AND PARSE_DATE('%Y-%m-%d', co.effective_date) >= DATE_SUB(a.anchor, INTERVAL 12 MONTH)
->         AND PARSE_DATE('%Y-%m-%d', co.effective_date) <  DATE_ADD(a.anchor, INTERVAL 12 MONTH)
+>         AND PARSE_DATE('%Y-%m-%d', co.effective_date) >= DATE_SUB(a.anchor, INTERVAL {gap} MONTH)
+>         AND PARSE_DATE('%Y-%m-%d', co.effective_date) <  DATE_ADD(a.anchor, INTERVAL {gap} MONTH)
 >       QUALIFY ROW_NUMBER() OVER (PARTITION BY co.patient_guid, co.source_practice_code, co.observation_guid ORDER BY co.source_date DESC, SAFE_CAST(co.code_id AS INT64))=1)
 > SELECT o.patient_guid, dc.sct, dc.term,
 >        COUNTIF(o.ed <  o.anchor) n_before, COUNTIF(o.ed >= o.anchor) n_after,
@@ -56,7 +60,7 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 > GROUP BY 1,2,3;
 > -- medications: FN §3c but window [anchor-12mo, anchor+12mo); carry a.anchor and return
 > --   COUNTIF(ed<anchor) n_before, COUNTIF(ed>=anchor) n_after, MIN(ed) first_ed  GROUP BY patient_guid, drug_term
-> -- new (first-ever): FN §3a but upper bound DATE_ADD(a.anchor, INTERVAL 12 MONTH)
+> -- new (first-ever): FN §3a but upper bound DATE_ADD(a.anchor, INTERVAL {gap} MONTH)
 > ```
 > Merge obs + meds; `is_new` from the first-ever query. A code can appear in **both** the before and after
 > columns (place it wherever its count > 0, with that side's count).
@@ -69,7 +73,7 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 > drivers:
 > - if age is the top ↑ driver → *"The model gave this p% almost entirely on age: being {age} contributed SHAP
 >   +0.xx — {N}× the next factor; on top of {plain-English comorbid backdrop, e.g. ex-smoker, COPD,
->   cardiovascular}. This is the over-flagged older-comorbid profile that looks like real lung cancer on
+>   cardiovascular}. This is the over-flagged older-comorbid profile that looks like real {organ} cancer⚙ on
 >   structured data."*
 > - else → *"The model gave this p% despite no cancer. Pushed up mainly by {top ↑ drivers in plain English} —
 >   an older-comorbid picture the model reads as cancer-like."*
@@ -80,10 +84,10 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 > - **12 MONTHS AFTER anchor** (green header) — what happened next.
 >
 > Per-column "new" = first-ever falls on that side of the anchor (blue); else grey (recurring); meds green;
-> lung-relevant orange; diagnoses bold; each chip shows `×count`. Add the purple **"Cancer workup within ±1
+> {organ}-relevant⚙ orange; diagnoses bold; each chip shows `×count`. Add the purple **"Cancer workup within ±1
 > year"** line, tagging each workup code `(before)` / `(after)` (or a grey "no cancer workup within ±1 year"
 > line). The intro **lede + How-to** must describe **three columns** (not left/right). Legend chips relabelled:
-> **N cancer workup — negative · N other active disease · N genuine false alarm** + new/recurring/med/lung/bold
+> **N cancer workup — negative · N other active disease · N genuine false alarm** + new/recurring/med/organ/bold
 > keys. Hovers on everything (PER_PATIENT_METHOD.md §F).
 >
 > **7. Save** `fp_contrast_pm.html`, render `…pdf`, and `fp_before_after.xlsx` (one row per code;
@@ -112,8 +116,10 @@ wording. It reuses the FN queries but with a **±12-month window** and **before/
 Do **not** paraphrase the **design** — copy it exactly (the exact design is written out below).
 Items marked **⚙** are **cancer-specific** — substitute per PER_PATIENT_METHOD.md §D2 (shown with the lung example).
 
-**Threshold** 0.50 · **window** `[anchor−12mo, anchor+12mo)` · show **all** codes · a code may appear in both
-the before and after column (wherever its side-count > 0).
+**Threshold** = your model's operating point (**0.50** = lung example) · **window** `[anchor − gap, anchor + gap)`
+where **gap = your model's horizon** (**12mo** = lung; change the SQL `INTERVAL {gap} MONTH` on both bounds) ·
+show **all** codes · a code may appear in both the before and after column (wherever its side-count > 0).
+*(Threshold + gap are per-model, not design — see Assumptions & limits.)*
 
 **Colours (hex):** as FN, plus workup line `#6a4c93`; "why flagged" uses the **same light red as FN**
 (`#b0413e`), not blue.
@@ -121,7 +127,7 @@ the before and after column (wherever its side-count > 0).
 **Per-column newness:** a chip is **new** (blue) if the code's first-ever date falls **on that side** of the
 anchor (before-col: first_ed < anchor; after-col: first_ed ≥ anchor); else grey (recurring); meds green.
 
-**Sort within each column:** `obs before med`, then lung-relevant, then column-new, then problem-diagnosis,
+**Sort within each column:** `obs before med`, then organ-relevant, then column-new, then problem-diagnosis,
 then count desc.
 
 **Classification → badge (exact, over ALL ±1yr codes):**
@@ -132,7 +138,7 @@ then count desc.
 
 **Column headers (exact):** **“MODEL WINDOW — what was used”** `{n} codes` · **“12 MONTHS BEFORE anchor”**
 (red) `{n} codes · {n} meds · {n} <organ>-relevant`⚙ · **“12 MONTHS AFTER anchor”** (green) same.
-**Workup line:** **“Cancer workup / lung investigations in the excluded year:”**… actually for FP use
+**Workup line:** **“Cancer workup / {organ} investigations in the excluded year:”**… actually for FP use
 **“Cancer workup within ±1 year:”** and tag each chip `(before)` or `(after)`; else grey **“No cancer workup
 within ±1 year — see the code lists.”**
 
@@ -152,5 +158,5 @@ non-cancer class) — the "after" year vindicates via a *negative* workup or oth
 
 **Outputs (exact names):** `fp_contrast_pm.html`, `fp_contrast_pm.pdf`, `fp_before_after.xlsx`.
 **Excel columns (exact order):** `cohort, patient, patient_guid, age, sex, anchor_date, window, code_term,
-code_type, lung_relevant, count, problem_list_dx, first_seen, status` (`window` ∈ {`model window`,
+code_type, organ_relevant, count, problem_list_dx, first_seen, status` (`window` ∈ {`model window`,
 `12mo BEFORE`, `12mo AFTER`}).

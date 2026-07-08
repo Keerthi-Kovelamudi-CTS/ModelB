@@ -36,7 +36,7 @@ new / recurring / medication, same hover tooltips, plus a filterable Excel.
 | `HOW_TO_GENERATE.md` | **Deep-dive — start here.** Steps + the exact prompt to paste into Claude; builds a local `deepdive.html` + `deepdive.pdf` (does not publish). |
 | `FN_before_vs_gap_PROMPT.md` | **Per-patient FN** sheet — missed cancers, model-window vs the excluded 12-month gap. |
 | `FP_before_after_PROMPT.md` | **Per-patient FP** sheet — false alarms, ±1 year around the flag (model · before · after). |
-| `PER_PATIENT_METHOD.md` | Shared method + **per-cancer config (§D2/§D3, pre-filled for lung/breast/prostate/bladder)** for the two per-patient sheets. Read before the FN/FP prompts. |
+| `PER_PATIENT_METHOD.md` | Shared method + **per-cancer config for ANY cancer** (§D2/§D3 — detector derived from each cancer's curated codelist; starters for all active cancers) for the two per-patient sheets. Read before the FN/FP prompts. |
 | `explainability.py` | **reference copy** of the SHAP generator (produces the deep-dive's inputs); source of truth is the pipeline's `3_Modeling/explainability.py`. |
 | `README.md` | this overview |
 

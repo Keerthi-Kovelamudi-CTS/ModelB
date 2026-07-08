@@ -19,6 +19,11 @@ report carries `patient_guid`s and therefore must never be hosted/published.)
 > Everywhere marked **⚙** below, **derive the wording from THIS model's own data** (its real top drivers,
 > subgroup gaps, error patterns) — if age isn't the dominant driver for your cancer, don't say it is. Swap
 > lung clinical examples (haemoptysis, COPD, chest X-ray) for your cancer's red-flags.
+>
+> **Also per-model, not universal:** the **operating threshold** (0.50 here — use *your* model's operating
+> point; the FN/FP set depends on it) and the **FE feature naming** — this prompt assumes the **V3 categorized
+> pipeline** (`age_at_prediction`, `ageband_u50`, `g_eth_*`, `<category>_<family>` features, and *categories*
+> for "on record"). A different FE (raw-SNOMED, other names) → adjust the feature decoder and on-record logic.
 
 ---
 
@@ -39,7 +44,7 @@ other `predict_proba` model (slower, capped).
 
 ## Step 2 — paste this prompt into Claude (swap the `<...>`)
 
-> **Build a per-patient FP/FN deep-dive report for our lung-cancer model and SAVE it locally as BOTH an HTML file and a PDF (do NOT publish it as an artifact or upload it anywhere — it must stay on our infrastructure).**
+> **Build a per-patient FP/FN deep-dive report for our <cancer> model (⚙ set your cancer) and SAVE it locally as BOTH an HTML file and a PDF (do NOT publish it as an artifact or upload it anywhere — it must stay on our infrastructure).**
 >
 > **Data** (under `<RUN_DIR>`):
 > - `<RUN_DIR>/…/explainability_internal/` — find the `*patient_explanations*.csv`. It's one of two layouts; detect which:

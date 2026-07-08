@@ -34,7 +34,31 @@ clinical detail, so they are patient-identifiable → local only, never publishe
   + the model-window column). This path is **run/cancer-specific**; lung's is
   `gs://gcs-ai-dev-model-artifacts/keerthi/Lung_Cancer/raw_events/Astra_10yr_7k_withtext_internal.parquet`.
 - [ ] **Your cancer's config** (§D2/§D3) — organ word, workup detector, {organ}-relevant terms, look-alike
-  profile. **Pre-filled for lung / breast / prostate / bladder** in §D3.
+  profile. **Works for any cancer** — the detector comes from your cancer's curated codelist (§D-preferred);
+  §D3 has starters for the active cancers (lung/breast/prostate/bladder/leukaemia/lymphoma/melanoma/ovarian).
+
+## Assumptions & limits — check these for YOUR model/team (⚙ = substitute)
+
+These are the lung defaults; they are **not** universal. Confirm/replace each before you rely on the numbers:
+
+- **⚙ Operating threshold.** FN/FP are defined at **0.50** (lung's internal operating point). **Use your
+  model's actual operating threshold** — the error set changes with it. (Edit `prob<0.50` / `prob>=0.50` in step 1.)
+- **⚙ Gap / window months.** Lung's gap is **12 months**; the SQL uses `INTERVAL 12 MONTH`. Set these to
+  **your model's horizon/gap** (it predicts at `anchor − gap`). Change *every* month-interval in the SQL and the labels.
+- **⚙ FE feature naming.** The plain-English decoder + "on record" logic assume the **V3 categorized pipeline**:
+  `age_at_prediction`, `ageband_u50`, `g_eth_*`, and `<category>_<family>` features (`_decay_intensity`,
+  `_count`, `_recency_rank`, …) with a per-category `<cat>_count`. A different FE (raw-SNOMED, other names) →
+  adjust the decoder and the on-record categories.
+- **⚙ Categorized model assumed.** The model-window / "on record" column shows **categories**; a raw-SNOMED
+  model has none — show top codes instead.
+- **⚙ Data source.** The SQL targets **CtheSigns EMIS** (`prj-cts-ai-dev-sp.EMIS_BULK_DATA_PROCESSED.*` +
+  `Prescribing_*` / `Coding_*`). A different project/dataset → swap the table references.
+- **⚙ File names / cache schema.** Assumes `features_p005_{h}_stable.parquet` and a withtext raw-events cache
+  carrying `days_before_anchor` (used to derive the anchor). Different names/schema → point at yours, or derive
+  the anchor another way.
+- **Schema A (signed SHAP) required** — see "Before you start".
+- **Prompt ≠ byte-identical.** A prompt-built report varies cosmetically run-to-run (LLM); only the lung
+  reference scripts are byte-exact. The *data* and *design* are consistent; the exact bytes aren't.
 
 ## Why these need BigQuery (the deep-dive doesn't)
 
@@ -83,15 +107,29 @@ Observations come from `CareRecord_Observation` joined to `Coding_ClinicalCode` 
 occurrence in the whole record falls inside the window** (compute `MIN(effective_date)` over all history, no
 date filter, then keep those whose first date is in the window).
 
-**D. The cancer-workup detector** (used for the badge + the "workup" line) — **THIS IS CANCER-SPECIFIC. Set it
-for your cancer (see "Cancer config" below); do not reuse the lung one.** The generic shape (keep):
-`suspected( <organ>)? cancer | fast[- ]track | two week wait | 2 week rule | 2ww |
-refer\w*.*(<organ terms>|oncolog|cancer|rapid) | oncolog |
-<the imaging/clinic/procedure/finding terms for THIS cancer> | malignan | neoplasm | carcinoma | metasta`
-…always **exclude** matches containing `not wanted` / `declined`, and any `screening` term that isn't for this
-organ (screening declines / other-site screening are false positives — e.g. *"Screening for malignant neoplasm
-of cervix not wanted"* which we hit on lung and fixed). Symptoms are deliberately **not** workup.
-The **lung** worked example (what we shipped) is:
+**D. The cancer-workup detector** (drives the badge + the "workup" line). Each gap code has a **SNOMED id
+(`sct`)** and a **`term`**. It has **two parts** — a generic core (no config) + a small organ add-on:
+
+**D-core — generic oncology pathway (cancer-AGNOSTIC, same for every cancer, needs no config).** Most of the
+"workup" is generic: `suspected cancer`, `2-week-wait / fast-track referral`, `referral to oncology`,
+`oncology service contact`, `malignant / neoplasm / carcinoma / metastasis`, `biopsy`. This catches the bulk
+of the pathway for *any* cancer with zero per-cancer input.
+
+**D-organ — the organ-specific add-on** (the imaging / clinic / procedure for that organ, e.g. chest X-ray +
+bronchoscopy for lung; mammogram + breast clinic for breast). This is the *only* per-cancer part, and you can
+source it **three ways (not just codelists)** — whichever you have:
+1. the cancer's **curated codelist** — flag if the gap code's `sct` is in it (`…/codelist2.0/<cancer>_curated_codes_2.0.tsv`); or
+2. the **run's FE categories** — flag by membership of an *oncology / referral / imaging / suspected-cancer* category (`code_category_mapping_2.0.json`); or
+3. a short **keyword list** (the lung fallback below).
+
+Because **D-core is generic and D-organ is derivable from data you already have**, this scales to **any cancer**.
+
+**D-fallback — a keyword regex on the `term` text** (quick + human-readable, but **hand-maintained and
+brittle** — use only when you can't load a codelist). Generic shape:
+`suspected( <organ>)? cancer | fast-track | two week wait | 2ww | refer\w*.*(<organ>|oncolog|cancer|rapid) |
+oncolog | <imaging/clinic/procedure/finding words for this cancer> | malignan | neoplasm | carcinoma | metasta`.
+**This keyword approach is *why the lung version has a fixed word list*** — it's the fallback, not the design.
+The lung example we shipped:
 ```
 suspected( lung)? cancer | fast[- ]track | two week wait | 2 week rule | 2ww |
 refer\w*.*(lung|chest|respirat|oncolog|cancer|thorac|medicine|medical service|rapid) |
@@ -100,23 +138,34 @@ respiratory (physician|medicine|clinic) | seen by respiratory | bronchoscop | lo
 pleural (asp|effusion|biopsy) | oncolog | lung (nodule|mass|cancer|lesion) | nodule of lung |
 solitary (pulmonary )?nodule | malignan | neoplasm | carcinoma | metasta | (ct|computed tomog).*(chest|thorax)
 ```
+Either way, **exclude** `not wanted` / `declined` and any `screening` term not for this organ (screening
+declines / other-site screening are false positives — e.g. *"Screening for malignant neoplasm of cervix not
+wanted"*, which we hit on lung and fixed). Symptoms (cough, chest pain, …) are deliberately **not** workup.
 
-**D2. Cancer config — set these per cancer (everything else is fixed).** The DESIGN is standardized across the
-team; only the **clinical content** changes per cancer. For your cancer, supply:
+**D2. Cancer config — set these per cancer (everything else is fixed).** **This works for ANY cancer** — the
+configs in §D3 are just **starters, not a whitelist**; any cancer with a curated codelist can be set up the
+same way. The DESIGN is standardized across the team; only the **clinical content** changes per cancer. For
+your cancer, supply:
 | Knob | Lung value (example) | Yours |
 |---|---|---|
 | **Organ / cancer word** (replaces "lung" in labels & narratives) | lung | breast / prostate / bladder / … |
-| **Workup detector** (§D) — referrals, imaging, clinics, procedures, findings for this cancer | chest X-ray, respiratory/chest clinic, bronchoscopy, lobectomy, lung nodule … | mammogram, breast clinic, core biopsy, mastectomy, breast lump … (breast) · PSA, urology, TRUS/MRI-fusion biopsy, prostatectomy … (prostate) |
+| **Workup detector** (§D) — a **generic oncology core** (cancer-agnostic, no config) **+** a small **organ add-on** from your codelist **or** FE categories **or** keywords | core + lung imaging/clinic terms | core (free) + your organ terms from codelist/categories (or fallback keywords, §D3) |
 | **"<organ>-relevant" highlighter** (the orange chips) — the symptom/test/organ terms to highlight | cough, chest, COPD, haemoptysis, x-ray, nodule, oncolog … | the equivalent organ/symptom terms for this cancer |
 | **"Look-alike" profile** (the FP narrative) — the confounding phenotype | older ex-smoker / COPD | e.g. BPH + raised PSA (prostate); benign breast disease (breast) |
 The **anchor/cohort** and the SNOMED→category features come from *their* pipeline run — the report just reads
 them; nothing else is cancer-specific.
 
-**D3. Pre-filled configs (starting drafts — validate against each cancer's curated codelist before use).**
-These are sensible defaults for the four active cancers; the workup/relevant lists are term fragments for the
-regex (case-insensitive), the same shape as lung's in §D.
+**D3. Per-cancer configs.** The **detector for every cancer should come from that cancer's curated codelist**
+(§D-preferred) — so it's *not* a hardcoded word list, and it covers **any** cancer, not just the ones below.
+What genuinely needs setting per cancer (judgement calls, can't be derived) is the **organ word** and the
+**look-alike profile**; the keyword `Workup`/`relevant` fragments shown are **optional fallbacks** (validate
+against the codelist). Starters for the active cancers — **and any other cancer works the same way**:
 
 - **Lung** ✅ (shipped): organ = `lung`; look-alike = *older ex-smoker / COPD*. Workup/relevant as in §D.
+- **Leukaemia**: organ = `leukaemia`; look-alike = *reactive cytopenias / infection / ITP (benign blood-count changes)*. Detector: haematology 2ww referral, blood film, bone-marrow aspirate/trephine, flow cytometry/immunophenotyping, leukaemia/myelodysplasia/lymphoproliferative — **from the leukaemia codelist**.
+- **Lymphoma**: organ = `lymphoma`; look-alike = *reactive lymphadenopathy / infection*. Detector: haematology 2ww, lymph-node biopsy/excision, CT neck/chest/abdo, PET-CT, bone marrow, lymphadenopathy, Hodgkin/non-Hodgkin — **from the lymphoma codelist**.
+- **Melanoma**: organ = `melanoma`; look-alike = *benign naevus / seborrhoeic keratosis*. Detector: skin/dermatology 2ww, dermoscopy, excision/wide-local-excision, sentinel-node biopsy, mole/lesion, melanoma — **from the melanoma codelist**.
+- **Ovarian**: organ = `ovarian`; look-alike = *benign ovarian cyst / IBS*. Detector: gynaecology 2ww, CA-125, transvaginal/pelvic ultrasound, CT abdo/pelvis, RMI, ovarian mass/cyst, oophorectomy — **from the ovarian codelist**.
 
 - **Breast**: organ = `breast`; **look-alike** = *benign breast disease / fibroadenoma / cysts in older women*.
   - Workup: `suspected breast cancer | fast[- ]track | two week wait | 2ww | refer\w*.*(breast|oncolog|cancer) | mammogra | breast (clinic|ultrasound|lump|mass|cyst) | one[- ]stop | core biopsy | fine needle | fna | mastectomy | wide local excision | lumpectomy | malignan | neoplasm | carcinoma | metasta | oncolog`
@@ -135,11 +184,11 @@ Always keep the shared exclusions from §D (`not wanted`/`declined`, and `screen
 **E. Build the HTML** — one self-contained white page, `<!doctype html><html><head><meta charset="utf-8">…`
 (charset required or `↓ ↑ ×` render as mojibake). Design tokens:
 `--miss:#b0413e` (red / FN), `--new:#2e6e8e` (blue / first-ever), `--muted` grey (recurring),
-`--med:#3f7a52` (green / medication), `--lung:#a8560f` (orange / lung-relevant), `--workup:#6a4c93`
+`--med:#3f7a52` (green / medication), `--relevant:#a8560f` (orange / organ-relevant), `--workup:#6a4c93`
 (purple / cancer-workup line). Per patient a **card** with:
 - header: `PID · age · sex · anchor · patient_guid` (guid small/monospace/selectable) + a **badge**;
 - a **light-red "Why …" line** — the SHAP story (see each prompt);
-- a **purple "Cancer workup / lung investigations" line** — the workup codes found (or a grey "none" line);
+- a **purple "Cancer workup / {organ} investigations" line** — the workup codes found (or a grey "none" line);
 - the **code columns** (2 for FN, 3 for FP), each a scrollable chipbox; each chip shows the term + a
   `×count`, coloured new/recurring/med/lung, **problem-list diagnoses in bold**.
 
@@ -155,7 +204,7 @@ is"; `_decay_intensity` → "recent … activity"; `_recency_rank` → "how rece
 - `<name>.html` — the report,
 - `<name>.pdf` — `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf=<name>.pdf "file://<name>.html"`,
 - `<name>.xlsx` — one row per (patient, code): `cohort, patient, patient_guid, age, sex, anchor_date,
-  window, code_term, code_type, lung_relevant, count, problem_list_dx, first_seen, status`.
+  window, code_term, code_type, organ_relevant, count, problem_list_dx, first_seen, status`.
 
 **Do not publish or upload** — these are patient-identifiable. Share the files internally only.
 
