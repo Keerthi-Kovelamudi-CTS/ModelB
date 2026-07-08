@@ -10,7 +10,8 @@ run your model  ─►  explainability outputs (CSV + stable matrix)  ─►  pa
 ```
 
 Layout example (a preview of what the page looks like): `https://claude.ai/code/artifact/b14ebe22-1513-478d-ab44-4214316e20d1`
-— your real output is a **local file**, not a hosted link.
+— your real output is a **local file**, not a hosted link. (That hosted preview is deliberately **guid-free**; your local
+report carries `patient_guid`s and therefore must never be hosted/published.)
 
 ---
 
@@ -47,7 +48,7 @@ other `predict_proba` model (slower, capped).
 > 2. **Confusion tiles** (TP/FP/FN/TN) + Sens/Spec.
 > 3. **Archetype buckets** — counts for the FN reasons and the FP reasons.
 > 4. **Legend** — how to read a card (risk %, on record, ↓ lowered, ↑ raised; miss = ↓ outweigh ↑, false alarm = ↑ win).
-> 5. **A card for every FN and every FP** (youngest first): `age · sex · ethnicity · events · categories`, a one-sentence plain-English narrative of why it went wrong (tailored to its archetype), then chip rows for **on record**, **↓ lowered**, **↑ raised** (show up to ~12 factors each).
+> 5. **A card for every FN and every FP** (youngest first): `age · sex · ethnicity · events · categories · patient_guid` (put the **`patient_guid`** in the header, small/monospace/selectable, so a clinician can trace the patient back in the source data — join it from the stable matrix / layout-B column), a one-sentence plain-English narrative of why it went wrong (tailored to its archetype), then chip rows for **on record**, **↓ lowered**, **↑ raised** (show up to ~12 factors each). *(The guid makes this file patient-identifiable — another reason it stays local and is never published/hosted.)*
 > 6. **Aggregate SHAP** — one small table per segment (TP/FP/TN/FN): top ~20 features by mean |SHAP| with direction.
 > 7. **Threshold trade** — an **internal** sweep table (Sens/Spec/PPV/Flagged/Missed/False-alarms across thresholds 0.2–0.8, from the internal probs) and, if held-out preds are given, a **held-out** sweep. Highlight the operating-point row.
 > 8. A dark **“The ceiling — what is genuinely hard, and what could move it”** section: three floor cards (Young & undocumented, Signal-poor, Clinical look-alikes) + an honest-ceiling paragraph (age inflates the headline AUROC; within-age discrimination is the honest number; single-digit PPV at low prevalence is a discrimination ceiling; real gains need a new signal — imaging — or a higher-prevalence, high-risk-only screen).
@@ -62,6 +63,7 @@ other `predict_proba` model (slower, capped).
 > - **The archetype buckets** — what qualifies a patient for that bucket.
 > - **The threshold-table column headers** (Flagged / Missed / False-alarms / PPV / the operating-point row) — what each column counts.
 > - **Section headers / on-record category chips / the ↓ lowered & ↑ raised concepts** — a sentence each.
+> - **The `patient_guid`** — e.g. “Patient GUID — for tracing this patient back in the source data (local only).”
 > Keep every description short (one sentence), concrete, and readable by a clinician who has never seen the model. A reader should be able to hover *any* label, number, or chip on the page and get told what it means.
 >
 > Design: clean clinical palette (red = miss, blue = false alarm), tabular numerals, paragraphs span the full column width. Include **print CSS** so the PDF keeps colours and paginates cleanly: `html{print-color-adjust:exact;-webkit-print-color-adjust:exact}`, `@page{margin:12mm}`, and `break-inside:avoid` on `.card/.ac/.tile/section`.
@@ -75,8 +77,9 @@ Claude *"use top-N …"* to change either (and `--threshold` for a different ope
 ## Notes
 
 - **Nothing leaves your systems** — the outputs are a local `deepdive.html` + `deepdive.pdf`; open/host
-  them internally or email the file. No claude.ai publishing. (PDF is rendered from the HTML with headless
-  Chrome — swap in `wkhtmltopdf`/`weasyprint` if that's what you have.)
+  them internally or email the file. **No claude.ai publishing** — the report shows per-patient clinical
+  detail **and `patient_guid`s**, so it is patient-identifiable and must stay on your infrastructure. (PDF is
+  rendered from the HTML with headless Chrome — swap in `wkhtmltopdf`/`weasyprint` if that's what you have.)
 - Everything (counts, Sens/Spec, archetypes, the age strip, the internal sweep) is **derived from the
   data** — you only supply the model’s display name + internal AUROC.
 - **Held-out sweep** needs held-out per-patient predictions; without them, the page still builds with the

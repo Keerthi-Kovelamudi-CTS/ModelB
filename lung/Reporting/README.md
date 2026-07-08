@@ -7,12 +7,13 @@ published). Works against any pipeline version (`V1`, `V3_categorized`, `V3_10Kc
 The report is built **by Claude** from the run's outputs and **saved to disk** — no build script to
 install, and no data leaves your infrastructure.
 
-**What's in it:** a card for every FN/FP (age/sex/ethnicity, on-record categories, ↓ lowered / ↑ raised
-SHAP factors), an age strip, error archetypes, aggregate SHAP per segment, the **internal + held-out
-threshold trade**, and a "ceiling — what's genuinely hard / what could move it" section. Shown with
-**full feature names**, and **every feature, metric, legend chip, confusion tile and table column carries
-an instant plain-language hover tooltip** — a clinician can hover any label or number and be told what it
-means, in plain English (no ML jargon).
+**What's in it:** a card for every FN/FP (age/sex/ethnicity, **`patient_guid`** for traceability, on-record
+categories, ↓ lowered / ↑ raised SHAP factors), an age strip, error archetypes, aggregate SHAP per segment,
+the **internal + held-out threshold trade**, and a "ceiling — what's genuinely hard / what could move it"
+section. Shown with **full feature names**, and **every feature, metric, legend chip, confusion tile and
+table column carries an instant plain-language hover tooltip** — a clinician can hover any label or number
+and be told what it means, in plain English (no ML jargon). Because it carries `patient_guid`s + clinical
+detail it is **patient-identifiable → local only, never published**.
 
 | File | What |
 |---|---|
@@ -26,8 +27,8 @@ run your model  ─►  explainability outputs  ─►  paste the prompt into Cl
    (pipeline produces them)                        (Claude reads, builds, saves locally — no upload)
 ```
 You share the **`.html` or `.pdf`** (internal SharePoint / server / email).
-Layout preview: `https://claude.ai/code/artifact/b14ebe22-1513-478d-ab44-4214316e20d1` (that's a hosted
-*example* of the look — your real output is a local file).
+Layout preview: `https://claude.ai/code/artifact/b14ebe22-1513-478d-ab44-4214316e20d1` (a hosted, deliberately
+**guid-free** *example* of the look — your real output is a local, patient-identifiable file).
 
 ## Where the data comes from
 
