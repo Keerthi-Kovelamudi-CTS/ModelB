@@ -1,0 +1,7 @@
+# V2 held-out — lung 1mo (gap 1mo) | TEST on FULL set n=44,497 (pos 492, prevalence 1.11%) | raw scores
+AUROC 0.9551   AUPRC 0.3981
+@Youden (raw, full set): Sens 90.0  Spec 88.3  PPV 7.9  NPV 99.9  (cut=0.6026)
+-- calibration (deployment artifact; Platt fit on the full held-out) --
+cal          Brier      ECE
+raw         0.1078   0.1679   (honest)
+Platt       0.0097   0.0032   (in-sample / optimistic)

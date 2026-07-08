@@ -1,0 +1,24 @@
+# V3 lung pipeline — minimal runtime deps
+# data / compute
+numpy
+scipy
+pandas                      # BigQuery -> DataFrame, and FE blocks not yet ported to Polars
+polars                      # targeted FE acceleration (hot per-code aggregations)
+pyarrow                     # parquet I/O (intermediate matrices) + arrow interchange
+# BigQuery
+google-cloud-bigquery
+db-dtypes                   # required for client.query(...).to_dataframe()
+# modeling
+scikit-learn
+xgboost
+lightgbm
+catboost
+optuna                      # hyperparameter tuning (only when TUNE=1)
+# plots
+matplotlib
+seaborn
+# io / config
+joblib
+python-dotenv               # loads .env in config.py
+gcsfs                       # read/write splits + artifacts on gs:// (GCS)
+# NOTE: imbalanced-learn intentionally dropped — handle_imbalance="none" (cost-weighting, no SMOTE).
