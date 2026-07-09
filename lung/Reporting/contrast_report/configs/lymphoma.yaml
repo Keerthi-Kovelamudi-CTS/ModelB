@@ -1,0 +1,12 @@
+# lymphoma config — DRAFT: validate workup/relevant against the lymphoma curated codelist before relying on numbers.
+cancer: lymphoma
+organ: lymphoma
+threshold: null
+gap_months: null
+bq_project: prj-cts-ai-dev-sp
+cache_uri: "⚙ SET to your run's raw-events cache (gs://… or local .parquet)"
+workup_terms: |-
+  refer\w*.*(h[a]ematolog|lymph)|lymph node (biopsy|excision|core)|excision biopsy|(ct|pet).*(neck|chest|abdomen|thorax)|pet[- ]ct|bone marrow|h[a]ematology clinic|lymphadenopathy|lymphoma|hodgkin|non[- ]hodgkin
+relevant_terms: |-
+  lymph node|lymphadenopathy|node|biopsy|\bct\b|\bpet\b|marrow|night sweat|weight loss|lymphoma|hodgkin
+lookalike: reactive lymphadenopathy / infection

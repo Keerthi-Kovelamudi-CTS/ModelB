@@ -38,6 +38,7 @@ new / recurring / medication, same hover tooltips, plus a filterable Excel.
 | `FP_before_after_PROMPT.md` | **Per-patient FP** sheet — false alarms, ±1 year around the flag (model · before · after). |
 | `PER_PATIENT_METHOD.md` | Shared method + **per-cancer config for ANY cancer** (§D2/§D3 — detector derived from each cancer's curated codelist; starters for all active cancers) for the two per-patient sheets. Read before the FN/FP prompts. |
 | `explainability.py` | **reference copy** of the SHAP generator (produces the deep-dive's inputs); source of truth is the pipeline's `3_Modeling/explainability.py`. |
+| `contrast_report/` | **Automation (no Claude).** A deterministic CLI that builds the FN/FP sheets + deep-dive from a run + per-cancer config: `python -m contrast_report --run <dir> --config contrast_report/configs/<cancer>.yaml --cohort all`. Reproduces the sheets exactly (lung: FN 19/3/3, FP 5/29/4); patient data stays local. Use this to run reports from code/CI instead of pasting the prompts. |
 | `README.md` | this overview |
 
 *(The prompts are self-contained — they include the SQL, the workup detector and the full build spec, so no

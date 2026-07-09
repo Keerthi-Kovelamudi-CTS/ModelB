@@ -1,0 +1,12 @@
+# bladder config — DRAFT: validate workup/relevant against the bladder curated codelist before relying on numbers.
+cancer: bladder
+organ: bladder
+threshold: null
+gap_months: null
+bq_project: prj-cts-ai-dev-sp
+cache_uri: "⚙ SET to your run's raw-events cache (gs://… or local .parquet)"
+workup_terms: |-
+  refer\w*.*(bladder|urolog|haematuria)|haematuria clinic|cystoscop|ct urogram|(bladder|renal) ultrasound|turbt|transurethral resection of bladder|bladder biopsy
+relevant_terms: |-
+  bladder|h[ae]maturia|blood in urine|cystoscop|urin|urolog|urogram|turbt|catheter|\buti\b|smok
+lookalike: recurrent UTI / haematuria from BPH or stones

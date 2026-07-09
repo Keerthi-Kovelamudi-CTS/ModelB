@@ -1,0 +1,12 @@
+# ovarian config — DRAFT: validate workup/relevant against the ovarian curated codelist before relying on numbers.
+cancer: ovarian
+organ: ovarian
+threshold: null
+gap_months: null
+bq_project: prj-cts-ai-dev-sp
+cache_uri: "⚙ SET to your run's raw-events cache (gs://… or local .parquet)"
+workup_terms: |-
+  refer\w*.*(gyn[a]ecolog)|\bca ?125\b|(transvaginal|pelvic) ultrasound|(ct|mri).*(abdomen|pelvi)|gynaecology (clinic|referral)|ovarian (mass|cyst)|oophorectom|risk of malignancy index|\brmi\b
+relevant_terms: |-
+  ovar|\bca ?125\b|pelvi|transvaginal|ultrasound|gyn[a]ecolog|bloat|abdominal|cyst
+lookalike: benign ovarian cyst / IBS
